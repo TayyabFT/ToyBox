@@ -1,0 +1,144 @@
+"use client";
+
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  ConfirmationPendingClock,
+  ConfirmationShiftProgress,
+  ConfirmationSignOffEdit,
+  VehicleFleetReady,
+} from "@/components/common/Svgs";
+import { sourcingApi } from "@/api/sourcing.api";
+import {
+  createEmptyConfirmationStats,
+  getInReviewPendingCount,
+  mapConfirmationSummary,
+  mapSourcingRequests,
+  splitConfirmationRequests,
+} from "@/lib/confirmations";
+import { showError } from "@/lib/toast";
+import { StatCard } from "@/components/staff/overview/StatCard";
+import { CompletedTodayPanel } from "./CompletedTodayPanel";
+import { ConfirmationsGreeting } from "./ConfirmationsGreeting";
+import { InReviewBookingsPanel } from "./InReviewBookingsPanel";
+import { PendingConfirmationsPanel } from "./PendingConfirmationsPanel";
+import { OfferVehicleModal } from "./OfferVehicleModal";
+import type { ConfirmationRequestItem, ConfirmationStatsDisplay } from "./types";
+
+export function ConfirmationsPage() {
+  const [loading, setLoading] = useState(true);
+  const [stats, setStats] = useState<ConfirmationStatsDisplay>(
+    createEmptyConfirmationStats(),
+  );
+  const [requests, setRequests] = useState<ConfirmationRequestItem[]>([]);
+  const [inReviewCount, setInReviewCount] = useState(0);
+  const [offerRequest, setOfferRequest] = useState<ConfirmationRequestItem | null>(
+    null,
+  );
+
+  const loadConfirmations = useCallback(async () => {
+    setLoading(true);
+
+    try {
+      const response = await sourcingApi.getStaffRequests();
+      const items = mapSourcingRequests(response.data);
+
+      setRequests(items);
+      setStats(mapConfirmationSummary(response.data));
+      setInReviewCount(getInReviewPendingCount(response.data));
+    } catch (error) {
+      const message =
+        (error as { message?: string }).message ??
+        "Failed to load job confirmations";
+
+      showError(message);
+      setRequests([]);
+      setStats(createEmptyConfirmationStats());
+      setInReviewCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadConfirmations();
+  }, [loadConfirmations]);
+
+  const { pending, inReview, completed } = useMemo(
+    () => splitConfirmationRequests(requests),
+    [requests],
+  );
+
+  return (
+    <div className="space-y-8 p-8">
+      <ConfirmationsGreeting />
+
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+        <StatCard
+          label={stats.pendingConfirm.label}
+          value={stats.pendingConfirm.value}
+          subtext={stats.pendingConfirm.subtext}
+          icon={<ConfirmationPendingClock />}
+          iconSize="lg"
+          valueLoading={loading}
+        />
+        <StatCard
+          label={stats.signOffQueue.label}
+          value={stats.signOffQueue.value}
+          subtext={stats.signOffQueue.subtext}
+          icon={<ConfirmationSignOffEdit />}
+          iconSize="lg"
+          valueLoading={loading}
+        />
+        <StatCard
+          label={stats.completedToday.label}
+          value={stats.completedToday.value}
+          subtext={stats.completedToday.subtext}
+          icon={<VehicleFleetReady />}
+          iconSize="lg"
+          valueLoading={loading}
+        />
+        <StatCard
+          label={stats.shiftProgress.label}
+          value={stats.shiftProgress.value}
+          subtext={stats.shiftProgress.subtext}
+          icon={<ConfirmationShiftProgress color="currentColor" />}
+          iconSize="lg"
+          valueLoading={loading}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
+        <div className="space-y-6 xl:col-span-3">
+          <PendingConfirmationsPanel
+            requests={pending}
+            pendingCount={Number.parseInt(stats.pendingConfirm.value, 10) || pending.length}
+            loading={loading}
+            onOfferVehicle={setOfferRequest}
+          />
+          <CompletedTodayPanel
+            requests={completed}
+            completedCount={
+              Number.parseInt(stats.completedToday.value, 10) || completed.length
+            }
+            loading={loading}
+          />
+        </div>
+
+        <div className="xl:col-span-2">
+          <InReviewBookingsPanel
+            requests={inReview}
+            pendingCount={inReviewCount || inReview.length}
+            loading={loading}
+          />
+        </div>
+      </div>
+
+      <OfferVehicleModal
+        open={offerRequest !== null}
+        request={offerRequest}
+        onClose={() => setOfferRequest(null)}
+        onSuccess={loadConfirmations}
+      />
+    </div>
+  );
+}
