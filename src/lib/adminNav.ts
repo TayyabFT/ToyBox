@@ -50,12 +50,11 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Concierge",
     href: `${ADMIN_BASE}/concierge`,
     section: "operations",
-    badge: { count: 3, tone: "pink" },
   },
   {
-    id: "confirmations",
-    label: "Confirmations",
-    href: `${ADMIN_BASE}/confirmations`,
+    id: "bookings",
+    label: "Bookings",
+    href: `${ADMIN_BASE}/bookings`,
     section: "operations",
     badge: { count: 5, tone: "gold" },
   },
@@ -122,7 +121,9 @@ export function isAdminNavActive(pathname: string, href: string): boolean {
 }
 
 export function getActiveAdminNavItem(pathname: string): AdminNavItem | null {
-  return adminNavItems.find((item) => isAdminNavActive(pathname, item.href)) ?? null;
+  return (
+    adminNavItems.find((item) => isAdminNavActive(pathname, item.href)) ?? null
+  );
 }
 
 export function getAdminPageTitle(pathname: string): string {

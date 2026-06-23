@@ -1,4 +1,8 @@
-import type { ChatConversation, MemberListItemRaw, MemberProfileData } from "@/types/api";
+import type {
+  ChatConversation,
+  MemberListItemRaw,
+  MemberProfileData,
+} from "@/types/api";
 import { compareResourceIdsDesc, toResourceId } from "@/lib/resourceId";
 import type {
   ConciergeAlert,
@@ -55,7 +59,9 @@ function mapConversationStatus(
   return "pending";
 }
 
-function mapConversationIcon(status: ConciergeRequestStatus): ConciergeRequestIcon {
+function mapConversationIcon(
+  status: ConciergeRequestStatus,
+): ConciergeRequestIcon {
   if (status === "done") return "check";
   if (status === "urgent") return "car";
   if (status === "active") return "gear";
@@ -142,9 +148,8 @@ export function getActiveConversationCount(
 export function getUnreadConversationCount(
   conversations: ChatConversation[],
 ): number {
-  return conversations.filter(
-    (conversation) => conversation.unreadForAdmin > 0,
-  ).length;
+  return conversations.filter((conversation) => conversation.unreadForAdmin > 0)
+    .length;
 }
 
 export function buildUrgentAlert(
@@ -182,9 +187,12 @@ export function mapMemberToConciergeDetail(
     id: conversation?.conversationId ?? String(member.id ?? ""),
     memberName: displayName,
     memberInitial: displayName.charAt(0).toUpperCase(),
-    memberStatus: member.onPremises ? "Online" : member.lastSeen ?? "Offline",
+    memberStatus: member.onPremises ? "Online" : (member.lastSeen ?? "Offline"),
     memberTier: member.tierLabel ?? member.membershipTier ?? "Member",
-    memberId: member.memberNumberLabel ?? member.memberNumber ?? String(member.id ?? ""),
+    memberId:
+      member.memberNumberLabel ??
+      member.memberNumber ??
+      String(member.id ?? ""),
     conciergeLead: "—",
     checklist: [],
     logistics: [

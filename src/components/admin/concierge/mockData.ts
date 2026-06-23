@@ -129,7 +129,8 @@ export const requestDetails: Record<string, ConciergeRequestDetail> = {
         sender: "member",
         senderName: "Member",
         time: "09:22",
-        message: "Perfect. I'll arrive at 14:30. Please have the SF90 at the entrance.",
+        message:
+          "Perfect. I'll arrive at 14:30. Please have the SF90 at the entrance.",
       },
       {
         id: "m3",
@@ -194,7 +195,11 @@ export const requestDetails: Record<string, ConciergeRequestDetail> = {
     memberId: "TB-018",
     conciergeLead: "James Alderton",
     checklist: [
-      { id: "c1", label: "Battery replacement — parts ordered", completed: false },
+      {
+        id: "c1",
+        label: "Battery replacement — parts ordered",
+        completed: false,
+      },
     ],
     logistics: [
       { label: "Service", value: "Battery Replacement" },
@@ -241,6 +246,7 @@ export const inboxMessages: ConciergeInboxMessage[] = [
     timeLabel: "12m",
     tags: ["urgent", "private"],
     unread: true,
+    apiMemberId: "1",
   },
   {
     id: "msg-2",
@@ -251,6 +257,7 @@ export const inboxMessages: ConciergeInboxMessage[] = [
     timeLabel: "8m",
     tags: ["urgent"],
     unread: true,
+    apiMemberId: "2",
   },
   {
     id: "msg-3",
@@ -261,6 +268,7 @@ export const inboxMessages: ConciergeInboxMessage[] = [
     timeLabel: "5m",
     tags: ["urgent"],
     unread: true,
+    apiMemberId: "3",
   },
   {
     id: "msg-4",
@@ -270,6 +278,7 @@ export const inboxMessages: ConciergeInboxMessage[] = [
     timeLabel: "2m",
     tags: ["high"],
     unread: true,
+    apiMemberId: "4",
   },
   {
     id: "msg-5",
@@ -280,15 +289,18 @@ export const inboxMessages: ConciergeInboxMessage[] = [
     timeLabel: "23m",
     tags: ["high"],
     unread: false,
+    apiMemberId: "5",
   },
   {
     id: "msg-6",
     memberName: "Mr. Bashir",
     memberInitial: "B",
-    preview: "Q2 statement received. Could you clarify the workshop line items?",
+    preview:
+      "Q2 statement received. Could you clarify the workshop line items?",
     timeLabel: "1h 4m",
     tags: ["normal"],
     unread: false,
+    apiMemberId: "6",
   },
 ];
 
@@ -405,7 +417,8 @@ export const messageDetails: Record<string, MessageChatDetail> = {
         sender: "member",
         senderName: "Member",
         time: "07:56",
-        message: "Q2 statement received. Could you clarify the workshop line items?",
+        message:
+          "Q2 statement received. Could you clarify the workshop line items?",
       },
     ],
   },

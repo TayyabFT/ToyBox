@@ -75,7 +75,7 @@ export function OverviewPage() {
           icon={<ActionMessage />}
         />
         <ActionCard
-          title="Confirmations"
+          title="Bookings"
           subtitle="2 await signature"
           icon={<ActionCheckbox />}
         />

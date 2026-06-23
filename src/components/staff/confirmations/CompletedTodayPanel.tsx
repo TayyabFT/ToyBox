@@ -36,7 +36,7 @@ export function CompletedTodayPanel({
           ))
         ) : (
           <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            No completed confirmations
+            No completed bookings
           </p>
         )}
       </div>

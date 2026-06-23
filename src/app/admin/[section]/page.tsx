@@ -31,7 +31,7 @@ export default async function AdminSectionPage({ params }: PageProps) {
     return <MembersPage />;
   }
 
-  if (navItem.id === "confirmations") {
+  if (navItem.id === "bookings") {
     return <ConfirmationsPage />;
   }
 

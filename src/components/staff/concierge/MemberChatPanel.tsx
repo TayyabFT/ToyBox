@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { chatApi } from "@/api/chat.api";
 import { VehicleSend } from "@/components/common/Svgs";
 import { SectionHeader } from "@/components/staff/overview/SectionHeader";
@@ -33,8 +33,16 @@ export function MemberChatPanel({
   );
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const chatTitle = conversation?.memberName ?? memberName;
+
+  const scrollToBottom = useCallback(() => {
+    const container = messagesContainerRef.current;
+    if (!container) return;
+
+    container.scrollTop = container.scrollHeight;
+  }, []);
 
   const loadMessages = useCallback(async () => {
     if (memberId === null) {
@@ -68,6 +76,14 @@ export function MemberChatPanel({
   useEffect(() => {
     void loadMessages();
   }, [loadMessages]);
+
+  useEffect(() => {
+    if (loading || messages.length === 0) return;
+
+    requestAnimationFrame(() => {
+      scrollToBottom();
+    });
+  }, [loading, messages, memberId, scrollToBottom]);
 
   async function handleSend() {
     const body = draft.trim();
@@ -112,54 +128,73 @@ export function MemberChatPanel({
   }
 
   return (
-    <section className="flex min-h-[420px] flex-col rounded-2xl border border-[#D4A8471A] bg-surface p-5">
-      <SectionHeader
-        title={`Member Chat — ${chatTitle}`}
-        badge={
-          conversation?.status === "active"
-            ? { label: "online", tone: "green" }
-            : undefined
-        }
-      />
-
-      <div className="Custom__Scrollbar mb-4 flex-1 space-y-4 overflow-y-auto pr-1">
-        {loading && messages.length === 0 && (
-          <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            Loading chat...
+    <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-[#D4A8471A] bg-[#11100C]">
+      {memberId === null ? (
+        <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
+          <p className="font-roboto text-[11px] tracking-[0.06em] text-secondary uppercase">
+            Select a request to view chat
           </p>
-        )}
+        </div>
+      ) : (
+        <>
+          <div className="shrink-0 pt-5 px-5">
+            <SectionHeader
+              title={`Member Chat — ${chatTitle}`}
+              badge={
+                conversation?.status === "active"
+                  ? { label: "online", tone: "green" }
+                  : undefined
+              }
+            />
+          </div>
 
-        {!loading && messages.length === 0 && (
-          <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            No messages yet
-          </p>
-        )}
+          <div
+            ref={messagesContainerRef}
+            className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto p-5"
+          >
+            <div className="space-y-4 pr-1">
+              {loading && messages.length === 0 && (
+                <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
+                  Loading chat...
+                </p>
+              )}
 
-        {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
-        ))}
-      </div>
+              {!loading && messages.length === 0 && (
+                <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
+                  No messages yet
+                </p>
+              )}
 
-      <div className="flex items-center gap-3 rounded-xl border border-[#D4A8471A] bg-card px-4 py-3">
-        <input
-          type="text"
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          onKeyDown={handleKeyDown}
-          disabled={memberId === null || sending}
-          placeholder={`Reply to ${chatTitle}...`}
-          className="font-roboto min-w-0 flex-1 bg-transparent text-[12px] tracking-[0.02em] text-foreground outline-none placeholder:text-secondary disabled:opacity-50"
-        />
-        <button
-          type="button"
-          aria-label="Send message"
-          disabled={memberId === null || sending || !draft.trim()}
-          onClick={() => void handleSend()}
-          className="flex size-9 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-[#F0C566] to-[#C9A84C] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          <VehicleSend color="var(--dark)" />
-        </button>
-      </div>
+              {messages.map((message) => (
+                <ChatMessage key={message.id} message={message} />
+              ))}
+            </div>
+          </div>
+
+          <div className="shrink-0 border-t border-[#D4A8470F] p-5">
+            <div className="flex items-center gap-3 rounded-xl border border-[#D4A84724] bg-[#0A0806] h-12">
+              <input
+                type="text"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={sending}
+                placeholder={`Reply to ${chatTitle}...`}
+                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-[#7D7460] outline-none placeholder:text-secondary disabled:opacity-50"
+              />
+              <button
+                type="button"
+                aria-label="Send message"
+                disabled={sending || !draft.trim()}
+                onClick={() => void handleSend()}
+                className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-[#F0C566] to-[#C9A84C] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <VehicleSend color="var(--dark)" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

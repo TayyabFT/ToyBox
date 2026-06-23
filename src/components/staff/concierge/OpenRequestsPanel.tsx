@@ -18,13 +18,15 @@ export function OpenRequestsPanel({
   onSelect,
 }: OpenRequestsPanelProps) {
   return (
-    <section className="rounded-2xl border border-[#D4A8471A] bg-[#11100C] p-5">
-      <SectionHeader
-        title="Open Requests"
-        badge={{ label: `${activeCount} active`, tone: "gold" }}
-      />
+    <section className="rounded-2xl border border-[#D4A8471A] bg-[#11100C] overflow-hidden">
+      <div className="pt-5 px-5">
+        <SectionHeader
+          title="Open Requests"
+          badge={{ label: `${activeCount} active`, tone: "gold" }}
+        />
+      </div>
 
-      <div className="overflow-hidden rounded-xl border border-[#D4A8471A] bg-card">
+      <div className="overflow-hidden bg-card">
         {loading ? (
           <p className="font-roboto px-4 py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
             Loading...

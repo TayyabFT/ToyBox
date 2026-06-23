@@ -887,3 +887,74 @@ export type ChatMarkReadResponse = ApiResponse<{
   memberId: string;
   markedRead: boolean;
 }>;
+
+export type CreateEventRequest = {
+  title: string;
+  category: "auctions" | "drives" | "social" | string;
+  description: string;
+  location: string;
+  startsAt: string;
+  endsAt: string;
+  isAllDay: boolean;
+  imageUrl: string;
+  isFeatured: boolean;
+  capacity: number;
+  accessType: "open" | "invite-only" | string;
+  status: "confirmed" | "draft" | "past" | string;
+};
+
+export type EventResponse = CreateEventRequest & {
+  id: string | number;
+  attendingCount?: number;
+  waitlistCount?: number;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type EventsListData = {
+  events?: EventResponse[];
+};
+
+export type EventsListResponse = ApiResponse<EventsListData>;
+
+export type EventStatsData = {
+  upcoming?: number;
+  confirmed?: number;
+  drafts?: number;
+  past?: number;
+  attendanceRate?: number;
+  upcomingTrend?: string;
+  confirmedTrend?: string;
+  attendanceTrend?: string;
+  [key: string]: unknown;
+};
+
+export type EventStatsResponse = ApiResponse<EventStatsData>;
+
+// Shape of a single RSVP entry returned inside rsvpList by GET /api/v1/events/:id
+export type EventRsvpRaw = {
+  rsvpId?: string | number;
+  status?: string; // "confirmed" | "waitlist"
+  isFavorite?: boolean;
+  joinedAt?: string;
+  member?: {
+    id?: string | number;
+    name?: string;
+    initial?: string;
+    profileImageUrl?: string;
+  };
+  vehicle?: {
+    id?: string | number;
+    name?: string;
+  };
+};
+
+// Full detail response returned by GET /api/v1/events/:id
+export type EventDetailData = EventResponse & {
+  spotsRemaining?: number;
+  isJoined?: boolean;
+  myRsvp?: unknown;
+  rsvpList?: EventRsvpRaw[];
+};
+
+export type EventDetailResponse = ApiResponse<EventDetailData>;

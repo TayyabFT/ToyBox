@@ -18,6 +18,12 @@ export const staffOperationsNav: StaffNavItem[] = [
     section: "operations",
   },
   {
+    id: "bookings",
+    label: "Bookings",
+    href: `${STAFF_BASE}/bookings`,
+    section: "operations",
+  },
+  {
     id: "inspections",
     label: "Inspections",
     href: `${STAFF_BASE}/inspections`,
@@ -57,12 +63,6 @@ export const staffManagementNav: StaffNavItem[] = [
     id: "concierge",
     label: "Concierge",
     href: `${STAFF_BASE}/concierge`,
-    section: "management",
-  },
-  {
-    id: "confirmations",
-    label: "Confirmations",
-    href: `${STAFF_BASE}/confirmations`,
     section: "management",
   },
   {

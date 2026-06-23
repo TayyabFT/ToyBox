@@ -9,7 +9,7 @@ import type { ConciergeOpenRequest, ConciergeRequestIcon } from "./types";
 
 function RequestIcon({ icon }: { icon: ConciergeRequestIcon }) {
   const boxClass =
-    "flex size-9 shrink-0 items-center justify-center rounded-lg border border-primary/22 bg-primary/[0.06] [&_svg]:size-[16px]";
+    "flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/22 bg-primary/[0.06] [&_svg]:size-[16px]";
 
   switch (icon) {
     case "car":
@@ -62,11 +62,11 @@ export function OpenRequestRow({
     >
       <RequestIcon icon={request.icon} />
 
-      <div className="min-w-0 flex-1 space-y-1">
-        <p className="font-roboto truncate text-[12px] font-medium tracking-[0.02em] text-foreground">
+      <div className="min-w-0 flex-1 space-y-0.5">
+        <p className="font-roboto truncate text-[14px] font-medium tracking-[0.02em] text-foreground">
           {request.title}
         </p>
-        <p className="font-copperplate truncate text-[9px] tracking-[0.1em] text-secondary uppercase">
+        <p className="font-roboto truncate text-[11px] tracking-[0.1em] text-secondary uppercase">
           {request.member} · {request.tier}
         </p>
       </div>

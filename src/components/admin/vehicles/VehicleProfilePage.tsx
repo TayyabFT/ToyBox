@@ -1,289 +1,252 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
-import { adminVehiclesApi } from "@/api/adminVehicles.api";
-import { HealthProgressBar } from "@/components/staff/vehicles/HealthProgressBar";
-import { mapAdminVehicleProfile } from "@/lib/adminVehicles";
+import { VehicleListCarIcon } from "@/components/common/Svgs";
 import { useSetAdminPageSubtitle } from "@/lib/adminPageMeta";
-import { showError } from "@/lib/toast";
-import type { VehicleProfileDetail } from "./types";
 
 type VehicleProfilePageProps = {
   vehicleId: string;
 };
 
-type DetailFieldProps = {
+const headerPills = [
+  { label: "Ready", tone: "teal" as const },
+  { label: "DXB · M1", tone: "outline" as const },
+  { label: "VIN · SCAEF2ZAPUX12345", tone: "outline" as const },
+];
+
+const specifications: { label: string; value: string }[] = [
+  { label: "Year", value: "2023" },
+  { label: "Colour", value: "Midnight sapphire" },
+  { label: "Engine", value: "6.75L V12 Bi-turbo" },
+  { label: "Miles", value: "3,240" },
+  { label: "Plate", value: "DXB · M1" },
+  { label: "VIN", value: "SCAEF2ZA9PUX12485" },
+];
+
+const bayDetails: { label: string; value: string }[] = [
+  { label: "Stored since", value: "Dec 18, 2024" },
+  { label: "Days stored", value: "181 days" },
+  { label: "Last inspected by", value: "Farah Al-Rashid" },
+];
+
+type Tone = "teal" | "gold" | "red";
+
+const serviceHistory: {
   label: string;
   value: string;
+  meta: string;
+  tone: Tone;
+}[] = [
+  {
+    label: "Routine Inspection Passed -",
+    value: "all clear",
+    meta: "Today · 06:30 · Farah Al-Rashid",
+    tone: "gold",
+  },
+  {
+    label: "Detailing Completed -",
+    value: "full exterior + interior",
+    meta: "Jun 10, 2026 · Workshop Team",
+    tone: "teal",
+  },
+  {
+    label: "Concierge Request Resolved -",
+    value: "Tyre pressure check",
+    meta: "May 28, 2026 · Ahmad Karimi",
+    tone: "gold",
+  },
+  {
+    label: "Vehicle Collected By Owner -",
+    value: "weekend drive",
+    meta: "May 12, 2026 · Front Gate",
+    tone: "teal",
+  },
+];
+
+const dotToneClass: Record<Tone, string> = {
+  teal: "bg-teal",
+  gold: "bg-primary",
+  red: "bg-[#E0685C]",
 };
 
-function DetailField({ label, value }: DetailFieldProps) {
+function SectionCard({
+  title,
+  action,
+  children,
+}: {
+  title: string;
+  action?: React.ReactNode;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="space-y-1.5">
-      <p className="font-roboto text-[9px] tracking-[0.12em] text-secondary uppercase">
-        {label}
-      </p>
-      <p className="font-roboto text-[12px] leading-relaxed text-foreground break-words">
-        {value}
-      </p>
-    </div>
+    <section className="rounded-2xl border border-accent/12 bg-card p-5">
+      <div className="flex min-h-[26px] items-center justify-between pb-3">
+        <h2 className="font-roboto text-[11px] font-medium tracking-[0.18em] text-secondary uppercase">
+          {title}
+        </h2>
+        {action}
+      </div>
+      <div className="border-t border-accent/8 pt-3">{children}</div>
+    </section>
   );
 }
 
-function statusTone(statusKey: string, isOverdue: boolean): string {
-  if (isOverdue) {
-    return "border-[var(--pink)]/40 bg-[var(--pink)]/[0.08] text-[var(--pink)]";
-  }
-
-  const normalized = statusKey.toLowerCase();
-
-  if (normalized.includes("service")) {
-    return "border-primary/40 bg-primary/[0.08] text-primary";
-  }
-
-  if (normalized.includes("ready") || normalized.includes("stored")) {
-    return "border-teal/40 bg-teal/[0.08] text-teal";
-  }
-
-  return "border-accent/25 text-secondary";
+function ViewAllButton() {
+  return (
+    <button
+      type="button"
+      className="font-roboto cursor-pointer rounded-full border border-accent/15 px-3 py-1 text-[9px] font-semibold tracking-[0.16em] text-primary uppercase transition-colors hover:border-primary/40"
+    >
+      View All
+    </button>
+  );
 }
 
-function isImageUrl(url: string): boolean {
-  return /\.(png|jpe?g|webp|gif|avif)(\?.*)?$/i.test(url);
+function InfoRow({ label, value }: { label: string; value: string }) {
+  return (
+    <li className="flex items-center justify-between gap-4 py-3.5">
+      <span className="font-roboto text-[13px] tracking-[0.02em] text-secondary">
+        {label}
+      </span>
+      <span className="font-roboto text-[13px] font-medium tracking-[0.02em] text-foreground">
+        {value}
+      </span>
+    </li>
+  );
 }
 
-export function VehicleProfilePage({ vehicleId }: VehicleProfilePageProps) {
-  const [profile, setProfile] = useState<VehicleProfileDetail | null>(null);
-  const [loading, setLoading] = useState(true);
+const pillToneClass = {
+  teal: "border-teal/35 bg-teal/8 text-teal",
+  outline: "border-accent/20 text-muted",
+};
 
-  useSetAdminPageSubtitle(profile?.displayName);
-
-  const loadProfile = useCallback(async () => {
-    setLoading(true);
-
-    try {
-      const response = await adminVehiclesApi.getVehicleById(vehicleId);
-      setProfile(mapAdminVehicleProfile(response.data));
-    } catch (error) {
-      const message =
-        (error as { message?: string }).message ??
-        "Failed to load vehicle details";
-
-      showError(message);
-      setProfile(null);
-    } finally {
-      setLoading(false);
-    }
-  }, [vehicleId]);
-
-  useEffect(() => {
-    loadProfile();
-  }, [loadProfile]);
-
-  if (loading) {
-    return (
-      <div className="p-8">
-        <p className="font-roboto text-sm text-secondary">
-          Loading vehicle details...
-        </p>
-      </div>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <div className="space-y-4 p-8">
-        <p className="font-roboto text-sm text-secondary">
-          Vehicle details could not be loaded.
-        </p>
-        <Link
-          href="/admin/vehicles"
-          className="font-roboto inline-flex text-[10px] font-semibold tracking-[0.12em] text-primary uppercase hover:underline"
-        >
-          Back to vehicles
-        </Link>
-      </div>
-    );
-  }
+export function VehicleProfilePage(_props: VehicleProfilePageProps) {
+  useSetAdminPageSubtitle("Ghost Black Badge");
 
   return (
-    <div className="space-y-7 p-8">
-      <Link
-        href="/admin/vehicles"
-        className="font-roboto inline-flex text-[10px] font-semibold tracking-[0.12em] text-secondary uppercase transition-colors hover:text-primary"
+    <div className="space-y-5 p-8">
+      <section
+        className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
+        style={{
+          background:
+            "radial-gradient(90% 130% at 42% -15%, rgba(212,168,71,0.20) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
+        }}
       >
-        ← Back to vehicles
-      </Link>
+        <div className="flex items-center gap-6">
+          <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
+            <VehicleListCarIcon className="h-[22px] w-[44px]" />
+          </span>
 
-      <section className="overflow-hidden rounded-2xl border border-accent/12 bg-card">
-        <div className="grid grid-cols-1 gap-6 p-6 lg:grid-cols-[280px_1fr]">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-accent/10 bg-surface">
-            {profile.imageUrl && isImageUrl(profile.imageUrl) ? (
-              <Image
-                src={profile.imageUrl}
-                alt={profile.displayName}
-                fill
-                className="object-cover"
-              />
-            ) : (
-              <div className="flex h-full items-center justify-center px-6 text-center">
-                <p className="font-copperplate text-[18px] tracking-[0.04em] text-secondary uppercase">
-                  {profile.make}
-                  {profile.model ? (
-                    <>
-                      <br />
-                      <span className="text-primary italic">{profile.model}</span>
-                    </>
-                  ) : null}
-                </p>
-              </div>
-            )}
-          </div>
+          <div className="min-w-0 space-y-2.5">
+            <p className="font-roboto text-[12px] font-medium tracking-[0.22em] text-secondary uppercase">
+              Rolls-Royce
+            </p>
 
-          <div className="flex flex-col justify-between gap-6">
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-3">
-                <h1 className="font-copperplate text-[32px] leading-none tracking-[0.04em] text-foreground uppercase">
-                  {profile.displayName}
-                </h1>
+            <h1 className="font-copperplate text-[34px] leading-none tracking-[0.05em]">
+              <span className="text-[#F2EAD5]">Ghost </span>
+              <span className="text-[#C9A84C]">Black Badge</span>
+            </h1>
 
-                {profile.isPriority ? (
-                  <span className="font-roboto rounded-full border border-primary/40 bg-primary/10 px-3 py-1 text-[9px] font-semibold tracking-[0.1em] text-primary uppercase">
-                    Priority
-                  </span>
-                ) : null}
-              </div>
+            <p className="font-roboto text-[11px] tracking-[0.12em] text-secondary uppercase">
+              2023 · Midnight Sapphire · Bay 04A - Level 04
+            </p>
 
-              <p className="font-roboto text-[10px] tracking-[0.06em] text-secondary uppercase">
-                {profile.year} · {profile.colour}
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-1">
+              {headerPills.map((pill) => (
                 <span
-                  className={`font-roboto inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[9px] font-semibold tracking-[0.1em] uppercase ${statusTone(
-                    profile.statusKey,
-                    profile.isOverdueService,
-                  )}`}
+                  key={pill.label}
+                  className={`inline-flex items-center rounded-full border px-3.5 py-1.5 font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase ${pillToneClass[pill.tone]}`}
                 >
-                  <span className="size-1.5 rounded-full bg-current" />
-                  {profile.statusLabel}
+                  {pill.label}
                 </span>
-
-                <span className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
-                  {profile.lastActivity}
-                </span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <DetailField label="Bay" value={profile.bay} />
-              <DetailField label="Storage" value={profile.storageBay} />
-              <DetailField label="Mileage" value={profile.mileage} />
-              <DetailField label="Plate" value={profile.plate} />
+              ))}
             </div>
           </div>
         </div>
-
-        {profile.isOverdueService ? (
-          <div className="border-t border-[var(--pink)]/20 bg-[var(--pink)]/[0.06] px-6 py-3">
-            <p className="font-roboto text-[10px] font-semibold tracking-[0.12em] text-[var(--pink)] uppercase">
-              Service overdue — review maintenance schedule
-            </p>
-          </div>
-        ) : null}
       </section>
 
-      <section className="rounded-2xl border border-accent/12 bg-card p-6">
-        <h2 className="mb-5 font-copperplate text-[18px] tracking-[0.04em] text-foreground uppercase">
-          Owner & Vehicle Details
-        </h2>
-
-        <div className="mb-6 flex items-center gap-3">
-          {profile.memberProfileImageUrl ? (
-            <Image
-              src={profile.memberProfileImageUrl}
-              alt={profile.memberName}
-              width={40}
-              height={40}
-              className="size-10 shrink-0 rounded-full object-cover"
-            />
-          ) : (
-            <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-roboto text-[12px] font-semibold text-dark uppercase">
-              {profile.memberInitial}
-            </span>
-          )}
-
-          <div>
-            <p className="font-roboto text-[12px] font-semibold tracking-[0.06em] text-foreground uppercase">
-              {profile.memberName}
+      <SectionCard title="Owner">
+        <div className="flex items-center gap-4">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-[#C9A84C]/70 bg-[#0d0b08] font-copperplate text-[18px] text-[#C9A84C]">
+            A
+          </span>
+          <div className="space-y-1">
+            <p className="font-copperplate text-[18px] tracking-[0.04em] text-foreground">
+              Alex Mitchell
             </p>
-            <p className="font-roboto text-[9px] tracking-[0.06em] text-secondary uppercase">
-              Member No. {profile.memberId}
+            <p className="font-roboto text-[11px] tracking-[0.08em] text-secondary uppercase">
+              No. 000010743 · Private · Since Dec 2024 · 4 Vehicles Registered
             </p>
           </div>
         </div>
+      </SectionCard>
 
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-          <DetailField label="Make" value={profile.make} />
-          <DetailField label="Model" value={profile.model || "—"} />
-          <DetailField label="Year" value={profile.year} />
-          <DetailField label="Colour" value={profile.colour} />
-          <DetailField label="Chassis No." value={profile.chassisNo} />
-          <DetailField label="Ownership" value={profile.ownershipType} />
-          <DetailField label="Last Serviced" value={profile.lastServicedAt} />
-          <DetailField label="Fuel Level" value={profile.fuelLevel} />
-          <DetailField label="Owner" value={profile.ownerName} />
-        </div>
-      </section>
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+        <SectionCard title="Specifications" action={<ViewAllButton />}>
+          <ul className="divide-y divide-accent/8">
+            {specifications.map((spec) => (
+              <InfoRow key={spec.label} label={spec.label} value={spec.value} />
+            ))}
+          </ul>
+        </SectionCard>
 
-      {profile.health.length > 0 ? (
-        <section className="rounded-2xl border border-accent/12 bg-card p-6">
-          <h2 className="mb-5 font-copperplate text-[18px] tracking-[0.04em] text-foreground uppercase">
-            Vehicle Health
-          </h2>
+        <SectionCard title="Bay Assignment">
+          <div className="flex items-center gap-4 pb-4">
+            <div className="flex size-[52px] shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-dark">
+              <span className="font-copperplate text-[16px] leading-none">
+                04A
+              </span>
+              <span className="mt-0.5 font-roboto text-[7px] font-semibold tracking-[0.1em]">
+                LEVEL 4
+              </span>
+            </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-            {profile.health.map((metric) => (
-              <div key={metric.label} className="space-y-2">
-                <HealthProgressBar
-                  metric={{
-                    label: metric.label,
-                    value: metric.value,
-                    tone: metric.tone,
-                  }}
-                />
-                <p className="font-roboto text-[10px] leading-relaxed text-secondary">
-                  {metric.note}
+            <div className="space-y-1">
+              <p className="font-roboto text-[14px] font-semibold tracking-[0.02em] text-foreground">
+                Bay 04A - Level 04
+              </p>
+              <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                Occupied · Climate Controlled
+              </p>
+              <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                Inspected 06:14 Today
+              </p>
+            </div>
+          </div>
+
+          <ul className="divide-y divide-accent/8 border-t border-accent/8">
+            {bayDetails.map((detail) => (
+              <InfoRow
+                key={detail.label}
+                label={detail.label}
+                value={detail.value}
+              />
+            ))}
+          </ul>
+        </SectionCard>
+      </div>
+
+      <SectionCard title="Service & Activity History">
+        <ul className="divide-y divide-accent/8">
+          {serviceHistory.map((entry) => (
+            <li key={entry.label} className="flex gap-3 py-3.5">
+              <span
+                className={`mt-1.5 size-2 shrink-0 rounded-full ${dotToneClass[entry.tone]}`}
+              />
+              <div className="space-y-1">
+                <p className="font-roboto text-[13px] tracking-[0.02em]">
+                  <span className="text-secondary">{entry.label} </span>
+                  <span className="font-semibold text-foreground">
+                    {entry.value}
+                  </span>
+                </p>
+                <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                  {entry.meta}
                 </p>
               </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
-
-      {profile.documents.length > 0 ? (
-        <section className="rounded-2xl border border-accent/12 bg-card p-6">
-          <h2 className="mb-5 font-copperplate text-[18px] tracking-[0.04em] text-foreground uppercase">
-            Documents
-          </h2>
-
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-            {profile.documents.map((document) => (
-              <a
-                key={document.label}
-                href={document.url}
-                target="_blank"
-                rel="noreferrer"
-                className="font-roboto rounded-xl border border-accent/12 bg-surface/60 px-4 py-3 text-[11px] font-semibold tracking-[0.06em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-primary/[0.06]"
-              >
-                {document.label}
-              </a>
-            ))}
-          </div>
-        </section>
-      ) : null}
+            </li>
+          ))}
+        </ul>
+      </SectionCard>
     </div>
   );
 }

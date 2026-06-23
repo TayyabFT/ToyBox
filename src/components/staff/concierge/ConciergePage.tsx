@@ -18,7 +18,12 @@ import { ConciergeGreeting } from "./ConciergeGreeting";
 import { MemberChatPanel } from "./MemberChatPanel";
 import { OpenRequestsPanel } from "./OpenRequestsPanel";
 import { RequestDetailPanel } from "./RequestDetailPanel";
-import type { ConciergeAlert, ConciergeFilter, ConciergeOpenRequest, ConciergeRequestDetail } from "./types";
+import type {
+  ConciergeAlert,
+  ConciergeFilter,
+  ConciergeOpenRequest,
+  ConciergeRequestDetail,
+} from "./types";
 
 const emptyDetail: ConciergeRequestDetail = {
   id: "",
@@ -107,9 +112,8 @@ export function ConciergePage() {
       try {
         const response = await membersApi.getMemberById(request.apiMemberId);
         const conversation =
-          conversations.find(
-            (item) => item.conversationId === request.id,
-          ) ?? null;
+          conversations.find((item) => item.conversationId === request.id) ??
+          null;
 
         if (!response.success || !response.data) {
           throw new Error(response.message || "Failed to load member profile");
@@ -142,23 +146,24 @@ export function ConciergePage() {
   );
 
   useEffect(() => {
-    if (filteredRequests.length === 0) {
-      setSelectedId(null);
-      return;
-    }
+    if (selectedId === null) return;
 
-    if (!filteredRequests.some((request) => request.id === selectedId)) {
-      setSelectedId(filteredRequests[0]!.id);
+    const isSelectedVisible = filteredRequests.some(
+      (request) => request.id === selectedId,
+    );
+
+    if (!isSelectedVisible) {
+      setSelectedId(null);
     }
   }, [activeFilter, filteredRequests, selectedId]);
 
-  const selectedRequest = useMemo(
-    () =>
-      openRequests.find((request) => request.id === selectedId) ??
-      openRequests[0] ??
-      null,
-    [openRequests, selectedId],
-  );
+  const selectedRequest = useMemo(() => {
+    if (!selectedId) return null;
+
+    return (
+      filteredRequests.find((request) => request.id === selectedId) ?? null
+    );
+  }, [filteredRequests, selectedId]);
 
   useEffect(() => {
     void loadMemberDetail(selectedRequest);

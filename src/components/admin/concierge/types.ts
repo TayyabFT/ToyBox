@@ -75,4 +75,5 @@ export type ConciergeInboxMessage = {
   timeLabel: string;
   tags: MessagePriorityTag[];
   unread?: boolean;
+  apiMemberId: string;
 };

@@ -18,7 +18,7 @@ export function PendingConfirmationsPanel({
     <div>
       <ConfirmationsOutsideHeader
         titleSplit={{ before: "Pending", after: "Booking" }}
-        subtitle={`${pendingCount} Booking${pendingCount === 1 ? "" : "s"} Require Your Confirmation Before Close-of-Shift`}
+        subtitle={`${pendingCount} Booking${pendingCount === 1 ? "" : "s"} Require Your Sign-Off Before Close-of-Shift`}
       />
 
       <section className={confirmationInnerClass}>

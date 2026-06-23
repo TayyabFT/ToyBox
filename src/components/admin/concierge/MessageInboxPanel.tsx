@@ -9,6 +9,7 @@ import type { ConciergeInboxMessage, MessageInboxFilter } from "./types";
 type MessageInboxPanelProps = {
   messages: ConciergeInboxMessage[];
   selectedId: string;
+  loading?: boolean;
   onSelect: (id: string) => void;
 };
 
@@ -26,6 +27,7 @@ function filterMessages(
 export function MessageInboxPanel({
   messages,
   selectedId,
+  loading = false,
   onSelect,
 }: MessageInboxPanelProps) {
   const [activeFilter, setActiveFilter] = useState<MessageInboxFilter>("all");
@@ -48,11 +50,19 @@ export function MessageInboxPanel({
   }, [onSelect, selectedId, visibleSelectedId]);
 
   return (
-    <section className={conciergeListPanelClass}>
-      <MessageInboxTabs active={activeFilter} onChange={setActiveFilter} />
+    <section
+      className={`${conciergeListPanelClass} flex h-full min-h-0 flex-col`}
+    >
+      <div className="shrink-0">
+        <MessageInboxTabs active={activeFilter} onChange={setActiveFilter} />
+      </div>
 
-      <div>
-        {filteredMessages.length > 0 ? (
+      <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto">
+        {loading ? (
+          <p className="font-roboto px-5 py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
+            Loading...
+          </p>
+        ) : filteredMessages.length > 0 ? (
           filteredMessages.map((message) => (
             <MessageInboxRow
               key={message.id}

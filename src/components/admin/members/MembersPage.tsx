@@ -49,7 +49,6 @@ export function MembersPage() {
 
         setStats(result.summary);
         setFilters(result.filters);
-        setActiveTier(result.tier);
         setMembers((current) =>
           append ? [...current, ...result.members] : result.members,
         );

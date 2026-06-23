@@ -19,11 +19,11 @@ export function PendingConfirmationsPanel({
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
           <span className="text-[#F2EAD5]">Pending</span>{" "}
-          <span className="text-primary">Confirmations</span>
+          <span className="text-primary">Bookings</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
           {pendingCount} Job{pendingCount === 1 ? "" : "s"} Require Your
-          Confirmation Before Close-of-Shift
+          Sign-Off Before Close-of-Shift
         </p>
       </div>
 
@@ -46,7 +46,7 @@ export function PendingConfirmationsPanel({
             ))
           ) : (
             <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-              No pending confirmations
+              No pending bookings
             </p>
           )}
         </div>

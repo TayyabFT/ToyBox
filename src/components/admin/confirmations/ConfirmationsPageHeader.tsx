@@ -5,8 +5,7 @@ export function ConfirmationsPageHeader() {
         Saturday, 17 July 2026 · Morning Shift
       </p>
       <h1 className="font-copperplate text-[32px] leading-tight tracking-[0.04em] uppercase sm:text-[36px]">
-        <span className="text-[#E7E5E4]">Booking </span>
-        <span className="text-[#C5A059]">Confirmation</span>
+        <span className="text-[#C5A059]">Bookings</span>
       </h1>
     </div>
   );

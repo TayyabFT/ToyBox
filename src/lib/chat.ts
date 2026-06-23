@@ -12,12 +12,16 @@ function formatChatTime(iso: string): string {
   });
 }
 
-export function mapChatMessages(messages: ChatMessage[]): ConciergeChatMessage[] {
-  return messages.map((message) => ({
+export function mapChatMessage(message: ChatMessage): ConciergeChatMessage {
+  return {
     id: message.id,
     sender: message.senderType === "member" ? "member" : "staff",
     senderName: message.senderName,
     time: formatChatTime(message.createdAt),
     message: message.body,
-  }));
+  };
+}
+
+export function mapChatMessages(messages: ChatMessage[]): ConciergeChatMessage[] {
+  return messages.map(mapChatMessage);
 }

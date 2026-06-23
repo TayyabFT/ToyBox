@@ -39,6 +39,13 @@ const validateSetupPassword = (
     errors.newPassword = "Password is required";
   } else if (newPassword.length < 8) {
     errors.newPassword = "Password must be at least 8 characters";
+  } else if (!/[A-Z]/.test(newPassword)) {
+    errors.newPassword = "Password must include at least one uppercase letter";
+  } else if (!/[0-9]/.test(newPassword)) {
+    errors.newPassword = "Password must include at least one number";
+  } else if (!/[^A-Za-z0-9]/.test(newPassword)) {
+    errors.newPassword =
+      "Password must include at least one special character";
   }
 
   if (!confirmPassword.trim()) {

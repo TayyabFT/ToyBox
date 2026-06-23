@@ -24,7 +24,7 @@ const page = async ({ params }: PageProps) => {
     return <VehiclesPage />;
   }
 
-  if (navItem.id === "confirmations") {
+  if (navItem.id === "bookings") {
     return <ConfirmationsPage />;
   }
 

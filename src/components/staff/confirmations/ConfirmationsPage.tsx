@@ -48,7 +48,7 @@ export function ConfirmationsPage() {
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
-        "Failed to load job confirmations";
+        "Failed to load bookings";
 
       showError(message);
       setRequests([]);

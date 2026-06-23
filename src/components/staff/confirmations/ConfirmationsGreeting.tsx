@@ -6,8 +6,7 @@ export function ConfirmationsGreeting() {
         <span className="text-primary">Morning Shift</span>
       </p>
       <h1 className="font-copperplate text-[32px] leading-tight">
-        <span className="text-[#F2EAD5]">Job </span>
-        <span className="text-primary">Confirmations</span>
+        <span className="text-primary">Bookings</span>
       </h1>
     </div>
   );

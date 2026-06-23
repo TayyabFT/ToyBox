@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
   Building,
@@ -17,6 +18,7 @@ import {
   Wrench,
   Sunburst,
 } from "@/components/common/Svgs";
+import { adminChatApi } from "@/api/adminChat.api";
 import { Sidebar } from "@/components/shared/layout";
 import { AdminSidebarNavSection, adminNavStroke } from "@/components/ui";
 import {
@@ -30,7 +32,7 @@ const navIcons: Record<string, (active: boolean) => React.ReactNode> = {
   members: (active) => <User stroke={adminNavStroke(active)} />,
   vehicles: (active) => <NavCar stroke={adminNavStroke(active)} />,
   concierge: (active) => <Message stroke={adminNavStroke(active)} />,
-  confirmations: (active) => (
+  bookings: (active) => (
     <NavConfirmationCheck stroke={adminNavStroke(active)} />
   ),
   "service-requests": (active) => <Sunburst active={active} />,
@@ -45,6 +47,46 @@ const navIcons: Record<string, (active: boolean) => React.ReactNode> = {
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const [conciergeChatCount, setConciergeChatCount] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadConciergeChatCount() {
+      try {
+        const response = await adminChatApi.getConversations();
+
+        if (!cancelled) {
+          setConciergeChatCount(response.data.conversations.length);
+        }
+      } catch {
+        if (!cancelled) {
+          setConciergeChatCount(0);
+        }
+      }
+    }
+
+    void loadConciergeChatCount();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [pathname]);
+
+  const operationsNav = useMemo(
+    () =>
+      adminOperationsNav.map((item) => {
+        if (item.id !== "concierge" || conciergeChatCount <= 0) {
+          return item;
+        }
+
+        return {
+          ...item,
+          badge: { count: conciergeChatCount, tone: "pink" as const },
+        };
+      }),
+    [conciergeChatCount],
+  );
 
   return (
     <Sidebar
@@ -66,7 +108,7 @@ export function AdminSidebar() {
     >
       <AdminSidebarNavSection
         title="Operations"
-        items={adminOperationsNav}
+        items={operationsNav}
         pathname={pathname}
         isActive={isAdminNavActive}
         icons={navIcons}

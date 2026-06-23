@@ -1844,6 +1844,7 @@ export function ActivityCheck({
   );
 }
 
+
 export function ActivityUser({
   className,
   color = "#C5A059",
@@ -2041,6 +2042,62 @@ export function MemberCheckStat({
         strokeWidth="1.2"
         strokeLinecap="round"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+export function AttendanceIcon({
+  className,
+}: {
+  className?: string;
+}) {
+  return (
+    <svg
+      className={className}
+      width="30"
+      height="30"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Calendar */}
+      <rect
+        x="3"
+        y="5"
+        width="11"
+        height="11"
+        rx="2"
+        stroke="#C9A84C"
+        strokeWidth="1.5"
+      />
+
+      <path
+        d="M6 3.5V6.5M11 3.5V6.5"
+        stroke="#C9A84C"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M3 8.5H14"
+        stroke="#C9A84C"
+        strokeWidth="1.5"
+      />
+
+      {/* User (increased size) */}
+      <circle
+        cx="17"
+        cy="13"
+        r="3.2"
+        stroke="#C9A84C"
+        strokeWidth="1.5"
+      />
+
+      <path
+        d="M13.8 19.2C14.2 17.2 15.7 16 17 16C18.3 16 19.8 17.2 20.2 19.2"
+        stroke="#C9A84C"
+        strokeWidth="1.5"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -2370,6 +2427,94 @@ export function ConciergeGear({
         strokeWidth="0.9"
         strokeLinecap="round"
       />
+    </svg>
+  );
+}
+
+export function StarFilled({ className, color = "#C9A84C" }: TopbarIconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <path
+        d="M8 2.5L9.55 6.1L13.5 6.55L10.75 9.15L11.55 13L8 11.15L4.45 13L5.25 9.15L2.5 6.55L6.45 6.1L8 2.5Z"
+        fill={color}
+      />
+    </svg>
+  );
+}
+
+export function EditPencil({ className, color = "#C9A84C" }: TopbarIconProps) {
+  return (
+    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <path
+        d="M10.8 2.6 13.4 5.2 5.6 13 3 13.4 3.4 10.8 10.8 2.6Z"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export type DetailGlyphName =
+  | "mail"
+  | "phone"
+  | "id"
+  | "location"
+  | "calendar";
+
+export function DetailGlyph({
+  icon,
+  className = "size-[15px]",
+  color = "#C9A84C",
+}: TopbarIconProps & { icon: DetailGlyphName }) {
+  const common = {
+    stroke: color,
+    strokeWidth: 1.15,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+    fill: "none",
+  };
+
+  return (
+    <svg viewBox="0 0 16 16" aria-hidden className={className}>
+      {icon === "mail" && (
+        <>
+          <rect x="2.2" y="3.8" width="11.6" height="8.4" rx="1.6" {...common} />
+          <path d="M3 5L8 8.6L13 5" {...common} />
+        </>
+      )}
+      {icon === "phone" && (
+        <path
+          d="M6.2 3.2 7 5c.12.3.02.62-.2.82l-.9.7c.62 1.2 1.5 2.08 2.7 2.7l.7-.9c.2-.22.52-.32.82-.2l1.78.78c.3.13.5.42.5.74v1.66c0 .42-.36.78-.78.72C7.4 12.4 3.6 8.6 3.06 4.06c-.06-.42.3-.78.72-.78h1.6c.34 0 .68.2.82.5z"
+          {...common}
+        />
+      )}
+      {icon === "id" && (
+        <>
+          <rect x="2.2" y="3.5" width="11.6" height="9" rx="1.6" {...common} />
+          <circle cx="5.9" cy="7" r="1.5" {...common} />
+          <path
+            d="M3.7 11c.25-1.05 1.1-1.6 2.2-1.6s1.95.55 2.2 1.6"
+            {...common}
+          />
+          <path d="M10 6.4h2.4M10 8.4h2.4" {...common} />
+        </>
+      )}
+      {icon === "location" && (
+        <>
+          <path
+            d="M8 13.6s4-3.4 4-6.8A4 4 0 0 0 8 2.8 4 4 0 0 0 4 6.8c0 3.4 4 6.8 4 6.8z"
+            {...common}
+          />
+          <circle cx="8" cy="6.8" r="1.5" {...common} />
+        </>
+      )}
+      {icon === "calendar" && (
+        <>
+          <rect x="2.2" y="3.4" width="11.6" height="9.2" rx="1.6" {...common} />
+          <path d="M2.2 6.3h11.6M5.4 2.2v2.3M10.6 2.2v2.3" {...common} />
+        </>
+      )}
     </svg>
   );
 }

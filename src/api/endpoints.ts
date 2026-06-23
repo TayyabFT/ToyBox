@@ -10,8 +10,7 @@ export const API_ENDPOINTS = {
   notifications: {
     inbox: "/api/v1/notifications/inbox",
     readAll: "/api/v1/notifications/inbox/read-all",
-    markRead: (id: string | number) =>
-      `/api/v1/notifications/inbox/${id}/read`,
+    markRead: (id: string | number) => `/api/v1/notifications/inbox/${id}/read`,
   },
   vehicles: {
     inventory: "/api/v1/admin/vehicles/inventory",
@@ -66,11 +65,20 @@ export const API_ENDPOINTS = {
     markRead: (memberId: string | number) =>
       `/api/v1/staff/chat/${memberId}/read`,
   },
+  adminChat: {
+    conversations: "/api/v1/admin/chat/conversations",
+    initiate: "/api/v1/admin/chat/initiate",
+    messages: (memberId: string | number) =>
+      `/api/v1/admin/chat/${memberId}/messages`,
+    markRead: (memberId: string | number) =>
+      `/api/v1/admin/chat/${memberId}/read`,
+  },
   events: {
     createevent: "/api/v1/events",
-     getevents: "/api/v1/events/all", 
-    getstats: "/api/v1/events/stats", 
+    getevents: "/api/v1/events/all",
+    getstats: "/api/v1/events/stats",
     update: (id: string | number) => `/api/v1/events/${id}`,
-  
+    detail: (id: string | number) => `/api/v1/events/${id}`,
+    delete: (id: string | number) => `/api/v1/events/${id}`,
   },
 } as const;

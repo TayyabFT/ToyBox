@@ -32,10 +32,7 @@ const badgeToneClass: Record<BadgeTone, string> = {
   teal: "bg-teal text-dark",
 };
 
-const navIcons: Record<
-  string,
-  (active: boolean) => React.ReactNode
-> = {
+const navIcons: Record<string, (active: boolean) => React.ReactNode> = {
   overview: (active) => <Grid active={active} />,
   inspections: (active) => <Checkbox active={active} />,
   "health-reports": (active) => <CircleCheck active={active} />,
@@ -43,7 +40,7 @@ const navIcons: Record<
   "photo-uploads": (active) => <Camera active={active} />,
   vehicles: (active) => <User active={active} />,
   concierge: (active) => <Message active={active} />,
-  confirmations: (active) => <Checkbox active={active} />,
+  bookings: (active) => <Checkbox active={active} />,
   "op-updates": (active) => <Edit active={active} />,
 };
 
@@ -78,18 +75,20 @@ function NavSection({
 
               <Link
                 href={item.href}
-                className={`relative flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${active
+                className={`relative flex w-full cursor-pointer items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+                  active
                     ? "bg-gradient-to-r from-accent/13 to-accent/3 text-accent"
                     : "text-muted hover:bg-[#FFFFFF08] hover:text-foreground"
-                  }`}
+                }`}
               >
                 <span className="flex size-6 shrink-0 items-center justify-center [&_svg]:size-[18px]">
                   {icon?.(active)}
                 </span>
 
                 <span
-                  className={`font-roboto flex-1 text-[13px] tracking-[0.04em] ${active ? "font-medium text-primary" : "font-normal"
-                    }`}
+                  className={`font-roboto flex-1 text-[13px] tracking-[0.04em] ${
+                    active ? "font-medium text-primary" : "font-normal"
+                  }`}
                 >
                   {item.label}
                 </span>
@@ -194,7 +193,11 @@ export function StaffSidebar() {
         items={staffOperationsNav}
         pathname={pathname}
       />
-      <NavSection title="Management" items={managementNav} pathname={pathname} />
+      <NavSection
+        title="Management"
+        items={managementNav}
+        pathname={pathname}
+      />
     </Sidebar>
   );
 }

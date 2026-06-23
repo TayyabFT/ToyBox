@@ -1,6 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { eventsApi } from "@/api/events.api";
+import type { EventResponse } from "@/types/api";
+import { isApiError, isNetworkFailure } from "@/lib/apiError";
+import { toResourceId } from "@/lib/resourceId";
 import { EventCardSkeletonGrid } from "./EventCardSkeleton";
+import { EventsEmptyState } from "./EventsEmptyState";
 interface EventItem {
   id: string;
   tag: string;
@@ -37,30 +41,30 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
       setError(null);
       
       const response = await eventsApi.getEvents();
-      console.log("Raw events API response:", response);
+      const rawEvents = response.data?.events ?? [];
       
-      // Fixes the UI layout extraction to reach response.data.events safely
-      const rawEvents = (response as any).data?.events || [];
-      
-      const formattedEvents: EventItem[] = rawEvents.map((apiEvent: any) => {
+      const formattedEvents: EventItem[] = rawEvents.map((apiEvent: EventResponse) => {
         const start = apiEvent.startsAt ? new Date(apiEvent.startsAt) : null;
         const end = apiEvent.endsAt ? new Date(apiEvent.endsAt) : null;
+        const attendingCount = apiEvent.attendingCount ?? 0;
+        const capacity = apiEvent.capacity ?? 0;
+        const waitlistCount = apiEvent.waitlistCount ?? 0;
         
         const dateString = start 
           ? `${start.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase()} · ${start.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false })} — ${end ? end.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false }) : 'TBD'}`
           : "DATE TBD";
 
         return {
-          id: apiEvent.id,
+          id: toResourceId(apiEvent.id),
           tag: apiEvent.status?.toUpperCase() || "UPCOMING",
           image: apiEvent.imageUrl || "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=600&auto=format&fit=crop",
           title: apiEvent.location ? `${apiEvent.title} — ${apiEvent.location}` : apiEvent.title,
           date: dateString,
-          confirmedCount: apiEvent.attendingCount || 0,
-          totalCount: apiEvent.capacity || 0,
-          rsvp: apiEvent.attendingCount || 0,
-          wait: apiEvent.waitlistCount || 0,
-          progress: apiEvent.capacity ? (apiEvent.attendingCount / apiEvent.capacity) * 100 : 0,
+          confirmedCount: attendingCount,
+          totalCount: capacity,
+          rsvp: attendingCount,
+          wait: waitlistCount,
+          progress: capacity ? (attendingCount / capacity) * 100 : 0,
           status: apiEvent.status?.toLowerCase() || "draft",
         };
       });
@@ -69,7 +73,9 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
       isInitialLoad.current = false;
     } catch (err) {
       console.error("Failed to parse live events payload:", err);
-      setError("Unable to load live event directory.");
+      const isOffline =
+        isNetworkFailure(err) || (isApiError(err) && err.status === 0);
+      setError(isOffline ? "No network connection" : "Unable to load events");
     } finally {
       setIsLoading(false);
     }
@@ -112,13 +118,16 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
   if (isLoading) {
     return <EventCardSkeletonGrid />;
   }
-  if (error) {
-    return (
-      <div className="text-center p-6 border border-red-900/20 bg-red-950/10 rounded-xl text-red-400 text-xs tracking-wider">
-        {error}
-      </div>
-    );
-  }
+
+  const emptyMessage = error
+    ? error
+    : activeFilter === "confirmed"
+      ? "No confirmed events"
+      : activeFilter === "draft"
+        ? "No draft events"
+        : activeFilter === "past"
+          ? "No past events"
+          : "No live events found";
 
   return (
     <div className="space-y-6">
@@ -138,11 +147,8 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
         </button>
       </div>
 
-      {/* Grid Layout for Cards */}
-      {visibleEvents.length === 0 ? (
-        <div className="text-center p-12 border border-zinc-900 bg-[#121314] rounded-xl text-zinc-500 text-[11px] tracking-widest uppercase">
-          {activeFilter ? `No ${activeFilter} events found.` : "No live events found."}
-        </div>
+      {error || visibleEvents.length === 0 ? (
+        <EventsEmptyState message={emptyMessage} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {visibleEvents.map((event) => (
@@ -155,7 +161,11 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
                   alt={event.title} 
                   className="w-full h-full object-cover opacity-80"
                 />
-                <span className="absolute top-4 left-4 bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-widest text-[#D4A847] px-3 py-1 rounded-full border border-[#D4A847]/20">
+                <span className={`absolute top-4 left-4 bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
+                  event.status === "confirmed"
+                    ? "text-[#7DBFA0] border-[#7DBFA0]/30"
+                    : "text-[#D4A847] border-[#D4A847]/20"
+                }`}>
                   {event.tag}
                 </span>
                 <span className="absolute bottom-4 right-4 bg-black/80 backdrop-blur-md text-[10px] font-bold tracking-wider text-white px-3 py-1 rounded-full border border-zinc-800">
@@ -195,7 +205,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
                       type="button"
                       disabled={updatingId === event.id}
                       onClick={() => handleConfirmDraft(event)}
-                      className="flex items-center gap-1.5 border border-zinc-700 text-zinc-400 hover:border-[#D4A847]/50 hover:text-[#D4A847] px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1.5 border border-zinc-700 text-zinc-400 cursor-pointer hover:border-[#D4A847]/50 hover:text-[#D4A847] px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {updatingId === event.id ? (
                         <>
@@ -211,7 +221,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
                     <button
                       type="button"
                       onClick={() => onManageClick(event)}
-                      className="border border-[#D4A847]/20 text-[#D4A847] hover:border-[#D4A847]/50 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all"
+                      className="border border-[#D4A847]/20 text-[#D4A847] cursor-pointer hover:border-[#D4A847]/50 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all"
                     >
                       Manage
                     </button>
