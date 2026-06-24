@@ -11,9 +11,9 @@ export function ConfirmationRequestRow({
   onOfferVehicle,
 }: ConfirmationRequestRowProps) {
   return (
-    <div className="flex items-center gap-4 border-b border-[#D4A8470F] px-4 py-4 last:border-b-0">
+    <div className="flex items-center gap-4 border-b border-accent/6 px-4 py-4 last:border-b-0">
       <div className="min-w-0 flex-1 space-y-1">
-        <p className="font-roboto truncate font-medium tracking-[0.03em] text-[#F2EAD5]">
+        <p className="font-roboto truncate font-medium tracking-[0.03em] text-foreground">
           {request.vehicle}
         </p>
         <p className="font-roboto truncate text-xs tracking-[0.06em] text-secondary uppercase">
@@ -27,7 +27,7 @@ export function ConfirmationRequestRow({
           <button
             type="button"
             onClick={() => onOfferVehicle?.(request)}
-            className="font-roboto flex cursor-pointer font-extrabold items-center gap-1 rounded-full bg-[#D4A847] px-3 py-1.5 text-[9px] font-semibold tracking-[0.08em] text-[#000000] uppercase"
+            className="font-roboto flex cursor-pointer font-extrabold items-center gap-1 rounded-full bg-accent px-3 py-1.5 text-[9px] font-semibold tracking-[0.08em] text-dark uppercase"
           >
             +
             Offer a Vehicle

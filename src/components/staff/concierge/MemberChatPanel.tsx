@@ -128,7 +128,7 @@ export function MemberChatPanel({
   }
 
   return (
-    <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-[#D4A8471A] bg-[#11100C]">
+    <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
       {memberId === null ? (
         <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
           <p className="font-roboto text-[11px] tracking-[0.06em] text-secondary uppercase">
@@ -171,8 +171,8 @@ export function MemberChatPanel({
             </div>
           </div>
 
-          <div className="shrink-0 border-t border-[#D4A8470F] p-5">
-            <div className="flex items-center gap-3 rounded-xl border border-[#D4A84724] bg-[#0A0806] h-12">
+          <div className="shrink-0 border-t border-accent/6 p-5">
+            <div className="flex items-center gap-3 rounded-xl border border-accent/14 bg-dark h-12">
               <input
                 type="text"
                 value={draft}
@@ -180,14 +180,14 @@ export function MemberChatPanel({
                 onKeyDown={handleKeyDown}
                 disabled={sending}
                 placeholder={`Reply to ${chatTitle}...`}
-                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-[#7D7460] outline-none placeholder:text-secondary disabled:opacity-50"
+                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-secondary outline-none placeholder:text-secondary disabled:opacity-50"
               />
               <button
                 type="button"
                 aria-label="Send message"
                 disabled={sending || !draft.trim()}
                 onClick={() => void handleSend()}
-                className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-[#F0C566] to-[#C9A84C] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-gold-bright to-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <VehicleSend color="var(--dark)" />
               </button>

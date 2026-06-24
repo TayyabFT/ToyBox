@@ -21,7 +21,7 @@ export function UrgentAlertBar({
   onReviewAll,
 }: UrgentAlertBarProps) {
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-pink/20 bg-[#141210] px-6 py-4">
+    <div className="flex items-center gap-4 rounded-xl border border-pink/20 bg-[var(--critical-banner)] px-6 py-4">
       <div className="flex shrink-0 items-center gap-3">
         <span className="flex size-9 items-center justify-center rounded-lg border border-pink/30 bg-pink/8">
           <AlertTriangle color="var(--pink)" className="size-4" />
@@ -38,13 +38,13 @@ export function UrgentAlertBar({
             className="flex items-center gap-3"
           >
             {index > 0 && (
-              <span aria-hidden className="font-roboto text-[12px] text-[#6B665E]/50">
+              <span aria-hidden className="font-roboto text-[12px] text-secondary/50">
                 |
               </span>
             )}
             <p className="font-roboto text-[12px] tracking-[0.03em] whitespace-nowrap">
               <span className="text-pink">{item.highlight}</span>{" "}
-              <span className="text-[#E7E5E4]">{item.detail}</span>
+              <span className="text-foreground">{item.detail}</span>
             </p>
           </div>
         ))}

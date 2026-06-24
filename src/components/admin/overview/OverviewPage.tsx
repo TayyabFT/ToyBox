@@ -148,6 +148,7 @@ export function AdminOverviewPage() {
           footnote="Founding"
           trend="+3"
           icon={<StatMembersIcon />}
+          featured
         />
         <StatCard
           label="In Storage"

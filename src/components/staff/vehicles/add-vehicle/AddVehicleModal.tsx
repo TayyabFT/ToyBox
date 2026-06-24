@@ -113,7 +113,7 @@ export function AddVehicleModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 bg-[#070605] shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
+      <div className="relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 bg-background shadow-[var(--shadow-modal)]">
         <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">
           <h2 className="mb-8 text-center text-[20px] text-primary">
             {stepTitle}
@@ -196,7 +196,7 @@ export function AddVehicleModal({
                 type="button"
                 onClick={handleBack}
                 disabled={submitting}
-                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-accent/25 bg-[#0A0908] py-4 text-sm font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-accent/25 bg-dark py-4 text-sm font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <RightArrow className="shrink-0 rotate-180" />
                 Back
@@ -205,7 +205,7 @@ export function AddVehicleModal({
                 type="button"
                 onClick={handleNext}
                 disabled={submitting}
-                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#F0C566] to-[#C9A84C] py-4 text-sm font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
+                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-sm font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Submitting..." : actionLabel}
                 {!submitting && step < 4 && (
@@ -218,7 +218,7 @@ export function AddVehicleModal({
               type="button"
               onClick={handleNext}
               disabled={submitting}
-              className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#F0C566] to-[#C9A84C] py-4 text-[13px] font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
+              className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-[13px] font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               {actionLabel}
               <RightArrow className="shrink-0" />

@@ -17,7 +17,7 @@ export function NotificationItem({
       onClick={onClick}
       className={`flex w-full cursor-pointer items-start gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors ${
         read
-          ? "border-accent/8 bg-transparent hover:bg-[#FFFFFF05]"
+          ? "border-accent/8 bg-transparent hover:bg-foreground/2"
           : "border-accent/12 bg-accent/4 hover:bg-accent/8"
       }`}
     >
@@ -37,7 +37,7 @@ export function NotificationItem({
       {!read && (
         <span
           aria-label="Unread"
-          className="mt-1.5 size-2 shrink-0 rounded-full bg-primary shadow-[0_0_8px_rgba(201,168,76,0.45)]"
+          className="mt-1.5 size-2 shrink-0 rounded-full bg-primary shadow-[var(--shadow-glow-primary)]"
         />
       )}
     </button>

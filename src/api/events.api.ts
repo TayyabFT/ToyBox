@@ -43,4 +43,9 @@ export const eventsApi = {
     apiClient<unknown>(API_ENDPOINTS.events.delete(id), {
       method: "DELETE",
     }),
+
+  sendUpdate: (id: string | number) =>
+    apiClient<unknown>(API_ENDPOINTS.events.sendUpdate(id), {
+      method: "POST",
+    }),
 };

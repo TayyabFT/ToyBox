@@ -10,7 +10,7 @@ export function ScheduleItem({
   detail,
 }: ScheduleItemProps) {
   return (
-    <div className="flex gap-4 border border-[#D4A84712] bg-[#1A1612] p-4 rounded-lg">
+    <div className="flex gap-4 border border-accent/7 bg-elevated p-4 rounded-lg">
       <div className="flex w-12 shrink-0 flex-col items-center">
         <span className="font-roboto text-xs font-medium tracking-[0.06em] text-primary">
           {time}

@@ -19,7 +19,7 @@ export function ConciergeFilterTabs({
   onChange,
 }: ConciergeFilterTabsProps) {
   return (
-    <div className="flex shrink-0 items-center rounded-full bg-[#11100C] border border-[#D4A8471A] p-1.5">
+    <div className="flex shrink-0 items-center rounded-full bg-card border border-accent/10 p-1.5">
       {filters.map((filter) => {
         const isActive = active === filter.id;
 
@@ -30,8 +30,8 @@ export function ConciergeFilterTabs({
             onClick={() => onChange(filter.id)}
             className={`font-roboto cursor-pointer rounded-full px-4 py-[7px] text-[11px] font-bold tracking-[0.12em] uppercase transition-colors ${
               isActive
-                ? "bg-[#D4A8471F] text-[#D4A847]"
-                : "text-[#7D7460] hover:text-[#D4A847]"
+                ? "bg-accent/12 text-accent"
+                : "text-secondary hover:text-accent"
             }`}
           >
             {filter.label}

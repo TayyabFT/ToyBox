@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
 import ToastProvider from "@/components/common/ToastProvider";
+import { ThemeProvider } from "@/components/common/ThemeProvider";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -26,11 +27,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full antialiased`}>
+    <html lang="en" className={`${roboto.variable} h-full antialiased`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem("toybox-theme");document.documentElement.setAttribute("data-theme",t==="light"?"light":"dark");}catch(e){document.documentElement.setAttribute("data-theme","dark");}})();`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col font-body Custom__Scrollbar">
         <StoreProvider>
-          {children}
-          <ToastProvider />
+          <ThemeProvider>
+            {children}
+            <ToastProvider />
+          </ThemeProvider>
         </StoreProvider>
       </body>
     </html>

@@ -1,7 +1,6 @@
 "use client";
 
-import { AdminSidebar } from "@/components/admin/Sidebar";
-import { AdminTopbar } from "@/components/admin/Topbar";
+import { Sidebar, Topbar } from "@/components/shared/layout";
 import { AdminPageMetaProvider } from "@/lib/adminPageMeta";
 import { useClientAuth } from "@/lib/useClientAuth";
 
@@ -17,9 +16,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
   return (
     <AdminPageMetaProvider>
       <div className="flex min-h-screen bg-background">
-        <AdminSidebar />
+        <Sidebar role="admin" />
         <div className="flex min-h-screen flex-1 flex-col overflow-hidden pl-[340px]">
-          <AdminTopbar />
+          <Topbar role="admin" />
           <main className="flex-1 overflow-auto">{children}</main>
         </div>
       </div>

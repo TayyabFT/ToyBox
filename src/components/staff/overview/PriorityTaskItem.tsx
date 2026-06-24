@@ -13,7 +13,7 @@ type PriorityTaskItemProps = {
 const iconToneClass: Record<IconTone, string> = {
   pink: "border-pink/28 bg-pink/[0.06]",
   gold: "border-primary/28 bg-primary/[0.06]",
-  blue: "border-[#7EB0D8]/28 bg-[#7EB0D8]/[0.06]",
+  blue: "border-info/28 bg-info/6",
   teal: "border-teal/28 bg-teal/[0.06]",
 };
 

@@ -24,7 +24,9 @@ interface EventPopupProps {
   eventData?: EventDetails;
   isLoading?: boolean;
   onEditClick?: () => void;
+  onSendUpdateClick?: () => void;
   onDeleteClick?: () => void;
+  isSendingUpdate?: boolean;
   isDeleting?: boolean;
 }
 
@@ -34,7 +36,9 @@ export function EventPopup({
   eventData,
   isLoading = false,
   onEditClick,
+  onSendUpdateClick,
   onDeleteClick,
+  isSendingUpdate = false,
   isDeleting = false,
 }: EventPopupProps) {
   const [activeTab, setActiveTab] = useState<'RSVPS' | 'WAITLIST' | 'NOTES' | 'SETTINGS'>('RSVPS');
@@ -81,7 +85,7 @@ export function EventPopup({
     return attendees.map((attendee, index) => (
       <div
         key={`${attendee.name}-${index}`}
-        className="bg-[#121314] rounded-xl p-3 border border-zinc-900/60 flex items-center justify-between hover:border-[#D4A847]/10 transition-all cursor-pointer group"
+        className="bg-[#121314] rounded-xl p-3 border border-zinc-900/60 flex items-center justify-between hover:border-[#D4A847]/10 transition-all"
       >
         <div className="flex items-center gap-3">
           {attendee.profileImageUrl ? (
@@ -110,19 +114,19 @@ export function EventPopup({
             <span className={`w-1 h-1 rounded-full ${attendee.status === 'WAITLIST' ? 'bg-amber-400' : 'bg-emerald-500'}`} />
             {attendee.status}
           </div>
-          <svg className="w-3.5 h-3.5 text-zinc-700 group-hover:text-zinc-500 transition-colors" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
         </div>
       </div>
     ));
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex justify-end bg-black/60 backdrop-blur-sm">
-      <div className="absolute inset-0" onClick={() => { setConfirmDelete(false); onClose(); }} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={() => { setConfirmDelete(false); onClose(); }}
+      />
 
-      <div className="relative w-full max-w-xl bg-[#0c0d0e] h-full text-white flex flex-col shadow-2xl border-l border-zinc-900/50">
+      <div className="relative z-10 flex w-full max-w-xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-zinc-900/50 bg-[#0c0d0e] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
         <div className="p-6 pb-4">
           <div className="flex justify-between items-start">
             <div>
@@ -185,7 +189,7 @@ export function EventPopup({
           ))}
         </div>
 
-        <div className="flex-1 overflow-y-auto p-6 space-y-2.5 pb-36">
+        <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-2.5">
           {activeTab === 'RSVPS' && renderAttendeeList(confirmedAttendees, 'No RSVPs yet')}
           {activeTab === 'WAITLIST' && renderAttendeeList(waitlistAttendees, 'No waitlist members')}
           {activeTab !== 'RSVPS' && activeTab !== 'WAITLIST' && (
@@ -195,7 +199,7 @@ export function EventPopup({
           )}
         </div>
 
-        <div className="absolute bottom-0 inset-x-0 bg-gradient-to-t from-[#0c0d0e] via-[#0c0d0e] to-transparent p-6 pt-10 space-y-2.5 border-t border-zinc-950">
+        <div className="shrink-0 space-y-2.5 border-t border-zinc-950 p-6">
           <div className="grid grid-cols-2 gap-3">
             <button onClick={onEditClick} className="flex items-center justify-center gap-2 border border-[#D4A847]/20 hover:border-[#D4A847]/50 text-zinc-300 bg-[#121314]/50 py-3 rounded-xl text-[10px] font-bold tracking-[0.15em] uppercase transition-all">
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,11 +207,25 @@ export function EventPopup({
               </svg>
               EDIT EVENT
             </button>
-            <button className="flex items-center justify-center gap-2 border border-[#D4A847]/20 hover:border-[#D4A847]/50 text-[#D4A847] bg-[#D4A847]/5 py-3 rounded-xl text-[10px] font-bold tracking-[0.15em] uppercase transition-all">
-              <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-              </svg>
-              SEND UPDATE
+            <button
+              type="button"
+              onClick={onSendUpdateClick}
+              disabled={isSendingUpdate || isDeleting}
+              className="flex items-center justify-center gap-2 border border-[#D4A847]/20 hover:border-[#D4A847]/50 text-[#D4A847] bg-[#D4A847]/5 py-3 rounded-xl text-[10px] font-bold tracking-[0.15em] uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSendingUpdate ? (
+                <>
+                  <span className="w-3.5 h-3.5 border border-[#D4A847]/30 border-t-[#D4A847] rounded-full animate-spin" />
+                  Sending...
+                </>
+              ) : (
+                <>
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                  </svg>
+                  SEND UPDATE
+                </>
+              )}
             </button>
           </div>
 

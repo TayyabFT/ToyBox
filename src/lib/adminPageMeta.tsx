@@ -50,6 +50,16 @@ export function useAdminPageMeta() {
   return context;
 }
 
+/**
+ * Reads the current page subtitle without requiring the provider to be present.
+ * Returns undefined when used outside an AdminPageMetaProvider (e.g. staff or
+ * member portals), so shared chrome can call it safely for any role.
+ */
+export function useAdminPageSubtitleValue(): string | undefined {
+  const context = useContext(AdminPageMetaContext);
+  return context?.meta.subtitle;
+}
+
 export function useSetAdminPageSubtitle(subtitle?: string) {
   const { setMeta } = useAdminPageMeta();
 

@@ -18,7 +18,7 @@ export function StaffDutyItem({
   const statusColor = statusTone === "green" ? "bg-teal" : "bg-primary";
 
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-[#D4A84712] bg-[#1A1612] p-3.5">
+    <div className="flex items-center gap-3 rounded-xl border border-accent/7 bg-elevated p-3.5">
       <span
         className={`font-roboto flex size-9 shrink-0 items-center justify-center rounded-full text-[11px] font-semibold uppercase ${avatarClass}`}
       >

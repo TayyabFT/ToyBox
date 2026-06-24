@@ -20,7 +20,7 @@ export function StaffNote() {
 
       <button
         type="button"
-        className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-[#F0C566] to-[#C9A84C] py-3 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase"
+        className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-gold-bright to-primary py-3 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase"
       >
         <VehicleSend />
         Submit Note

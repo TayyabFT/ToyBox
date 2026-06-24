@@ -2,7 +2,7 @@ export function AssignmentCard() {
   return (
     <div className="rounded-2xl border border-teal/18 bg-teal/4 p-5">
       <div className="mb-4 flex items-center gap-2">
-        <span className="size-2 rounded-full bg-teal shadow-[0_0_8px_rgba(125,191,160,0.5)]" />
+        <span className="size-2 rounded-full bg-teal shadow-[var(--shadow-glow-teal)]" />
         <p className="font-roboto text-[10px] tracking-[0.12em] text-teal uppercase">
           Your Assignment
         </p>

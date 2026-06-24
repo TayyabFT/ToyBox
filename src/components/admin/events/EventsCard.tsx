@@ -5,6 +5,11 @@ import { isApiError, isNetworkFailure } from "@/lib/apiError";
 import { toResourceId } from "@/lib/resourceId";
 import { EventCardSkeletonGrid } from "./EventCardSkeleton";
 import { EventsEmptyState } from "./EventsEmptyState";
+
+function isPublishedEventStatus(status: string) {
+  return status === "published" || status === "confirmed";
+}
+
 interface EventItem {
   id: string;
   tag: string;
@@ -16,15 +21,16 @@ interface EventItem {
   rsvp: number;
   wait: number;
   progress: number;
-  status: string; // raw status from API e.g. "draft" | "confirmed" | "past"
+  status: string; // raw status from API e.g. "draft" | "published" | "past"
 }
 
 interface EventsCardProps {
   onManageClick: (event: EventItem) => void;
   refreshTrigger?: number;
+  onEventUpdated?: () => void;
 }
 
-export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProps) {
+export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }: EventsCardProps) {
   const [events, setEvents] = useState<EventItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -84,19 +90,20 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
   fetchEvents();
 }, [refreshTrigger]);
 
-  // Promotes a draft event to confirmed via PATCH, then updates local state
+  // Promotes a draft event to published via PATCH, then updates local state
   async function handleConfirmDraft(event: EventItem) {
     if (updatingId) return; // prevent double-clicks
     setUpdatingId(event.id);
     try {
-      await eventsApi.updateEvent(event.id, { status: "confirmed" });
+      await eventsApi.updateEvent(event.id, { status: "published" });
       setEvents((prev) =>
         prev.map((e) =>
           e.id === event.id
-            ? { ...e, status: "confirmed", tag: "CONFIRMED" }
+            ? { ...e, status: "published", tag: "PUBLISHED" }
             : e
         )
       );
+      onEventUpdated?.();
     } catch (err) {
       console.error("Failed to confirm event:", err);
     } finally {
@@ -106,7 +113,11 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
 
   // Derived list — null filter means show all
   const visibleEvents = activeFilter
-    ? events.filter((e) => e.status === activeFilter)
+    ? events.filter((e) =>
+        activeFilter === "confirmed"
+          ? isPublishedEventStatus(e.status)
+          : e.status === activeFilter,
+      )
     : events;
 
   // Helper: button classes based on whether this filter is active
@@ -162,7 +173,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0 }: EventsCardProp
                   className="w-full h-full object-cover opacity-80"
                 />
                 <span className={`absolute top-4 left-4 bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
-                  event.status === "confirmed"
+                  isPublishedEventStatus(event.status)
                     ? "text-[#7DBFA0] border-[#7DBFA0]/30"
                     : "text-[#D4A847] border-[#D4A847]/20"
                 }`}>

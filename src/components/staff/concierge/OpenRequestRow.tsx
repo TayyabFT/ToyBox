@@ -54,7 +54,7 @@ export function OpenRequestRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex w-full cursor-pointer items-center gap-3 border-b border-[#D4A8470F] px-4 py-3.5 text-left transition-colors last:border-b-0 hover:bg-accent/[0.03] ${
+      className={`flex w-full cursor-pointer items-center gap-3 border-b border-accent/6 px-4 py-3.5 text-left transition-colors last:border-b-0 hover:bg-accent/[0.03] ${
         selected
           ? "border-l-2 border-l-primary bg-accent/[0.04] pl-[14px]"
           : "border-l-2 border-l-transparent"

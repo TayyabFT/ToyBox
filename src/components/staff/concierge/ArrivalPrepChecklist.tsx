@@ -56,7 +56,7 @@ export function ArrivalPrepChecklist({
 
       <button
         type="button"
-        className="font-roboto flex cursor-pointer items-center gap-2 rounded-lg border border-[#D4A8471A] bg-surface px-4 py-2.5 text-[10px] font-medium tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
+        className="font-roboto flex cursor-pointer items-center gap-2 rounded-lg border border-accent/10 bg-surface px-4 py-2.5 text-[10px] font-medium tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
       >
         <Edit active />
         Add Note

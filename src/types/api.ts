@@ -900,7 +900,7 @@ export type CreateEventRequest = {
   isFeatured: boolean;
   capacity: number;
   accessType: "open" | "invite-only" | string;
-  status: "confirmed" | "draft" | "past" | string;
+  status: "published" | "confirmed" | "draft" | "past" | string;
 };
 
 export type EventResponse = CreateEventRequest & {
@@ -919,12 +919,14 @@ export type EventsListResponse = ApiResponse<EventsListData>;
 
 export type EventStatsData = {
   upcoming?: number;
-  confirmed?: number;
+  published?: number;
   drafts?: number;
   past?: number;
-  attendanceRate?: number;
+  attendanceRate?: number | string;
+  avgAttendanceRate?: number | string;
+  attendanceVsAvg?: number | string;
   upcomingTrend?: string;
-  confirmedTrend?: string;
+  publishedTrend?: string;
   attendanceTrend?: string;
   [key: string]: unknown;
 };

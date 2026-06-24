@@ -23,13 +23,13 @@ export function AddVehicleFileField({
       </label>
 
       <div
-        className={`flex overflow-hidden rounded-xl border bg-[#0A0908] ${
+        className={`flex overflow-hidden rounded-xl border bg-dark ${
           error ? "border-red-500" : "border-accent/15"
         }`}
       >
         <label
           htmlFor={inputId}
-          className="font-roboto shrink-0 cursor-pointer border-r border-accent/15 bg-[#141210] px-4 py-3.5 text-[11px] text-secondary"
+          className="font-roboto shrink-0 cursor-pointer border-r border-accent/15 bg-input-muted px-4 py-3.5 text-[11px] text-secondary"
         >
           Choose File
         </label>

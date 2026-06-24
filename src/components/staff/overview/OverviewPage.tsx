@@ -82,7 +82,7 @@ export function OverviewPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <section className="col-span-2 rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+        <section className="col-span-2 rounded-2xl border border-accent/10 bg-surface p-5">
           <SectionHeader
             title="Priority Tasks · Today"
             badge={{ label: "3 urgent", tone: "red" }}
@@ -127,7 +127,7 @@ export function OverviewPage() {
               detail="12 Vehicles Pending Report · Submit Before End of Shift"
               time="17:00"
               iconTone="blue"
-              icon={<FileReport color="#7EB0D8" />}
+              icon={<FileReport color="var(--info)" />}
             />
             <PriorityTaskItem
               index="06"
@@ -140,7 +140,7 @@ export function OverviewPage() {
           </div>
         </section> 
 
-        <section className="rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+        <section className="rounded-2xl border border-accent/10 bg-surface p-5">
           <SectionHeader title="Today's Schedule" trailing="8 events" />
 
           <div className="space-y-3">
@@ -174,7 +174,7 @@ export function OverviewPage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
-        <section className="rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+        <section className="rounded-2xl border border-accent/10 bg-surface p-5">
           <SectionHeader
             title="System Alerts"
             badge={{ label: "2 critical", tone: "red" }}
@@ -189,7 +189,7 @@ export function OverviewPage() {
             <SystemAlertItem
               message="Climate alert — Bay 12-C temperature rising"
               time="8m ago"
-              icon={<Thermometer color="#D89999" />}
+              icon={<Thermometer color="var(--pink)" />}
             />
             <SystemAlertItem
               message="Member request pending — Concierge chat"
@@ -199,7 +199,7 @@ export function OverviewPage() {
           </div>
         </section>
 
-        <section className="rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+        <section className="rounded-2xl border border-accent/10 bg-surface p-5">
           <SectionHeader
             title="Staff on Duty"
             badge={{ label: "5 active", tone: "green" }}
@@ -210,7 +210,7 @@ export function OverviewPage() {
               initial="K"
               name="Kathrine M. (You)"
               role="Senior Operative"
-              avatarClass="bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-dark"
+              avatarClass="bg-gradient-to-b from-gold-bright to-gold-deep text-dark"
               statusTone="green"
               highlight
             />
@@ -218,35 +218,35 @@ export function OverviewPage() {
               initial="M"
               name="Marcus T."
               role="Floor Supervisor"
-              avatarClass="bg-[#4A7C9E] text-foreground"
+              avatarClass="bg-avatar-slate text-foreground"
               statusTone="green"
             />
             <StaffDutyItem
               initial="S"
               name="Sofia R."
               role="Detailing Specialist"
-              avatarClass="bg-[#9E6B8A] text-foreground"
+              avatarClass="bg-avatar-rose text-foreground"
               statusTone="green"
             />
             <StaffDutyItem
               initial="J"
               name="James L."
               role="Intake Officer"
-              avatarClass="bg-[#6B5B9E] text-foreground"
+              avatarClass="bg-avatar-purple text-foreground"
               statusTone="gold"
             />
             <StaffDutyItem
               initial="A"
               name="Amir H."
               role="Concierge Lead"
-              avatarClass="bg-[#5B8A72] text-foreground"
+              avatarClass="bg-avatar-green text-foreground"
               statusTone="green"
             />
           </div>
         </section>
 
         <section className="space-y-4">
-          <div className="rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+          <div className="rounded-2xl border border-accent/10 bg-surface p-5">
             <SectionHeader title="Shift Stats" trailing="Morning" />
 
             <div>

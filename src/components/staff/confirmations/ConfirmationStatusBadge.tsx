@@ -2,8 +2,8 @@ import type { ConfirmationBadgeTone } from "./types";
 
 const badgeClass: Record<ConfirmationBadgeTone, string> = {
   confirmed: "border-teal/35 text-teal",
-  pending: "border-[#D4A84747] bg-[#D4A8471A] text-[#D4A847]",
-  "in-review": "border-[#7EB0D847] bg-[#7EB0D81A] text-[#7EB0D8]",
+  pending: "border-accent/28 bg-accent/10 text-accent",
+  "in-review": "border-info/28 bg-info/10 text-info",
   awaiting: "border-primary/45 text-primary",
   "sign-off": "border-primary/55 text-primary",
   done: "border-teal/35 bg-teal/8 text-teal",

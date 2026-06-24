@@ -6,7 +6,7 @@ const statusConfig: Record<
 > = {
   "in-service": {
     label: "IN SERVICE",
-    className: "border-[#D4A84747] bg-[#D4A8471A] text-[#D4A847]",
+    className: "border-accent/28 bg-accent/10 text-accent",
   },
   ready: {
     label: "READY",
@@ -18,7 +18,7 @@ const statusConfig: Record<
   },
   dispatched: {
     label: "DISPATCHED",
-    className: "border-[#6B9EC4]/47 bg-[#6B9EC4]/10 text-[#6B9EC4]",
+    className: "border-vehicle-blue/28 bg-vehicle-blue/10 text-vehicle-blue",
   },
   away: {
     label: "AWAY",

@@ -18,7 +18,7 @@ export function OpenRequestsPanel({
   onSelect,
 }: OpenRequestsPanelProps) {
   return (
-    <section className="rounded-2xl border border-[#D4A8471A] bg-[#11100C] overflow-hidden">
+    <section className="rounded-2xl border border-accent/10 bg-card overflow-hidden">
       <div className="pt-5 px-5">
         <SectionHeader
           title="Open Requests"

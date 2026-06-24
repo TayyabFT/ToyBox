@@ -16,7 +16,7 @@ export function CompletedTodayPanel({
     <section className="space-y-4">
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
-          <span className="text-[#F2EAD5]">Completed</span>{" "}
+          <span className="text-foreground">Completed</span>{" "}
           <span className="text-primary">Today</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
@@ -25,7 +25,7 @@ export function CompletedTodayPanel({
         </p>
       </div>
 
-      <div className="rounded-2xl border border-[#D4A8471A] bg-[#11100C]">
+      <div className="rounded-2xl border border-accent/10 bg-card">
         {loading ? (
           <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
             Loading...

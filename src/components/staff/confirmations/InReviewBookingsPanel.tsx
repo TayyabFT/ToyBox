@@ -15,10 +15,10 @@ export function InReviewBookingsPanel({
   return (
     <section className="rounded-2xl border border-accent/12 bg-card p-5">
       <div className="mb-5 flex items-center gap-3">
-        <h2 className="text-[13px] uppercase text-[#7D7460]">
+        <h2 className="text-[13px] uppercase text-secondary">
           In Review Bookings
         </h2>
-        <span className="font-roboto rounded-full border border-[#E8B84B47] bg-[#E8B84B1A] px-2.5 py-1 text-[10px] font-medium tracking-[0.08em] text-[#E8B84B] uppercase">
+        <span className="font-roboto rounded-full border border-badge-warm/28 bg-badge-warm/10 px-2.5 py-1 text-[10px] font-medium tracking-[0.08em] text-badge-warm uppercase">
           {pendingCount} Pending
         </span>
       </div>

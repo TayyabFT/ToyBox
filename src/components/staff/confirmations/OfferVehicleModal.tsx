@@ -63,7 +63,7 @@ function OfferDateField({
           aria-invalid={Boolean(error)}
           onChange={(event) => onChange(event.target.value)}
           disabled={disabled}
-          className={`font-roboto w-full cursor-pointer rounded-xl border bg-[#0A0908] px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 ${
+          className={`font-roboto w-full cursor-pointer rounded-xl border bg-dark px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 ${
             error
               ? "border-red-500 focus:border-red-500"
               : "border-accent/20 focus:border-accent/40"
@@ -213,7 +213,7 @@ export function OfferVehicleModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-[28px] border border-accent/20 bg-[#070605] shadow-[0_24px_80px_rgba(0,0,0,0.65)]">
+      <div className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-[28px] border border-accent/20 bg-background shadow-[var(--shadow-modal)]">
         <div className="relative border-b border-accent/10 px-6 pb-5 pt-6">
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
             Bookings
@@ -254,7 +254,7 @@ export function OfferVehicleModal({
                   }
                 }}
                 disabled={loadingVehicles || submitting || vehicles.length === 0}
-                className={`font-roboto w-full appearance-none rounded-xl border bg-[#0A0908] px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                className={`font-roboto w-full appearance-none rounded-xl border bg-dark px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                   errors.vehicleId
                     ? "border-red-500 focus:border-red-500"
                     : "border-accent/20 focus:border-accent/40"
@@ -287,7 +287,7 @@ export function OfferVehicleModal({
             <p className="font-roboto text-[10px] tracking-[0.12em] text-primary uppercase">
               Offer to Member
             </p>
-            <div className="font-roboto rounded-xl border border-accent/20 bg-[#0A0908] px-4 py-3.5 text-sm text-foreground">
+            <div className="font-roboto rounded-xl border border-accent/20 bg-dark px-4 py-3.5 text-sm text-foreground">
               {request.memberName}
             </div>
           </div>
@@ -348,7 +348,7 @@ export function OfferVehicleModal({
             type="button"
             onClick={handleSubmit}
             disabled={submitting || loadingVehicles || vehicles.length === 0}
-            className="font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-[#F0C566] to-[#C9A84C] px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
+            className="font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Sending..." : "Send Offer"}
           </button>

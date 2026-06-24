@@ -19,7 +19,7 @@ export function VehiclesGreeting({ onAddVehicle }: VehiclesGreetingProps) {
       <button
         type="button"
         onClick={onAddVehicle}
-        className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-[#F0C566] to-[#C9A84C] px-5 py-3 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase"
+        className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase"
       >
         <PlusSmall />
         Add Vehicle

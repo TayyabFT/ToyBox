@@ -36,7 +36,7 @@ export function AddVehicleStepper({ currentStep }: AddVehicleStepperProps) {
                     stepNumber < currentStep ||
                     (currentStep === 1 && stepNumber === 1)
                       ? "bg-primary"
-                      : "bg-[#1A1A1E]"
+                      : "bg-stepper-inactive"
                   }`}
                 />
               )}
@@ -57,7 +57,7 @@ export function AddVehicleStepper({ currentStep }: AddVehicleStepperProps) {
             >
               <span
                 className={`font-roboto text-[9px] tracking-[0.04em] uppercase ${
-                  isReached ? "text-primary" : "text-[#F0EBDB80]"
+                  isReached ? "text-primary" : "text-foreground-soft/50"
                 }`}
               >
                 {step.label}

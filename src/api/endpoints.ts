@@ -80,5 +80,6 @@ export const API_ENDPOINTS = {
     update: (id: string | number) => `/api/v1/events/${id}`,
     detail: (id: string | number) => `/api/v1/events/${id}`,
     delete: (id: string | number) => `/api/v1/events/${id}`,
+    sendUpdate: (id: string | number) => `/api/v1/events/${id}/send-update`,
   },
 } as const;

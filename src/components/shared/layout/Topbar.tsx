@@ -1,34 +1,89 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
-import { Bell } from "@/components/common/Svgs";
+import { usePathname } from "next/navigation";
+import { Bell, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
 import { NotificationPopup } from "@/components/staff/NotificationPopup";
 import { ProfilePopup } from "@/components/shared/layout/ProfilePopup";
+import { StaffProfileCard } from "@/components/staff/StaffProfileCard";
+import { AdminProfileCard } from "@/components/admin/AdminProfileCard";
+import { MemberProfileCard } from "@/components/member/MemberProfileCard";
+import { getActiveAdminNavItem, getAdminPageTitle } from "@/lib/adminNav";
+import { getStaffPageTitle } from "@/lib/staffNav";
+import { getMemberPageTitle } from "@/lib/memberNav";
+import { useAdminPageSubtitleValue } from "@/lib/adminPageMeta";
 import { showToast } from "@/lib/toast";
+import { useTheme } from "@/components/common/ThemeProvider";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchInbox,
   markAllNotificationsRead,
   markNotificationRead,
 } from "@/store/slices/notificationsSlice";
+import type { UserRole } from "@/lib/auth";
 
-type TopbarProps = {
-  /** Left-aligned breadcrumb, fully owned by each portal. */
-  breadcrumb: ReactNode;
-  /** Visual content of the profile trigger button (icon or initial). */
+type TopbarSpec = {
+  /** Breadcrumb root label. */
+  brand: string;
+  /** Resolves the active page label from the pathname. */
+  getPageTitle: (pathname: string) => string;
+  /** Resolves the active section href (used for detail-page breadcrumbs). */
+  getActiveHref?: (pathname: string) => string | null;
+  /** Visual content of the profile trigger button. */
   profileTrigger: ReactNode;
-  /** Classes for the profile trigger button — differs per portal. */
+  /** Classes for the profile trigger button. */
   profileTriggerClassName: string;
-  /** Portal-specific profile card rendered inside the profile popup. */
+  /** Profile card shown inside the profile popup. */
   profileCard: ReactNode;
 };
 
-export function Topbar({
-  breadcrumb,
-  profileTrigger,
-  profileTriggerClassName,
-  profileCard,
-}: TopbarProps) {
+const PROFILE_ICON_TRIGGER =
+  "flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40 [&_svg]:size-[18px]";
+const PROFILE_INITIAL_TRIGGER =
+  "flex size-10 cursor-pointer items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-sm font-medium text-dark uppercase";
+
+/* ------------------------------------------------------------------ *
+ * Per-role topbar specifications.
+ * The shared design is the staff topbar; only the data differs.
+ * ------------------------------------------------------------------ */
+
+const ADMIN_TOPBAR: TopbarSpec = {
+  brand: "TOYBOX ADMIN",
+  getPageTitle: getAdminPageTitle,
+  getActiveHref: (pathname) => getActiveAdminNavItem(pathname)?.href ?? null,
+  profileTrigger: "F",
+  profileTriggerClassName: PROFILE_INITIAL_TRIGGER,
+  profileCard: <AdminProfileCard />,
+};
+
+const STAFF_TOPBAR: TopbarSpec = {
+  brand: "TOYBOX",
+  getPageTitle: getStaffPageTitle,
+  profileTrigger: <User />,
+  profileTriggerClassName: PROFILE_ICON_TRIGGER,
+  profileCard: <StaffProfileCard />,
+};
+
+const MEMBER_TOPBAR: TopbarSpec = {
+  brand: "TOYBOX",
+  getPageTitle: getMemberPageTitle,
+  profileTrigger: "M",
+  profileTriggerClassName: PROFILE_INITIAL_TRIGGER,
+  profileCard: <MemberProfileCard />,
+};
+
+const TOPBAR_SPECS: Record<UserRole, TopbarSpec> = {
+  admin: ADMIN_TOPBAR,
+  staff: STAFF_TOPBAR,
+  member: MEMBER_TOPBAR,
+};
+
+export function Topbar({ role }: { role: UserRole }) {
+  const spec = TOPBAR_SPECS[role];
+  const pathname = usePathname();
+  const subtitle = useAdminPageSubtitleValue();
+
   const dispatch = useAppDispatch();
   const { items, loading, markAllLoading } = useAppSelector(
     (state) => state.notifications,
@@ -36,8 +91,11 @@ export function Topbar({
 
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
 
   const hasUnread = items.some((item) => !item.read);
+  const page = spec.getPageTitle(pathname).toUpperCase();
+  const sectionHref = spec.getActiveHref?.(pathname) ?? null;
 
   useEffect(() => {
     dispatch(fetchInbox());
@@ -89,9 +147,40 @@ export function Topbar({
   return (
     <>
       <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-accent/8 bg-background px-8">
-        {breadcrumb}
+        <nav
+          aria-label="Breadcrumb"
+          className="flex items-center gap-2 text-[13px] tracking-[0.14em] uppercase"
+        >
+          <span className="font-roboto text-secondary">{spec.brand}</span>
+          <span className="font-roboto text-secondary">/</span>
+          {subtitle && sectionHref ? (
+            <>
+              <Link
+                href={sectionHref}
+                className="font-roboto text-secondary transition-colors hover:text-primary"
+              >
+                {page}
+              </Link>
+              <span className="font-roboto text-secondary">/</span>
+              <span className="font-roboto text-primary">
+                {subtitle.toUpperCase()}
+              </span>
+            </>
+          ) : (
+            <span className="font-roboto text-primary">{page}</span>
+          )}
+        </nav>
 
         <div className="flex items-center gap-3">
+          <button
+            type="button"
+            aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+            onClick={toggleTheme}
+            className="flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40"
+          >
+            {isDarkMode ? <ThemeSun /> : <ThemeMoon />}
+          </button>
+
           <button
             type="button"
             aria-label="Notifications"
@@ -111,9 +200,9 @@ export function Topbar({
               setNotificationsOpen(false);
               setProfileOpen(true);
             }}
-            className={profileTriggerClassName}
+            className={spec.profileTriggerClassName}
           >
-            {profileTrigger}
+            {spec.profileTrigger}
           </button>
         </div>
       </header>
@@ -129,7 +218,7 @@ export function Topbar({
       />
 
       <ProfilePopup open={profileOpen} onClose={() => setProfileOpen(false)}>
-        {profileCard}
+        {spec.profileCard}
       </ProfilePopup>
     </>
   );

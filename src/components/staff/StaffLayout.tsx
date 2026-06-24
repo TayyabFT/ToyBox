@@ -1,7 +1,6 @@
 "use client";
 
-import { StaffSidebar } from "@/components/staff/Sidebar";
-import { StaffTopbar } from "@/components/staff/Topbar";
+import { Sidebar, Topbar } from "@/components/shared/layout";
 import { useClientAuth } from "@/lib/useClientAuth";
 
 type StaffLayoutProps = {
@@ -15,9 +14,9 @@ export function StaffLayout({ children }: StaffLayoutProps) {
 
   return (
     <div className="flex min-h-screen bg-background">
-      <StaffSidebar />
+      <Sidebar role="staff" />
       <div className="flex min-h-screen flex-1 flex-col overflow-hidden pl-[340px]">
-        <StaffTopbar />
+        <Topbar role="staff" />
         <main className="flex-1 overflow-auto">{children}</main>
       </div>
     </div>

@@ -160,10 +160,13 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
   };
 
   return (
-    <div className="fixed inset-0 z-[60] flex justify-end bg-black/70 backdrop-blur-sm">
-      <div className="absolute inset-0" onClick={isSubmitting ? undefined : onClose} />
+    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
+      <div
+        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        onClick={isSubmitting ? undefined : onClose}
+      />
 
-      <div className="relative w-full max-w-xl bg-[#0c0d0e] h-full text-white flex flex-col shadow-2xl border-l border-[#D4A847]/10">
+      <div className="relative z-10 flex w-full max-w-xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-[#D4A847]/10 bg-[#0c0d0e] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
 
         {/* Header */}
         <div className="p-6 border-b border-zinc-900/50 flex justify-between items-center">
@@ -187,7 +190,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
         </div>
 
         {/* Form */}
-        <form id="event-form" onSubmit={handleSubmit} noValidate className="Custom__Scrollbar flex-1 overflow-y-auto p-8 space-y-6">
+        <form id="event-form" onSubmit={handleSubmit} noValidate className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto p-8 space-y-6">
 
           {/* Basic Info */}
           <div className="space-y-4">

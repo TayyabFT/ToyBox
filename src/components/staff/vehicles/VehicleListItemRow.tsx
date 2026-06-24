@@ -26,7 +26,7 @@ function getStatusAccentColor(status: VehicleStatus): string {
     case "overdue":
       return "var(--pink)";
     case "dispatched":
-      return "#6B9EC4";
+      return "var(--vehicle-blue)";
     case "away":
       return "var(--secondary)";
     default:
@@ -46,18 +46,18 @@ export function VehicleListItemRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`relative flex w-full cursor-pointer items-center gap-3 border-b border-[#D4A8470F] px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-[#D4A84708] ${
-        selected ? "bg-[#D4A8470D]" : "bg-transparent"
+      className={`relative flex w-full cursor-pointer items-center gap-3 border-b border-accent/6 px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-accent/3 ${
+        selected ? "bg-accent/5" : "bg-transparent"
       }`}
     >
       {selected && (
         <span
           aria-hidden
-          className="absolute inset-y-0 left-0 w-[3px] bg-[#D4A847]"
+          className="absolute inset-y-0 left-0 w-[3px] bg-accent"
         />
       )}
 
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-[#E8B84B33] bg-[#E8B84B14]">
+      <span className="flex size-10 shrink-0 items-center justify-center rounded-lg border border-badge-warm/20 bg-badge-warm/8">
         <VehicleListCarIcon color={accentColor} className="h-[10px] w-[19px]" />
       </span>
 
@@ -71,7 +71,7 @@ export function VehicleListItemRow({
             vehicle.name
           ) : (
             <>
-              <span className="text-[#F2EAD5]">{brand}</span>
+              <span className="text-foreground">{brand}</span>
               {model ? (
                 <>
                   {" "}

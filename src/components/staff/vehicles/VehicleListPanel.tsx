@@ -15,13 +15,13 @@ export function VehicleListPanel({
   onSelect,
 }: VehicleListPanelProps) {
   return (
-    <section className="flex flex-col overflow-hidden rounded-2xl border border-[#D4A8471A] bg-[#11100C]">
-      <div className="flex items-center justify-between gap-3 border-b border-[#D4A8470F] px-5 py-4">
+    <section className="flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
+      <div className="flex items-center justify-between gap-3 border-b border-accent/6 px-5 py-4">
         <h2 className="font-copperplate text-[10px] tracking-[0.12em] text-secondary uppercase">
           My Assigned Vehicles · Wing A
         </h2>
         <span className="font-roboto flex items-center gap-1.5 text-[9px] font-medium tracking-[0.1em] text-teal uppercase">
-          <span className="size-1.5 rounded-full bg-teal shadow-[0_0_6px_rgba(125,191,160,0.6)]" />
+          <span className="size-1.5 rounded-full bg-teal shadow-[var(--shadow-glow-teal-strong)]" />
           Live
         </span>
       </div>

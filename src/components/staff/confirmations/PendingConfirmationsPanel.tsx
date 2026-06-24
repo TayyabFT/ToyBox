@@ -18,7 +18,7 @@ export function PendingConfirmationsPanel({
     <section className="space-y-4">
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
-          <span className="text-[#F2EAD5]">Pending</span>{" "}
+          <span className="text-foreground">Pending</span>{" "}
           <span className="text-primary">Bookings</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
@@ -27,8 +27,8 @@ export function PendingConfirmationsPanel({
         </p>
       </div>
 
-      <div className="rounded-2xl border border-[#D4A8471A] bg-[#11100C]">
-        <p className="font-roboto text-xs tracking-[0.14em] text-secondary uppercase p-5 border-b border-[#D4A8470F]">
+      <div className="rounded-2xl border border-accent/10 bg-card">
+        <p className="font-roboto text-xs tracking-[0.14em] text-secondary uppercase p-5 border-b border-accent/6">
           Bookings
         </p>
         <div>

@@ -8,7 +8,7 @@ type SectionHeaderProps = {
 
 export function SectionHeader({ title, badge, trailing }: SectionHeaderProps) {
   return (
-    <div className="-mx-5 mb-4 border-b border-[#D4A8470F] px-5 pb-4">
+    <div className="-mx-5 mb-4 border-b border-accent/6 px-5 pb-4">
       <div className="flex items-center justify-between gap-3">
         <h3 className="text-sm font-normal uppercase text-secondary">{title}</h3>
 

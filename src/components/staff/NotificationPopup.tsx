@@ -45,7 +45,7 @@ export function NotificationPopup({
                 type="button"
                 onClick={onMarkAllAsRead}
                 disabled={markAllLoading}
-                className="font-roboto cursor-pointer text-[9px] font-medium tracking-[0.08em] text-primary uppercase transition-colors hover:text-[#F0D078] disabled:opacity-50"
+                className="font-roboto cursor-pointer text-[9px] font-medium tracking-[0.08em] text-primary uppercase transition-colors hover:text-gold-light disabled:opacity-50"
               >
                 {markAllLoading ? "Marking..." : "Mark all read"}
               </button>

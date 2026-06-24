@@ -13,7 +13,7 @@ import { EventsCard } from "./EventsCard";
 import { EventPopup } from "./EventsPopup";
 import { EventForm } from "./EventsForm";
 import { eventsApi } from "@/api/events.api";
-import { showError } from "@/lib/toast";
+import { showError, showSuccess } from "@/lib/toast";
 
 // Shown while the real stats are loading
 const PLACEHOLDER_STATS: EventStatItem[] = [
@@ -60,6 +60,10 @@ export function EventsPage() {
       try {
         const response = await eventsApi.getStats();
         const stats = response.data;
+        const attendanceRate =
+          stats.attendanceRate != null && stats.attendanceRate !== ""
+            ? `${stats.attendanceRate}%`
+            : "—";
 
         setEventStats([
           {
@@ -71,9 +75,9 @@ export function EventsPage() {
           },
           {
             label: "Confirmed",
-            value: stats.confirmed != null ? String(stats.confirmed) : "—",
+            value: stats.published != null ? String(stats.published) : "—",
             subtext: "filled",
-            trend: stats.confirmedTrend ? String(stats.confirmedTrend) : undefined,
+            trend: stats.publishedTrend ? String(stats.publishedTrend) : undefined,
             icon: <MemberCheckStat className="size-4" />,
           },
           {
@@ -84,9 +88,13 @@ export function EventsPage() {
           },
           {
             label: "Attendance",
-            value: stats.attendanceRate != null ? `${stats.attendanceRate}%` : "—",
+            value: attendanceRate,
             subtext: "vs avg",
-            trend: stats.attendanceTrend ? String(stats.attendanceTrend) : undefined,
+            trend: stats.attendanceVsAvg
+              ? String(stats.attendanceVsAvg)
+              : stats.attendanceTrend
+                ? String(stats.attendanceTrend)
+                : undefined,
             icon: <AttendanceIcon className="size-4" />,
           },
         ]);
@@ -172,16 +180,33 @@ export function EventsPage() {
   };
 
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isSendingUpdate, setIsSendingUpdate] = useState(false);
+
+  const handleSendUpdate = async () => {
+    if (!selectedEventData?.id) return;
+    setIsSendingUpdate(true);
+    try {
+      await eventsApi.sendUpdate(selectedEventData.id);
+      showSuccess("Update sent to RSVP'd members!");
+    } catch (err) {
+      console.error("Failed to send event update:", err);
+      showError("Failed to send update.");
+    } finally {
+      setIsSendingUpdate(false);
+    }
+  };
 
   const handleDeleteEvent = async () => {
     if (!selectedEventData?.id) return;
     setIsDeleting(true);
     try {
       await eventsApi.deleteEvent(selectedEventData.id);
+      showSuccess("Event successfully deleted!");
       setIsPopupOpen(false);
       handleEventCreated(); // refresh card list + stats
     } catch (err) {
       console.error("Failed to delete event:", err);
+      showError("Failed to delete event.");
     } finally {
       setIsDeleting(false);
     }
@@ -238,7 +263,11 @@ export function EventsPage() {
       <EventsStatsRow stats={eventStats} />
       
       {/* Main Grid View */}
-      <EventsCard onManageClick={handleOpenManagement} refreshTrigger={refreshKey} />
+      <EventsCard
+        onManageClick={handleOpenManagement}
+        refreshTrigger={refreshKey}
+        onEventUpdated={handleEventCreated}
+      />
       
       {/* Event Creation / Edit Form Panel Drawer */}
       <EventForm
@@ -264,7 +293,9 @@ export function EventsPage() {
         eventData={selectedEventData || undefined}
         isLoading={isPopupLoading}
         onEditClick={handleEditClick}
+        onSendUpdateClick={handleSendUpdate}
         onDeleteClick={handleDeleteEvent}
+        isSendingUpdate={isSendingUpdate}
         isDeleting={isDeleting}
       />
     </div>

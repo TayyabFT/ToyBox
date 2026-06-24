@@ -15,7 +15,7 @@ export function LogisticsSummary({ items }: LogisticsSummaryProps) {
         {items.map((item) => (
           <div
             key={item.label}
-            className="rounded-xl border border-[#D4A8471A] bg-surface px-4 py-3"
+            className="rounded-xl border border-accent/10 bg-surface px-4 py-3"
           >
             <p className="font-roboto mb-1.5 text-[9px] tracking-[0.12em] text-secondary uppercase">
               {item.label}

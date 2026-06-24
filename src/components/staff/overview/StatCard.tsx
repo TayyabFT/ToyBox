@@ -33,7 +33,7 @@ export function StatCard({
     iconSize === "lg" ? `size-14 ${svgSizeClass}` : `size-12 ${svgSizeClass}`;
 
   return (
-    <div className="group flex min-h-[148px] cursor-pointer flex-col justify-between rounded-2xl border border-accent/12 bg-card p-5 transition-all duration-200 hover:border-primary hover:bg-gradient-to-br hover:from-[#F0C566] hover:to-[#8B6F2A]">
+    <div className="group flex min-h-[148px] cursor-pointer flex-col justify-between rounded-2xl border border-accent/12 bg-card p-5 transition-all duration-200 hover:border-primary hover:bg-gradient-to-br hover:from-gold-bright hover:to-gold-deep">
       <div className="flex items-start justify-between gap-3">
         <p className="font-roboto text-[10px] tracking-[0.12em] text-secondary uppercase group-hover:text-dark/60">
           {label}
@@ -64,7 +64,7 @@ export function StatCard({
             {subtext}
           </p>
           {trend && (
-            <span className="font-roboto flex items-center gap-0.5 text-[10px] font-semibold tracking-[0.06em] text-[#0A0806] group-hover:text-dark/70">
+            <span className="font-roboto flex items-center gap-0.5 text-[10px] font-semibold tracking-[0.06em] text-dark group-hover:text-dark/70">
               <TrendUp />
               {trend}
             </span>
