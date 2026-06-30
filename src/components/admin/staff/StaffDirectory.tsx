@@ -1,9 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
-  MemberProfileArrow,
   MemberStarStat,
 } from "@/components/common/Svgs";
 import type { StaffFilterOption, StaffProfile } from "./types";
@@ -75,19 +73,11 @@ function StaffProfileCard({ staff }: StaffProfileCardProps) {
         </span>
       </div>
 
-      <div className="mt-4 flex items-center justify-between gap-4 border-t border-accent/8 pt-4">
+      <div className="mt-4 border-t border-accent/8 pt-4">
         <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
           Last seen ·{" "}
           <span className="font-medium text-foreground">{staff.lastSeen}</span>
         </p>
-
-        <Link
-          href={`/admin/staff/${staff.id}`}
-          className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-full border border-accent/25 px-3.5 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-primary uppercase transition-colors hover:border-primary/50 hover:bg-accent/8"
-        >
-          Profile
-          <MemberProfileArrow className="size-3" />
-        </Link>
       </div>
     </article>
   );

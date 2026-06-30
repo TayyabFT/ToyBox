@@ -7,7 +7,7 @@ import { Bell, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
 import { NotificationPopup } from "@/components/staff/NotificationPopup";
 import { ProfilePopup } from "@/components/shared/layout/ProfilePopup";
 import { AuthProfileContent } from "@/components/shared/layout/AuthProfileContent";
-import { getActiveAdminNavItem, getAdminPageTitle } from "@/lib/adminNav";
+import { getAdminActiveHref, getAdminPageTitle, ADMIN_PROFILE_PATH } from "@/lib/adminNav";
 import { getStaffPageTitle } from "@/lib/staffNav";
 import { getMemberPageTitle } from "@/lib/memberNav";
 import { useAdminPageSubtitleValue } from "@/lib/adminPageMeta";
@@ -47,7 +47,7 @@ const PROFILE_INITIAL_TRIGGER =
 const ADMIN_TOPBAR: TopbarSpec = {
   brand: "TOYBOX ADMIN",
   getPageTitle: getAdminPageTitle,
-  getActiveHref: (pathname) => getActiveAdminNavItem(pathname)?.href ?? null,
+  getActiveHref: getAdminActiveHref,
   profileTrigger: "F",
   profileTriggerClassName: PROFILE_INITIAL_TRIGGER,
 };
@@ -215,7 +215,21 @@ export function Topbar({ role }: { role: UserRole }) {
         onMarkAllAsRead={handleMarkAllAsRead}
       />
 
-      <ProfilePopup open={profileOpen} onClose={() => setProfileOpen(false)}>
+      <ProfilePopup
+        open={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        action={
+          role === "admin" ? (
+            <Link
+              href={ADMIN_PROFILE_PATH}
+              onClick={() => setProfileOpen(false)}
+              className="font-roboto flex w-full cursor-pointer items-center justify-center rounded-xl border border-primary/40 bg-primary/8 py-3.5 text-[11px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/60 hover:bg-primary/12"
+            >
+              Show Complete Profile
+            </Link>
+          ) : undefined
+        }
+      >
         <AuthProfileContent open={profileOpen} />
       </ProfilePopup>
     </>

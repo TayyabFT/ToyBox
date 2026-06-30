@@ -53,6 +53,7 @@ export const API_ENDPOINTS = {
     requests: "/api/v1/staff/transport/requests",
   },
   overview: {
+    main: "/api/v1/admin/overview",
     jobs: "/api/v1/admin/overview/jobs",
   },
   staffOverview: {
@@ -108,5 +109,11 @@ export const API_ENDPOINTS = {
     dashboardStats: "/api/v1/admin/workshop/dashboard/stats",
     dashboardBays: "/api/v1/admin/workshop/dashboard/bays",
     dashboardQueue: "/api/v1/admin/workshop/dashboard/queue",
+  },
+  adminProfile: {
+    overview: "/api/v1/admin/profile/overview",
+    profile: "/api/v1/admin/profile",
+    activity: "/api/v1/admin/profile/activity",
+    sessions: "/api/v1/admin/profile/sessions",
   },
 } as const;

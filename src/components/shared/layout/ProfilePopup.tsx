@@ -11,9 +11,16 @@ type ProfilePopupProps = {
   onClose: () => void;
   /** Portal-specific profile card shown above the logout action. */
   children: ReactNode;
+  /** Optional action rendered between profile content and logout (e.g. admin full profile link). */
+  action?: ReactNode;
 };
 
-export function ProfilePopup({ open, onClose, children }: ProfilePopupProps) {
+export function ProfilePopup({
+  open,
+  onClose,
+  children,
+  action,
+}: ProfilePopupProps) {
   const router = useRouter();
   const dispatch = useAppDispatch();
 
@@ -47,6 +54,10 @@ export function ProfilePopup({ open, onClose, children }: ProfilePopupProps) {
         </div>
 
         <div className="max-h-[min(70vh,560px)] overflow-y-auto p-5">{children}</div>
+
+        {action ? (
+          <div className="border-t border-accent/12 px-5 py-4">{action}</div>
+        ) : null}
 
         <div className="border-t border-accent/12 p-5">
           <button

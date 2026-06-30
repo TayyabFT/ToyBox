@@ -71,16 +71,11 @@ export function useSetAdminPageSubtitle(subtitle?: string) {
 }
 
 export function getAdminMemberProfileId(pathname: string): string | null {
-  const match = pathname.match(/^\/admin\/members\/(\d+)$/);
-  return match?.[1] ?? null;
-}
-
-export function getAdminStaffProfileId(pathname: string): string | null {
-  const match = pathname.match(/^\/admin\/staff\/(\d+)$/);
+  const match = pathname.match(/^\/admin\/members\/([^/]+)$/);
   return match?.[1] ?? null;
 }
 
 export function getAdminVehicleProfileId(pathname: string): string | null {
-  const match = pathname.match(/^\/admin\/vehicles\/(\d+)$/);
+  const match = pathname.match(/^\/admin\/vehicles\/([^/]+)$/);
   return match?.[1] ?? null;
 }

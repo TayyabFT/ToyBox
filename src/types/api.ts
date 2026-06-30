@@ -1513,3 +1513,263 @@ export type WorkshopDashboardQueueData = {
 
 export type WorkshopDashboardQueueResponse =
   ApiResponse<WorkshopDashboardQueueData>;
+
+// ─── Admin Profile ───────────────────────────────────────────────────────────
+
+export type AdminProfileOverviewStatRaw = {
+  key?: string;
+  label?: string;
+  value?: number;
+  subLabel?: string;
+  unit?: string;
+  received?: number;
+  completed?: number;
+};
+
+export type AdminProfileOverviewData = {
+  actionsToday?: AdminProfileOverviewStatRaw;
+  membersManaged?: AdminProfileOverviewStatRaw;
+  openTasks?: AdminProfileOverviewStatRaw;
+  uptimeThisMonth?: AdminProfileOverviewStatRaw;
+};
+
+export type AdminProfileOverviewResponse = ApiResponse<AdminProfileOverviewData>;
+
+export type AdminProfileData = {
+  id?: string;
+  staffId?: string;
+  name?: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  mobile?: string;
+  mobileCountryCode?: string;
+  location?: string;
+  residence?: string;
+  jobTitle?: string;
+  role?: string;
+  joined?: string;
+  joinedLabel?: string;
+  profileImageUrl?: string;
+};
+
+export type AdminProfileResponse = ApiResponse<AdminProfileData>;
+
+export type AdminProfileUpdateRequest = {
+  mobile?: string;
+};
+
+export type AdminProfileActivityItemRaw = {
+  id?: string;
+  type?: string;
+  title?: string;
+  description?: string;
+  body?: string;
+  tone?: string;
+  createdAt?: string;
+  timeLabel?: string;
+};
+
+export type AdminProfileActivityData = {
+  items?: AdminProfileActivityItemRaw[];
+  total?: number;
+  limit?: number;
+  offset?: number;
+};
+
+export type AdminProfileActivityResponse = ApiResponse<AdminProfileActivityData>;
+
+export type AdminSessionRaw = {
+  id?: string;
+  userType?: string;
+  userName?: string;
+  deviceLabel?: string;
+  browser?: string;
+  platform?: string;
+  location?: string;
+  ipAddress?: string;
+  isCurrent?: boolean;
+  lastActiveAt?: string;
+  timeLabel?: string;
+  status?: string;
+};
+
+export type AdminSessionsData = {
+  sessions?: AdminSessionRaw[];
+};
+
+export type AdminSessionsResponse = ApiResponse<AdminSessionsData>;
+
+// ─── Admin Overview (full page) ───────────────────────────────────────────────
+
+export type AdminOverviewGreeting = {
+  text: string;
+  firstName: string;
+  timestamp: string;
+};
+
+export type AdminOverviewAlertItem = {
+  id: string;
+  severity: string;
+  message: string;
+  detail: string;
+  sourceType: string;
+  sourceId: string;
+};
+
+export type AdminOverviewTicker = {
+  criticalCount: number;
+  alerts: AdminOverviewAlertItem[];
+};
+
+export type AdminOverviewActiveMembers = {
+  value: number;
+  newToday: number;
+  label: string;
+};
+
+export type AdminOverviewInStorage = {
+  value: number;
+  newThisWeek: number;
+  label: string;
+};
+
+export type AdminOverviewOpenRequests = {
+  value: number;
+  urgent: number;
+  label: string;
+};
+
+export type AdminOverviewTodayRevenue = {
+  valueAed: number;
+  displayValue: string;
+  avgAed: number;
+  transactionCount: number;
+  changeVsLastWeekPercent: number;
+  label: string;
+};
+
+export type AdminOverviewKpis = {
+  activeMembers: AdminOverviewActiveMembers;
+  inStorage: AdminOverviewInStorage;
+  openRequests: AdminOverviewOpenRequests;
+  todayRevenue: AdminOverviewTodayRevenue;
+};
+
+export type AdminOverviewPriorityItem = {
+  id: string;
+  type: string;
+  tag: string;
+  time: string;
+  title: string;
+  detail: string;
+  memberId: string;
+  memberName: string;
+  priority: string;
+};
+
+export type AdminOverviewTodayPriorities = {
+  count: number;
+  label: string;
+  subtitle: string;
+  items: AdminOverviewPriorityItem[];
+};
+
+export type AdminOverviewCriticalAlertItem = {
+  id: string;
+  severity: string;
+  type: string;
+  title: string;
+  detail: string;
+  vehicleId: string;
+  bay: string;
+};
+
+export type AdminOverviewCriticalAlerts = {
+  criticalCount: number;
+  totalCount: number;
+  items: AdminOverviewCriticalAlertItem[];
+};
+
+export type AdminOverviewConciergeQueueItem = {
+  id: string;
+  memberName: string;
+  memberNumber: string;
+  requestType: string;
+  title: string;
+  urgency: string;
+  waitingMinutes: number;
+  vehicleLabel: string;
+};
+
+export type AdminOverviewConciergeQueue = {
+  openCount: number;
+  urgentCount: number;
+  unreadCount: number;
+  items: AdminOverviewConciergeQueueItem[];
+};
+
+export type AdminOverviewRecentActivityItem = {
+  id: string;
+  time: string;
+  actor: string;
+  action: string;
+  subject: string;
+  sourceType: string;
+};
+
+export type AdminOverviewRecentActivity = {
+  windowMinutes: number;
+  count: number;
+  items: AdminOverviewRecentActivityItem[];
+};
+
+export type AdminOverviewStaffMember = {
+  id: string;
+  name: string;
+  jobTitle: string;
+  status: string;
+  profileImageUrl: string;
+};
+
+export type AdminOverviewStaffOnShift = {
+  activeCount: number;
+  members: AdminOverviewStaffMember[];
+};
+
+export type AdminOverviewScheduleItem = {
+  time: string;
+  title: string;
+  subtitle: string;
+  tag: string;
+  vehicleLabel: string;
+};
+
+export type AdminOverviewTodaySchedule = {
+  date: string;
+  count: number;
+  items: AdminOverviewScheduleItem[];
+};
+
+export type AdminOverviewJobStats = {
+  pendingConfirm: number;
+  signOffQueue: number;
+  completedToday: number;
+  shiftProgress: number;
+};
+
+export type AdminOverviewData = {
+  greeting: AdminOverviewGreeting;
+  ticker: AdminOverviewTicker;
+  kpis: AdminOverviewKpis;
+  todayPriorities: AdminOverviewTodayPriorities;
+  criticalAlerts: AdminOverviewCriticalAlerts;
+  conciergeQueue: AdminOverviewConciergeQueue;
+  recentActivity: AdminOverviewRecentActivity;
+  staffOnShift: AdminOverviewStaffOnShift;
+  todaySchedule: AdminOverviewTodaySchedule;
+  jobStats: AdminOverviewJobStats;
+};
+
+export type AdminOverviewResponse = ApiResponse<AdminOverviewData>;

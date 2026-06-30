@@ -1,4 +1,5 @@
 export const ADMIN_BASE = "/admin";
+export const ADMIN_PROFILE_PATH = `${ADMIN_BASE}/profile`;
 
 export type AdminNavBadgeTone = "gold" | "pink" | "teal";
 
@@ -127,5 +128,17 @@ export function getActiveAdminNavItem(pathname: string): AdminNavItem | null {
 }
 
 export function getAdminPageTitle(pathname: string): string {
+  if (pathname === ADMIN_PROFILE_PATH) {
+    return "Profile";
+  }
+
   return getActiveAdminNavItem(pathname)?.label ?? "Overview";
+}
+
+export function getAdminActiveHref(pathname: string): string | null {
+  if (pathname === ADMIN_PROFILE_PATH) {
+    return ADMIN_PROFILE_PATH;
+  }
+
+  return getActiveAdminNavItem(pathname)?.href ?? null;
 }
