@@ -5,9 +5,10 @@ import type { MaintenanceJob } from "./types";
 
 type MaintenanceJobCardProps = {
   job: MaintenanceJob;
+  staffMode?: boolean;
 };
 
-export function MaintenanceJobCard({ job }: MaintenanceJobCardProps) {
+export function MaintenanceJobCard({ job, staffMode = false }: MaintenanceJobCardProps) {
   const isInProgress = job.status === "in-progress";
 
   return (
@@ -67,17 +68,19 @@ export function MaintenanceJobCard({ job }: MaintenanceJobCardProps) {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 pt-1">
-        {isInProgress ? (
-          <JobActionButton label="View Job Card" />
-        ) : (
-          <>
-            <JobActionButton label="Action Required" variant="danger-outline" />
-            <JobActionButton label="Book Centre" />
-            <JobActionButton label="Notify Member" variant="gold" />
-          </>
-        )}
-      </div>
+      {!staffMode ? (
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {isInProgress ? (
+            <JobActionButton label="View Job Card" />
+          ) : (
+            <>
+              <JobActionButton label="Action Required" variant="danger-outline" />
+              <JobActionButton label="Book Centre" />
+              <JobActionButton label="Notify Member" variant="gold" />
+            </>
+          )}
+        </div>
+      ) : null}
     </article>
   );
 }

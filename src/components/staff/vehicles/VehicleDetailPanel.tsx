@@ -12,7 +12,7 @@ type VehicleDetailPanelProps = {
 
 export function VehicleDetailPanel({ detail }: VehicleDetailPanelProps) {
   return (
-    <section className="overflow-hidden rounded-2xl border border-accent/12 bg-surface">
+    <section className="overflow-hidden rounded-2xl border border-accent/12 bg-card">
       <VehicleDetailAlert isOverdue={detail.isOverdue} />
 
       <VehicleInfoGrid

@@ -3,7 +3,14 @@ export type VehicleStatus =
   | "ready"
   | "overdue"
   | "dispatched"
-  | "away";
+  | "away"
+  | "in-progress"
+  | "pending"
+  | "done"
+  | "critical"
+  | "due-service"
+  | "good"
+  | "excellent";
 
 export type VehicleListItem = {
   id: string;
@@ -12,6 +19,7 @@ export type VehicleListItem = {
   member: string;
   mileage: string;
   status: VehicleStatus;
+  healthPercent?: number;
 };
 
 export type HealthMetric = {

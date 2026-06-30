@@ -1,0 +1,136 @@
+import { ToyBoxLogoMark } from "@/components/common/Svgs";
+import type { BulletinDraftPreview, RecentBulletin } from "./types";
+
+type BulletinPreviewProps = {
+  draft: BulletinDraftPreview;
+  bulletins: RecentBulletin[];
+  loading?: boolean;
+};
+
+function formatRate(rate: number | null): string {
+  return rate == null ? "—" : `${rate}%`;
+}
+
+const VISIBLE_RECENT_BULLETINS = 4;
+/** Fits ~4 bulletin rows (card + gap). */
+const RECENT_BULLETINS_MAX_HEIGHT = "max-h-[308px]";
+
+function splitPreviewTitle(title: string): { lead: string; accent: string } {
+  const trimmed = title.trim();
+
+  if (!trimmed) {
+    return { lead: "", accent: "" };
+  }
+
+  const separator = " — ";
+  const separatorIndex = trimmed.indexOf(separator);
+
+  if (separatorIndex === -1) {
+    return { lead: trimmed, accent: "" };
+  }
+
+  return {
+    lead: trimmed.slice(0, separatorIndex + separator.length),
+    accent: trimmed.slice(separatorIndex + separator.length),
+  };
+}
+
+export function BulletinPreview({
+  draft,
+  bulletins,
+  loading = false,
+}: BulletinPreviewProps) {
+  const { lead, accent } = splitPreviewTitle(draft.title);
+  const previewTitle = draft.title.trim();
+  const previewBody = draft.body.trim();
+
+  return (
+    <section className="flex flex-col rounded-2xl border border-accent/12 bg-card p-6">
+      <p className="font-copperplate-body text-[10px] tracking-[0.16em] text-secondary uppercase">
+        Preview · In-App
+      </p>
+
+      <div className="mt-4 rounded-2xl border border-accent/12 bg-surface/60 p-5">
+        <div className="flex items-center gap-2.5">
+          <ToyBoxLogoMark className="size-[18px]" />
+          <span className="font-copperplate-body text-[13px] font-medium tracking-[0.22em] text-foreground uppercase">
+            Toy Box
+          </span>
+          <span className="font-copperplate-body ml-auto text-[10px] tracking-[0.1em] text-secondary lowercase">
+            now
+          </span>
+        </div>
+
+        <h3 className="mt-4 font-copperplate text-[14px] tracking-[0.03em] uppercase">
+          {previewTitle ? (
+            <>
+              <span className="text-foreground">{lead || previewTitle}</span>
+              {accent ? <span className="text-primary">{accent}</span> : null}
+            </>
+          ) : (
+            <span className="text-muted">Your bulletin title</span>
+          )}
+        </h3>
+
+        <p className="mt-2.5 font-copperplate-body line-clamp-4 text-[12px] leading-relaxed tracking-[0.02em] text-secondary">
+          {previewBody || "Your bulletin message will appear here as you type."}
+        </p>
+      </div>
+
+      <p className="mt-7 font-copperplate-body text-[10px] tracking-[0.16em] text-secondary uppercase">
+        Recent Bulletins
+      </p>
+
+      <div
+        className={`Custom__Scrollbar mt-4 overflow-y-auto pr-1 ${
+          !loading && bulletins.length > VISIBLE_RECENT_BULLETINS
+            ? RECENT_BULLETINS_MAX_HEIGHT
+            : ""
+        }`}
+      >
+        <ul className="space-y-3">
+          {loading ? (
+            <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
+              <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
+                Loading bulletins...
+              </p>
+            </li>
+          ) : bulletins.length === 0 ? (
+            <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
+              <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
+                No bulletins yet
+              </p>
+            </li>
+          ) : (
+            bulletins.map((bulletin) => (
+              <li
+                key={bulletin.id}
+                className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-copperplate-body text-[12px] font-semibold tracking-[0.08em] text-foreground uppercase">
+                    {bulletin.title}
+                  </p>
+                  <span className="font-copperplate-body shrink-0 text-[10px] tracking-[0.08em] text-secondary ">
+                    {bulletin.time}
+                  </span>
+                </div>
+
+                <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.1em] text-secondary uppercase">
+                  Open{" "}
+                  <span className="font-semibold text-primary">
+                    {formatRate(bulletin.openRate)}
+                  </span>{" "}
+                  · Click{" "}
+                  <span className="font-semibold text-primary">
+                    {formatRate(bulletin.clickRate)}
+                  </span>
+                </p>
+              </li>
+            ))
+          )}
+        </ul>
+      </div>
+    </section>
+  );
+}

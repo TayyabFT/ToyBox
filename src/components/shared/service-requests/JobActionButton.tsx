@@ -4,6 +4,8 @@ type JobActionButtonProps = {
   label: string;
   variant?: JobButtonVariant;
   className?: string;
+  onClick?: () => void;
+  disabled?: boolean;
 };
 
 const variantClass: Record<JobButtonVariant, string> = {
@@ -19,11 +21,15 @@ export function JobActionButton({
   label,
   variant = "outline",
   className = "",
+  onClick,
+  disabled = false,
 }: JobActionButtonProps) {
   return (
     <button
       type="button"
-      className={`font-roboto cursor-pointer rounded-lg px-3 py-2 text-[9px] font-medium tracking-[0.1em] uppercase transition-colors ${variantClass[variant]} ${className}`}
+      onClick={onClick}
+      disabled={disabled}
+      className={`font-roboto cursor-pointer rounded-lg px-3 py-2 text-[9px] font-medium tracking-[0.1em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${variantClass[variant]} ${className}`}
     >
       {label}
     </button>

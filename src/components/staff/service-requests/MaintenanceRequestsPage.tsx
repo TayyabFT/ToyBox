@@ -61,7 +61,7 @@ export function MaintenanceRequestsPage() {
       emptyText="No maintenance requests found."
     >
       {jobs.map((job) => (
-        <MaintenanceJobCard key={job.id} job={job} />
+        <MaintenanceJobCard key={job.id} job={job} staffMode />
       ))}
     </ServiceSectionListPage>
   );

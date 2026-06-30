@@ -57,7 +57,7 @@ export function TransportRequestsPage() {
       emptyText="No transport requests found."
     >
       {jobs.map((job) => (
-        <TransportJobCard key={job.id} job={job} />
+        <TransportJobCard key={job.id} job={job} staffMode />
       ))}
     </ServiceSectionListPage>
   );

@@ -19,6 +19,51 @@ export type SignInData = {
 
 export type SignInResponse = ApiResponse<SignInData>;
 
+export type AuthProfilePanel = "member" | "staff" | "admin";
+
+export type AuthProfileHeaderStatRaw = {
+  key?: string;
+  label?: string;
+  value?: string | number;
+  count?: string | number;
+  subtext?: string;
+  sub?: string;
+};
+
+export type AuthProfileFieldRaw = {
+  key?: string;
+  label?: string;
+  value?: string | number | boolean | null;
+};
+
+export type AuthProfileSectionRaw = {
+  key?: string;
+  title?: string;
+  label?: string;
+  fields?: AuthProfileFieldRaw[];
+  items?: AuthProfileFieldRaw[];
+};
+
+export type AuthProfileData = {
+  role?: string;
+  panel?: AuthProfilePanel | string;
+  name?: string;
+  fullName?: string;
+  displayName?: string;
+  jobTitle?: string;
+  membershipTier?: string;
+  tier?: string;
+  email?: string;
+  avatarUrl?: string;
+  profileImageUrl?: string;
+  headerStats?: AuthProfileHeaderStatRaw[];
+  sections?:
+    | Record<string, AuthProfileSectionRaw>
+    | AuthProfileSectionRaw[];
+};
+
+export type AuthProfileResponse = ApiResponse<AuthProfileData>;
+
 export type ApiError = {
   status: number;
   message: string;
@@ -295,6 +340,38 @@ export type MemberTierFilter =
   | "principal"
   | "black_card";
 
+export type MemberVehicleItemRaw = {
+  id?: number | string;
+  name?: string;
+  displayName?: string;
+  plate?: string;
+  status?: string;
+  statusLabel?: string;
+};
+
+export type MemberRecentActivityItemRaw = {
+  id?: string;
+  type?: string;
+  title?: string;
+  subtitle?: string;
+  occurredAt?: string;
+  timeLabel?: string;
+  tone?: string;
+};
+
+export type MemberUpcomingEventRaw = {
+  id?: string | number;
+  title?: string;
+  location?: string;
+  startsAt?: string;
+  dateLabel?: string;
+  monthLabel?: string;
+  dayLabel?: string;
+  status?: string;
+  statusLabel?: string;
+  isFavorite?: boolean;
+};
+
 export type MemberProfileData = MemberListItemRaw & {
   firstName?: string;
   lastName?: string;
@@ -307,6 +384,12 @@ export type MemberProfileData = MemberListItemRaw & {
   invitedAt?: string;
   invitationAcceptedAt?: string;
   privacySettings?: string;
+  vehiclesSection?: {
+    total?: number;
+    items?: MemberVehicleItemRaw[];
+  };
+  recentActivity?: MemberRecentActivityItemRaw[];
+  upcomingEvents?: MemberUpcomingEventRaw[];
 };
 
 export type MemberProfileResponse = ApiResponse<MemberProfileData>;
@@ -819,6 +902,336 @@ export type StaffOverviewJobsData = AdminOverviewJobsData;
 
 export type StaffOverviewJobsResponse = ApiResponse<StaffOverviewJobsData>;
 
+export type StaffOverviewStaffRaw = {
+  id?: number;
+  name?: string;
+  role?: string;
+  jobTitle?: string;
+  status?: string;
+};
+
+export type StaffOverviewShiftRaw = {
+  label?: string;
+  displayDate?: string;
+  startTime?: string;
+  endTime?: string;
+  timeRemainingLabel?: string;
+};
+
+export type StaffOverviewKpiRaw = {
+  label?: string;
+  value?: string | number;
+  subtext?: string;
+  subtitle?: string;
+  trend?: string;
+  icon?: string;
+};
+
+export type StaffOverviewQuickActionRaw = {
+  id?: string;
+  title?: string;
+  label?: string;
+  subtitle?: string;
+  subtext?: string;
+  count?: number;
+  href?: string;
+  icon?: string;
+};
+
+export type StaffOverviewTaskRaw = {
+  id?: string;
+  index?: number | string;
+  title?: string;
+  detail?: string;
+  description?: string;
+  time?: string;
+  scheduledAt?: string;
+  status?: { label?: string; tone?: string } | string;
+  icon?: string;
+  iconTone?: string;
+};
+
+export type StaffOverviewScheduleEventRaw = {
+  id?: string;
+  time?: string;
+  title?: string;
+  detail?: string;
+  description?: string;
+};
+
+export type StaffOverviewAlertRaw = {
+  id?: string;
+  message?: string;
+  title?: string;
+  time?: string;
+  timeAgo?: string;
+  icon?: string;
+};
+
+export type StaffOverviewStaffOnDutyRaw = {
+  id?: number | string;
+  name?: string;
+  role?: string;
+  jobTitle?: string;
+  initial?: string;
+  status?: string;
+  isCurrentUser?: boolean;
+  highlight?: boolean;
+  avatarTone?: string;
+};
+
+export type StaffOverviewShiftStatRaw = {
+  label?: string;
+  value?: string | number;
+};
+
+export type StaffOverviewAssignmentRaw = {
+  bay?: string;
+  location?: string;
+  workshop?: string;
+  vehicle?: string;
+  shiftStatus?: string;
+  status?: string;
+};
+
+export type StaffOverviewListSectionRaw<T> = {
+  items?: T[];
+  urgentCount?: number;
+  criticalCount?: number;
+  count?: number;
+  label?: string;
+};
+
+export type StaffOverviewData = {
+  staff?: StaffOverviewStaffRaw;
+  shift?: StaffOverviewShiftRaw;
+  kpis?: StaffOverviewKpiRaw[] | Record<string, StaffOverviewKpiRaw>;
+  quickActions?: StaffOverviewQuickActionRaw[];
+  priorityTasks?:
+    | StaffOverviewTaskRaw[]
+    | StaffOverviewListSectionRaw<StaffOverviewTaskRaw>;
+  schedule?:
+    | StaffOverviewScheduleEventRaw[]
+    | StaffOverviewListSectionRaw<StaffOverviewScheduleEventRaw>;
+  systemAlerts?:
+    | StaffOverviewAlertRaw[]
+    | StaffOverviewListSectionRaw<StaffOverviewAlertRaw>;
+  staffOnDuty?: StaffOverviewStaffOnDutyRaw[];
+  shiftStats?:
+    | StaffOverviewShiftStatRaw[]
+    | StaffOverviewListSectionRaw<StaffOverviewShiftStatRaw>;
+  yourAssignment?: StaffOverviewAssignmentRaw;
+};
+
+export type StaffOverviewResponse = ApiResponse<StaffOverviewData>;
+
+export type StaffJobQueueStatus =
+  | "pending"
+  | "assigned"
+  | "scheduled"
+  | "in_progress"
+  | "completed";
+
+export type StaffJobSubtaskRaw = {
+  key?: string;
+  label?: string;
+  done?: boolean;
+  completed?: boolean;
+  completedAt?: string;
+};
+
+export type StaffJobProgressRaw = {
+  percent?: number;
+  elapsedMinutes?: number;
+  estimatedMinutes?: number;
+  remainingMinutes?: number;
+  subtasksTotal?: number;
+  subtasksCompleted?: number;
+  isComplete?: boolean;
+  label?: string;
+  note?: string;
+};
+
+export type StaffJobStatusBadgeRaw = {
+  label?: string;
+  tone?: string;
+};
+
+export type StaffJobScheduleRaw = {
+  startTime?: string;
+  endTime?: string;
+};
+
+export type StaffJobLocationRaw = {
+  label?: string;
+  detail?: string;
+  address?: string;
+};
+
+export type StaffJobAuthorRaw = {
+  id?: string;
+  name?: string;
+  role?: string;
+};
+
+export type StaffJobNoteRaw = {
+  id?: string | number;
+  referenceId?: string;
+  note?: string;
+  body?: string;
+  text?: string;
+  imageUrls?: string[];
+  createdAt?: string;
+  author?: StaffJobAuthorRaw | string;
+  authorName?: string;
+};
+
+export type StaffJobTimelineItemRaw = {
+  key?: string;
+  label?: string;
+  status?: string;
+  completedAt?: string;
+};
+
+export type StaffActiveJobDetailRaw = {
+  vehicle?: string;
+  member?: string;
+  memberName?: string;
+  specialInstructions?: string;
+  subtitle?: string;
+  pickup?: StaffJobLocationRaw;
+  dropoff?: StaffJobLocationRaw;
+  from?: string;
+  to?: string;
+  serviceType?: string;
+  centre?: string;
+  workshop?: string;
+};
+
+export type StaffActiveJobRaw = {
+  id?: string;
+  referenceId?: string;
+  referenceNumber?: string;
+  referenceType?: string;
+  status?: string;
+  statusBadge?: StaffJobStatusBadgeRaw;
+  staffProfileId?: string;
+  category?: string;
+  requestType?: string;
+  requestTypeLabel?: string;
+  title?: string;
+  vehicle?: string;
+  member?: string;
+  memberName?: string;
+  assignee?: string;
+  assigneeName?: string;
+  subtitle?: string;
+  specialInstructions?: string;
+  notesText?: string;
+  pickup?: StaffJobLocationRaw;
+  dropoff?: StaffJobLocationRaw;
+  from?: StaffJobLocationRaw | string;
+  to?: StaffJobLocationRaw | string;
+  schedule?: StaffJobScheduleRaw;
+  subtasks?: StaffJobSubtaskRaw[];
+  progress?: StaffJobProgressRaw;
+  timeline?: StaffJobTimelineItemRaw[];
+  notes?: StaffJobNoteRaw[];
+  detail?: StaffActiveJobDetailRaw;
+  scheduledStart?: string;
+  scheduledEnd?: string;
+  startTime?: string;
+  endTime?: string;
+  startedAt?: string;
+  completedAt?: string;
+  createdAt?: string;
+  estimatedMinutes?: number;
+  slotDurationHours?: number;
+  serviceType?: string;
+  centre?: string;
+  workshop?: string;
+};
+
+export type StaffActiveJobData = {
+  job?: StaffActiveJobRaw | null;
+};
+
+export type StaffActiveJobResponse = ApiResponse<StaffActiveJobData>;
+
+export type StaffJobProgressData = {
+  jobId?: string;
+  referenceId?: string;
+  status?: string;
+  progress?: StaffJobProgressRaw;
+};
+
+export type StaffJobProgressResponse = ApiResponse<StaffJobProgressData>;
+
+export type StaffJobNotesData = {
+  referenceId?: string;
+  count?: number;
+  notes?: StaffJobNoteRaw[];
+};
+
+export type StaffJobNotesResponse = ApiResponse<StaffJobNotesData>;
+
+export type StaffJobCompleteData = {
+  completed?: StaffActiveJobRaw;
+  nextJob?: StaffActiveJobRaw | null;
+  staffStatus?: string;
+};
+
+export type StaffJobCompleteResponse = ApiResponse<StaffJobCompleteData>;
+
+export type StaffJobMutationResponse = ApiResponse<StaffActiveJobRaw>;
+
+export type StaffJobActiveNoteData = {
+  jobId?: string;
+  referenceId?: string;
+  note?: StaffJobNoteRaw;
+};
+
+export type StaffJobActiveNoteResponse = ApiResponse<StaffJobActiveNoteData>;
+
+export type StaffJobListPageRaw = {
+  count?: number;
+  limit?: number;
+  offset?: number;
+  jobs?: StaffActiveJobRaw[];
+};
+
+export type StaffJobQueueData = {
+  staffProfileId?: string;
+  mine?: StaffJobListPageRaw;
+  available?: StaffJobListPageRaw;
+};
+
+export type StaffJobQueueResponse = ApiResponse<StaffJobQueueData>;
+
+export type StaffJobCompletedData = {
+  staffProfileId?: string;
+  count?: number;
+  limit?: number;
+  offset?: number;
+  jobs?: StaffActiveJobRaw[];
+};
+
+export type StaffJobCompletedResponse = ApiResponse<StaffJobCompletedData>;
+
+export type StaffJobScheduleRequest = {
+  startTime: string;
+  endTime: string;
+};
+
+export type StaffJobStartRequest = {
+  estimatedMinutes: number;
+  subtasks: Array<{ key?: string; label: string }>;
+};
+
+export type StaffJobActiveNoteRequest = {
+  note: string;
+};
+
 export type AssignVehicleRequest = {
   vehicleId: string;
   memberId: string;
@@ -933,6 +1346,83 @@ export type EventStatsData = {
 
 export type EventStatsResponse = ApiResponse<EventStatsData>;
 
+export type CommunicationsStatsData = {
+  sentBulletins?: number;
+  totalDeliveries?: number;
+  openRatePercent?: number | string;
+  clickRatePercent?: number | string;
+  draftCount?: number;
+};
+
+export type CommunicationsStatsResponse = ApiResponse<CommunicationsStatsData>;
+
+export type CommunicationsBulletinRaw = {
+  id?: string;
+  title?: string;
+  body?: string;
+  type?: string;
+  status?: string;
+  category?: string;
+  imageUrl?: string;
+  authorName?: string;
+  isPinned?: boolean;
+  audienceSegments?: string[];
+  channels?: string[];
+  scheduledAt?: string;
+  sentAt?: string;
+  sentCount?: number;
+  createdBy?: string;
+  openRatePercent?: number | string;
+  clickRatePercent?: number | string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type CommunicationsBulletinsData = {
+  items?: CommunicationsBulletinRaw[];
+  total?: number;
+  limit?: number;
+  offset?: number;
+};
+
+export type CommunicationsBulletinsResponse =
+  ApiResponse<CommunicationsBulletinsData>;
+
+export type CommunicationsAudiencePreviewData = {
+  ALL_MEMBERS?: number;
+  VIP?: number;
+  CONCOURS_ELIGIBLE?: number;
+  NEW?: number;
+};
+
+export type CommunicationsAudiencePreviewResponse =
+  ApiResponse<CommunicationsAudiencePreviewData>;
+
+export type BulletinContentType = "bulletin" | "alert";
+export type BulletinStatus = "draft" | "sent";
+export type BulletinChannel = "app" | "email" | "push";
+export type BulletinAudienceSegment =
+  | "ALL_MEMBERS"
+  | "VIP"
+  | "CONCOURS_ELIGIBLE"
+  | "NEW";
+
+export type CreateBulletinRequest = {
+  title: string;
+  body: string;
+  type: BulletinContentType;
+  status: BulletinStatus;
+  category?: string;
+  imageUrl?: string;
+  authorName?: string;
+  isPinned?: boolean;
+  audienceSegments: BulletinAudienceSegment[];
+  channels: BulletinChannel[];
+  scheduledAt?: string;
+};
+
+export type CreateBulletinResponse = ApiResponse<CommunicationsBulletinRaw>;
+
 // Shape of a single RSVP entry returned inside rsvpList by GET /api/v1/events/:id
 export type EventRsvpRaw = {
   rsvpId?: string | number;
@@ -960,3 +1450,66 @@ export type EventDetailData = EventResponse & {
 };
 
 export type EventDetailResponse = ApiResponse<EventDetailData>;
+
+export type WorkshopDashboardStatsData = {
+  activeJobs: number;
+  overdue: number;
+  awaitingParts: number;
+  avgTurnaroundDays: string | number;
+  avg300: string | number;
+  avgDelta: string | number;
+  engineersOn: number;
+  engineers: string[];
+};
+
+export type WorkshopDashboardStatsResponse =
+  ApiResponse<WorkshopDashboardStatsData>;
+
+export type WorkshopBayRaw = {
+  id: string;
+  source: string;
+  bayNumber: string;
+  vehicleName: string;
+  memberName: string;
+  serviceDescription: string;
+  technicianName: string;
+  status: string;
+  statusBadge: string;
+  dueAt: string;
+  referenceNumber: string;
+};
+
+export type WorkshopDashboardBaysData = {
+  bays: WorkshopBayRaw[];
+  count: number;
+};
+
+export type WorkshopDashboardBaysResponse =
+  ApiResponse<WorkshopDashboardBaysData>;
+
+export type WorkshopQueueItemRaw = {
+  id: string;
+  source: string;
+  scheduledAt: string;
+  memberName: string;
+  memberNumber: string;
+  memberAvatarUrl: string;
+  vehicleName: string;
+  serviceType: string;
+  engineer: string;
+  est: number;
+  category: string;
+  status: string;
+  referenceNumber: string;
+};
+
+export type WorkshopDashboardQueueData = {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+  items: WorkshopQueueItemRaw[];
+};
+
+export type WorkshopDashboardQueueResponse =
+  ApiResponse<WorkshopDashboardQueueData>;

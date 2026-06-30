@@ -32,7 +32,7 @@ export function ProfilePopup({ open, onClose, children }: ProfilePopupProps) {
       onClick={onClose}
     >
       <div
-        className="relative z-10 mr-4 w-full max-w-[320px] overflow-hidden rounded-2xl border border-accent/25 bg-card"
+        className="relative z-10 mr-4 w-full max-w-[360px] overflow-hidden rounded-2xl border border-accent/25 bg-card"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-end border-b border-accent/12 px-5 py-3">
@@ -46,7 +46,7 @@ export function ProfilePopup({ open, onClose, children }: ProfilePopupProps) {
           </button>
         </div>
 
-        <div className="p-5">{children}</div>
+        <div className="max-h-[min(70vh,560px)] overflow-y-auto p-5">{children}</div>
 
         <div className="border-t border-accent/12 p-5">
           <button

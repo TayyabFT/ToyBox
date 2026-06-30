@@ -9,6 +9,7 @@ type MaintenanceSectionProps = {
   jobs: MaintenanceJob[];
   seeAllHref?: string;
   loading?: boolean;
+  staffMode?: boolean;
 };
 
 export function MaintenanceSection({
@@ -16,6 +17,7 @@ export function MaintenanceSection({
   jobs,
   seeAllHref,
   loading = false,
+  staffMode = false,
 }: MaintenanceSectionProps) {
   const showSeeAll = Boolean(seeAllHref && meta.requestCount > jobs.length);
 
@@ -59,7 +61,7 @@ export function MaintenanceSection({
 
       <div className="space-y-3">
         {jobs.map((job) => (
-          <MaintenanceJobCard key={job.id} job={job} />
+          <MaintenanceJobCard key={job.id} job={job} staffMode={staffMode} />
         ))}
       </div>
     </section>

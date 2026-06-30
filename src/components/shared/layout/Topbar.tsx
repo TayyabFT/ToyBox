@@ -6,9 +6,7 @@ import { usePathname } from "next/navigation";
 import { Bell, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
 import { NotificationPopup } from "@/components/staff/NotificationPopup";
 import { ProfilePopup } from "@/components/shared/layout/ProfilePopup";
-import { StaffProfileCard } from "@/components/staff/StaffProfileCard";
-import { AdminProfileCard } from "@/components/admin/AdminProfileCard";
-import { MemberProfileCard } from "@/components/member/MemberProfileCard";
+import { AuthProfileContent } from "@/components/shared/layout/AuthProfileContent";
 import { getActiveAdminNavItem, getAdminPageTitle } from "@/lib/adminNav";
 import { getStaffPageTitle } from "@/lib/staffNav";
 import { getMemberPageTitle } from "@/lib/memberNav";
@@ -34,8 +32,6 @@ type TopbarSpec = {
   profileTrigger: ReactNode;
   /** Classes for the profile trigger button. */
   profileTriggerClassName: string;
-  /** Profile card shown inside the profile popup. */
-  profileCard: ReactNode;
 };
 
 const PROFILE_ICON_TRIGGER =
@@ -54,7 +50,6 @@ const ADMIN_TOPBAR: TopbarSpec = {
   getActiveHref: (pathname) => getActiveAdminNavItem(pathname)?.href ?? null,
   profileTrigger: "F",
   profileTriggerClassName: PROFILE_INITIAL_TRIGGER,
-  profileCard: <AdminProfileCard />,
 };
 
 const STAFF_TOPBAR: TopbarSpec = {
@@ -62,7 +57,6 @@ const STAFF_TOPBAR: TopbarSpec = {
   getPageTitle: getStaffPageTitle,
   profileTrigger: <User />,
   profileTriggerClassName: PROFILE_ICON_TRIGGER,
-  profileCard: <StaffProfileCard />,
 };
 
 const MEMBER_TOPBAR: TopbarSpec = {
@@ -70,7 +64,6 @@ const MEMBER_TOPBAR: TopbarSpec = {
   getPageTitle: getMemberPageTitle,
   profileTrigger: "M",
   profileTriggerClassName: PROFILE_INITIAL_TRIGGER,
-  profileCard: <MemberProfileCard />,
 };
 
 const TOPBAR_SPECS: Record<UserRole, TopbarSpec> = {
@@ -96,6 +89,11 @@ export function Topbar({ role }: { role: UserRole }) {
   const hasUnread = items.some((item) => !item.read);
   const page = spec.getPageTitle(pathname).toUpperCase();
   const sectionHref = spec.getActiveHref?.(pathname) ?? null;
+  const showDetailBreadcrumb = Boolean(
+    subtitle &&
+      sectionHref &&
+      subtitle.toUpperCase() !== page,
+  );
 
   useEffect(() => {
     dispatch(fetchInbox());
@@ -146,24 +144,24 @@ export function Topbar({ role }: { role: UserRole }) {
 
   return (
     <>
-      <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-accent/8 bg-background px-8">
+      <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-accent/8 bg-[var(--shell-bg)] px-8">
         <nav
           aria-label="Breadcrumb"
           className="flex items-center gap-2 text-[13px] tracking-[0.14em] uppercase"
         >
           <span className="font-roboto text-secondary">{spec.brand}</span>
           <span className="font-roboto text-secondary">/</span>
-          {subtitle && sectionHref ? (
+          {showDetailBreadcrumb ? (
             <>
               <Link
-                href={sectionHref}
+                href={sectionHref!}
                 className="font-roboto text-secondary transition-colors hover:text-primary"
               >
                 {page}
               </Link>
               <span className="font-roboto text-secondary">/</span>
               <span className="font-roboto text-primary">
-                {subtitle.toUpperCase()}
+                {subtitle!.toUpperCase()}
               </span>
             </>
           ) : (
@@ -218,7 +216,7 @@ export function Topbar({ role }: { role: UserRole }) {
       />
 
       <ProfilePopup open={profileOpen} onClose={() => setProfileOpen(false)}>
-        {spec.profileCard}
+        <AuthProfileContent open={profileOpen} />
       </ProfilePopup>
     </>
   );

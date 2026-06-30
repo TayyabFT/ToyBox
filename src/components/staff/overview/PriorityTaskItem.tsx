@@ -27,7 +27,7 @@ export function PriorityTaskItem({
   iconTone,
 }: PriorityTaskItemProps) {
   return (
-    <div className="flex items-center gap-3.5 rounded-xl border border-accent/12 bg-card px-4 py-3.5">
+    <div className="overview-elevated-card-shell flex items-center gap-3.5 rounded-xl px-4 py-3.5">
       <span className="font-roboto w-5 shrink-0 text-[11px] tracking-[0.06em] text-section-label">
         {index}
       </span>

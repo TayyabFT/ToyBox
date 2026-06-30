@@ -1,6 +1,8 @@
 import {
   overviewSectionSubtitleClass,
   overviewSectionTitleClass,
+  overviewTitleAccentClass,
+  overviewTitleBeforeClass,
 } from "./panelStyles";
 
 type OverviewSectionHeaderProps = {
@@ -20,11 +22,13 @@ export function OverviewOutsideHeader({
 }: Pick<OverviewSectionHeaderProps, "title" | "titleAccent" | "titleSplit" | "subtitle">) {
   const titleContent = titleSplit ? (
     <>
-      <span className="text-[#E7E5E4]">{titleSplit.before} </span>
-      <span className="text-[#C5A059]">{titleSplit.after}</span>
+      <span className={overviewTitleBeforeClass}>{titleSplit.before} </span>
+      <span className={overviewTitleAccentClass}>{titleSplit.after}</span>
     </>
   ) : (
-    <span className={titleAccent ? "text-[#C5A059]" : "text-[#E7E5E4]"}>{title}</span>
+    <span className={titleAccent ? overviewTitleAccentClass : overviewTitleBeforeClass}>
+      {title}
+    </span>
   );
 
   return (
@@ -45,15 +49,19 @@ export function OverviewSectionHeader({
 }: OverviewSectionHeaderProps) {
   const titleContent = titleSplit ? (
     <>
-      <span className="text-[#E7E5E4]">{titleSplit.before} </span>
-      <span className="text-[#C5A059]">{titleSplit.after}</span>
+      <span className={overviewTitleBeforeClass}>{titleSplit.before} </span>
+      <span className={overviewTitleAccentClass}>{titleSplit.after}</span>
     </>
   ) : (
-    <span className={titleAccent ? "text-[#C5A059]" : "text-[#E7E5E4]"}>{title}</span>
+    <span className={titleAccent ? overviewTitleAccentClass : overviewTitleBeforeClass}>
+      {title}
+    </span>
   );
 
   return (
-    <div className={divider ? "mb-4 border-b border-white/5 pb-4" : "mb-4"}>
+    <div
+      className={divider ? "mb-4 border-b border-[var(--overview-border)] pb-4" : "mb-4"}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1.5">
           <h3 className={overviewSectionTitleClass}>{titleContent}</h3>
@@ -61,7 +69,7 @@ export function OverviewSectionHeader({
         </div>
 
         {trailing && (
-          <span className="font-roboto shrink-0 pt-0.5 text-[10px] tracking-[0.08em] text-[#6B665E] uppercase">
+          <span className="font-roboto shrink-0 pt-0.5 text-[10px] tracking-[0.08em] text-secondary uppercase">
             {trailing}
           </span>
         )}

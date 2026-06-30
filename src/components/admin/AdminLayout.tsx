@@ -15,11 +15,11 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <AdminPageMetaProvider>
-      <div className="flex min-h-screen bg-background">
+      <div className="flex min-h-screen bg-[var(--shell-bg)]">
         <Sidebar role="admin" />
         <div className="flex min-h-screen flex-1 flex-col overflow-hidden pl-[340px]">
           <Topbar role="admin" />
-          <main className="flex-1 overflow-auto">{children}</main>
+          <main className="flex-1 overflow-auto bg-background">{children}</main>
         </div>
       </div>
     </AdminPageMetaProvider>

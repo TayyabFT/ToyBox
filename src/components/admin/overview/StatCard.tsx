@@ -10,9 +10,18 @@ type StatCardProps = {
   footnoteTone?: "default" | "pink";
   trend?: string;
   icon: React.ReactNode;
-  /** Light-mode Figma: first card uses a dark gradient surface */
+  /** Light-mode Figma: first card uses the active gradient surface */
   featured?: boolean;
 };
+
+const statCardHoverLabelClass =
+  "group-hover:text-[var(--stat-card-hover-fg-muted)]";
+
+const statCardHoverValueClass =
+  "group-hover:text-[var(--stat-card-hover-fg)]";
+
+const statCardHoverIconClass =
+  "group-hover:border-[color-mix(in_srgb,var(--stat-card-hover-fg)_22%,transparent)] group-hover:bg-[color-mix(in_srgb,var(--stat-card-hover-fg)_20%,transparent)] group-hover:text-[var(--stat-card-hover-fg)]";
 
 export function StatCard({
   label,
@@ -30,18 +39,18 @@ export function StatCard({
     footnoteTone === "pink"
       ? isFeaturedLight
         ? "text-pink"
-        : "text-pink group-hover:text-dark/70"
+        : `text-pink ${statCardHoverLabelClass}`
       : isFeaturedLight
-        ? "text-white/65"
-        : "text-secondary group-hover:text-dark/55";
+        ? "text-white/70"
+        : `text-secondary ${statCardHoverLabelClass}`;
 
   return (
     <div
       className={[
-        "group flex min-h-[160px] cursor-pointer flex-col rounded-2xl border p-6 transition-all duration-200",
+        "group flex min-h-[160px] cursor-pointer flex-col rounded-2xl p-6 transition-all duration-200",
         isFeaturedLight
-          ? "border-transparent bg-gradient-to-br from-[#3A3530] to-[#2A2622]"
-          : "border-accent/18 bg-card hover:border-primary/40 hover:bg-gradient-to-br hover:from-[#F0C566] hover:to-[#8B6F2A]",
+          ? "border-transparent bg-gradient-to-br from-[var(--stat-card-active-from)] to-[var(--stat-card-active-to)]"
+          : "stat-card-shell",
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-3">
@@ -50,7 +59,7 @@ export function StatCard({
             "font-roboto text-[12px] tracking-[0.14em] uppercase",
             isFeaturedLight
               ? "text-white/70"
-              : "text-secondary group-hover:text-dark/60",
+              : ["text-secondary", statCardHoverLabelClass].join(" "),
           ].join(" ")}
         >
           {label}
@@ -60,7 +69,10 @@ export function StatCard({
             "flex size-10 shrink-0 items-center justify-center rounded-lg border [&_svg]:size-4",
             isFeaturedLight
               ? "border-white/15 bg-white/10 text-white"
-              : "border-accent/18 bg-accent/8 text-accent group-hover:border-dark/22 group-hover:bg-dark/20 group-hover:text-dark",
+              : [
+                  "border-accent/18 bg-accent/8 text-accent",
+                  statCardHoverIconClass,
+                ].join(" "),
           ].join(" ")}
         >
           {icon}
@@ -73,7 +85,7 @@ export function StatCard({
             "font-copperplate text-[34px] leading-none tracking-[0.02em]",
             isFeaturedLight
               ? "text-white"
-              : "text-foreground group-hover:text-dark",
+              : ["text-foreground", statCardHoverValueClass].join(" "),
           ].join(" ")}
         >
           {value}
@@ -94,13 +106,18 @@ export function StatCard({
           <span
             className={[
               "font-roboto flex items-center gap-0.5 text-[12px] font-medium tracking-[0.04em] text-teal",
-              !isFeaturedLight && "group-hover:text-dark/70",
+              !isFeaturedLight &&
+                "group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]",
             ]
               .filter(Boolean)
               .join(" ")}
           >
             <TrendUp
-              className={isFeaturedLight ? undefined : "group-hover:[&_path]:stroke-[#0A0806]"}
+              className={
+                isFeaturedLight
+                  ? undefined
+                  : "group-hover:[&_path]:stroke-[var(--stat-card-hover-fg)]"
+              }
               color="currentColor"
             />
             {trend}

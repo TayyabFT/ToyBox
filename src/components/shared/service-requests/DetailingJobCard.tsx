@@ -5,9 +5,10 @@ import type { DetailingJob } from "./types";
 
 type DetailingJobCardProps = {
   job: DetailingJob;
+  staffMode?: boolean;
 };
 
-export function DetailingJobCard({ job }: DetailingJobCardProps) {
+export function DetailingJobCard({ job, staffMode = false }: DetailingJobCardProps) {
   const isInProgress = job.status === "in-progress";
 
   return (
@@ -70,17 +71,19 @@ export function DetailingJobCard({ job }: DetailingJobCardProps) {
         </div>
       )}
 
-      <div className="flex flex-wrap items-center gap-2 pt-1">
-        {isInProgress ? (
-          <JobActionButton label="Update Status" />
-        ) : (
-          <>
-            <JobActionButton label="Unassigned" variant="gray" />
-            <JobActionButton label="Assign Tech" />
-            <JobActionButton label="Accept Job" variant="gold" />
-          </>
-        )}
-      </div>
+      {!staffMode ? (
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {isInProgress ? (
+            <JobActionButton label="Update Status" />
+          ) : (
+            <>
+              <JobActionButton label="Unassigned" variant="gray" />
+              <JobActionButton label="Assign Tech" />
+              <JobActionButton label="Accept Job" variant="gold" />
+            </>
+          )}
+        </div>
+      ) : null}
     </article>
   );
 }

@@ -34,6 +34,8 @@ type ServiceRequestsDashboardProps = {
   maintenance: SectionConfig<MaintenanceJob>;
   detailing: SectionConfig<DetailingJob>;
   loadStats: () => Promise<ServiceRequestStat[]>;
+  activeJobPanel?: React.ReactNode;
+  staffMode?: boolean;
 };
 
 const PREVIEW_COUNT = 2;
@@ -44,6 +46,8 @@ export function ServiceRequestsDashboard({
   maintenance,
   detailing,
   loadStats,
+  activeJobPanel,
+  staffMode = false,
 }: ServiceRequestsDashboardProps) {
   const [activeFilter, setActiveFilter] = useState<ServiceRequestFilter>("all");
 
@@ -179,6 +183,7 @@ export function ServiceRequestsDashboard({
             jobs={previewTransport}
             seeAllHref={`${basePath}/service-requests/transport`}
             loading={transportLoading}
+            staffMode={staffMode}
           />
         ) : null}
         {showMaintenanceSection ? (
@@ -187,6 +192,7 @@ export function ServiceRequestsDashboard({
             jobs={previewMaintenance}
             seeAllHref={`${basePath}/service-requests/maintenance`}
             loading={maintenanceLoading}
+            staffMode={staffMode}
           />
         ) : null}
         {showDetailingSection ? (
@@ -195,9 +201,13 @@ export function ServiceRequestsDashboard({
             jobs={previewDetailing}
             seeAllHref={`${basePath}/service-requests/detailing`}
             loading={detailingLoading}
+            staffMode={staffMode}
           />
         ) : null}
-        {showActiveJob && <ActiveJobDetailPanel detail={activeJobDetail} />}
+        {showActiveJob &&
+          (activeJobPanel ?? (
+            <ActiveJobDetailPanel detail={activeJobDetail} />
+          ))}
       </div>
     </div>
   );

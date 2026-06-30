@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
     signIn: "/api/v1/auth/sign-in",
     setupPassword: "/api/v1/auth/setup-password",
     refresh: "/api/v1/auth/refresh",
+    profile: "/api/v1/auth/profile",
     invitations: "/api/v1/auth/invitations",
     verifyOtp: "/api/v1/auth/invitations/verify-otp",
     resend: "/api/v1/auth/invitations/resend",
@@ -55,7 +56,23 @@ export const API_ENDPOINTS = {
     jobs: "/api/v1/admin/overview/jobs",
   },
   staffOverview: {
+    overview: "/api/v1/staff/overview",
     jobs: "/api/v1/staff/overview/jobs",
+  },
+  staffJobs: {
+    active: "/api/v1/staff/jobs/active",
+    progress: (id: string) => `/api/v1/staff/jobs/${id}/progress`,
+    schedule: (id: string) => `/api/v1/staff/jobs/${id}/schedule`,
+    start: (id: string) => `/api/v1/staff/jobs/${id}/start`,
+    complete: (id: string) => `/api/v1/staff/jobs/${id}/complete`,
+    subtask: (id: string, key: string) =>
+      `/api/v1/staff/jobs/${id}/subtasks/${key}`,
+    notesByReference: (referenceId: string) =>
+      `/api/v1/jobs/${referenceId}/notes`,
+    activeNotes: "/api/v1/staff/jobs/active/notes",
+    activePhotos: "/api/v1/staff/jobs/active/photos",
+    queue: "/api/v1/staff/jobs/queue",
+    completed: "/api/v1/staff/jobs/completed",
   },
   chat: {
     conversations: "/api/v1/staff/chat/conversations",
@@ -81,5 +98,15 @@ export const API_ENDPOINTS = {
     detail: (id: string | number) => `/api/v1/events/${id}`,
     delete: (id: string | number) => `/api/v1/events/${id}`,
     sendUpdate: (id: string | number) => `/api/v1/events/${id}/send-update`,
+  },
+  communications: {
+    stats: "/api/v1/admin/communications/stats",
+    bulletins: "/api/v1/admin/communications/bulletins",
+    audiencePreview: "/api/v1/admin/communications/audience-preview",
+  },
+  workshop: {
+    dashboardStats: "/api/v1/admin/workshop/dashboard/stats",
+    dashboardBays: "/api/v1/admin/workshop/dashboard/bays",
+    dashboardQueue: "/api/v1/admin/workshop/dashboard/queue",
   },
 } as const;

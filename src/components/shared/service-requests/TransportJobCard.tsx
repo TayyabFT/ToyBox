@@ -4,9 +4,10 @@ import type { TransportJob } from "./types";
 
 type TransportJobCardProps = {
   job: TransportJob;
+  staffMode?: boolean;
 };
 
-export function TransportJobCard({ job }: TransportJobCardProps) {
+export function TransportJobCard({ job, staffMode = false }: TransportJobCardProps) {
   const isAssigned = Boolean(job.assignee);
 
   return (
@@ -55,7 +56,9 @@ export function TransportJobCard({ job }: TransportJobCardProps) {
       ) : null}
 
       <div className="flex flex-wrap items-center gap-2 pt-1">
-        {isAssigned ? (
+        {staffMode ? (
+          isAssigned ? <AssigneeBadge label={job.assignee!} /> : null
+        ) : isAssigned ? (
           <>
             <AssigneeBadge label={job.assignee!} />
             <JobActionButton label="View Details" />

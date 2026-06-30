@@ -8,6 +8,7 @@ type DetailingSectionProps = {
   jobs: DetailingJob[];
   seeAllHref?: string;
   loading?: boolean;
+  staffMode?: boolean;
 };
 
 export function DetailingSection({
@@ -15,6 +16,7 @@ export function DetailingSection({
   jobs,
   seeAllHref,
   loading = false,
+  staffMode = false,
 }: DetailingSectionProps) {
   const showSeeAll = Boolean(seeAllHref && meta.requestCount > jobs.length);
 
@@ -53,7 +55,7 @@ export function DetailingSection({
 
       <div className="space-y-3">
         {jobs.map((job) => (
-          <DetailingJobCard key={job.id} job={job} />
+          <DetailingJobCard key={job.id} job={job} staffMode={staffMode} />
         ))}
       </div>
     </section>

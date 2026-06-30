@@ -6,8 +6,8 @@ type SystemAlertItemProps = {
 
 export function SystemAlertItem({ message, time, icon }: SystemAlertItemProps) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-pink/22 px-3.5 py-4 bg-pink/3">
-      <span className="flex size-7 shrink-0 items-center justify-center rounded-md bg-pink/12">
+    <div className="overview-elevated-card-shell flex items-center gap-3 rounded-xl px-3.5 py-4">
+      <span className="flex size-7 shrink-0 items-center justify-center rounded-md border border-pink/16 bg-pink/10">
         {icon}
       </span>
 

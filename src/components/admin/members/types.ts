@@ -40,6 +40,30 @@ export type MembersDirectoryResult = {
   offset: number;
 };
 
+export type MemberVehicleEntry = {
+  id: string;
+  name: string;
+  plate: string;
+  status: string;
+  statusLabel: string;
+};
+
+export type MemberRecentActivityEntry = {
+  id: string;
+  title: string;
+  subtitle: string;
+  timeLabel: string;
+  tone: string;
+};
+
+export type MemberUpcomingEventEntry = {
+  id: string;
+  title: string;
+  dateLabel: string;
+  status: string;
+  statusLabel: string;
+};
+
 export type MemberProfileDetail = {
   id: string;
   initial: string;
@@ -70,4 +94,7 @@ export type MemberProfileDetail = {
   events: number;
   miles: number;
   days: number;
+  vehiclesSection: { total: number; items: MemberVehicleEntry[] };
+  recentActivity: MemberRecentActivityEntry[];
+  upcomingEvents: MemberUpcomingEventEntry[];
 };

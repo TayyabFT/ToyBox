@@ -8,6 +8,7 @@ type TransportSectionProps = {
   jobs: TransportJob[];
   seeAllHref?: string;
   loading?: boolean;
+  staffMode?: boolean;
 };
 
 export function TransportSection({
@@ -15,6 +16,7 @@ export function TransportSection({
   jobs,
   seeAllHref,
   loading = false,
+  staffMode = false,
 }: TransportSectionProps) {
   const showSeeAll = Boolean(seeAllHref && meta.requestCount > jobs.length);
 
@@ -53,7 +55,7 @@ export function TransportSection({
 
       <div className="space-y-3">
         {jobs.map((job) => (
-          <TransportJobCard key={job.id} job={job} />
+          <TransportJobCard key={job.id} job={job} staffMode={staffMode} />
         ))}
       </div>
     </section>

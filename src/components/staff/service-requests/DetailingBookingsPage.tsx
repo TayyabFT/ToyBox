@@ -61,7 +61,7 @@ export function DetailingBookingsPage() {
       emptyText="No detailing bookings found."
     >
       {jobs.map((job) => (
-        <DetailingJobCard key={job.id} job={job} />
+        <DetailingJobCard key={job.id} job={job} staffMode />
       ))}
     </ServiceSectionListPage>
   );

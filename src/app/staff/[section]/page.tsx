@@ -3,6 +3,8 @@ import { OverviewPage } from "@/components/staff/overview";
 import { VehiclesPage } from "@/components/staff/vehicles";
 import { ConfirmationsPage } from "@/components/staff/confirmations";
 import { ConciergePage } from "@/components/staff/concierge";
+import { InspectionsPage } from "@/components/staff/inspections";
+import { HealthReportsPage } from "@/components/staff/health-reports";
 import { ServiceRequestsPage } from "@/components/staff/service-requests";
 import { staffNavItems } from "@/lib/staffNav";
 
@@ -26,6 +28,14 @@ const page = async ({ params }: PageProps) => {
 
   if (navItem.id === "bookings") {
     return <ConfirmationsPage />;
+  }
+
+  if (navItem.id === "inspections") {
+    return <InspectionsPage />;
+  }
+
+  if (navItem.id === "health-reports") {
+    return <HealthReportsPage />;
   }
 
   if (navItem.id === "concierge") {

@@ -24,6 +24,34 @@ const statusConfig: Record<
     label: "AWAY",
     className: "border-secondary/47 bg-secondary/10 text-secondary",
   },
+  "in-progress": {
+    label: "In Progress",
+    className: "border-primary/45 bg-primary/10 text-primary",
+  },
+  pending: {
+    label: "Pending",
+    className: "border-secondary/30 bg-secondary/8 text-secondary",
+  },
+  done: {
+    label: "Done",
+    className: "border-teal/35 bg-teal/8 text-teal",
+  },
+  critical: {
+    label: "Critical",
+    className: "border-pink/47 bg-pink/10 text-pink",
+  },
+  "due-service": {
+    label: "Due Service",
+    className: "border-primary/45 bg-primary/10 text-primary",
+  },
+  good: {
+    label: "Good",
+    className: "border-teal/35 bg-teal/8 text-teal",
+  },
+  excellent: {
+    label: "Excellent",
+    className: "border-teal/47 bg-teal/12 text-teal",
+  },
 };
 
 type VehicleStatusBadgeProps = {

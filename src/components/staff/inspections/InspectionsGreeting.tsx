@@ -1,0 +1,14 @@
+export function InspectionsGreeting() {
+  return (
+    <div className="space-y-3">
+      <p className="font-roboto text-xs tracking-[0.14em] uppercase">
+        <span className="text-foreground">Saturday, 17 July 2026 · </span>
+        <span className="text-primary">Morning Shift</span>
+      </p>
+      <h1 className="font-copperplate text-[32px] leading-tight">
+        <span className="text-foreground">Vehicle </span>
+        <span className="text-primary">Inspections</span>
+      </h1>
+    </div>
+  );
+}

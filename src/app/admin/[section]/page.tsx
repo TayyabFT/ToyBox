@@ -1,10 +1,13 @@
 import { notFound } from "next/navigation";
+import { AnalyticsPage } from "@/components/admin/analytics";
+import { CommunicationsPage } from "@/components/admin/communications";
 import { ConfirmationsPage } from "@/components/admin/confirmations";
 import { ConciergePage } from "@/components/admin/concierge";
 import { EventsPage } from "@/components/admin/events";
 import { MembersPage } from "@/components/admin/members";
 import { AdminOverviewPage } from "@/components/admin/overview";
 import { ServiceRequestsPage } from "@/components/admin/service-requests";
+import { WorkshopPage } from "@/components/admin/workshop";
 import { StaffPage } from "@/components/admin/staff";
 import { VehiclesPage } from "@/components/admin/vehicles";
 import { adminNavItems } from "@/lib/adminNav";
@@ -49,6 +52,18 @@ export default async function AdminSectionPage({ params }: PageProps) {
 
   if (navItem.id === "service-requests") {
     return <ServiceRequestsPage />;
+  }
+
+  if (navItem.id === "workshop") {
+    return <WorkshopPage />;
+  }
+
+  if (navItem.id === "communications") {
+    return <CommunicationsPage />;
+  }
+
+  if (navItem.id === "analytics") {
+    return <AnalyticsPage />;
   }
 
   return (

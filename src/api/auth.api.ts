@@ -1,5 +1,8 @@
+import { apiClient } from "@/api/client";
+import { API_ENDPOINTS } from "@/api/endpoints";
 import { normalizeHttpError, normalizeRequestError } from "@/lib/apiError";
 import type {
+  AuthProfileResponse,
   RefreshTokenResponse,
   SetupPasswordRequest,
   SetupPasswordResponse,
@@ -42,4 +45,7 @@ export const authApi = {
     postAuth<SetupPasswordResponse>("/api/auth/setup-password", payload),
 
   refreshToken: () => postAuth<RefreshTokenResponse>("/api/auth/refresh"),
+
+  getProfile: () =>
+    apiClient<AuthProfileResponse>(API_ENDPOINTS.auth.profile),
 };

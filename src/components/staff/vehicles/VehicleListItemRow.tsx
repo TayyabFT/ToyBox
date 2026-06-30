@@ -6,6 +6,7 @@ type VehicleListItemRowProps = {
   vehicle: VehicleListItem;
   selected: boolean;
   onSelect: () => void;
+  trailingText?: string;
 };
 
 function splitVehicleName(name: string): { brand: string; model: string } {
@@ -24,23 +25,47 @@ function splitVehicleName(name: string): { brand: string; model: string } {
 function getStatusAccentColor(status: VehicleStatus): string {
   switch (status) {
     case "overdue":
+    case "critical":
       return "var(--pink)";
     case "dispatched":
       return "var(--vehicle-blue)";
     case "away":
+    case "pending":
       return "var(--secondary)";
+    case "done":
+    case "good":
+    case "excellent":
+      return "var(--teal)";
+    case "due-service":
+      return "var(--primary)";
+    case "in-progress":
+      return "var(--primary)";
     default:
       return "var(--primary)";
   }
+}
+
+function getHealthPercentColor(value: number): string {
+  if (value < 50) return "text-pink";
+  if (value < 70) return "text-primary";
+  return "text-teal";
 }
 
 export function VehicleListItemRow({
   vehicle,
   selected,
   onSelect,
+  trailingText,
 }: VehicleListItemRowProps) {
   const { brand, model } = splitVehicleName(vehicle.name);
   const accentColor = selected ? "var(--primary)" : getStatusAccentColor(vehicle.status);
+  const trailingDisplay =
+    trailingText ??
+    (vehicle.healthPercent != null ? `${vehicle.healthPercent}%` : vehicle.bay);
+  const trailingClassName =
+    vehicle.healthPercent != null
+      ? getHealthPercentColor(vehicle.healthPercent)
+      : "text-primary";
 
   return (
     <button
@@ -92,8 +117,10 @@ export function VehicleListItemRow({
       </span>
 
       <span className="flex shrink-0 flex-col items-end gap-2 self-stretch justify-center">
-        <span className="font-roboto text-[10px] tracking-[0.06em] text-primary uppercase">
-          {vehicle.bay}
+        <span
+          className={`font-roboto text-[10px] tracking-[0.06em] uppercase ${trailingClassName}`}
+        >
+          {trailingDisplay}
         </span>
         <VehicleStatusBadge status={vehicle.status} />
       </span>

@@ -2,18 +2,24 @@ import { memberStats } from "@/components/admin/members/mockData";
 import type {
   MemberProfile,
   MemberProfileDetail,
+  MemberRecentActivityEntry,
   MemberStatItem,
   MemberStatsDisplay,
   MembersDirectoryResult,
+  MemberUpcomingEventEntry,
+  MemberVehicleEntry,
 } from "@/components/admin/members/types";
 import type {
   MemberFilterOption,
   MemberListItemRaw,
   MemberProfileData,
+  MemberRecentActivityItemRaw,
   MemberSummaryStat,
   MembersListData,
   MembersSummary,
   MemberTierFilter,
+  MemberUpcomingEventRaw,
+  MemberVehicleItemRaw,
 } from "@/types/api";
 
 export const DEFAULT_MEMBER_FILTERS: MemberFilterOption[] = [
@@ -181,6 +187,40 @@ function formatDateTime(value?: string): string {
   });
 }
 
+function mapVehicleEntry(raw: MemberVehicleItemRaw): MemberVehicleEntry {
+  const id = String(raw.id ?? "");
+  const name = (raw.displayName ?? raw.name ?? "").trim() || "—";
+  return {
+    id,
+    name,
+    plate: (raw.plate ?? "").trim() || "—",
+    status: raw.status ?? "",
+    statusLabel: (raw.statusLabel ?? raw.status ?? "").trim(),
+  };
+}
+
+function mapRecentActivityEntry(
+  raw: MemberRecentActivityItemRaw,
+): MemberRecentActivityEntry {
+  return {
+    id: raw.id ?? String(Math.random()),
+    title: raw.title?.trim() || "—",
+    subtitle: raw.subtitle?.trim() ?? "",
+    timeLabel: raw.timeLabel?.trim() ?? "",
+    tone: raw.tone ?? "warning",
+  };
+}
+
+function mapUpcomingEventEntry(raw: MemberUpcomingEventRaw): MemberUpcomingEventEntry {
+  return {
+    id: String(raw.id ?? ""),
+    title: raw.title?.trim() || "—",
+    dateLabel: raw.dateLabel?.trim() || raw.monthLabel?.trim() || "—",
+    status: raw.status ?? "",
+    statusLabel: (raw.statusLabel ?? raw.status ?? "").trim(),
+  };
+}
+
 export function mapMemberProfile(data: unknown): MemberProfileDetail | null {
   if (!data || typeof data !== "object") {
     return null;
@@ -194,6 +234,10 @@ export function mapMemberProfile(data: unknown): MemberProfileDetail | null {
 
   const displayName = member.displayName?.trim() || `Member #${member.id}`;
   const stats = member.headerStats;
+
+  const vehicleItems = (member.vehiclesSection?.items ?? []).map(mapVehicleEntry);
+  const recentActivity = (member.recentActivity ?? []).map(mapRecentActivityEntry);
+  const upcomingEvents = (member.upcomingEvents ?? []).map(mapUpcomingEventEntry);
 
   return {
     id: String(member.id),
@@ -225,5 +269,11 @@ export function mapMemberProfile(data: unknown): MemberProfileDetail | null {
     events: stats?.events ?? 0,
     miles: stats?.miles ?? 0,
     days: stats?.days ?? 0,
+    vehiclesSection: {
+      total: member.vehiclesSection?.total ?? vehicleItems.length,
+      items: vehicleItems,
+    },
+    recentActivity,
+    upcomingEvents,
   };
 }

@@ -53,6 +53,25 @@
   --vehicle-blue: #6b9ec4;
   --gold-bright: #f0c566;
   --gold-deep: #8b6f2a;
+  --stat-card-hover-from: #f0c566;
+  --stat-card-hover-to: #8b6f2a;
+  --stat-card-hover-fg: #0a0806;
+  --stat-card-hover-fg-muted: rgba(10, 8, 6, 0.6);
+  --stat-card-active-from: #3a3530;
+  --stat-card-active-to: #8a7d6a;
+  --stat-card-bg: var(--card);
+  --stat-card-border: radial-gradient(
+    100% 100% at 50% 0%,
+    rgba(240, 237, 230, 0.14) 0%,
+    rgba(197, 160, 89, 0.32) 38%,
+    rgba(197, 160, 89, 0.12) 100%
+  );
+  --stat-card-border-hover: radial-gradient(
+    100% 100% at 50% 0%,
+    rgba(240, 197, 102, 0.42) 0%,
+    rgba(197, 160, 89, 0.52) 45%,
+    rgba(197, 160, 89, 0.28) 100%
+  );
   --badge-warm: #e8b84b;
   --avatar-slate: #4a7c9e;
   --avatar-rose: #9e6b8a;
@@ -72,35 +91,74 @@
   --gold-glow: rgba(201, 168, 76, 0.45);
   --card-dark: rgba(22, 19, 16, 0.82);
   --critical-banner: #141210;
+  --overview-border: rgba(255, 255, 255, 0.05);
+  --overview-heading-accent: #c5a059;
+  --tag-gold: #c5a059;
+  --tag-pink: #d89999;
+  --tag-purple: #9e8ad4;
+  --nav-active-bg: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--accent) 13%, transparent),
+    color-mix(in srgb, var(--accent) 3%, transparent)
+  );
+  --nav-active-fg: var(--accent);
+  --nav-active-indicator: var(--accent);
+  --nav-icon-active: var(--accent);
+  --nav-hover-bg: rgba(255, 255, 255, 0.03);
+  --section-canvas: #11100c;
+  --shell-bg: var(--background);
+  --sidebar-bg: var(--shell-bg);
   --font-copperplate: "Copperplate", serif;
 }
 
 [data-theme="light"] {
-  /* Brand — same keys, light-surface values */
+  /* Brand — same keys, light-surface values (Figma warm beige stack) */
   --primary: #1a1816;
   --secondary: #6b665e;
 
-  --accent: #c9a84c;
-  --muted: #8a8378;
+  --accent: #bfa05a;
+  --muted: #8c8c8c;
   --foreground: #1a1816;
   --foreground-soft: #3a3530;
-  --background: #f2efe9;
-  --card: #e5e1d8;
-  --surface: #ddd8cf;
+  --background: #e4e0d8;
+  --card: #ebe6d9;
+  --surface: #dad4c8;
+  --section-canvas: #dcd6c8;
+  --shell-bg: #f0eeea;
+  --sidebar-bg: #f0eeea;
   --dark: #0a0806;
   --teal: #4d8f72;
   --pink: #c45c5c;
   --section-label: #8a8378;
 
-  --elevated: #ddd8cf;
-  --input-muted: #d5d0c7;
-  --stepper-inactive: #c8c3ba;
+  --elevated: #d0c8bc;
+  --input-muted: #e3ded4;
+  --stepper-inactive: #d5cfc4;
 
   --info: #4a8ab8;
   --vehicle-blue: #4a7c9e;
-  --gold-bright: #c9a84c;
+  --gold-bright: #bfa05a;
   --gold-deep: #8b6f2a;
-  --badge-warm: #c9a84c;
+  --stat-card-hover-from: #3a3530;
+  --stat-card-hover-to: #8a7d6a;
+  --stat-card-hover-fg: #ffffff;
+  --stat-card-hover-fg-muted: rgba(255, 255, 255, 0.7);
+  --stat-card-active-from: #3a3530;
+  --stat-card-active-to: #8a7d6a;
+  --stat-card-bg: #d0c8bc;
+  --stat-card-border: radial-gradient(
+    100% 100% at 50% 0%,
+    #ffffff 0%,
+    #ffffff 18%,
+    #f0ede6 72%,
+    #f0ede6 100%
+  );
+  --stat-card-border-hover: radial-gradient(
+    100% 100% at 50% 0%,
+    #ffffff 0%,
+    #f0ede6 55%,
+    #d0c8bc 100%
+  );
   --avatar-slate: #4a7c9e;
   --avatar-rose: #9e6b8a;
   --avatar-purple: #6b5b9e;
@@ -112,11 +170,27 @@
   --shadow-glow-primary: 0 0 8px rgba(201, 168, 76, 0.25);
   --shadow-glow-gold: 0 0 24px rgba(201, 168, 76, 0.2);
 
-  --gold: #c9a84c;
-  --gold-light: #d4b45c;
-  --gold-glow: rgba(201, 168, 76, 0.25);
-  --card-dark: rgba(229, 225, 216, 0.95);
+  --gold: #bfa05a;
+  --gold-light: #c9a84c;
+  --gold-glow: rgba(191, 160, 90, 0.25);
+  --card-dark: rgba(235, 230, 217, 0.95);
   --critical-banner: #f3ebe8;
+  --overview-border: rgba(26, 24, 22, 0.08);
+  --overview-heading-accent: #1a1816;
+  --tag-gold: #c9a84c;
+  --tag-pink: #c45c5c;
+  --tag-purple: #8b7cb8;
+  --nav-active-bg: radial-gradient(
+    140% 180% at 0% 50%,
+    #ffffff 0%,
+    #d0c8bc 28%,
+    #b3a99a 58%,
+    #8a7d6a 100%
+  );
+  --nav-active-fg: #1a1816;
+  --nav-active-indicator: #8a7d6a;
+  --nav-icon-active: #1a1816;
+  --nav-hover-bg: rgba(26, 24, 22, 0.04);
   --font-copperplate: "Copperplate", serif;
 }
 
@@ -141,6 +215,8 @@
   --color-vehicle-blue: var(--vehicle-blue);
   --color-gold-bright: var(--gold-bright);
   --color-gold-deep: var(--gold-deep);
+  --color-stat-card-hover-from: var(--stat-card-hover-from);
+  --color-stat-card-hover-to: var(--stat-card-hover-to);
   --color-badge-warm: var(--badge-warm);
   --color-avatar-slate: var(--avatar-slate);
   --color-avatar-rose: var(--avatar-rose);
@@ -157,6 +233,127 @@ body {
   font-weight: 400;
 }
 
+/* Admin overview — priority tags & actions (colors only) */
+.priority-tag {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.priority-tag--gold {
+  color: var(--tag-gold);
+  border-color: color-mix(in srgb, var(--tag-gold) 40%, transparent);
+  background: color-mix(in srgb, var(--tag-gold) 10%, transparent);
+}
+
+.priority-tag--pink {
+  color: var(--tag-pink);
+  border-color: color-mix(in srgb, var(--tag-pink) 40%, transparent);
+  background: color-mix(in srgb, var(--tag-pink) 10%, transparent);
+}
+
+.priority-tag--purple {
+  color: var(--tag-purple);
+  border-color: color-mix(in srgb, var(--tag-purple) 40%, transparent);
+  background: color-mix(in srgb, var(--tag-purple) 10%, transparent);
+}
+
+.priority-tag--teal {
+  color: var(--teal);
+  border-color: color-mix(in srgb, var(--teal) 40%, transparent);
+  background: color-mix(in srgb, var(--teal) 10%, transparent);
+}
+
+[data-theme="light"] .priority-tag--gold {
+  background: color-mix(in srgb, var(--tag-gold) 18%, transparent);
+}
+
+[data-theme="light"] .priority-tag--pink {
+  background: color-mix(in srgb, var(--tag-pink) 14%, transparent);
+}
+
+[data-theme="light"] .priority-tag--purple {
+  background: color-mix(in srgb, var(--tag-purple) 14%, transparent);
+}
+
+[data-theme="light"] .priority-tag--teal {
+  background: color-mix(in srgb, var(--teal) 14%, transparent);
+}
+
+.priority-action {
+  border-width: 1px;
+  border-style: solid;
+  background: transparent;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s,
+    color 0.2s;
+}
+
+.priority-action--gold {
+  color: var(--tag-gold);
+  border-color: color-mix(in srgb, var(--tag-gold) 50%, transparent);
+}
+
+.priority-action--gold:hover {
+  border-color: color-mix(in srgb, var(--tag-gold) 80%, transparent);
+  background: color-mix(in srgb, var(--tag-gold) 8%, transparent);
+}
+
+.priority-action--pink {
+  color: var(--tag-pink);
+  border-color: color-mix(in srgb, var(--tag-pink) 50%, transparent);
+}
+
+.priority-action--pink:hover {
+  border-color: color-mix(in srgb, var(--tag-pink) 80%, transparent);
+  background: color-mix(in srgb, var(--tag-pink) 8%, transparent);
+}
+
+/* Stat cards — 1.5px radial gradient border (Figma: light #F0EDE6 / #FFFFFF) */
+.stat-card-shell {
+  border: 1.5px solid transparent;
+  background-image:
+    linear-gradient(var(--stat-card-bg), var(--stat-card-bg)),
+    var(--stat-card-border);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  transition: background-image 0.2s ease;
+}
+
+.stat-card-shell:hover {
+  background-image:
+    linear-gradient(
+      to bottom right,
+      var(--stat-card-hover-from),
+      var(--stat-card-hover-to)
+    ),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
+.overview-elevated-card-shell {
+  border: 1px solid transparent;
+  background-image:
+    linear-gradient(var(--elevated), var(--elevated)),
+    var(--stat-card-border);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Sidebar — active nav item */
+.sidebar-nav-link--active {
+  background: var(--nav-active-bg);
+  color: var(--nav-active-fg);
+}
+
+.sidebar-nav-link--inactive {
+  color: var(--muted);
+}
+
+.sidebar-nav-link--inactive:hover {
+  background: var(--nav-hover-bg);
+  color: var(--foreground);
+}
+
 /* Copperplate — headings only */
 .font-copperplate,
 .font-headline {
@@ -164,6 +361,11 @@ body {
   font-weight: 400;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* Copperplate font family without the heading uppercase/letter-spacing */
+.font-copperplate-body {
+  font-family: var(--font-copperplate);
 }
 
 /* Roboto Regular — body & subheadings */
