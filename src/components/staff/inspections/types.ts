@@ -27,6 +27,7 @@ export type InspectionChecklistItem = {
 };
 
 export type ActiveInspection = {
+  id?: string;
   reference: string;
   vehicle: string;
   bay: string;
@@ -41,6 +42,7 @@ export type ActiveInspection = {
   };
   odometer: string;
   fuelLevel: string;
+  notes?: string;
 };
 
 export type InspectionStats = {

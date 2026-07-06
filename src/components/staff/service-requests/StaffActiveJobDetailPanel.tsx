@@ -11,6 +11,7 @@ import {
   normalizeStartSubtasks,
 } from "@/lib/staffJobs";
 import { useStaffActiveJob } from "./useStaffActiveJob";
+import type { JobCompleteEvent } from "./jobCompleteTypes";
 
 type DraftSubtask = {
   id: string;
@@ -34,8 +35,10 @@ function PanelShell({ children }: { children: React.ReactNode }) {
 
 export function StaffActiveJobDetailPanel({
   onWorkflowChange,
+  onJobCompleted,
 }: {
   onWorkflowChange?: () => void;
+  onJobCompleted?: (event: JobCompleteEvent) => void;
 }) {
   const {
     job,
@@ -169,9 +172,10 @@ export function StaffActiveJobDetailPanel({
   }
 
   async function handleCompleteJob() {
-    const saved = await completeJob();
+    const result = await completeJob();
 
-    if (saved) {
+    if (result) {
+      onJobCompleted?.({ ...result, at: Date.now() });
       onWorkflowChange?.();
     }
   }

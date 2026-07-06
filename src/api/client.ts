@@ -1,4 +1,5 @@
 import { normalizeHttpError, normalizeRequestError } from "@/lib/apiError";
+import type { ApiFieldError } from "@/types/api";
 
 const PROXY_PREFIX = "/api/backend";
 
@@ -57,7 +58,13 @@ export async function apiClient<T>(
   }
 
   if (!response.ok) {
-    throw normalizeHttpError(response.status, data?.message);
+    const apiError = normalizeHttpError(response.status, data?.message);
+
+    if (Array.isArray(data?.errors)) {
+      apiError.errors = data.errors as ApiFieldError[];
+    }
+
+    throw apiError;
   }
 
   return data as T;

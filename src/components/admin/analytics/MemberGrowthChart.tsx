@@ -13,12 +13,7 @@ import {
   type ScriptableContext,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
-import {
-  memberGrowthCumulative,
-  memberGrowthMonths,
-  memberGrowthNewPerMonth,
-  memberGrowthSummary,
-} from "./memberGrowthChartData";
+import type { MemberGrowthChartData } from "./types";
 
 ChartJS.register(
   CategoryScale,
@@ -31,7 +26,6 @@ ChartJS.register(
 
 const GOLD = "#C9A84C";
 const MUTED = "#7D7460";
-const TEAL = "#7DBFA0";
 const PURPLE = "#9E8AD4";
 const GRID = "rgba(212, 168, 71, 0.08)";
 
@@ -55,16 +49,38 @@ function buildCumulativeGradient(context: ScriptableContext<"line">) {
   return gradient;
 }
 
-export function MemberGrowthChart() {
-  const lastIndex = memberGrowthMonths.length - 1;
+type MemberGrowthChartProps = {
+  data: MemberGrowthChartData;
+  status?: "loading" | "error";
+};
 
-  const data = useMemo(
+export function MemberGrowthChart({ data, status }: MemberGrowthChartProps) {
+  const {
+    header,
+    months,
+    cumulative,
+    newPerMonth,
+    totalDisplay,
+    subtitle,
+    cumulativeLegend,
+    newLegend,
+  } = data;
+  const isLoading = status === "loading";
+  const isError = status === "error";
+  const lastIndex = months.length - 1;
+
+  const maxCumulative = useMemo(() => {
+    const max = cumulative.length ? Math.max(...cumulative) : 0;
+    return Math.max(Math.ceil((max || 1) * 1.2), 10);
+  }, [cumulative]);
+
+  const chartData = useMemo(
     () => ({
-      labels: [...memberGrowthMonths],
+      labels: months,
       datasets: [
         {
-          label: "Cumulative",
-          data: memberGrowthCumulative,
+          label: cumulativeLegend,
+          data: cumulative,
           borderColor: GOLD,
           backgroundColor: buildCumulativeGradient,
           borderWidth: 2,
@@ -79,8 +95,8 @@ export function MemberGrowthChart() {
           pointBorderWidth: 0,
         },
         {
-          label: "New / Month",
-          data: memberGrowthNewPerMonth,
+          label: newLegend,
+          data: newPerMonth,
           borderColor: "rgba(125, 116, 96, 0.55)",
           borderWidth: 1.5,
           borderDash: [5, 5],
@@ -94,7 +110,7 @@ export function MemberGrowthChart() {
         },
       ],
     }),
-    [lastIndex],
+    [months, cumulative, newPerMonth, cumulativeLegend, newLegend, lastIndex],
   );
 
   const options = useMemo<ChartOptions<"line">>(
@@ -140,7 +156,7 @@ export function MemberGrowthChart() {
           display: true,
           position: "left",
           min: 0,
-          max: 160,
+          max: maxCumulative,
           ticks: { display: false },
           grid: {
             color: GRID,
@@ -153,7 +169,7 @@ export function MemberGrowthChart() {
         padding: { top: 8, right: 4, left: 0, bottom: 0 },
       },
     }),
-    [lastIndex],
+    [lastIndex, maxCumulative],
   );
 
   return (
@@ -161,35 +177,58 @@ export function MemberGrowthChart() {
       <div className="flex items-start justify-between gap-6">
         <div className="space-y-2">
           <p className="font-roboto text-[10px] tracking-[0.16em] text-secondary uppercase">
-            Member Growth — 12 Month Trend
+            {header}
           </p>
-          <p className="font-copperplate text-[32px] leading-none tracking-[0.04em] text-foreground">
-            {memberGrowthSummary.totalMembers} Members
-          </p>
-          <p className="font-roboto text-[11px] tracking-[0.06em] text-teal">
-            {memberGrowthSummary.trailingGrowth} ·{" "}
-            {memberGrowthSummary.trailingLabel}
-          </p>
+          {isLoading ? (
+            <span className="relative block h-[32px] w-32 overflow-hidden rounded bg-accent/8">
+              <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/14 to-transparent" />
+            </span>
+          ) : (
+            <p className="font-copperplate text-[32px] leading-none tracking-[0.04em] text-foreground">
+              {totalDisplay}
+            </p>
+          )}
+          {isLoading ? (
+            <span className="relative block h-[14px] w-40 overflow-hidden rounded bg-accent/8">
+              <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/14 to-transparent" />
+            </span>
+          ) : (
+            <p className="font-roboto text-[11px] tracking-[0.06em] text-teal">
+              {subtitle}
+            </p>
+          )}
         </div>
 
         <div className="flex shrink-0  items-end gap-2.5 pt-1">
           <div className="flex items-center gap-2">
             <span className="h-px w-5 bg-primary" />
             <span className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
-              Cumulative
+              {cumulativeLegend}
             </span>
           </div>
           <div className="flex items-center gap-2">
             <span className="h-px w-5 border-t border-dashed border-muted/60" />
             <span className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
-              New / Month
+              {newLegend}
             </span>
           </div>
         </div>
       </div>
 
       <div className="mt-6 h-[200px] w-full">
-        <Line data={data} options={options} />
+        {isLoading ? (
+          <div className="relative h-full w-full overflow-hidden rounded-xl bg-accent/6">
+            <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/12 to-transparent" />
+          </div>
+        ) : isError ? (
+          <div className="flex h-full w-full items-center justify-center rounded-xl border border-dashed border-accent/15">
+            <p className="font-roboto text-xs text-secondary">
+              Unable to load chart data.
+            </p>
+          </div>
+        ) : (
+          <Line data={chartData} options={options} />
+        )}
       </div>
     </section>
   );

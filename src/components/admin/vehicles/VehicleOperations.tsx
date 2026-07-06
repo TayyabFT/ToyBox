@@ -148,9 +148,26 @@ export function VehicleOperations({
           </div>
 
           {loading && rows.length === 0 ? (
-            <p className="font-roboto py-8 text-center text-sm text-secondary">
-              Loading operations...
-            </p>
+            <div className="divide-y divide-accent/8" aria-hidden="true">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className={`${GRID} px-3 py-4`}>
+                  <div className="h-4 w-8 animate-pulse rounded bg-accent/10" />
+                  <div className="flex items-center gap-3">
+                    <div className="size-8 shrink-0 animate-pulse rounded-full bg-accent/10" />
+                    <div className="space-y-1.5">
+                      <div className="h-3 w-24 animate-pulse rounded bg-accent/10" />
+                      <div className="h-2.5 w-16 animate-pulse rounded bg-accent/10" />
+                    </div>
+                  </div>
+                  <div className="h-3 w-28 animate-pulse rounded bg-accent/10" />
+                  <div className="h-5 w-20 animate-pulse rounded-full bg-accent/10" />
+                  <div className="h-3 w-20 animate-pulse rounded bg-accent/10" />
+                  <div className="flex justify-end">
+                    <div className="h-6 w-16 animate-pulse rounded-full bg-accent/10" />
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : null}
 
           {!loading && rows.length === 0 ? (

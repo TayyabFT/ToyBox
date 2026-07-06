@@ -25,9 +25,16 @@ import { ServiceRequestsDashboard } from "@/components/shared/service-requests/S
 import { StaffActiveJobDetailPanel } from "./StaffActiveJobDetailPanel";
 import { StaffCompletedJobsSection } from "./StaffCompletedJobsSection";
 import { StaffJobQueueSection } from "./StaffJobQueueSection";
+import type { JobCompleteEvent } from "./jobCompleteTypes";
 
 export function ServiceRequestsPage() {
   const [jobsRefreshToken, setJobsRefreshToken] = useState(0);
+  const [completeEvent, setCompleteEvent] = useState<JobCompleteEvent | null>(null);
+
+  function handleJobCompleted(event: JobCompleteEvent) {
+    setCompleteEvent(event);
+    setJobsRefreshToken((current) => current + 1);
+  }
 
   return (
     <>
@@ -39,6 +46,7 @@ export function ServiceRequestsPage() {
           onWorkflowChange={() =>
             setJobsRefreshToken((current) => current + 1)
           }
+          onJobCompleted={handleJobCompleted}
         />
       }
       transport={{
@@ -83,8 +91,14 @@ export function ServiceRequestsPage() {
       }}
       />
       <div className="grid grid-cols-1 gap-4 px-8 pb-8 xl:grid-cols-2">
-        <StaffJobQueueSection refreshToken={jobsRefreshToken} />
-        <StaffCompletedJobsSection refreshToken={jobsRefreshToken} />
+        <StaffJobQueueSection
+          refreshToken={jobsRefreshToken}
+          completeEvent={completeEvent}
+        />
+        <StaffCompletedJobsSection
+          refreshToken={jobsRefreshToken}
+          completeEvent={completeEvent}
+        />
       </div>
     </>
   );

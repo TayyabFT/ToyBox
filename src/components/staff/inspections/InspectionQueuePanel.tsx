@@ -7,6 +7,7 @@ type InspectionQueuePanelProps = {
   items: InspectionQueueItem[];
   selectedId: string;
   pendingCount: number;
+  loading?: boolean;
   onSelect: (id: string) => void;
 };
 
@@ -14,6 +15,7 @@ export function InspectionQueuePanel({
   items,
   selectedId,
   pendingCount,
+  loading = false,
   onSelect,
 }: InspectionQueuePanelProps) {
   return (
@@ -26,6 +28,18 @@ export function InspectionQueuePanel({
       </div>
 
       <div className="Custom__Scrollbar max-h-[720px] overflow-y-auto">
+        {loading && items.length === 0 ? (
+          <p className="font-roboto px-5 py-8 text-center text-sm text-secondary">
+            Loading inspection queue...
+          </p>
+        ) : null}
+
+        {!loading && items.length === 0 ? (
+          <p className="font-roboto px-5 py-8 text-center text-sm text-secondary">
+            No inspections in queue.
+          </p>
+        ) : null}
+
         {items.map((item) => (
           <VehicleListItemRow
             key={item.id}

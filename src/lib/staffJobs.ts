@@ -112,6 +112,21 @@ export function unwrapCompletePayload(data: unknown): StaffActiveJobRaw | null {
   return null;
 }
 
+export function unwrapCompletedJobPayload(data: unknown): StaffActiveJobRaw | null {
+  if (!data || typeof data !== "object") {
+    return null;
+  }
+
+  const record = data as Record<string, unknown>;
+  const completed = record.completed;
+
+  if (completed && typeof completed === "object") {
+    return completed as StaffActiveJobRaw;
+  }
+
+  return null;
+}
+
 function normalizeQueueStatus(job: StaffActiveJobRaw): StaffJobQueueStatus {
   const status = job.status?.trim().toLowerCase().replace(/-/g, "_") ?? "";
   const badge = job.statusBadge?.label?.trim().toLowerCase() ?? "";

@@ -64,9 +64,15 @@ export type AuthProfileData = {
 
 export type AuthProfileResponse = ApiResponse<AuthProfileData>;
 
+export type ApiFieldError = {
+  field?: string;
+  message?: string;
+};
+
 export type ApiError = {
   status: number;
   message: string;
+  errors?: ApiFieldError[];
 };
 
 export type InviteRole = "member" | "staff";
@@ -727,6 +733,69 @@ export type AdminVehicleDetailRaw = {
 
 export type AdminVehicleDetailResponse = ApiResponse<AdminVehicleDetailRaw>;
 
+export type AdminVehicleDetailsOwnerRaw = {
+  id?: string;
+  name?: string;
+  initial?: string;
+  memberNumber?: string;
+  membershipTier?: string;
+  tierLabel?: string;
+  memberSince?: string;
+  infoLabel?: string;
+  totalVehiclesRegistered?: number;
+};
+
+export type AdminVehicleDetailsKeyAssignmentRaw = {
+  bay?: string;
+  bayCode?: string;
+  levelCode?: string;
+  storedStatus?: string;
+  inspectionStatus?: string;
+  storedSince?: string;
+  daysStored?: number;
+  daysStoredLabel?: string;
+  lastInspectedBy?: string;
+};
+
+export type AdminVehicleDetailsActivityRaw = {
+  id?: string;
+  title?: string;
+  dotColor?: string;
+  occurredAt?: string;
+  description?: string;
+  /** Legacy / alternate field names */
+  label?: string;
+  value?: string;
+  meta?: string;
+  detail?: string;
+  time?: string;
+  tone?: string;
+};
+
+export type AdminVehicleDetailsScreenRaw = {
+  id?: string;
+  make?: string;
+  model?: string;
+  displayName?: string;
+  subtitle?: string;
+  year?: number;
+  colour?: string;
+  engine?: string;
+  mileage?: string;
+  plate?: string;
+  vin?: string;
+  status?: string;
+  statusKey?: string;
+  statusLabel?: string;
+  imageUrl?: string;
+  owner?: AdminVehicleDetailsOwnerRaw;
+  keyAssignment?: AdminVehicleDetailsKeyAssignmentRaw;
+  activityHistory?: AdminVehicleDetailsActivityRaw[];
+};
+
+export type AdminVehicleDetailsScreenResponse =
+  ApiResponse<AdminVehicleDetailsScreenRaw>;
+
 export type AdminDetailingPackage = {
   key?: string;
   name?: string;
@@ -1232,6 +1301,274 @@ export type StaffJobActiveNoteRequest = {
   note: string;
 };
 
+export type StaffInspectionStatRaw = {
+  value?: string | number;
+  subtitle?: string;
+  subtext?: string;
+  label?: string;
+};
+
+export type StaffInspectionDashboardSummaryRaw = {
+  dueToday?: StaffInspectionStatRaw;
+  inProgress?: StaffInspectionStatRaw;
+  completedThisShift?: StaffInspectionStatRaw;
+  completed?: StaffInspectionStatRaw;
+  flaggedIssues?: StaffInspectionStatRaw;
+  flagged?: StaffInspectionStatRaw;
+};
+
+export type StaffInspectionVehicleRaw = {
+  id?: string | number;
+  name?: string;
+  label?: string;
+  make?: string;
+  model?: string;
+  displayName?: string;
+};
+
+export type StaffInspectionStaffRaw = {
+  id?: string | number;
+  name?: string;
+  label?: string;
+};
+
+export type StaffInspectionQueueItemRaw = {
+  id?: string | number;
+  referenceNumber?: string;
+  statusKey?: string;
+  status?: string;
+  vehicle?: StaffInspectionVehicleRaw | string;
+  assignedStaff?: StaffInspectionStaffRaw | string;
+  assignee?: string;
+  assigneeName?: string;
+  serviceType?: string;
+  inspectionType?: string;
+  bay?: string;
+  scheduledAt?: string;
+  time?: string;
+};
+
+export type StaffInspectionListData = {
+  dashboardSummary?: StaffInspectionDashboardSummaryRaw;
+  inspections?: StaffInspectionQueueItemRaw[];
+  total?: number;
+};
+
+export type StaffInspectionListResponse = ApiResponse<StaffInspectionListData>;
+
+export type StaffInspectionSummaryResponse =
+  ApiResponse<StaffInspectionDashboardSummaryRaw>;
+
+export type StaffInspectionChecklistItemRaw = {
+  key?: string;
+  id?: string | number;
+  label?: string;
+  status?: string;
+  step?: string;
+};
+
+export type StaffInspectionStepRaw = {
+  key?: string;
+  id?: string;
+  label?: string;
+  status?: string;
+  state?: string;
+};
+
+export type StaffInspectionFlaggedIssueRaw = {
+  key?: string;
+  tag?: string;
+  label?: string;
+  notes?: string;
+  note?: string;
+};
+
+export type StaffInspectionDetailRaw = {
+  id?: string | number;
+  referenceNumber?: string;
+  reference?: string;
+  vehicle?: StaffInspectionVehicleRaw | string;
+  bay?: string;
+  mileage?: string | number;
+  odometerReading?: string | number;
+  inspectionType?: string;
+  type?: string;
+  currentStep?: string;
+  activeStep?: string;
+  steps?: StaffInspectionStepRaw[];
+  checklist?: StaffInspectionChecklistItemRaw[];
+  flaggedIssues?: StaffInspectionFlaggedIssueRaw[];
+  flaggedIssue?: StaffInspectionFlaggedIssueRaw;
+  fuelLevel?: string;
+  notes?: string;
+};
+
+export type StaffInspectionDetailResponse = ApiResponse<StaffInspectionDetailRaw>;
+
+export type StaffInspectionMutationResponse = ApiResponse<StaffInspectionDetailRaw>;
+
+export type StaffHealthReportTabRaw = {
+  key?: string;
+  label?: string;
+};
+
+export type StaffHealthReportCountsRaw = {
+  all?: number;
+  critical?: number;
+  due_service?: number;
+  healthy?: number;
+  [key: string]: number | undefined;
+};
+
+export type StaffHealthReportFleetSummaryRaw = {
+  label?: string;
+  totalVehicles?: number;
+  overviewLabel?: string;
+  tabs?: StaffHealthReportTabRaw[];
+  counts?: StaffHealthReportCountsRaw;
+};
+
+export type StaffHealthReportVehicleRaw = {
+  id?: string;
+  displayName?: string;
+  make?: string;
+  model?: string;
+  year?: number;
+  colour?: string;
+  imageUrl?: string;
+  healthPercent?: number;
+  healthReportRef?: string;
+  healthReportLabel?: string;
+  statusLabel?: string;
+  filterKey?: string;
+  bay?: string;
+  memberName?: string;
+  memberId?: string;
+  memberNumber?: string;
+  memberCode?: string;
+  mileage?: string;
+  mileageRaw?: string;
+  locationLine?: string;
+  lastServiceDisplay?: string;
+  lastServicedAt?: string;
+  isOverdueService?: boolean;
+  overdueDays?: string | number;
+  overdueLabel?: string;
+  serviceDueDisplay?: string;
+  subtitle?: string;
+  storageLocation?: string;
+  overallConditionLabel?: string;
+  criticalHealthCount?: number;
+};
+
+export type StaffHealthReportVehiclesData = {
+  fleetHealthSummary?: StaffHealthReportFleetSummaryRaw;
+  filterKey?: string;
+  tabs?: StaffHealthReportTabRaw[];
+  counts?: StaffHealthReportCountsRaw;
+  vehicles?: StaffHealthReportVehicleRaw[];
+  total?: number;
+  limit?: number;
+  offset?: number;
+};
+
+export type StaffHealthReportSystemItemRaw = {
+  key?: string;
+  label?: string;
+  percentage?: number;
+  note?: string;
+};
+
+export type StaffHealthReportIssueRaw = {
+  id?: string;
+  type?: string;
+  severity?: string;
+  title?: string;
+  detail?: string;
+  category?: string;
+  urgency?: string;
+  percentage?: number;
+  actionLabel?: string;
+};
+
+export type StaffHealthReportServiceHistoryItemRaw = {
+  id?: string;
+  date?: string;
+  title?: string;
+  location?: string;
+  detail?: string;
+};
+
+export type StaffHealthReportDetailRaw = StaffHealthReportVehicleRaw & {
+  overallCondition?: {
+    label?: string;
+    healthPercent?: number;
+    statusLabel?: string;
+    isCritical?: boolean;
+    isServiceOverdue?: boolean;
+    overdueLabel?: string;
+  };
+  serviceDue?: {
+    memberName?: string;
+    serviceDueDisplay?: string;
+    overdueDays?: string | number;
+    label?: string;
+  };
+  systemBreakdown?: {
+    label?: string;
+    criticalCount?: number;
+    items?: StaffHealthReportSystemItemRaw[];
+  };
+  flaggedIssues?: {
+    label?: string;
+    items?: StaffHealthReportIssueRaw[];
+  };
+  serviceHistory?: {
+    label?: string;
+    viewAllLabel?: string;
+    items?: StaffHealthReportServiceHistoryItemRaw[];
+  };
+  currentShift?: {
+    key?: string;
+    label?: string;
+    displayDate?: string;
+    startTime?: string;
+    endTime?: string;
+    timeRemainingMinutes?: number;
+    timeRemainingLabel?: string;
+  };
+};
+
+export type StaffHealthReportVehiclesResponse =
+  ApiResponse<StaffHealthReportVehiclesData>;
+
+export type StaffHealthReportDetailResponse =
+  ApiResponse<StaffHealthReportDetailRaw>;
+
+export type StaffInspectionType =
+  | "pre_service"
+  | "storage_check_in"
+  | "general";
+
+export type StaffInspectionCreateRequest = {
+  vehicleId: string;
+  memberId: string;
+  inspectionType: StaffInspectionType;
+  scheduledAt: string;
+  bay: string;
+  assignedStaffId: string;
+  odometerReading?: string;
+  fuelLevel?: string;
+};
+
+export type StaffInspectionDraftRequest = {
+  currentStep?: string;
+  checklist?: Array<{ key: string; status: string }>;
+  odometerReading?: string;
+  fuelLevel?: string;
+  notes?: string;
+};
+
 export type AssignVehicleRequest = {
   vehicleId: string;
   memberId: string;
@@ -1664,8 +2001,12 @@ export type AdminOverviewPriorityItem = {
   time: string;
   title: string;
   detail: string;
-  memberId: string;
-  memberName: string;
+  memberId?: string;
+  memberName?: string;
+  attendeeCount?: number;
+  capacity?: number;
+  sourceType?: string;
+  sourceId?: string;
   priority: string;
 };
 
@@ -1773,3 +2114,103 @@ export type AdminOverviewData = {
 };
 
 export type AdminOverviewResponse = ApiResponse<AdminOverviewData>;
+
+export type AdminAnalyticsPeriod = {
+  key?: string;
+  from?: string;
+  to?: string;
+  label?: string;
+  interval?: string;
+};
+
+export type AdminAnalyticsKpiRaw = {
+  label?: string;
+  value?: number;
+  displayValue?: string;
+  subtitle?: string;
+  delta?: number;
+  deltaLabel?: string;
+};
+
+export type AdminAnalyticsKpis = {
+  growth?: AdminAnalyticsKpiRaw;
+  retention?: AdminAnalyticsKpiRaw;
+  nps?: AdminAnalyticsKpiRaw;
+  engagement?: AdminAnalyticsKpiRaw;
+};
+
+export type AdminAnalyticsStatsData = {
+  period?: AdminAnalyticsPeriod;
+  kpis?: AdminAnalyticsKpis;
+};
+
+export type AdminAnalyticsStatsResponse = ApiResponse<AdminAnalyticsStatsData>;
+
+export type AdminAnalyticsSeriesPoint = {
+  x?: string;
+  y?: number;
+};
+
+export type AdminAnalyticsMemberGrowthRaw = {
+  header?: string;
+  totalMembers?: number;
+  displayValue?: string;
+  subtitle?: string;
+  newInPeriod?: number;
+  legends?: {
+    cumulative?: string;
+    new?: string;
+  };
+  series?: {
+    cumulative?: AdminAnalyticsSeriesPoint[];
+    new?: AdminAnalyticsSeriesPoint[];
+  };
+};
+
+export type AdminAnalyticsMemberAttendanceRaw = {
+  label?: string;
+  value?: number;
+  displayValue?: string;
+  delta?: number;
+  deltaLabel?: string;
+  bottomLeftLabel?: string;
+  bottomRightLabel?: string;
+  totalAttended?: number;
+  series?: AdminAnalyticsSeriesPoint[];
+};
+
+export type AdminAnalyticsConciergeLoadRaw = {
+  label?: string;
+  value?: number;
+  displayValue?: string;
+  deltaLabel?: string;
+  bottomLeftLabel?: string;
+  bottomRightLabel?: string;
+  series?: AdminAnalyticsSeriesPoint[];
+};
+
+export type AdminAnalyticsVehicleUtilRaw = {
+  label?: string;
+  value?: number;
+  displayValue?: string;
+  delta?: number;
+  deltaLabel?: string;
+  peakHour?: string;
+  activeVehicles?: number;
+  totalVehicles?: number;
+  bottomLeftLabel?: string;
+  bottomCenterLabel?: string;
+  bottomRightLabel?: string;
+  series?: AdminAnalyticsSeriesPoint[];
+};
+
+export type AdminAnalyticsDashboardData = {
+  period?: AdminAnalyticsPeriod;
+  memberGrowth?: AdminAnalyticsMemberGrowthRaw;
+  memberAttendance?: AdminAnalyticsMemberAttendanceRaw;
+  conciergeLoad?: AdminAnalyticsConciergeLoadRaw;
+  vehicleUtil?: AdminAnalyticsVehicleUtilRaw;
+};
+
+export type AdminAnalyticsDashboardResponse =
+  ApiResponse<AdminAnalyticsDashboardData>;

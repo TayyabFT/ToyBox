@@ -10,70 +10,128 @@ import {
 import { StatCard } from "@/components/staff/overview/StatCard";
 import { ActiveInspectionPanel } from "./ActiveInspectionPanel";
 import { InspectionQueuePanel } from "./InspectionQueuePanel";
+import { AddInspectionModal } from "./add-inspection";
 import { InspectionsGreeting } from "./InspectionsGreeting";
-import {
-  activeInspection,
-  inspectionQueue,
-  inspectionStats,
-} from "./mockData";
+import { useStaffInspections } from "./useStaffInspections";
 
 export function InspectionsPage() {
-  const [selectedId, setSelectedId] = useState(inspectionQueue[0]?.id ?? "");
+  const [addInspectionOpen, setAddInspectionOpen] = useState(false);
+  const {
+    stats,
+    queue,
+    selectedId,
+    setSelectedId,
+    inspection,
+    loading,
+    detailLoading,
+    actionLoading,
+    pendingCount,
+    saveDraft,
+    submitReport,
+    uploadPhoto,
+    toggleChecklistItem,
+    changeStep,
+    updateOdometer,
+    updateFuelLevel,
+    updateNotes,
+    createInspection,
+  } = useStaffInspections();
 
-  const pendingCount = useMemo(
-    () =>
-      inspectionQueue.filter(
-        (item) => item.status === "pending" || item.status === "overdue",
-      ).length,
-    [],
+  const statCards = useMemo(
+    () => [
+      {
+        label: "Due Today",
+        value: stats.dueToday.value,
+        subtext: stats.dueToday.subtext,
+        icon: <ActionCheckbox />,
+      },
+      {
+        label: "In Progress",
+        value: stats.inProgress.value,
+        subtext: stats.inProgress.subtext,
+        icon: <ConfirmationPendingClock />,
+      },
+      {
+        label: "Completed",
+        value: stats.completed.value,
+        subtext: stats.completed.subtext,
+        icon: <VehicleFleetReady />,
+      },
+      {
+        label: "Flagged Issues",
+        value: stats.flagged.value,
+        subtext: stats.flagged.subtext,
+        icon: <VehicleFlag />,
+        highlighted: true,
+      },
+    ],
+    [stats],
   );
 
   return (
     <div className="space-y-8 p-8">
-      <InspectionsGreeting />
+      <InspectionsGreeting onAddInspection={() => setAddInspectionOpen(true)} />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
-        <StatCard
-          label="Due Today"
-          value={inspectionStats.dueToday.value}
-          subtext={inspectionStats.dueToday.subtext}
-          icon={<ActionCheckbox />}
-          iconSize="lg"
-        />
-        <StatCard
-          label="In Progress"
-          value={inspectionStats.inProgress.value}
-          subtext={inspectionStats.inProgress.subtext}
-          icon={<ConfirmationPendingClock />}
-          iconSize="lg"
-        />
-        <StatCard
-          label="Completed"
-          value={inspectionStats.completed.value}
-          subtext={inspectionStats.completed.subtext}
-          icon={<VehicleFleetReady />}
-          iconSize="lg"
-        />
-        <StatCard
-          label="Flagged Issues"
-          value={inspectionStats.flagged.value}
-          subtext={inspectionStats.flagged.subtext}
-          icon={<VehicleFlag />}
-          iconSize="lg"
-          highlighted
-        />
+        {statCards.map((card) => (
+          <StatCard
+            key={card.label}
+            label={card.label}
+            value={loading ? "—" : card.value}
+            subtext={card.subtext}
+            icon={card.icon}
+            iconSize="lg"
+            valueLoading={loading}
+            highlighted={card.highlighted}
+          />
+        ))}
       </div>
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         <InspectionQueuePanel
-          items={inspectionQueue}
+          items={queue}
           selectedId={selectedId}
           pendingCount={pendingCount}
+          loading={loading}
           onSelect={setSelectedId}
         />
 
-        <ActiveInspectionPanel inspection={activeInspection} />
+        {detailLoading && !inspection ? (
+          <section className="rounded-2xl border border-accent/10 bg-card p-5">
+            <p className="font-roboto py-16 text-center text-sm text-secondary">
+              Loading inspection detail...
+            </p>
+          </section>
+        ) : inspection ? (
+          <ActiveInspectionPanel
+            inspection={inspection}
+            actionLoading={actionLoading}
+            onSaveDraft={() => void saveDraft()}
+            onSubmit={() => void submitReport()}
+            onUploadPhoto={uploadPhoto}
+            onToggleChecklistItem={toggleChecklistItem}
+            onStepBack={() => changeStep("back")}
+            onStepNext={() => changeStep("next")}
+            onOdometerChange={updateOdometer}
+            onFuelLevelChange={updateFuelLevel}
+            onNotesChange={updateNotes}
+          />
+        ) : (
+          <section className="rounded-2xl border border-accent/10 bg-card p-5">
+            <p className="font-roboto py-16 text-center text-sm text-secondary">
+              {loading
+                ? "Loading inspections..."
+                : "Select an inspection from the queue."}
+            </p>
+          </section>
+        )}
       </div>
+
+      <AddInspectionModal
+        open={addInspectionOpen}
+        onClose={() => setAddInspectionOpen(false)}
+        onSubmit={createInspection}
+      />
     </div>
   );
 }

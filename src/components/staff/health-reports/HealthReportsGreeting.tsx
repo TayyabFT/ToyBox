@@ -1,16 +1,18 @@
 "use client";
 
-import type { HealthFilter } from "./types";
+import type { HealthFilter, HealthReportTab } from "./types";
 import { HealthReportsFilterTabs } from "./HealthReportsFilterTabs";
 
 type HealthReportsGreetingProps = {
   activeFilter: HealthFilter;
   onFilterChange: (filter: HealthFilter) => void;
+  tabs?: HealthReportTab[];
 };
 
 export function HealthReportsGreeting({
   activeFilter,
   onFilterChange,
+  tabs,
 }: HealthReportsGreetingProps) {
   return (
     <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
@@ -28,6 +30,7 @@ export function HealthReportsGreeting({
       <HealthReportsFilterTabs
         active={activeFilter}
         onChange={onFilterChange}
+        tabs={tabs}
       />
     </div>
   );

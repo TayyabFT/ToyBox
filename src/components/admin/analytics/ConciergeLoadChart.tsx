@@ -14,7 +14,8 @@ import {
 } from "chart.js";
 import { Line } from "react-chartjs-2";
 import { AnalyticsInsightCard } from "./AnalyticsInsightCard";
-import { conciergeLoadSeries, PURPLE } from "./analyticsChartTheme";
+import { PURPLE } from "./analyticsChartTheme";
+import type { ConciergeLoadChartData } from "./types";
 
 ChartJS.register(
   CategoryScale,
@@ -44,13 +45,20 @@ function buildPurpleGradient(context: ScriptableContext<"line">) {
   return gradient;
 }
 
-export function ConciergeLoadChart() {
-  const data = useMemo(
+type ConciergeLoadChartProps = {
+  data: ConciergeLoadChartData;
+  status?: "loading" | "error";
+};
+
+export function ConciergeLoadChart({ data, status }: ConciergeLoadChartProps) {
+  const { value, trend, footerLeft, footerRight, series } = data;
+
+  const chartData = useMemo(
     () => ({
-      labels: conciergeLoadSeries.map((_, index) => String(index)),
+      labels: series.map((_, index) => String(index)),
       datasets: [
         {
-          data: conciergeLoadSeries,
+          data: series,
           borderColor: PURPLE,
           backgroundColor: buildPurpleGradient,
           borderWidth: 2,
@@ -61,7 +69,7 @@ export function ConciergeLoadChart() {
         },
       ],
     }),
-    [],
+    [series],
   );
 
   const options = useMemo<ChartOptions<"line">>(
@@ -93,13 +101,14 @@ export function ConciergeLoadChart() {
   return (
     <AnalyticsInsightCard
       title="Concierge Load"
-      value="487/MO"
-      trend="4m 12s"
-      footerLeft="Steve handles"
-      footerRight="38%"
+      value={value}
+      trend={trend}
+      footerLeft={footerLeft}
+      footerRight={footerRight}
+      status={status}
     >
       <div className="h-[88px] w-full">
-        <Line data={data} options={options} />
+        <Line data={chartData} options={options} />
       </div>
     </AnalyticsInsightCard>
   );

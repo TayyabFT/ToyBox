@@ -93,6 +93,7 @@ export function VehiclesStatsRow({
               subtext={stat.subtext}
               trend={stat.trend}
               icon={icon}
+              valueLoading={loading}
             />
           </div>
         );

@@ -61,11 +61,13 @@ function ChecklistCheckbox({ state }: { state: ChecklistItemState }) {
 type InspectionChecklistSectionProps = {
   stepLabel: string;
   items: InspectionChecklistItem[];
+  onToggleItem?: (itemId: string) => void;
 };
 
 export function InspectionChecklistSection({
   stepLabel,
   items,
+  onToggleItem,
 }: InspectionChecklistSectionProps) {
   const midpoint = Math.ceil(items.length / 2);
   const leftColumn = items.slice(0, midpoint);
@@ -82,38 +84,47 @@ export function InspectionChecklistSection({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-2">
-        {[leftColumn, rightColumn].map((column, columnIndex) => (
-          <div key={columnIndex} className="space-y-3">
-            {column.map((item) => (
-              <div
-                key={item.id}
-                className={`flex items-center justify-between gap-3 rounded-lg border px-3 py-2.5 ${
-                  item.state === "issue"
-                    ? "border-pink/25 bg-pink/[0.04]"
-                    : "border-accent/10 bg-elevated/60"
-                }`}
-              >
-                <div className="flex min-w-0 items-center gap-3">
-                  <ChecklistCheckbox state={item.state} />
-                  <p
-                    className={`font-roboto text-[12px] tracking-[0.02em] ${
-                      item.state === "issue"
-                        ? "text-pink"
-                        : item.state === "pending"
-                          ? "text-secondary"
-                          : "text-foreground"
-                    }`}
-                  >
-                    {item.label}
-                  </p>
-                </div>
-                <ChecklistStatus state={item.state} />
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <p className="font-roboto rounded-xl border border-dashed border-accent/20 px-4 py-6 text-center text-sm text-secondary">
+          No checklist items for this step.
+        </p>
+      ) : (
+        <div className="grid grid-cols-1 gap-x-8 gap-y-3 md:grid-cols-2">
+          {[leftColumn, rightColumn].map((column, columnIndex) => (
+            <div key={columnIndex} className="space-y-3">
+              {column.map((item) => (
+                <button
+                  key={item.id}
+                  type="button"
+                  disabled={!onToggleItem}
+                  onClick={() => onToggleItem?.(item.id)}
+                  className={`flex w-full items-center justify-between gap-3 rounded-lg border px-3 py-2.5 text-left transition-colors ${
+                    item.state === "issue"
+                      ? "border-pink/25 bg-pink/[0.04]"
+                      : "border-accent/10 bg-elevated/60"
+                  } ${onToggleItem ? "cursor-pointer hover:border-primary/25" : "cursor-default"}`}
+                >
+                  <div className="flex min-w-0 items-center gap-3">
+                    <ChecklistCheckbox state={item.state} />
+                    <p
+                      className={`font-roboto text-[12px] tracking-[0.02em] ${
+                        item.state === "issue"
+                          ? "text-pink"
+                          : item.state === "pending"
+                            ? "text-secondary"
+                            : "text-foreground"
+                      }`}
+                    >
+                      {item.label}
+                    </p>
+                  </div>
+                  <ChecklistStatus state={item.state} />
+                </button>
+              ))}
+            </div>
+          ))}
+        </div>
+      )}
     </section>
   );
 }

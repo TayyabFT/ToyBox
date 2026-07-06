@@ -41,6 +41,37 @@ export type VehicleDocumentLink = {
   url: string;
 };
 
+export type VehicleActivityHistoryItem = {
+  id: string;
+  label: string;
+  value: string;
+  meta: string;
+  tone: "teal" | "gold" | "red";
+};
+
+export type VehicleDetailsScreenDisplay = {
+  id: string;
+  make: string;
+  model: string;
+  displayName: string;
+  subtitle: string;
+  statusLabel: string;
+  statusKey: string;
+  plate: string;
+  vin: string;
+  ownerInitial: string;
+  ownerName: string;
+  ownerInfoLabel: string;
+  specifications: { label: string; value: string }[];
+  bayCode: string;
+  levelCode: string;
+  bayTitle: string;
+  storedStatus: string;
+  inspectionStatus: string;
+  bayDetails: { label: string; value: string }[];
+  activityHistory: VehicleActivityHistoryItem[];
+};
+
 export type VehicleProfileDetail = {
   id: string;
   displayName: string;

@@ -12,26 +12,28 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { AnalyticsInsightCard } from "./AnalyticsInsightCard";
-import {
-  eventAttendanceBars,
-  eventAttendanceBrightBars,
-  GOLD_BRIGHT,
-  GOLD_MUTED,
-} from "./analyticsChartTheme";
+import { GOLD_BRIGHT, GOLD_MUTED } from "./analyticsChartTheme";
+import type { EventAttendanceChartData } from "./types";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
-export function EventAttendanceChart() {
-  const data = useMemo(
+type EventAttendanceChartProps = {
+  data: EventAttendanceChartData;
+  status?: "loading" | "error";
+};
+
+export function EventAttendanceChart({ data, status }: EventAttendanceChartProps) {
+  const { value, trend, footerLeft, footerRight, series, brightIndexes } = data;
+  const brightSet = useMemo(() => new Set(brightIndexes), [brightIndexes]);
+
+  const chartData = useMemo(
     () => ({
-      labels: eventAttendanceBars.map((_, index) => String(index)),
+      labels: series.map((_, index) => String(index)),
       datasets: [
         {
-          data: eventAttendanceBars,
+          data: series,
           backgroundColor: (context: ScriptableContext<"bar">) =>
-            eventAttendanceBrightBars.has(context.dataIndex)
-              ? GOLD_BRIGHT
-              : GOLD_MUTED,
+            brightSet.has(context.dataIndex) ? GOLD_BRIGHT : GOLD_MUTED,
           borderRadius: { topLeft: 4, topRight: 4, bottomLeft: 0, bottomRight: 0 },
           borderSkipped: false,
           barPercentage: 0.72,
@@ -39,7 +41,7 @@ export function EventAttendanceChart() {
         },
       ],
     }),
-    [],
+    [series, brightSet],
   );
 
   const options = useMemo<ChartOptions<"bar">>(
@@ -58,7 +60,6 @@ export function EventAttendanceChart() {
         y: {
           display: false,
           min: 0,
-          max: 100,
           grid: { display: false },
         },
       },
@@ -72,13 +73,14 @@ export function EventAttendanceChart() {
   return (
     <AnalyticsInsightCard
       title="Event Attendance"
-      value="87%"
-      trend="+4%"
-      footerLeft="12m"
-      footerRight="Concours - 100%"
+      value={value}
+      trend={trend}
+      footerLeft={footerLeft}
+      footerRight={footerRight}
+      status={status}
     >
       <div className="h-[88px] w-full">
-        <Bar data={data} options={options} />
+        <Bar data={chartData} options={options} />
       </div>
     </AnalyticsInsightCard>
   );

@@ -50,14 +50,49 @@ function SectionCard({
   );
 }
 
-function ViewAllButton() {
+const ROW_LIMIT = 4;
+
+function ViewAllButton({ onClick }: { onClick: () => void }) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className="font-roboto cursor-pointer text-[9px] font-semibold tracking-[0.16em] text-primary uppercase transition-colors hover:text-accent"
     >
       View All
     </button>
+  );
+}
+
+function ListModal({
+  title,
+  onClose,
+  children,
+}: {
+  title: string;
+  onClose: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm">
+      <div className="flex max-h-[80vh] w-full max-w-md flex-col overflow-hidden rounded-2xl border border-accent/20 bg-card shadow-2xl">
+        <div className="flex shrink-0 items-center justify-between border-b border-accent/8 p-5">
+          <h3 className="font-roboto text-[11px] font-semibold tracking-[0.18em] text-secondary uppercase">
+            {title}
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            className="font-roboto cursor-pointer text-[10px] font-semibold tracking-[0.12em] text-secondary uppercase transition-colors hover:text-foreground"
+          >
+            Close
+          </button>
+        </div>
+        <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto p-5">
+          {children}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -76,7 +111,15 @@ function activityDotClass(tone: string): string {
   return "bg-primary";
 }
 
-function VehiclesList({ items }: { items: MemberVehicleEntry[] }) {
+function VehiclesList({
+  items,
+  limit,
+}: {
+  items: MemberVehicleEntry[];
+  limit?: number;
+}) {
+  const rows = limit ? items.slice(0, limit) : items;
+
   if (items.length === 0) {
     return (
       <p className="font-roboto py-4 text-center text-[12px] text-secondary">
@@ -87,7 +130,7 @@ function VehiclesList({ items }: { items: MemberVehicleEntry[] }) {
 
   return (
     <ul className="space-y-2.5">
-      {items.map((vehicle) => (
+      {rows.map((vehicle) => (
         <li
           key={vehicle.id}
           className="flex items-center gap-3 border-b border-[#D4A8470F] px-5 py-2.5"
@@ -121,7 +164,15 @@ function VehiclesList({ items }: { items: MemberVehicleEntry[] }) {
   );
 }
 
-function UpcomingEventsList({ items }: { items: MemberUpcomingEventEntry[] }) {
+function UpcomingEventsList({
+  items,
+  limit,
+}: {
+  items: MemberUpcomingEventEntry[];
+  limit?: number;
+}) {
+  const rows = limit ? items.slice(0, limit) : items;
+
   if (items.length === 0) {
     return (
       <p className="font-roboto py-4 text-center text-[12px] text-secondary">
@@ -132,7 +183,7 @@ function UpcomingEventsList({ items }: { items: MemberUpcomingEventEntry[] }) {
 
   return (
     <ul className="divide-y divide-accent/8">
-      {items.map((event) => (
+      {rows.map((event) => (
         <li key={event.id} className="flex items-center gap-5 py-3">
           <span className="w-14 shrink-0 font-roboto text-[10px] tracking-[0.1em] text-secondary uppercase">
             {event.dateLabel}
@@ -196,6 +247,13 @@ function RecentActivityList({ items }: { items: MemberRecentActivityEntry[] }) {
 
 function ProfilePageContent({ profile }: { profile: MemberProfileDetail }) {
   useSetAdminPageSubtitle(profile.displayName);
+
+  const [activeModal, setActiveModal] = useState<
+    "vehicles" | "events" | null
+  >(null);
+
+  const vehicleItems = profile.vehiclesSection.items;
+  const eventItems = profile.upcomingEvents;
 
   const memberStats = [
     { value: String(profile.vehicles), label: "Vehicles", sub: "Registered" },
@@ -267,14 +325,43 @@ function ProfilePageContent({ profile }: { profile: MemberProfileDetail }) {
       <div className="grid grid-cols-1 items-stretch gap-5 lg:grid-cols-2">
         {/* Left: Vehicles + Upcoming Events */}
         <div className="flex flex-col gap-5">
-          <SectionCard title="Vehicles" action={<ViewAllButton />}>
-            <VehiclesList items={profile.vehiclesSection.items} />
+          <SectionCard
+            title="Vehicles"
+            action={
+              vehicleItems.length > ROW_LIMIT ? (
+                <ViewAllButton onClick={() => setActiveModal("vehicles")} />
+              ) : undefined
+            }
+          >
+            <VehiclesList items={vehicleItems} limit={ROW_LIMIT} />
           </SectionCard>
 
-          <SectionCard title="Upcoming Events" action={<ViewAllButton />}>
-            <UpcomingEventsList items={profile.upcomingEvents} />
+          <SectionCard
+            title="Upcoming Events"
+            action={
+              eventItems.length > ROW_LIMIT ? (
+                <ViewAllButton onClick={() => setActiveModal("events")} />
+              ) : undefined
+            }
+          >
+            <UpcomingEventsList items={eventItems} limit={ROW_LIMIT} />
           </SectionCard>
         </div>
+
+        {activeModal === "vehicles" && (
+          <ListModal title="Vehicles" onClose={() => setActiveModal(null)}>
+            <VehiclesList items={vehicleItems} />
+          </ListModal>
+        )}
+
+        {activeModal === "events" && (
+          <ListModal
+            title="Upcoming Events"
+            onClose={() => setActiveModal(null)}
+          >
+            <UpcomingEventsList items={eventItems} />
+          </ListModal>
+        )}
 
         {/* Right: Recent Activity — stretches to match left column height */}
         <div className="flex flex-col max-h-max">

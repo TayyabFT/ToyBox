@@ -23,13 +23,13 @@ export function NotificationItem({
     >
       <div className="min-w-0 flex-1 space-y-1">
         <p
-          className={`font-roboto text-[13px] tracking-[0.04em] ${
+          className={`font-roboto text-[13px] tracking-[0.04em] line-clamp-2 ${
             read ? "font-normal text-muted" : "font-medium text-foreground"
           }`}
         >
           {title}
         </p>
-        <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary uppercase">
+        <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary uppercase line-clamp-4">
           {subheading}
         </p>
       </div>

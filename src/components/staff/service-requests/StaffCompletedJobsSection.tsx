@@ -3,22 +3,31 @@
 import { useCallback, useEffect, useState } from "react";
 import { staffJobsApi } from "@/api/staffJobs.api";
 import { ServiceSectionHeader } from "@/components/shared/service-requests/ServiceSectionHeader";
-import { mapStaffJobListItems, type StaffJobListItem } from "@/lib/staffJobs";
+import {
+  mapStaffJobListItem,
+  mapStaffJobListItems,
+  type StaffJobListItem,
+} from "@/lib/staffJobs";
 import { showError } from "@/lib/toast";
+import type { JobCompleteEvent } from "./jobCompleteTypes";
 import { StaffJobListCard } from "./StaffJobListCard";
 
 type StaffCompletedJobsSectionProps = {
   refreshToken?: number;
+  completeEvent?: JobCompleteEvent | null;
 };
 
 export function StaffCompletedJobsSection({
   refreshToken = 0,
+  completeEvent = null,
 }: StaffCompletedJobsSectionProps) {
   const [jobs, setJobs] = useState<StaffJobListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadCompleted = useCallback(async () => {
-    setLoading(true);
+  const loadCompleted = useCallback(async (silent = false) => {
+    if (!silent) {
+      setLoading(true);
+    }
 
     try {
       const response = await staffJobsApi.getCompleted();
@@ -29,16 +38,40 @@ export function StaffCompletedJobsSection({
       const message =
         (error as { message?: string }).message ?? "Failed to load completed jobs";
 
-      showError(message);
-      setJobs([]);
+      if (!silent) {
+        showError(message);
+        setJobs([]);
+      }
     } finally {
-      setLoading(false);
+      if (!silent) {
+        setLoading(false);
+      }
     }
   }, []);
 
   useEffect(() => {
     void loadCompleted();
   }, [loadCompleted, refreshToken]);
+
+  useEffect(() => {
+    if (!completeEvent?.completedJob) {
+      return;
+    }
+
+    const completedItem = mapStaffJobListItem(completeEvent.completedJob);
+
+    if (completedItem) {
+      setJobs((current) => {
+        const withoutDuplicate = current.filter(
+          (job) => job.id !== completedItem.id,
+        );
+
+        return [completedItem, ...withoutDuplicate];
+      });
+    }
+
+    void loadCompleted(true);
+  }, [completeEvent, loadCompleted]);
 
   return (
     <section

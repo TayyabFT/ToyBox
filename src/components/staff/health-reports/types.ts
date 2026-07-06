@@ -6,6 +6,11 @@ import type {
 
 export type HealthFilter = "all" | "critical" | "due-service" | "healthy";
 
+export type HealthReportTab = {
+  id: HealthFilter;
+  label: string;
+};
+
 export type FleetHealthItem = {
   id: string;
   vehicle: string;

@@ -1,10 +1,24 @@
+"use client";
+
+import { useRef } from "react";
 import { FlaggedIssueBox } from "./FlaggedIssueBox";
 import { InspectionChecklistSection } from "./InspectionChecklistSection";
 import { InspectionProgressStepper } from "./InspectionProgressStepper";
+import { getAdjacentStepId } from "@/lib/staffInspections";
 import type { ActiveInspection } from "./types";
 
 type ActiveInspectionPanelProps = {
   inspection: ActiveInspection;
+  actionLoading?: boolean;
+  onSaveDraft: () => void;
+  onSubmit: () => void;
+  onUploadPhoto: (file: File) => Promise<boolean>;
+  onToggleChecklistItem: (itemId: string) => void;
+  onStepBack: () => void;
+  onStepNext: () => void;
+  onOdometerChange: (value: string) => void;
+  onFuelLevelChange: (value: string) => void;
+  onNotesChange: (value: string) => void;
 };
 
 function InfoCell({ label, value }: { label: string; value: React.ReactNode }) {
@@ -20,10 +34,25 @@ function InfoCell({ label, value }: { label: string; value: React.ReactNode }) {
   );
 }
 
-export function ActiveInspectionPanel({ inspection }: ActiveInspectionPanelProps) {
+export function ActiveInspectionPanel({
+  inspection,
+  actionLoading = false,
+  onSaveDraft,
+  onSubmit,
+  onUploadPhoto,
+  onToggleChecklistItem,
+  onStepBack,
+  onStepNext,
+  onOdometerChange,
+  onFuelLevelChange,
+  onNotesChange,
+}: ActiveInspectionPanelProps) {
+  const photoInputRef = useRef<HTMLInputElement>(null);
   const activeStep = inspection.steps.find(
     (step) => step.id === inspection.activeStepId,
   );
+  const previousStep = getAdjacentStepId(inspection.activeStepId, "back");
+  const nextStep = getAdjacentStepId(inspection.activeStepId, "next");
 
   return (
     <section className="rounded-2xl border border-accent/10 bg-card p-5">
@@ -35,13 +64,17 @@ export function ActiveInspectionPanel({ inspection }: ActiveInspectionPanelProps
         <div className="flex flex-wrap items-center gap-2">
           <button
             type="button"
-            className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
+            disabled={actionLoading}
+            onClick={onSaveDraft}
+            className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Save Draft
           </button>
           <button
             type="button"
-            className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90"
+            disabled={actionLoading}
+            onClick={onSubmit}
+            className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
           >
             Submit Report
           </button>
@@ -68,14 +101,17 @@ export function ActiveInspectionPanel({ inspection }: ActiveInspectionPanelProps
 
       <div className="space-y-6">
         <InspectionChecklistSection
-          stepLabel={`Step 2 — ${activeStep?.label ?? "Interior"} Checklist`}
+          stepLabel={`Step — ${activeStep?.label ?? "Inspection"} Checklist`}
           items={inspection.checklist}
+          onToggleItem={onToggleChecklistItem}
         />
 
         {inspection.flaggedIssue && (
           <FlaggedIssueBox
             tag={inspection.flaggedIssue.tag}
-            notes={inspection.flaggedIssue.notes}
+            notes={inspection.notes ?? inspection.flaggedIssue.notes}
+            onNotesChange={onNotesChange}
+            onAddPhoto={() => photoInputRef.current?.click()}
           />
         )}
 
@@ -89,8 +125,8 @@ export function ActiveInspectionPanel({ inspection }: ActiveInspectionPanelProps
             </label>
             <input
               id="odometer"
-              readOnly
               value={inspection.odometer}
+              onChange={(event) => onOdometerChange(event.target.value)}
               className="font-roboto w-full rounded-xl border border-accent/15 bg-dark px-4 py-3 text-sm text-foreground outline-none"
             />
           </div>
@@ -103,34 +139,60 @@ export function ActiveInspectionPanel({ inspection }: ActiveInspectionPanelProps
             </label>
             <input
               id="fuel-level"
-              readOnly
               value={inspection.fuelLevel}
+              onChange={(event) => onFuelLevelChange(event.target.value)}
               className="font-roboto w-full rounded-xl border border-accent/15 bg-dark px-4 py-3 text-sm text-foreground outline-none"
             />
           </div>
         </div>
       </div>
 
+      <input
+        ref={photoInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+
+          if (file) {
+            void onUploadPhoto(file);
+          }
+
+          event.target.value = "";
+        }}
+      />
+
       <div className="mt-6 flex flex-col gap-3 border-t border-accent/6 pt-5 sm:flex-row sm:items-center sm:justify-between">
         <button
           type="button"
-          className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35"
+          disabled={!previousStep || actionLoading}
+          onClick={onStepBack}
+          className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          Back: Exterior
+          {previousStep
+            ? `Back: ${inspection.steps.find((step) => step.id === previousStep)?.label ?? previousStep}`
+            : "Back"}
         </button>
 
         <button
           type="button"
-          className="font-roboto flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-accent/20 bg-surface px-4 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35"
+          disabled={actionLoading}
+          onClick={() => photoInputRef.current?.click()}
+          className="font-roboto flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-accent/20 bg-surface px-4 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Take Photo
         </button>
 
         <button
           type="button"
-          className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90"
+          disabled={!nextStep || actionLoading}
+          onClick={onStepNext}
+          className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
-          Next: Mechanical &gt;
+          {nextStep
+            ? `Next: ${inspection.steps.find((step) => step.id === nextStep)?.label ?? nextStep} >`
+            : "Next"}
         </button>
       </div>
     </section>

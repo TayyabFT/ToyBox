@@ -3,40 +3,89 @@
 import { useCallback, useEffect, useState } from "react";
 import { staffJobsApi } from "@/api/staffJobs.api";
 import { ServiceSectionHeader } from "@/components/shared/service-requests/ServiceSectionHeader";
-import { mapStaffJobListItems, type StaffJobListItem } from "@/lib/staffJobs";
+import {
+  mapStaffJobListItems,
+  unwrapActiveJobPayload,
+  type StaffJobListItem,
+} from "@/lib/staffJobs";
 import { showError } from "@/lib/toast";
+import type { JobCompleteEvent } from "./jobCompleteTypes";
 import { StaffJobListCard } from "./StaffJobListCard";
 
 type StaffJobQueueSectionProps = {
   refreshToken?: number;
+  completeEvent?: JobCompleteEvent | null;
 };
 
-export function StaffJobQueueSection({ refreshToken = 0 }: StaffJobQueueSectionProps) {
+export function StaffJobQueueSection({
+  refreshToken = 0,
+  completeEvent = null,
+}: StaffJobQueueSectionProps) {
   const [jobs, setJobs] = useState<StaffJobListItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const loadQueue = useCallback(async () => {
-    setLoading(true);
+  const loadQueue = useCallback(
+    async (options?: { silent?: boolean; excludeIds?: string[] }) => {
+      const silent = options?.silent ?? false;
 
-    try {
-      const response = await staffJobsApi.getQueue();
-      const mineJobs = mapStaffJobListItems(response.data?.mine?.jobs);
+      if (!silent) {
+        setLoading(true);
+      }
 
-      setJobs(mineJobs);
-    } catch (error) {
-      const message =
-        (error as { message?: string }).message ?? "Failed to load job queue";
+      try {
+        const [queueResponse, activeResponse] = await Promise.all([
+          staffJobsApi.getQueue(),
+          staffJobsApi.getActive(),
+        ]);
+        const activeJobId = unwrapActiveJobPayload(activeResponse.data)?.id?.trim();
+        const excludeIds = new Set(
+          [...(options?.excludeIds ?? []), activeJobId].filter(
+            (id): id is string => Boolean(id),
+          ),
+        );
+        const mineJobs = mapStaffJobListItems(queueResponse.data?.mine?.jobs).filter(
+          (job) => !excludeIds.has(job.id),
+        );
 
-      showError(message);
-      setJobs([]);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+        setJobs(mineJobs);
+      } catch (error) {
+        const message =
+          (error as { message?: string }).message ?? "Failed to load job queue";
+
+        if (!silent) {
+          showError(message);
+          setJobs([]);
+        }
+      } finally {
+        if (!silent) {
+          setLoading(false);
+        }
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     void loadQueue();
   }, [loadQueue, refreshToken]);
+
+  useEffect(() => {
+    if (!completeEvent) {
+      return;
+    }
+
+    const { completedJobId, nextJobId } = completeEvent;
+
+    const excludeIds = [completedJobId, nextJobId].filter(
+      (id): id is string => Boolean(id),
+    );
+
+    setJobs((current) =>
+      current.filter((job) => !excludeIds.includes(job.id)),
+    );
+
+    void loadQueue({ silent: true, excludeIds });
+  }, [completeEvent, loadQueue]);
 
   return (
     <section

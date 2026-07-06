@@ -12,20 +12,27 @@ import {
 } from "chart.js";
 import { Bar } from "react-chartjs-2";
 import { AnalyticsInsightCard } from "./AnalyticsInsightCard";
-import { vehicleUtilIntensity } from "./analyticsChartTheme";
+import type { VehicleUtilChartData } from "./types";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip);
 
-export function VehicleUtilChart() {
-  const data = useMemo(
+type VehicleUtilChartProps = {
+  data: VehicleUtilChartData;
+  status?: "loading" | "error";
+};
+
+export function VehicleUtilChart({ data, status }: VehicleUtilChartProps) {
+  const { value, trend, footerLeft, footerCenter, footerRight, intensity } = data;
+
+  const chartData = useMemo(
     () => ({
-      labels: vehicleUtilIntensity.map((_, index) => String(index)),
+      labels: intensity.map((_, index) => String(index)),
       datasets: [
         {
-          data: vehicleUtilIntensity.map(() => 1),
+          data: intensity.map(() => 1),
           backgroundColor: (context: ScriptableContext<"bar">) => {
-            const intensity = vehicleUtilIntensity[context.dataIndex] ?? 0.2;
-            return `rgba(201, 168, 76, ${intensity})`;
+            const alpha = intensity[context.dataIndex] ?? 0.2;
+            return `rgba(201, 168, 76, ${alpha})`;
           },
           borderRadius: 3,
           borderSkipped: false,
@@ -34,7 +41,7 @@ export function VehicleUtilChart() {
         },
       ],
     }),
-    [],
+    [intensity],
   );
 
   const options = useMemo<ChartOptions<"bar">>(
@@ -67,14 +74,15 @@ export function VehicleUtilChart() {
   return (
     <AnalyticsInsightCard
       title="Vehicle Util"
-      value="68%"
-      trend="+8%"
-      footerLeft="00h"
-      footerCenter="peak 19h"
-      footerRight="23h"
+      value={value}
+      trend={trend}
+      footerLeft={footerLeft}
+      footerCenter={footerCenter}
+      footerRight={footerRight}
+      status={status}
     >
       <div className="h-[88px] w-full">
-        <Bar data={data} options={options} />
+        <Bar data={chartData} options={options} />
       </div>
     </AnalyticsInsightCard>
   );

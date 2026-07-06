@@ -3,9 +3,10 @@ import type { AnalyticsStatItem } from "./types";
 
 type AnalyticsStatsRowProps = {
   stats: AnalyticsStatItem[];
+  loading?: boolean;
 };
 
-export function AnalyticsStatsRow({ stats }: AnalyticsStatsRowProps) {
+export function AnalyticsStatsRow({ stats, loading = false }: AnalyticsStatsRowProps) {
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
       {stats.map((stat) => (
@@ -16,6 +17,7 @@ export function AnalyticsStatsRow({ stats }: AnalyticsStatsRowProps) {
           subtext={stat.subtext}
           trend={stat.trend}
           icon={stat.icon}
+          valueLoading={loading}
         />
       ))}
     </div>

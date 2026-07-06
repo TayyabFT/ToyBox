@@ -7,10 +7,12 @@ import {
   mapStaffJobNotes,
   mapStaffJobPhotos,
   unwrapActiveJobPayload,
+  unwrapCompletedJobPayload,
   unwrapCompletePayload,
   type StaffActiveJobView,
 } from "@/lib/staffJobs";
 import { showError, showToast } from "@/lib/toast";
+import type { JobCompleteResult } from "./jobCompleteTypes";
 
 const PROGRESS_POLL_MS = 30_000;
 
@@ -206,16 +208,17 @@ export function useStaffActiveJob() {
     [applyActivePayload, job, refreshProgress],
   );
 
-  const completeJob = useCallback(async () => {
-    if (!job?.queueJobId) return false;
+  const completeJob = useCallback(async (): Promise<JobCompleteResult | null> => {
+    if (!job?.queueJobId) return null;
 
     const response = await runAction(() =>
       staffJobsApi.complete(job.queueJobId),
     );
 
-    if (!response) return false;
+    if (!response) return null;
 
     const nextJob = unwrapCompletePayload(response.data);
+    const completedJob = unwrapCompletedJobPayload(response.data);
 
     if (nextJob) {
       const mapped = applyActivePayload({ job: nextJob });
@@ -233,7 +236,12 @@ export function useStaffActiveJob() {
         ? "Job completed — next assignment loaded"
         : "Active job marked complete",
     });
-    return true;
+
+    return {
+      completedJobId: job.queueJobId,
+      nextJobId: nextJob?.id?.trim() ?? null,
+      completedJob,
+    };
   }, [applyActivePayload, job?.queueJobId, loadNotes]);
 
   const addNote = useCallback(

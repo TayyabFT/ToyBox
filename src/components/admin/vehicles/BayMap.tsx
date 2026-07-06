@@ -63,7 +63,17 @@ export function BayMap({ bayMap, loading = false }: BayMapProps) {
         </div>
       </div>
 
-      {bayMap.bays.length === 0 ? (
+      {loading && bayMap.bays.length === 0 ? (
+        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 xl:grid-cols-8">
+          {Array.from({ length: 16 }).map((_, index) => (
+            <div
+              key={index}
+              className="h-[78px] animate-pulse rounded-xl border border-accent/12 bg-accent/8"
+              aria-hidden="true"
+            />
+          ))}
+        </div>
+      ) : bayMap.bays.length === 0 ? (
         <p className="font-roboto py-8 text-center text-sm text-secondary">
           No bay data available.
         </p>

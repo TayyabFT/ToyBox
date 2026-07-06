@@ -1,71 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { VehicleListCarIcon } from "@/components/common/Svgs";
+import { adminVehiclesApi } from "@/api/adminVehicles.api";
+import { mapAdminVehicleDetailsScreen } from "@/lib/adminVehicleDetails";
 import { useSetAdminPageSubtitle } from "@/lib/adminPageMeta";
+import { showError } from "@/lib/toast";
+import type {
+  VehicleActivityHistoryItem,
+  VehicleDetailsScreenDisplay,
+} from "./types";
 
 type VehicleProfilePageProps = {
   vehicleId: string;
 };
 
-const headerPills = [
-  { label: "Ready", tone: "teal" as const },
-  { label: "DXB · M1", tone: "outline" as const },
-  { label: "VIN · SCAEF2ZAPUX12345", tone: "outline" as const },
-];
-
-const specifications: { label: string; value: string }[] = [
-  { label: "Year", value: "2023" },
-  { label: "Colour", value: "Midnight sapphire" },
-  { label: "Engine", value: "6.75L V12 Bi-turbo" },
-  { label: "Miles", value: "3,240" },
-  { label: "Plate", value: "DXB · M1" },
-  { label: "VIN", value: "SCAEF2ZA9PUX12485" },
-];
-
-const bayDetails: { label: string; value: string }[] = [
-  { label: "Stored since", value: "Dec 18, 2024" },
-  { label: "Days stored", value: "181 days" },
-  { label: "Last inspected by", value: "Farah Al-Rashid" },
-];
-
-type Tone = "teal" | "gold" | "red";
-
-const serviceHistory: {
-  label: string;
-  value: string;
-  meta: string;
-  tone: Tone;
-}[] = [
-  {
-    label: "Routine Inspection Passed -",
-    value: "all clear",
-    meta: "Today · 06:30 · Farah Al-Rashid",
-    tone: "gold",
-  },
-  {
-    label: "Detailing Completed -",
-    value: "full exterior + interior",
-    meta: "Jun 10, 2026 · Workshop Team",
-    tone: "teal",
-  },
-  {
-    label: "Concierge Request Resolved -",
-    value: "Tyre pressure check",
-    meta: "May 28, 2026 · Ahmad Karimi",
-    tone: "gold",
-  },
-  {
-    label: "Vehicle Collected By Owner -",
-    value: "weekend drive",
-    meta: "May 12, 2026 · Front Gate",
-    tone: "teal",
-  },
-];
+type Tone = VehicleActivityHistoryItem["tone"];
 
 const dotToneClass: Record<Tone, string> = {
   teal: "bg-teal",
   gold: "bg-primary",
   red: "bg-[#E0685C]",
+};
+
+const pillToneClass = {
+  teal: "border-teal/35 bg-teal/8 text-teal",
+  outline: "border-accent/20 text-muted",
 };
 
 function SectionCard({
@@ -114,13 +74,57 @@ function InfoRow({ label, value }: { label: string; value: string }) {
   );
 }
 
-const pillToneClass = {
-  teal: "border-teal/35 bg-teal/8 text-teal",
-  outline: "border-accent/20 text-muted",
-};
+function statusPillTone(statusKey: string): "teal" | "outline" {
+  if (statusKey === "ready" || statusKey === "stored") {
+    return "teal";
+  }
 
-export function VehicleProfilePage(_props: VehicleProfilePageProps) {
-  useSetAdminPageSubtitle("Ghost Black Badge");
+  return "outline";
+}
+
+function formatLevelLabel(levelCode: string): string {
+  if (levelCode === "—") return levelCode;
+  return levelCode.replace(/^LEVEL\s+/i, "LEVEL ");
+}
+
+function splitVehicleTitle(displayName: string, model: string) {
+  if (model === "—" || displayName === "—") {
+    return { primary: displayName, accent: "" };
+  }
+
+  const normalizedDisplay = displayName.toLowerCase();
+  const normalizedModel = model.toLowerCase();
+  const modelIndex = normalizedDisplay.lastIndexOf(normalizedModel);
+
+  if (modelIndex === -1) {
+    return { primary: displayName, accent: "" };
+  }
+
+  return {
+    primary: displayName.slice(0, modelIndex).trim(),
+    accent: displayName.slice(modelIndex).trim(),
+  };
+}
+
+function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay }) {
+  useSetAdminPageSubtitle(detail.displayName);
+
+  const titleParts = splitVehicleTitle(detail.displayName, detail.model);
+
+  const headerPills = [
+    { label: detail.statusLabel, tone: statusPillTone(detail.statusKey) },
+    ...(detail.plate !== "—"
+      ? [{ label: detail.plate, tone: "outline" as const }]
+      : []),
+    ...(detail.vin !== "—"
+      ? [{ label: `VIN · ${detail.vin}`, tone: "outline" as const }]
+      : []),
+  ];
+
+  const ownerInitial =
+    detail.ownerInitial !== "N/A" && detail.ownerInitial !== "—"
+      ? detail.ownerInitial
+      : detail.ownerName.charAt(0).toUpperCase();
 
   return (
     <div className="space-y-5 p-8">
@@ -137,18 +141,30 @@ export function VehicleProfilePage(_props: VehicleProfilePageProps) {
           </span>
 
           <div className="min-w-0 space-y-2.5">
-            <p className="font-roboto text-[12px] font-medium tracking-[0.22em] text-secondary uppercase">
-              Rolls-Royce
-            </p>
+            {detail.make !== "—" && (
+              <p className="font-roboto text-[12px] font-medium tracking-[0.22em] text-secondary uppercase">
+                {detail.make}
+              </p>
+            )}
 
             <h1 className="font-copperplate text-[34px] leading-none tracking-[0.05em]">
-              <span className="text-[#F2EAD5]">Ghost </span>
-              <span className="text-[#C9A84C]">Black Badge</span>
+              {titleParts.primary && (
+                <span className="text-[#F2EAD5]">{titleParts.primary} </span>
+              )}
+              {titleParts.accent ? (
+                <span className="text-[#C9A84C]">{titleParts.accent}</span>
+              ) : (
+                !titleParts.primary && (
+                  <span className="text-[#F2EAD5]">{detail.displayName}</span>
+                )
+              )}
             </h1>
 
-            <p className="font-roboto text-[11px] tracking-[0.12em] text-secondary uppercase">
-              2023 · Midnight Sapphire · Bay 04A - Level 04
-            </p>
+            {detail.subtitle !== "—" && (
+              <p className="font-roboto text-[11px] tracking-[0.12em] text-secondary uppercase">
+                {detail.subtitle}
+              </p>
+            )}
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               {headerPills.map((pill) => (
@@ -167,14 +183,14 @@ export function VehicleProfilePage(_props: VehicleProfilePageProps) {
       <SectionCard title="Owner">
         <div className="flex items-center gap-4">
           <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-[#C9A84C]/70 bg-[#0d0b08] font-copperplate text-[18px] text-[#C9A84C]">
-            A
+            {ownerInitial}
           </span>
           <div className="space-y-1">
             <p className="font-copperplate text-[18px] tracking-[0.04em] text-foreground">
-              Alex Mitchell
+              {detail.ownerName}
             </p>
             <p className="font-roboto text-[11px] tracking-[0.08em] text-secondary uppercase">
-              No. 000010743 · Private · Since Dec 2024 · 4 Vehicles Registered
+              {detail.ownerInfoLabel}
             </p>
           </div>
         </div>
@@ -183,7 +199,7 @@ export function VehicleProfilePage(_props: VehicleProfilePageProps) {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
         <SectionCard title="Specifications" action={<ViewAllButton />}>
           <ul className="divide-y divide-accent/8">
-            {specifications.map((spec) => (
+            {detail.specifications.map((spec) => (
               <InfoRow key={spec.label} label={spec.label} value={spec.value} />
             ))}
           </ul>
@@ -193,60 +209,141 @@ export function VehicleProfilePage(_props: VehicleProfilePageProps) {
           <div className="flex items-center gap-4 pb-4">
             <div className="flex size-[52px] shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-dark">
               <span className="font-copperplate text-[16px] leading-none">
-                04A
+                {detail.bayCode}
               </span>
-              <span className="mt-0.5 font-roboto text-[7px] font-semibold tracking-[0.1em]">
-                LEVEL 4
-              </span>
+              {detail.levelCode !== "—" && (
+                <span className="mt-0.5 font-roboto text-[7px] font-semibold tracking-[0.1em]">
+                  {formatLevelLabel(detail.levelCode)}
+                </span>
+              )}
             </div>
 
             <div className="space-y-1">
-              <p className="font-roboto text-[14px] font-semibold tracking-[0.02em] text-foreground">
-                Bay 04A - Level 04
-              </p>
-              <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
-                Occupied · Climate Controlled
-              </p>
-              <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
-                Inspected 06:14 Today
-              </p>
+              {detail.bayTitle !== "—" && (
+                <p className="font-roboto text-[14px] font-semibold tracking-[0.02em] text-foreground">
+                  {detail.bayTitle}
+                </p>
+              )}
+              {detail.storedStatus !== "—" && (
+                <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                  {detail.storedStatus}
+                </p>
+              )}
+              {detail.inspectionStatus !== "—" && (
+                <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                  {detail.inspectionStatus}
+                </p>
+              )}
             </div>
           </div>
 
           <ul className="divide-y divide-accent/8 border-t border-accent/8">
-            {bayDetails.map((detail) => (
-              <InfoRow
-                key={detail.label}
-                label={detail.label}
-                value={detail.value}
-              />
+            {detail.bayDetails.map((item) => (
+              <InfoRow key={item.label} label={item.label} value={item.value} />
             ))}
           </ul>
         </SectionCard>
       </div>
 
       <SectionCard title="Service & Activity History">
-        <ul className="divide-y divide-accent/8">
-          {serviceHistory.map((entry) => (
-            <li key={entry.label} className="flex gap-3 py-3.5">
-              <span
-                className={`mt-1.5 size-2 shrink-0 rounded-full ${dotToneClass[entry.tone]}`}
-              />
-              <div className="space-y-1">
-                <p className="font-roboto text-[13px] tracking-[0.02em]">
-                  <span className="text-secondary">{entry.label} </span>
-                  <span className="font-semibold text-foreground">
-                    {entry.value}
-                  </span>
-                </p>
-                <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
-                  {entry.meta}
-                </p>
-              </div>
-            </li>
-          ))}
-        </ul>
+        {detail.activityHistory.length === 0 ? (
+          <p className="font-roboto text-[13px] tracking-[0.02em] text-secondary">
+            No activity recorded yet.
+          </p>
+        ) : (
+          <ul className="divide-y divide-accent/8">
+            {detail.activityHistory.map((entry) => (
+              <li key={entry.id} className="flex gap-3 py-3.5">
+                <span
+                  className={`mt-1.5 size-2 shrink-0 rounded-full ${dotToneClass[entry.tone]}`}
+                />
+                <div className="space-y-1">
+                  <p className="font-roboto text-[13px] tracking-[0.02em]">
+                    {entry.value ? (
+                      <>
+                        <span className="text-secondary">{entry.label} </span>
+                        <span className="font-semibold text-foreground">
+                          {entry.value}
+                        </span>
+                      </>
+                    ) : (
+                      <span className="font-semibold text-foreground">
+                        {entry.label}
+                      </span>
+                    )}
+                  </p>
+                  <p className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+                    {entry.meta}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
       </SectionCard>
     </div>
   );
+}
+
+export function VehicleProfilePage({ vehicleId }: VehicleProfilePageProps) {
+  const [detail, setDetail] = useState<VehicleDetailsScreenDisplay | null>(
+    null,
+  );
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function load() {
+      setLoading(true);
+
+      try {
+        const response = await adminVehiclesApi.getVehicleDetails(vehicleId);
+        const mapped = mapAdminVehicleDetailsScreen(response.data);
+
+        if (!cancelled) {
+          setDetail(mapped);
+        }
+      } catch (error) {
+        const message =
+          (error as { message?: string }).message ?? "Failed to load vehicle";
+
+        if (!cancelled) {
+          showError(message);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [vehicleId]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
+          Loading…
+        </p>
+      </div>
+    );
+  }
+
+  if (!detail) {
+    return (
+      <div className="flex min-h-[40vh] items-center justify-center">
+        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
+          Vehicle not found.
+        </p>
+      </div>
+    );
+  }
+
+  return <ProfilePageContent detail={detail} />;
 }

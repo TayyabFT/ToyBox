@@ -264,14 +264,16 @@ export function AdminOverviewPage() {
                     const titleParts =
                       dashIdx > -1
                         ? { before: item.title.slice(0, dashIdx), after: item.title.slice(dashIdx + 3) }
-                        : { before: item.memberName, after: item.title };
+                        : item.memberName
+                          ? { before: item.memberName, after: item.title }
+                          : undefined;
                     return (
                       <PriorityScheduleItem
                         key={item.id}
                         time={formatTime(item.time)}
                         countdown={getCountdown(item.time)}
                         tag={{ label: item.tag, tone: tagTone }}
-                        title=""
+                        title={item.title}
                         titleParts={titleParts}
                         detail={item.detail}
                         action="View"

@@ -17,6 +17,7 @@ export const API_ENDPOINTS = {
     inventory: "/api/v1/admin/vehicles/inventory",
     admin: "/api/v1/admin/vehicles",
     detail: (id: string | number) => `/api/v1/admin/vehicles/${id}`,
+    details: (id: string | number) => `/api/v1/admin/vehicles/${id}/details`,
   },
   sourcing: {
     staffRequests: "/api/v1/staff/sourcing/requests",
@@ -75,6 +76,18 @@ export const API_ENDPOINTS = {
     queue: "/api/v1/staff/jobs/queue",
     completed: "/api/v1/staff/jobs/completed",
   },
+  staffInspections: {
+    list: "/api/v1/staff/inspections",
+    summary: "/api/v1/staff/inspections/summary",
+    detail: (id: string | number) => `/api/v1/staff/inspections/${id}`,
+    photos: (id: string | number) => `/api/v1/staff/inspections/${id}/photos`,
+    submit: (id: string | number) => `/api/v1/staff/inspections/${id}/submit`,
+  },
+  staffHealthReports: {
+    vehicles: "/api/v1/staff/health-reports/vehicles",
+    vehicleDetail: (id: string | number) =>
+      `/api/v1/staff/health-reports/vehicles/${id}`,
+  },
   chat: {
     conversations: "/api/v1/staff/chat/conversations",
     initiate: "/api/v1/staff/chat/initiate",
@@ -115,5 +128,9 @@ export const API_ENDPOINTS = {
     profile: "/api/v1/admin/profile",
     activity: "/api/v1/admin/profile/activity",
     sessions: "/api/v1/admin/profile/sessions",
+  },
+  adminAnalytics: {
+    stats: "/api/v1/admin/analytics/stats",
+    dashboard: "/api/v1/admin/analytics",
   },
 } as const;

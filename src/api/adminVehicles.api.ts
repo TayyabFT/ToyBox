@@ -3,6 +3,7 @@ import { API_ENDPOINTS } from "@/api/endpoints";
 import { toResourceId } from "@/lib/resourceId";
 import type {
   AdminVehicleDetailResponse,
+  AdminVehicleDetailsScreenResponse,
   AdminVehiclesResponse,
   AdminVehiclesSummaryKey,
 } from "@/types/api";
@@ -42,5 +43,10 @@ export const adminVehiclesApi = {
   getVehicleById: (id: string | number) =>
     apiClient<AdminVehicleDetailResponse>(
       API_ENDPOINTS.vehicles.detail(toResourceId(id)),
+    ),
+
+  getVehicleDetails: (id: string | number) =>
+    apiClient<AdminVehicleDetailsScreenResponse>(
+      API_ENDPOINTS.vehicles.details(toResourceId(id)),
     ),
 };

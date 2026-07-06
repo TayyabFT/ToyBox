@@ -197,15 +197,9 @@ function ProfilePageContent({
   const accountDetails: { icon: DetailGlyphName; label: string; value: string }[] = [
     { icon: "mail", label: "Email", value: profile.email?.trim() || "—" },
     { icon: "phone", label: "Phone", value: formatPhone(profile.mobile, profile.mobileCountryCode) },
-    { icon: "id", label: "Staff ID", value: profile.staffId?.trim() || "—" },
+    { icon: "id", label: "Admin ID", value: profile.staffId?.trim() || "—" },
     { icon: "location", label: "Location", value: formatLocation(profile.location, profile.residence) },
     { icon: "calendar", label: "Joined", value: profile.joinedLabel?.trim() || "—" },
-  ];
-
-  const permissionRows: [string, string][] = [
-    ["Members", "Vehicles"],
-    ["Events", "Analytics"],
-    ["Comms", "Finance"],
   ];
 
   async function handleSaveMobile(mobile: string) {
@@ -351,28 +345,6 @@ function ProfilePageContent({
                   </li>
                 ))}
               </ul>
-            </SectionCard>
-
-            <SectionCard title="Permissions">
-              <div>
-                {permissionRows.map((pair, index) => (
-                  <div
-                    key={pair.join("-")}
-                    className={`grid grid-cols-2 gap-x-6 py-2.5 ${
-                      index > 0 ? "border-t border-accent/8" : ""
-                    }`}
-                  >
-                    {pair.map((permission) => (
-                      <div key={permission} className="flex items-center gap-3">
-                        <span className="size-4 shrink-0 rounded-[5px] border border-[#C9A84C]/45 bg-[#C9A84C]/5" />
-                        <span className="font-roboto text-[13px] tracking-[0.02em] text-foreground">
-                          {permission}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
             </SectionCard>
           </div>
 
