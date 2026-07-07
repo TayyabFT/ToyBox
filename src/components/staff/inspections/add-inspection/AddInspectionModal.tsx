@@ -12,13 +12,14 @@ import { showError } from "@/lib/toast";
 import {
   buildCreateInspectionBody,
   hasAddInspectionErrors,
+  normalizeBayForApi,
   resolveInspectionType,
   validateAddInspectionForm,
   type AddInspectionFieldErrors,
   type CreateInspectionResult,
 } from "@/lib/addInspectionValidation";
 import { mapOfferVehicleOptions, indexInventoryVehicles } from "@/lib/vehicles";
-import type { StaffInspectionCreateRequest } from "@/types/api";
+import type { InventoryVehicleRaw, StaffInspectionCreateRequest } from "@/types/api";
 import {
   createInitialAddInspectionForm,
   FUEL_LEVEL_OPTIONS,
@@ -77,6 +78,15 @@ const inputClass = (hasError: boolean) =>
       : "border-accent/20 focus:border-accent/40"
   }`;
 
+function resolveVehicleBay(item?: InventoryVehicleRaw): string {
+  const raw =
+    item?.storageBay?.trim() ||
+    item?.ownershipInfo?.storageBay?.trim() ||
+    "";
+
+  return normalizeBayForApi(raw);
+}
+
 export function AddInspectionModal({
   open,
   onClose,
@@ -94,6 +104,9 @@ export function AddInspectionModal({
   const [vehicleMembers, setVehicleMembers] = useState<Record<string, string>>(
     {},
   );
+  const [inventoryById, setInventoryById] = useState<
+    Record<string, InventoryVehicleRaw>
+  >({});
 
   useEffect(() => {
     if (!open) return;
@@ -124,8 +137,9 @@ export function AddInspectionModal({
           }),
         );
 
-        const membersByVehicle: Record<string, string> = {};
         const inventoryById = indexInventoryVehicles(inventoryResponse.data);
+
+        const membersByVehicle: Record<string, string> = {};
 
         for (const [vehicleId, item] of Object.entries(inventoryById)) {
           if (
@@ -141,6 +155,7 @@ export function AddInspectionModal({
         setMembers(memberOptions);
         setStaff(staffOptions);
         setVehicleMembers(membersByVehicle);
+        setInventoryById(inventoryById);
 
         const profileEmail = profileResponse?.data?.email?.trim().toLowerCase();
         const matchedStaff = profileEmail
@@ -154,17 +169,19 @@ export function AddInspectionModal({
             )
           : undefined;
 
+        const firstVehicleId = vehicleOptions[0]?.id ?? "";
+        const firstVehicle = firstVehicleId ? inventoryById[firstVehicleId] : undefined;
+
         setForm({
           ...createInitialAddInspectionForm(),
-          vehicleId: vehicleOptions[0]?.id ?? "",
+          vehicleId: firstVehicleId,
           memberId:
-            (vehicleOptions[0]?.id
-              ? membersByVehicle[vehicleOptions[0].id]
-              : "") ||
+            (firstVehicleId ? membersByVehicle[firstVehicleId] : "") ||
             memberOptions[0]?.id ||
             "",
           assignedStaffId: matchedStaff?.id ?? staffOptions[0]?.id ?? "",
           inspectionType: "pre_service",
+          bay: resolveVehicleBay(firstVehicle),
         });
         setErrors({});
       } catch (error) {
@@ -202,16 +219,19 @@ export function AddInspectionModal({
 
   function handleVehicleChange(vehicleId: string) {
     const linkedMemberId = vehicleMembers[vehicleId];
+    const vehicleBay = resolveVehicleBay(inventoryById[vehicleId]);
 
     setForm((current) => ({
       ...current,
       vehicleId,
       memberId: linkedMemberId || current.memberId,
+      bay: vehicleBay || current.bay,
     }));
     setErrors((current) => ({
       ...current,
       vehicleId: undefined,
       memberId: linkedMemberId ? undefined : current.memberId,
+      bay: undefined,
     }));
   }
 
@@ -425,14 +445,15 @@ export function AddInspectionModal({
               />
             </Field>
 
-            <Field id="inspection-fuel" label="Fuel Level">
+            <Field id="inspection-fuel" label="Fuel Level" error={errors.fuelLevel}>
               <div className="relative">
                 <select
                   id="inspection-fuel"
                   value={form.fuelLevel}
                   disabled={submitting}
+                  aria-invalid={Boolean(errors.fuelLevel)}
                   onChange={(event) => updateField("fuelLevel", event.target.value)}
-                  className={selectClass(false)}
+                  className={selectClass(Boolean(errors.fuelLevel))}
                 >
                   {FUEL_LEVEL_OPTIONS.map((option) => (
                     <option key={option.value} value={option.value}>

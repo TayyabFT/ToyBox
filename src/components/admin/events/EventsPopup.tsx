@@ -9,6 +9,7 @@ interface Attendee {
 }
 
 interface EventDetails {
+  id?: string | number;
   title: string;
   date: string;
   rsvpsCount: number;
@@ -16,6 +17,7 @@ interface EventDetails {
   waitlistCount: number;
   attendanceRate: number;
   attendees: Attendee[];
+  notes?: string;
 }
 
 interface EventPopupProps {
@@ -26,8 +28,10 @@ interface EventPopupProps {
   onEditClick?: () => void;
   onSendUpdateClick?: () => void;
   onDeleteClick?: () => void;
+  onSaveNotes?: (notes: string) => void | Promise<void>;
   isSendingUpdate?: boolean;
   isDeleting?: boolean;
+  isSavingNotes?: boolean;
 }
 
 export function EventPopup({
@@ -38,11 +42,14 @@ export function EventPopup({
   onEditClick,
   onSendUpdateClick,
   onDeleteClick,
+  onSaveNotes,
   isSendingUpdate = false,
   isDeleting = false,
+  isSavingNotes = false,
 }: EventPopupProps) {
   const [activeTab, setActiveTab] = useState<'RSVPS' | 'WAITLIST' | 'NOTES' | 'SETTINGS'>('RSVPS');
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [notesDraft, setNotesDraft] = useState('');
 
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +57,10 @@ export function EventPopup({
       setActiveTab('RSVPS');
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    setNotesDraft(eventData?.notes ?? '');
+  }, [eventData?.id, eventData?.notes]);
 
   if (!isOpen || !eventData) return null;
 
@@ -189,12 +200,48 @@ export function EventPopup({
           ))}
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto p-6 space-y-2.5">
+        <div className="min-h-0 flex-1 overflow-y-auto Custom__Scrollbar p-6 space-y-2.5">
           {activeTab === 'RSVPS' && renderAttendeeList(confirmedAttendees, 'No RSVPs yet')}
           {activeTab === 'WAITLIST' && renderAttendeeList(waitlistAttendees, 'No waitlist members')}
-          {activeTab !== 'RSVPS' && activeTab !== 'WAITLIST' && (
+          {activeTab === 'NOTES' && (
+            <div className="space-y-4">
+              <div>
+                <label
+                  htmlFor="event-notes"
+                  className="mb-2 block text-[10px] font-bold tracking-[0.15em] text-zinc-500 uppercase"
+                >
+                  Event Notes
+                </label>
+                <textarea
+                  id="event-notes"
+                  value={notesDraft}
+                  onChange={(e) => setNotesDraft(e.target.value)}
+                  placeholder="Add internal notes about venue, catering, parking, and logistics..."
+                  rows={8}
+                  disabled={isLoading || isSavingNotes}
+                  className="w-full resize-none rounded-xl border border-zinc-900 bg-[#121314] px-4 py-3 text-sm leading-relaxed text-zinc-200 placeholder:text-zinc-600 focus:border-[#D4A847]/30 focus:outline-none disabled:opacity-60"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={() => onSaveNotes?.(notesDraft)}
+                disabled={isLoading || isSavingNotes || !onSaveNotes}
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-[#D4A847]/20 bg-[#D4A847]/5 py-3 text-[10px] font-bold tracking-[0.15em] text-[#D4A847] uppercase transition-all hover:border-[#D4A847]/50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isSavingNotes ? (
+                  <>
+                    <span className="h-3.5 w-3.5 animate-spin rounded-full border border-[#D4A847]/30 border-t-[#D4A847]" />
+                    Saving...
+                  </>
+                ) : (
+                  'Save Notes'
+                )}
+              </button>
+            </div>
+          )}
+          {activeTab === 'SETTINGS' && (
             <div className="text-center py-12 text-zinc-600 text-xs tracking-wider uppercase">
-              {activeTab} view content goes here
+              Settings view content goes here
             </div>
           )}
         </div>

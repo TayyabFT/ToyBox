@@ -67,7 +67,7 @@ export function StaffOnShiftItem({
 
       <div className="shrink-0 text-right">
         <p
-          className={`font-roboto text-[11px] font-medium tracking-[0.04em] ${statusTextClass}`}
+          className={`font-roboto text-[11px] font-medium tracking-[0.04em] pr-6 ${statusTextClass}`}
         >
           {statusLabel[status]}
         </p>

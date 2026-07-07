@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { eventsApi } from "@/api/events.api";
 import type { CreateEventRequest } from "@/types/api";
 import { showError, showSuccess } from "@/lib/toast";
+import { VehicleCalendar, ClockSmall } from "@/components/common/Svgs";
 
 const EMPTY_FORM = {
   title: "",
@@ -88,6 +89,137 @@ function fieldClass(base: string, hasError: boolean) {
   return `${base} ${hasError ? "border-red-500/60 focus:border-red-500/80" : "border-zinc-800 focus:border-[#D4A847]/40"}`;
 }
 
+// Splits a "YYYY-MM-DDTHH:mm" value into its date and time parts
+function splitDateTime(value: string): { date: string; time: string } {
+  const [date = "", time = ""] = value ? value.split("T") : [];
+  return { date, time };
+}
+
+// Rejoins date + time parts into a "YYYY-MM-DDTHH:mm" value
+function joinDateTime(date: string, time: string): string {
+  if (!date) return "";
+  return `${date}T${time || "00:00"}`;
+}
+
+// Same clickable-icon date picker used in the Offer a Vehicle modal
+function ScheduleDateField({
+  id,
+  label,
+  value,
+  min,
+  error,
+  onChange,
+  disabled = false,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  min?: string;
+  error?: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function openPicker() {
+    if (disabled) return;
+    inputRef.current?.showPicker?.();
+    inputRef.current?.focus();
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          id={id}
+          type="date"
+          value={value}
+          min={min}
+          aria-invalid={Boolean(error)}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className={fieldClass(
+            "w-full cursor-pointer rounded-lg bg-[#121314] px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
+            Boolean(error),
+          )}
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={openPicker}
+          disabled={disabled}
+          aria-label={`Select ${label} date`}
+          className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer disabled:cursor-not-allowed"
+        >
+          <VehicleCalendar />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// Same clickable-icon pattern as ScheduleDateField, adapted for time selection
+function ScheduleTimeField({
+  id,
+  label,
+  value,
+  error,
+  onChange,
+  disabled = false,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  error?: string;
+  onChange: (value: string) => void;
+  disabled?: boolean;
+}) {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  function openPicker() {
+    if (disabled) return;
+    inputRef.current?.showPicker?.();
+    inputRef.current?.focus();
+  }
+
+  return (
+    <div className="flex flex-col gap-1">
+      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          ref={inputRef}
+          id={id}
+          type="time"
+          value={value}
+          aria-invalid={Boolean(error)}
+          onChange={(e) => onChange(e.target.value)}
+          disabled={disabled}
+          className={fieldClass(
+            "w-full cursor-pointer rounded-lg bg-[#121314] px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
+            Boolean(error),
+          )}
+        />
+        <button
+          type="button"
+          tabIndex={-1}
+          onClick={openPicker}
+          disabled={disabled}
+          aria-label={`Select ${label} time`}
+          className="absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer disabled:cursor-not-allowed"
+        >
+          <ClockSmall />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: EventFormProps) {
   const isEditMode = Boolean(eventId);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -115,6 +247,22 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
     if (submitted) {
       const newErrors = validate(updated as typeof EMPTY_FORM);
       setErrors((prev) => ({ ...prev, [name]: newErrors[name as keyof typeof EMPTY_FORM] }));
+    }
+  };
+
+  // Merges a date/time picker change into the combined startsAt/endsAt value
+  const updateSchedule = (
+    field: "startsAt" | "endsAt",
+    part: "date" | "time",
+    partValue: string,
+  ) => {
+    const current = splitDateTime(formData[field]);
+    const next = { ...current, [part]: partValue };
+    const updated = { ...formData, [field]: joinDateTime(next.date, next.time) };
+    setFormData(updated);
+    if (submitted) {
+      const newErrors = validate(updated as typeof EMPTY_FORM);
+      setErrors((prev) => ({ ...prev, [field]: newErrors[field] }));
     }
   };
 
@@ -247,35 +395,54 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
           {/* Schedule */}
           <div className="space-y-4">
             <h3 className="text-[11px] font-bold tracking-[0.15em] text-[#D4A847] border-b border-zinc-900 pb-2">SCHEDULE</h3>
-            <div className="grid grid-cols-2 gap-4">
 
-              {/* Starts At */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Starts At *</label>
-                <input
-                  type="datetime-local"
-                  name="startsAt"
-                  value={formData.startsAt}
-                  onChange={handleChange}
+            {/* Starts At */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Starts At *</p>
+              <div className="grid grid-cols-2 gap-3">
+                <ScheduleDateField
+                  id="event-starts-date"
+                  label="Date"
+                  value={splitDateTime(formData.startsAt).date}
+                  error={errors.startsAt}
+                  onChange={(value) => updateSchedule("startsAt", "date", value)}
                   disabled={isSubmitting}
-                  className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none border [color-scheme:dark]", Boolean(errors.startsAt))}
                 />
-                <FieldError message={errors.startsAt} />
+                <ScheduleTimeField
+                  id="event-starts-time"
+                  label="Time"
+                  value={splitDateTime(formData.startsAt).time}
+                  error={errors.startsAt}
+                  onChange={(value) => updateSchedule("startsAt", "time", value)}
+                  disabled={isSubmitting}
+                />
               </div>
+              <FieldError message={errors.startsAt} />
+            </div>
 
-              {/* Ends At */}
-              <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Ends At *</label>
-                <input
-                  type="datetime-local"
-                  name="endsAt"
-                  value={formData.endsAt}
-                  onChange={handleChange}
+            {/* Ends At */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Ends At *</p>
+              <div className="grid grid-cols-2 gap-3">
+                <ScheduleDateField
+                  id="event-ends-date"
+                  label="Date"
+                  value={splitDateTime(formData.endsAt).date}
+                  min={splitDateTime(formData.startsAt).date || undefined}
+                  error={errors.endsAt}
+                  onChange={(value) => updateSchedule("endsAt", "date", value)}
                   disabled={isSubmitting}
-                  className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none border [color-scheme:dark]", Boolean(errors.endsAt))}
                 />
-                <FieldError message={errors.endsAt} />
+                <ScheduleTimeField
+                  id="event-ends-time"
+                  label="Time"
+                  value={splitDateTime(formData.endsAt).time}
+                  error={errors.endsAt}
+                  onChange={(value) => updateSchedule("endsAt", "time", value)}
+                  disabled={isSubmitting}
+                />
               </div>
+              <FieldError message={errors.endsAt} />
             </div>
           </div>
 

@@ -63,7 +63,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
         return {
           id: toResourceId(apiEvent.id),
           tag: apiEvent.status?.toUpperCase() || "UPCOMING",
-          image: apiEvent.imageUrl || "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?q=80&w=600&auto=format&fit=crop",
+          image: apiEvent.imageUrl || "",
           title: apiEvent.location ? `${apiEvent.title} — ${apiEvent.location}` : apiEvent.title,
           date: dateString,
           confirmedCount: attendingCount,

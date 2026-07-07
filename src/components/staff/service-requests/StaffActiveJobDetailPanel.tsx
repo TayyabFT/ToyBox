@@ -270,7 +270,7 @@ export function StaffActiveJobDetailPanel({
             <select
               value={selectedSlot}
               onChange={(event) => setSelectedSlot(event.target.value)}
-              className="font-roboto w-full rounded-lg border border-accent/15 bg-dark px-3 py-2 text-[11px] text-foreground outline-none"
+              className="font-roboto w-full rounded-lg border border-accent/15 bg-input-muted px-3 py-2 text-[11px] text-foreground outline-none transition-colors focus:border-accent/35"
             >
               <option value="">Select a slot</option>
               {scheduleSlots.map((slot) => (
@@ -327,7 +327,7 @@ export function StaffActiveJobDetailPanel({
                           handleDraftSubtaskChange(subtask.id, event.target.value)
                         }
                         placeholder={`Subtask ${index + 1}`}
-                        className="font-roboto min-w-0 flex-1 rounded-lg border border-accent/15 bg-dark px-3 py-2 text-[11px] text-foreground outline-none"
+                        className="font-roboto min-w-0 flex-1 rounded-lg border border-accent/15 bg-input-muted px-3 py-2 text-[11px] text-foreground outline-none transition-colors focus:border-accent/35"
                       />
                       <button
                         type="button"
@@ -494,7 +494,7 @@ export function StaffActiveJobDetailPanel({
               onChange={(event) => setNoteDraft(event.target.value)}
               rows={3}
               placeholder="Add a job note..."
-              className="font-roboto w-full resize-none rounded-xl border border-accent/15 bg-dark px-4 py-3 text-[12px] text-foreground outline-none"
+              className="font-roboto w-full resize-none rounded-xl border border-accent/15 bg-input-muted px-4 py-3 text-[12px] text-foreground outline-none transition-colors focus:border-accent/35"
             />
           </div>
         ) : null}
@@ -514,7 +514,7 @@ export function StaffActiveJobDetailPanel({
               value={photoCaption}
               onChange={(event) => setPhotoCaption(event.target.value)}
               placeholder="Photo caption (optional)"
-              className="font-roboto w-full rounded-xl border border-accent/15 bg-dark px-4 py-2 text-[11px] text-foreground outline-none"
+              className="font-roboto w-full rounded-xl border border-accent/15 bg-input-muted px-4 py-2 text-[11px] text-foreground outline-none transition-colors focus:border-accent/35"
             />
           </div>
         ) : null}

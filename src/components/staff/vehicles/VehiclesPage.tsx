@@ -69,14 +69,16 @@ export function VehiclesPage() {
     [vehicles, selectedId],
   );
 
-  const detail = useMemo(
-    () =>
-      mapVehicleDetail(
-        inventoryById[selectedId],
-        selectedVehicle,
-      ),
-    [inventoryById, selectedId, selectedVehicle],
-  );
+  const detail = useMemo(() => {
+    if (loading || !selectedId || !selectedVehicle) {
+      return null;
+    }
+
+    return mapVehicleDetail(
+      inventoryById[selectedId],
+      selectedVehicle,
+    );
+  }, [inventoryById, loading, selectedId, selectedVehicle]);
 
   return (
     <div className="space-y-8 p-8">
@@ -128,7 +130,7 @@ export function VehiclesPage() {
           />
         </div>
         <div className="xl:col-span-3">
-          <VehicleDetailPanel detail={detail} />
+          <VehicleDetailPanel detail={detail} loading={loading} />
         </div>
       </div>
 

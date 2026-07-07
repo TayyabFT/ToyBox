@@ -1306,6 +1306,9 @@ export type StaffInspectionStatRaw = {
   subtitle?: string;
   subtext?: string;
   label?: string;
+  count?: string | number;
+  total?: string | number;
+  displayValue?: string;
 };
 
 export type StaffInspectionDashboardSummaryRaw = {
@@ -1350,7 +1353,9 @@ export type StaffInspectionQueueItemRaw = {
 
 export type StaffInspectionListData = {
   dashboardSummary?: StaffInspectionDashboardSummaryRaw;
-  inspections?: StaffInspectionQueueItemRaw[];
+  inspections?: StaffInspectionQueueItemRaw[] | unknown;
+  items?: StaffInspectionQueueItemRaw[] | unknown;
+  queue?: StaffInspectionQueueItemRaw[] | unknown;
   total?: number;
 };
 
@@ -1364,7 +1369,9 @@ export type StaffInspectionChecklistItemRaw = {
   id?: string | number;
   label?: string;
   status?: string;
+  state?: string;
   step?: string;
+  stepKey?: string;
 };
 
 export type StaffInspectionStepRaw = {
@@ -1377,10 +1384,16 @@ export type StaffInspectionStepRaw = {
 
 export type StaffInspectionFlaggedIssueRaw = {
   key?: string;
+  itemKey?: string;
   tag?: string;
   label?: string;
+  title?: string;
   notes?: string;
   note?: string;
+  description?: string;
+  photoUrls?: string[];
+  imageUrls?: string[];
+  photos?: StaffInspectionPhotoRaw[] | unknown;
 };
 
 export type StaffInspectionDetailRaw = {
@@ -1395,17 +1408,57 @@ export type StaffInspectionDetailRaw = {
   type?: string;
   currentStep?: string;
   activeStep?: string;
-  steps?: StaffInspectionStepRaw[];
-  checklist?: StaffInspectionChecklistItemRaw[];
-  flaggedIssues?: StaffInspectionFlaggedIssueRaw[];
+  currentStepKey?: string;
+  activeStepKey?: string;
+  steps?: StaffInspectionStepRaw[] | unknown;
+  inspectionSteps?: StaffInspectionStepRaw[] | unknown;
+  progress?: { steps?: StaffInspectionStepRaw[] | unknown } | unknown;
+  checklist?: StaffInspectionChecklistItemRaw[] | unknown;
+  checklistItems?: StaffInspectionChecklistItemRaw[] | unknown;
+  flaggedIssues?: StaffInspectionFlaggedIssueRaw[] | unknown;
   flaggedIssue?: StaffInspectionFlaggedIssueRaw;
+  issues?: StaffInspectionFlaggedIssueRaw[] | unknown;
+  statusKey?: string;
+  status?: string;
+  inspectionStatus?: string;
   fuelLevel?: string;
   notes?: string;
+  photos?: StaffInspectionPhotoRaw[] | unknown;
+  photoEvidence?: StaffInspectionPhotoRaw[] | unknown;
+  evidencePhotos?: StaffInspectionPhotoRaw[] | unknown;
+  evidence?: StaffInspectionPhotoRaw[] | unknown;
+  images?: StaffInspectionPhotoRaw[] | unknown;
+  imageUrls?: string[];
 };
 
-export type StaffInspectionDetailResponse = ApiResponse<StaffInspectionDetailRaw>;
+export type StaffInspectionPhotoRaw = {
+  id?: string | number;
+  url?: string;
+  imageUrl?: string;
+  thumbnailUrl?: string;
+  src?: string;
+  itemKey?: string;
+  caption?: string;
+  label?: string;
+  photoUrl?: string;
+  fileUrl?: string;
+  path?: string;
+  createdAt?: string;
+  uploadedAt?: string;
+  imageUrls?: string[];
+};
 
-export type StaffInspectionMutationResponse = ApiResponse<StaffInspectionDetailRaw>;
+export type StaffInspectionDetailResponse = ApiResponse<
+  StaffInspectionDetailRaw | Record<string, unknown>
+>;
+
+export type StaffInspectionMutationResponse = ApiResponse<
+  StaffInspectionDetailRaw | Record<string, unknown>
+>;
+
+export type StaffInspectionCreateResponse = ApiResponse<
+  StaffInspectionDetailRaw | Record<string, unknown>
+>;
 
 export type StaffHealthReportTabRaw = {
   key?: string;
@@ -1561,12 +1614,147 @@ export type StaffInspectionCreateRequest = {
   fuelLevel?: string;
 };
 
+export type StaffInspectionPhotoUploadPayload = {
+  photo: File;
+  itemKey?: string;
+};
+
 export type StaffInspectionDraftRequest = {
   currentStep?: string;
   checklist?: Array<{ key: string; status: string }>;
   odometerReading?: string;
   fuelLevel?: string;
   notes?: string;
+};
+
+export type StaffPhotoUploadTabRaw = {
+  key?: string;
+  label?: string;
+  active?: boolean;
+};
+
+export type StaffPhotoUploadHeaderRaw = {
+  dateLabel?: string;
+  shiftLabel?: string;
+  title?: string;
+};
+
+export type StaffPhotoUploadActiveJobRaw = {
+  reference?: string;
+  linkedJobReference?: string;
+  vehicle?: string;
+  vehicleName?: string;
+  bay?: string;
+  imageCode?: string;
+  fileName?: string;
+  caption?: string;
+};
+
+export type StaffPhotoUploadTodaySummaryRaw = {
+  totalPhotos?: number;
+  pendingUpload?: number;
+  pendingUploadCount?: number;
+  pendingSizeMb?: number | string;
+  pendingTotalSize?: string;
+};
+
+export type StaffPhotoCaptureRaw = {
+  id?: string | number;
+  sectionLabel?: string;
+  label?: string;
+  capturedAt?: string;
+  time?: string;
+  status?: string;
+  statusKey?: string;
+  isIssueFlagged?: boolean;
+  thumbnailUrl?: string;
+  imageUrl?: string;
+  caption?: string;
+};
+
+export type StaffPhotoCaptureDetailRaw = StaffPhotoCaptureRaw & {
+  photoIndex?: string | number;
+  index?: string | number;
+  fileSize?: string | number;
+  fileType?: string;
+  mimeType?: string;
+  linkedJobReference?: string;
+  categoryTags?: string[];
+  caption?: string;
+  notes?: string;
+};
+
+export type StaffPhotoUploadListItemRaw = {
+  id?: string | number;
+  title?: string;
+  sectionLabel?: string;
+  vehicle?: string;
+  vehicleName?: string;
+  linkedJobReference?: string;
+  capturedAt?: string;
+  time?: string;
+  fileSize?: string | number;
+  status?: string;
+  statusKey?: string;
+  isIssueFlagged?: boolean;
+};
+
+export type StaffPhotoUploadSummaryData = {
+  header?: StaffPhotoUploadHeaderRaw;
+  tabs?: StaffPhotoUploadTabRaw[] | unknown;
+  activeJob?: StaffPhotoUploadActiveJobRaw;
+  todayCaptures?: StaffPhotoCaptureRaw[] | unknown;
+  todaySummary?: StaffPhotoUploadTodaySummaryRaw;
+  selectedPhoto?: StaffPhotoCaptureDetailRaw;
+  recentUploads?: StaffPhotoUploadListItemRaw[] | unknown;
+  uploads?: StaffPhotoUploadListItemRaw[] | unknown;
+  sidebar?: {
+    selectedPhoto?: StaffPhotoCaptureDetailRaw;
+    photo?: StaffPhotoCaptureDetailRaw;
+    recentUploads?: StaffPhotoUploadListItemRaw[] | unknown;
+    uploads?: StaffPhotoUploadListItemRaw[] | unknown;
+  };
+};
+
+export type StaffPhotoUploadListData = {
+  uploads?: StaffPhotoUploadListItemRaw[];
+  recentUploads?: StaffPhotoUploadListItemRaw[];
+  items?: StaffPhotoUploadListItemRaw[];
+  total?: number;
+  limit?: number;
+  offset?: number;
+};
+
+export type StaffPhotoUploadTodayData = {
+  captures?: StaffPhotoCaptureRaw[];
+  todayCaptures?: StaffPhotoCaptureRaw[];
+  summary?: StaffPhotoUploadTodaySummaryRaw;
+};
+
+export type StaffPhotoUploadSummaryResponse =
+  ApiResponse<StaffPhotoUploadSummaryData>;
+export type StaffPhotoUploadListResponse =
+  ApiResponse<StaffPhotoUploadListData>;
+export type StaffPhotoUploadTodayResponse =
+  ApiResponse<StaffPhotoUploadTodayData>;
+export type StaffPhotoUploadDetailResponse =
+  ApiResponse<StaffPhotoCaptureDetailRaw>;
+export type StaffPhotoUploadMutationResponse =
+  ApiResponse<StaffPhotoCaptureDetailRaw>;
+
+export type StaffPhotoUploadCreateRequest = {
+  sectionLabel: string;
+  categoryTags: string[];
+  caption?: string;
+  linkedJobReference?: string;
+};
+
+export type StaffPhotoUploadUpdateRequest = {
+  sectionLabel?: string;
+  categoryTags?: string[];
+  caption?: string;
+  linkedJobReference?: string;
+  isIssueFlagged?: boolean;
 };
 
 export type AssignVehicleRequest = {
@@ -1760,7 +1948,7 @@ export type CreateBulletinRequest = {
 
 export type CreateBulletinResponse = ApiResponse<CommunicationsBulletinRaw>;
 
-// Shape of a single RSVP entry returned inside rsvpList by GET /api/v1/events/:id
+// Shape of a single RSVP entry returned by GET /api/v1/admin/events/:id
 export type EventRsvpRaw = {
   rsvpId?: string | number;
   status?: string; // "confirmed" | "waitlist"
@@ -1772,21 +1960,32 @@ export type EventRsvpRaw = {
     initial?: string;
     profileImageUrl?: string;
   };
-  vehicle?: {
-    id?: string | number;
-    name?: string;
-  };
+  vehicle?:
+    | string
+    | {
+        id?: string | number;
+        name?: string;
+      };
 };
 
-// Full detail response returned by GET /api/v1/events/:id
+// Full detail response returned by GET /api/v1/admin/events/:id
 export type EventDetailData = EventResponse & {
   spotsRemaining?: number;
   isJoined?: boolean;
   myRsvp?: unknown;
+  attendanceRate?: number;
   rsvpList?: EventRsvpRaw[];
+  waitlistList?: EventRsvpRaw[];
+  notes?: string;
 };
 
 export type EventDetailResponse = ApiResponse<EventDetailData>;
+
+export type UpdateEventNotesRequest = {
+  notes: string;
+};
+
+export type UpdateEventNotesResponse = ApiResponse<{ notes?: string }>;
 
 export type WorkshopDashboardStatsData = {
   activeJobs: number;
@@ -2115,6 +2314,179 @@ export type AdminOverviewData = {
 
 export type AdminOverviewResponse = ApiResponse<AdminOverviewData>;
 
+export type StaffOperationalUpdateTagRaw = {
+  label?: string;
+  tone?: string;
+};
+
+export type StaffOperationalUpdateRaw = {
+  id?: string | number;
+  updateId?: string | number;
+  author?: string;
+  authorName?: string;
+  authorInitial?: string;
+  authorRole?: string;
+  staffName?: string;
+  status?: string;
+  statusKey?: string;
+  statusLabel?: string;
+  updateType?: string;
+  type?: string;
+  time?: string;
+  timeLabel?: string;
+  createdAt?: string;
+  postedAt?: string;
+  body?: string;
+  title?: string;
+  message?: string;
+  content?: string;
+  tags?: StaffOperationalUpdateTagRaw[] | unknown;
+  labels?: unknown;
+  icon?: string;
+  iconKey?: string;
+  isFlagged?: boolean;
+  flagIssue?: boolean;
+  isAnnouncement?: boolean;
+  isPinned?: boolean;
+  isOwnPost?: boolean;
+  isMine?: boolean;
+  canPin?: boolean;
+  linkedJobReference?: string;
+  vehicleId?: string;
+  memberId?: string;
+  vehicle?: { name?: string; displayName?: string; make?: string; model?: string } | string;
+  member?: { name?: string; label?: string } | string;
+  filterTags?: string[];
+};
+
+export type StaffOperationalUpdatesHeaderRaw = {
+  dateLabel?: string;
+  shiftLabel?: string;
+  date?: string;
+  shift?: string;
+};
+
+export type StaffOperationalUpdateTabRaw = {
+  id?: string;
+  key?: string;
+  label?: string;
+};
+
+export type StaffOperationalUpdateBroadcastRaw = {
+  id?: string | number;
+  author?: string;
+  authorName?: string;
+  role?: string;
+  authorRole?: string;
+  body?: string;
+  message?: string;
+  timeLabel?: string;
+  postedAt?: string;
+  isPinned?: boolean;
+};
+
+export type StaffOperationalUpdatesSummaryData = {
+  header?: StaffOperationalUpdatesHeaderRaw;
+  screen?: {
+    header?: StaffOperationalUpdatesHeaderRaw;
+    tabs?: StaffOperationalUpdateTabRaw[] | unknown;
+    broadcast?: StaffOperationalUpdateBroadcastRaw;
+    managementBroadcast?: StaffOperationalUpdateBroadcastRaw;
+  };
+  tabs?: StaffOperationalUpdateTabRaw[] | unknown;
+  filterTabs?: StaffOperationalUpdateTabRaw[] | unknown;
+  broadcast?: StaffOperationalUpdateBroadcastRaw;
+  managementBroadcast?: StaffOperationalUpdateBroadcastRaw;
+  feed?: StaffOperationalUpdateRaw[] | unknown;
+  updates?: StaffOperationalUpdateRaw[] | unknown;
+  items?: StaffOperationalUpdateRaw[] | unknown;
+};
+
+export type StaffOperationalUpdatePinnedNoticeRaw = {
+  id?: string | number;
+  title?: string;
+  body?: string;
+  message?: string;
+  tone?: string;
+  color?: string;
+  isPinned?: boolean;
+};
+
+export type StaffOperationalUpdatesPinnedData = {
+  notices?: StaffOperationalUpdatePinnedNoticeRaw[] | unknown;
+  pinned?: StaffOperationalUpdatePinnedNoticeRaw[] | unknown;
+  items?: StaffOperationalUpdatePinnedNoticeRaw[] | unknown;
+};
+
+export type StaffOperationalUpdateShiftLogRaw = {
+  id?: string | number;
+  time?: string;
+  title?: string;
+  highlight?: string;
+  label?: string;
+  body?: string;
+  tone?: string;
+};
+
+export type StaffOperationalUpdatesShiftLogData = {
+  staffName?: string;
+  name?: string;
+  entries?: StaffOperationalUpdateShiftLogRaw[] | unknown;
+  items?: StaffOperationalUpdateShiftLogRaw[] | unknown;
+  log?: StaffOperationalUpdateShiftLogRaw[] | unknown;
+  footerNote?: string;
+  footer?: string;
+  priorityNote?: string;
+};
+
+export type StaffOperationalUpdatesFeedData = {
+  feed?: StaffOperationalUpdateRaw[] | unknown;
+  updates?: StaffOperationalUpdateRaw[] | unknown;
+  items?: StaffOperationalUpdateRaw[] | unknown;
+};
+
+export type OperationalUpdateType =
+  | "general"
+  | "shift_note"
+  | "flagged_issue"
+  | "service_reminder"
+  | "inspection"
+  | "transport"
+  | "detailing"
+  | "workshop";
+
+export type StaffOperationalUpdateCreateRequest = {
+  body: string;
+  title?: string;
+  updateType: OperationalUpdateType;
+  linkedJobReference?: string;
+  vehicleId?: string;
+  memberId?: string;
+  flagIssue?: boolean;
+};
+
+export type StaffOperationalUpdatePinRequest = {
+  isPinned: boolean;
+};
+
+export type StaffOperationalUpdatesSummaryResponse = ApiResponse<
+  StaffOperationalUpdatesSummaryData | Record<string, unknown>
+>;
+export type StaffOperationalUpdatesFeedResponse = ApiResponse<
+  StaffOperationalUpdatesFeedData | StaffOperationalUpdateRaw[] | Record<string, unknown>
+>;
+export type StaffOperationalUpdatesPinnedResponse = ApiResponse<
+  StaffOperationalUpdatesPinnedData | StaffOperationalUpdatePinnedNoticeRaw[] | Record<string, unknown>
+>;
+export type StaffOperationalUpdatesShiftLogResponse = ApiResponse<
+  StaffOperationalUpdatesShiftLogData | Record<string, unknown>
+>;
+export type StaffOperationalUpdateDetailResponse = ApiResponse<
+  StaffOperationalUpdateRaw | Record<string, unknown>
+>;
+export type StaffOperationalUpdateMutationResponse = ApiResponse<
+  StaffOperationalUpdateRaw | Record<string, unknown>
+>;
 export type AdminAnalyticsPeriod = {
   key?: string;
   from?: string;

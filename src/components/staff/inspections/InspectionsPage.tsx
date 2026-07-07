@@ -31,10 +31,12 @@ export function InspectionsPage() {
     uploadPhoto,
     toggleChecklistItem,
     changeStep,
+    setStep,
     updateOdometer,
     updateFuelLevel,
     updateNotes,
     createInspection,
+    canEditInspection,
   } = useStaffInspections();
 
   const statCards = useMemo(
@@ -87,7 +89,7 @@ export function InspectionsPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
         <InspectionQueuePanel
           items={queue}
           selectedId={selectedId}
@@ -97,8 +99,8 @@ export function InspectionsPage() {
         />
 
         {detailLoading && !inspection ? (
-          <section className="rounded-2xl border border-accent/10 bg-card p-5">
-            <p className="font-roboto py-16 text-center text-sm text-secondary">
+          <section className="w-full self-start rounded-2xl border border-accent/10 bg-card p-5">
+            <p className="font-roboto py-8 text-center text-sm text-secondary">
               Loading inspection detail...
             </p>
           </section>
@@ -106,19 +108,21 @@ export function InspectionsPage() {
           <ActiveInspectionPanel
             inspection={inspection}
             actionLoading={actionLoading}
+            canEditInspection={canEditInspection}
             onSaveDraft={() => void saveDraft()}
             onSubmit={() => void submitReport()}
             onUploadPhoto={uploadPhoto}
             onToggleChecklistItem={toggleChecklistItem}
             onStepBack={() => changeStep("back")}
             onStepNext={() => changeStep("next")}
+            onStepSelect={setStep}
             onOdometerChange={updateOdometer}
             onFuelLevelChange={updateFuelLevel}
             onNotesChange={updateNotes}
           />
         ) : (
-          <section className="rounded-2xl border border-accent/10 bg-card p-5">
-            <p className="font-roboto py-16 text-center text-sm text-secondary">
+          <section className="w-full self-start rounded-2xl border border-accent/10 bg-card p-5">
+            <p className="font-roboto py-8 text-center text-sm text-secondary">
               {loading
                 ? "Loading inspections..."
                 : "Select an inspection from the queue."}

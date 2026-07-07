@@ -37,17 +37,28 @@ export function ServiceRequestsPage() {
   }
 
   return (
-    <>
-      <ServiceRequestsDashboard
+    <ServiceRequestsDashboard
       basePath="/staff"
       staffMode
-      activeJobPanel={
-        <StaffActiveJobDetailPanel
-          onWorkflowChange={() =>
-            setJobsRefreshToken((current) => current + 1)
-          }
-          onJobCompleted={handleJobCompleted}
-        />
+      staffContent={
+        <div className="space-y-4">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+            <StaffActiveJobDetailPanel
+              onWorkflowChange={() =>
+                setJobsRefreshToken((current) => current + 1)
+              }
+              onJobCompleted={handleJobCompleted}
+            />
+            <StaffJobQueueSection
+              refreshToken={jobsRefreshToken}
+              completeEvent={completeEvent}
+            />
+          </div>
+          <StaffCompletedJobsSection
+            refreshToken={jobsRefreshToken}
+            completeEvent={completeEvent}
+          />
+        </div>
       }
       transport={{
         load: async () => {
@@ -89,17 +100,6 @@ export function ServiceRequestsPage() {
           return createEmptyStaffServiceRequestStats();
         }
       }}
-      />
-      <div className="grid grid-cols-1 gap-4 px-8 pb-8 xl:grid-cols-2">
-        <StaffJobQueueSection
-          refreshToken={jobsRefreshToken}
-          completeEvent={completeEvent}
-        />
-        <StaffCompletedJobsSection
-          refreshToken={jobsRefreshToken}
-          completeEvent={completeEvent}
-        />
-      </div>
-    </>
+    />
   );
 }

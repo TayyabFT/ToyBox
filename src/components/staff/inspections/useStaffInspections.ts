@@ -1,26 +1,41 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { staffInspectionsApi } from "@/api/staffInspections.api";
 import {
   buildInspectionDraftPayload,
+  buildFallbackInspectionFromQueue,
   cycleChecklistItemState,
+  extractCreatedInspectionId,
+  extractInspectionDashboardSummary,
+  extractInspectionPhotos,
+  extractInspectionQueue,
+  findCreatedInspectionInQueue,
+  formatInspectionApiErrorMessage,
   getAdjacentStepId,
+  hasMeaningfulInspectionDetailData,
+  hasMeaningfulInspectionSummary,
   mapActiveInspection,
   mapInspectionQueue,
   mapInspectionStats,
+  mergeInspectionAfterDraft,
+  mergeInspectionPhotos,
+  resolveFlaggedItemKey,
+  resolveInspectionApiId,
+  isInspectionEditable,
+  isInspectionSubmittable,
   setActiveStep,
 } from "@/lib/staffInspections";
+import type { InspectionSummaryKey } from "./types";
 import type {
   StaffInspectionCreateRequest,
-  StaffInspectionDetailRaw,
 } from "@/types/api";
+import { isApiError } from "@/lib/apiError";
 import {
   hasAddInspectionErrors,
   mapApiValidationErrors,
   type CreateInspectionResult,
 } from "@/lib/addInspectionValidation";
-import { isApiError } from "@/lib/apiError";
 import { showError, showToast } from "@/lib/toast";
 import type {
   ActiveInspection,
@@ -30,10 +45,10 @@ import type {
 } from "./types";
 
 const EMPTY_STATS: InspectionStats = {
-  dueToday: { value: "0", subtext: "Inspections Pending" },
-  inProgress: { value: "0", subtext: "Active Now" },
-  completed: { value: "0", subtext: "This Shift" },
-  flagged: { value: "0", subtext: "Needs Review" },
+  dueToday: { value: "0", subtext: "Inspections Pending", summaryKey: "dueToday" },
+  inProgress: { value: "0", subtext: "Active Now", summaryKey: "inProgress" },
+  completed: { value: "0", subtext: "This Shift", summaryKey: "completedThisShift" },
+  flagged: { value: "0", subtext: "Needs Review", summaryKey: "flaggedIssues" },
 };
 
 export function useStaffInspections() {
@@ -44,6 +59,14 @@ export function useStaffInspections() {
   const [loading, setLoading] = useState(true);
   const [detailLoading, setDetailLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+  const [activeSummaryKey, setActiveSummaryKey] =
+    useState<InspectionSummaryKey | null>(null);
+
+  // Read the queue through a ref inside loadDetail so its identity stays
+  // stable; otherwise the detail effect re-runs when the queue arrives and
+  // fetches the detail twice on first load.
+  const queueRef = useRef<InspectionQueueItem[]>(queue);
+  queueRef.current = queue;
 
   const pendingCount = useMemo(
     () =>
@@ -53,14 +76,50 @@ export function useStaffInspections() {
     [queue],
   );
 
-  const loadList = useCallback(async () => {
+  const canEditInspection = useMemo(() => {
+    const inspectionId = resolveInspectionApiId(inspection?.id, selectedId);
+    const queueItem =
+      queue.find((item) => item.id === inspectionId) ??
+      queue.find((item) => item.id === selectedId) ??
+      null;
+
+    return isInspectionEditable(queueItem, inspection?.statusKey);
+  }, [queue, selectedId, inspection?.id, inspection?.statusKey]);
+
+  const loadSummary = useCallback(async () => {
+    try {
+      const response = await staffInspectionsApi.getSummary();
+
+      if (hasMeaningfulInspectionSummary(response.data)) {
+        setStats(
+          mapInspectionStats(extractInspectionDashboardSummary(response.data)),
+        );
+      }
+    } catch {
+      // Summary is a KPI-only refresh; the list endpoint already provides
+      // dashboardSummary, so a failure here should not disrupt the page.
+    }
+  }, []);
+
+  const loadList = useCallback(
+    async (summaryKey?: InspectionSummaryKey | null) => {
     setLoading(true);
 
     try {
-      const response = await staffInspectionsApi.getList();
+      const response = await staffInspectionsApi.getList({
+        summaryKey: summaryKey ?? undefined,
+        limit: 50,
+        offset: 0,
+      });
 
-      setStats(mapInspectionStats(response.data?.dashboardSummary));
-      const items = mapInspectionQueue(response.data?.inspections);
+      const listSummary = extractInspectionDashboardSummary(response.data);
+
+      if (hasMeaningfulInspectionSummary(response.data)) {
+        setStats(mapInspectionStats(listSummary));
+      } else {
+        void loadSummary();
+      }
+      const items = mapInspectionQueue(extractInspectionQueue(response.data));
       setQueue(items);
 
       setSelectedId((current) => {
@@ -81,136 +140,274 @@ export function useStaffInspections() {
     } finally {
       setLoading(false);
     }
-  }, []);
+    },
+    [loadSummary],
+  );
 
-  const loadDetail = useCallback(async (id: string) => {
-    if (!id) {
+  const loadDetail = useCallback(
+    async (id: string) => {
+      if (!id) {
+        setInspection(null);
+        return;
+      }
+
+      setDetailLoading(true);
       setInspection(null);
-      return;
-    }
 
-    setDetailLoading(true);
+      try {
+        const response = await staffInspectionsApi.getDetail(id);
+        const queueItem =
+          queueRef.current.find((item) => item.id === id) ?? null;
 
-    try {
-      const response = await staffInspectionsApi.getDetail(id);
-      setInspection(mapActiveInspection(response.data));
-    } catch (error) {
-      const message =
-        (error as { message?: string }).message ??
-        "Failed to load inspection detail";
+        setInspection((previous) => {
+          const mapped =
+            mapActiveInspection(response.data, {
+              fallbackId: id,
+              queueItem,
+            }) ?? buildFallbackInspectionFromQueue(queueItem, id);
 
-      showError(message);
-      setInspection(null);
-    } finally {
-      setDetailLoading(false);
-    }
-  }, []);
+          if (!mapped) {
+            return previous;
+          }
+
+          return {
+            ...mapped,
+            photos:
+              mapped.photos.length > 0
+                ? mapped.photos
+                : previous?.photos ?? [],
+          };
+        });
+      } catch (error) {
+        const message =
+          (error as { message?: string }).message ??
+          "Failed to load inspection detail";
+
+        showError(message);
+
+        const queueItem =
+          queueRef.current.find((item) => item.id === id) ?? null;
+        setInspection(buildFallbackInspectionFromQueue(queueItem, id));
+      } finally {
+        setDetailLoading(false);
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
-    void loadList();
-  }, [loadList]);
+    void loadList(activeSummaryKey);
+  }, [activeSummaryKey, loadList]);
 
   useEffect(() => {
     void loadDetail(selectedId);
   }, [loadDetail, selectedId]);
 
-  async function runAction<T>(action: () => Promise<T>): Promise<T | null> {
-    setActionLoading(true);
-
-    try {
-      return await action();
-    } catch (error) {
-      const message = (error as { message?: string }).message ?? "Action failed";
-      showError(message);
-      return null;
-    } finally {
-      setActionLoading(false);
-    }
-  }
-
-  const applyDetailResponse = useCallback((data: StaffInspectionDetailRaw | null | undefined) => {
-    const mapped = mapActiveInspection(data);
-
-    if (mapped) {
-      setInspection(mapped);
-    }
-  }, []);
-
   const saveDraft = useCallback(async () => {
     if (!inspection?.id) return false;
 
-    const response = await runAction(() =>
-      staffInspectionsApi.saveDraft(
-        inspection.id!,
-        buildInspectionDraftPayload(inspection),
-      ),
-    );
+    const inspectionId = resolveInspectionApiId(inspection.id, selectedId);
+    const queueItem =
+      queue.find((item) => item.id === inspectionId) ??
+      queue.find((item) => item.id === selectedId) ??
+      null;
 
-    if (!response) return false;
+    if (!isInspectionEditable(queueItem, inspection.statusKey)) {
+      showError("Completed inspections cannot be edited.");
+      return false;
+    }
 
-    applyDetailResponse(response.data);
-    showToast.success({
-      title: "Draft Saved",
-      message: "Inspection draft updated",
-    });
-    return true;
-  }, [applyDetailResponse, inspection]);
-
-  const submitReport = useCallback(async () => {
-    if (!inspection?.id) return false;
+    const payload = buildInspectionDraftPayload(inspection);
 
     setActionLoading(true);
 
     try {
-      await staffInspectionsApi.saveDraft(
-        inspection.id,
-        buildInspectionDraftPayload(inspection),
+      const response = await staffInspectionsApi.saveDraft(inspectionId, payload);
+
+      setInspection((current) =>
+        current
+          ? mergeInspectionAfterDraft(current, response.data, {
+              fallbackId: inspectionId,
+              queueItem,
+            })
+          : current,
       );
 
-      const response = await staffInspectionsApi.submit(inspection.id);
+      if (!hasMeaningfulInspectionDetailData(response.data)) {
+        await loadDetail(inspectionId);
+      }
 
       showToast.success({
-        title: "Report Submitted",
-        message: "Inspection report submitted successfully",
+        title: "Draft Saved",
+        message: response.message || "Inspection draft updated",
       });
-
-      await loadList();
-
-      if (response.data) {
-        applyDetailResponse(response.data);
-      } else {
-        await loadDetail(inspection.id);
-      }
 
       return true;
     } catch (error) {
-      const message =
-        (error as { message?: string }).message ?? "Failed to submit report";
+      const message = formatInspectionApiErrorMessage(
+        error,
+        "Failed to save draft",
+      );
+
       showError(message);
       return false;
     } finally {
       setActionLoading(false);
     }
-  }, [applyDetailResponse, inspection, loadDetail, loadList]);
+  }, [inspection, loadDetail, queue, selectedId]);
 
-  const uploadPhoto = useCallback(
-    async (file: File) => {
-      if (!inspection?.id) return false;
+  const submitReport = useCallback(async () => {
+    if (!inspection?.id) return false;
 
-      const response = await runAction(() =>
-        staffInspectionsApi.uploadPhoto(inspection.id!, file, inspection.notes),
+    const inspectionId = resolveInspectionApiId(inspection.id, selectedId);
+    const queueItem =
+      queue.find((item) => item.id === inspectionId) ??
+      queue.find((item) => item.id === selectedId) ??
+      null;
+
+    if (!isInspectionSubmittable(queueItem, inspection.statusKey)) {
+      showError("This inspection has already been submitted.");
+      return false;
+    }
+
+    const draftPayload = buildInspectionDraftPayload(inspection);
+
+    setActionLoading(true);
+
+    try {
+      const draftResponse = await staffInspectionsApi.saveDraft(
+        inspectionId,
+        draftPayload,
       );
 
-      if (!response) return false;
+      setInspection((current) =>
+        current
+          ? mergeInspectionAfterDraft(current, draftResponse.data, {
+              fallbackId: inspectionId,
+              queueItem,
+            })
+          : current,
+      );
 
-      applyDetailResponse(response.data);
+      const response = await staffInspectionsApi.submit(inspectionId);
+
       showToast.success({
-        title: "Photo Uploaded",
-        message: "Photo evidence added",
+        title: "Report Submitted",
+        message: response.message || "Inspection report submitted successfully",
       });
+
+      await loadList(activeSummaryKey);
+
+      setInspection((current) =>
+        current
+          ? mergeInspectionAfterDraft(current, response.data, {
+              fallbackId: inspectionId,
+              queueItem,
+            })
+          : current,
+      );
+
+      if (!hasMeaningfulInspectionDetailData(response.data)) {
+        await loadDetail(inspectionId);
+      }
+
       return true;
+    } catch (error) {
+      const message = formatInspectionApiErrorMessage(
+        error,
+        "Failed to submit report",
+      );
+      showError(message);
+      return false;
+    } finally {
+      setActionLoading(false);
+    }
+  }, [activeSummaryKey, inspection, loadDetail, loadList, queue, selectedId]);
+
+  const uploadPhoto = useCallback(
+    async (file: File, itemKey?: string) => {
+      if (!inspection?.id) return false;
+
+      const inspectionId = resolveInspectionApiId(inspection.id, selectedId);
+      const resolvedItemKey = itemKey ?? resolveFlaggedItemKey(inspection);
+
+      setActionLoading(true);
+
+      try {
+        const response = await staffInspectionsApi.uploadPhoto(inspectionId, {
+          photo: file,
+          itemKey: resolvedItemKey,
+        });
+
+        const queueItem = queue.find((item) => item.id === inspectionId) ?? null;
+        const responsePhotos = extractInspectionPhotos(response.data);
+
+        setInspection((current) => {
+          if (!current) {
+            return current;
+          }
+
+          const merged = mergeInspectionAfterDraft(current, response.data, {
+            fallbackId: inspectionId,
+            queueItem,
+          });
+          const existingPhotos = current.photos.filter(
+            (photo) => !photo.id.startsWith("local-"),
+          );
+
+          return {
+            ...merged,
+            photos: mergeInspectionPhotos(
+              responsePhotos.length > 0 ? responsePhotos : merged.photos,
+              responsePhotos.length > 0 ? existingPhotos : [],
+            ),
+          };
+        });
+
+        if (!hasMeaningfulInspectionDetailData(response.data)) {
+          const detailResponse = await staffInspectionsApi.getDetail(inspectionId);
+          const detailQueueItem =
+            queue.find((item) => item.id === inspectionId) ?? null;
+          const mapped = mapActiveInspection(detailResponse.data, {
+            fallbackId: inspectionId,
+            queueItem: detailQueueItem,
+          });
+
+          if (mapped) {
+            setInspection((current) =>
+              current
+                ? {
+                    ...mapped,
+                    photos: mergeInspectionPhotos(
+                      mapped.photos,
+                      current.photos.filter(
+                        (photo) => !photo.id.startsWith("local-"),
+                      ),
+                    ),
+                  }
+                : mapped,
+            );
+          }
+        }
+
+        showToast.success({
+          title: "Photo Uploaded",
+          message: response.message || "Photo evidence added",
+        });
+        return true;
+      } catch (error) {
+        const message = formatInspectionApiErrorMessage(
+          error,
+          "Failed to upload photo",
+        );
+
+        showError(message);
+        return false;
+      } finally {
+        setActionLoading(false);
+      }
     },
-    [applyDetailResponse, inspection],
+    [inspection, loadDetail, queue, selectedId],
   );
 
   const updateInspection = useCallback(
@@ -293,23 +490,45 @@ export function useStaffInspections() {
 
       try {
         const response = await staffInspectionsApi.create(body);
-        const createdId =
-          response.data?.id !== undefined && response.data?.id !== null
-            ? String(response.data.id)
-            : "";
+        const createdId = extractCreatedInspectionId(response.data);
 
         showToast.success({
           title: "Inspection Added",
           message: response.message || "Inspection scheduled successfully",
         });
 
-        await loadList();
+        setActiveSummaryKey(null);
 
-        if (createdId) {
-          setSelectedId(createdId);
+        const listResponse = await staffInspectionsApi.getList({
+          limit: 50,
+          offset: 0,
+        });
+
+        if (hasMeaningfulInspectionSummary(listResponse.data)) {
+          setStats(
+            mapInspectionStats(
+              extractInspectionDashboardSummary(listResponse.data),
+            ),
+          );
+        } else {
+          void loadSummary();
+        }
+        const items = mapInspectionQueue(extractInspectionQueue(listResponse.data));
+        setQueue(items);
+
+        const selectedInspectionId = findCreatedInspectionInQueue(
+          items,
+          body,
+          createdId,
+        );
+
+        if (selectedInspectionId) {
+          setSelectedId(selectedInspectionId);
         }
 
-        return { ok: true };
+        setLoading(false);
+
+        return { ok: true, createdId: selectedInspectionId || createdId || undefined };
       } catch (error) {
         const fieldErrors = isApiError(error)
           ? mapApiValidationErrors(error.errors)
@@ -327,6 +546,17 @@ export function useStaffInspections() {
         setActionLoading(false);
       }
     },
+    [loadSummary],
+  );
+
+  const filterBySummaryKey = useCallback(
+    (summaryKey: InspectionSummaryKey) => {
+      setActiveSummaryKey((current) => {
+        const next = current === summaryKey ? null : summaryKey;
+        void loadList(next);
+        return next;
+      });
+    },
     [loadList],
   );
 
@@ -340,6 +570,8 @@ export function useStaffInspections() {
     detailLoading,
     actionLoading,
     pendingCount,
+    activeSummaryKey,
+    canEditInspection,
     saveDraft,
     submitReport,
     uploadPhoto,
@@ -350,6 +582,6 @@ export function useStaffInspections() {
     updateFuelLevel,
     updateNotes,
     createInspection,
-    reload: loadList,
+    filterBySummaryKey,
   };
 }

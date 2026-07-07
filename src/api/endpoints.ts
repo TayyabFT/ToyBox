@@ -88,6 +88,24 @@ export const API_ENDPOINTS = {
     vehicleDetail: (id: string | number) =>
       `/api/v1/staff/health-reports/vehicles/${id}`,
   },
+  staffPhotoUploads: {
+    list: "/api/v1/staff/photo-uploads",
+    summary: "/api/v1/staff/photo-uploads/summary",
+    today: "/api/v1/staff/photo-uploads/today",
+    detail: (id: string | number) => `/api/v1/staff/photo-uploads/${id}`,
+    sync: (id: string | number) => `/api/v1/staff/photo-uploads/${id}/sync`,
+    syncAll: "/api/v1/staff/photo-uploads/sync-all",
+    upload: "/api/v1/staff/photo-uploads/upload",
+  },
+  staffOperationalUpdates: {
+    list: "/api/v1/staff/operational-updates",
+    summary: "/api/v1/staff/operational-updates/summary",
+    feed: "/api/v1/staff/operational-updates/feed",
+    pinned: "/api/v1/staff/operational-updates/pinned",
+    myShiftLog: "/api/v1/staff/operational-updates/my-shift-log",
+    detail: (id: string | number) => `/api/v1/staff/operational-updates/${id}`,
+    pin: (id: string | number) => `/api/v1/staff/operational-updates/${id}/pin`,
+  },
   chat: {
     conversations: "/api/v1/staff/chat/conversations",
     initiate: "/api/v1/staff/chat/initiate",
@@ -109,9 +127,10 @@ export const API_ENDPOINTS = {
     getevents: "/api/v1/events/all",
     getstats: "/api/v1/events/stats",
     update: (id: string | number) => `/api/v1/events/${id}`,
-    detail: (id: string | number) => `/api/v1/events/${id}`,
+    detail: (id: string | number) => `/api/v1/admin/events/${id}`,
     delete: (id: string | number) => `/api/v1/events/${id}`,
     sendUpdate: (id: string | number) => `/api/v1/events/${id}/send-update`,
+    notes: (id: string | number) => `/api/v1/admin/events/${id}/notes`,
   },
   communications: {
     stats: "/api/v1/admin/communications/stats",

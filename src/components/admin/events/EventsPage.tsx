@@ -14,6 +14,31 @@ import { EventPopup } from "./EventsPopup";
 import { EventForm } from "./EventsForm";
 import { eventsApi } from "@/api/events.api";
 import { showError, showSuccess } from "@/lib/toast";
+import type { EventRsvpRaw } from "@/types/api";
+
+function mapRsvpVehicle(vehicle: EventRsvpRaw["vehicle"]): string {
+  if (typeof vehicle === "string") {
+    return vehicle.trim() || "—";
+  }
+
+  return vehicle?.name?.trim() || "—";
+}
+
+function mapRsvpToAttendee(
+  entry: EventRsvpRaw,
+  status: "CONFIRMED" | "WAITLIST",
+) {
+  return {
+    name: entry.member?.name ?? "—",
+    initial:
+      entry.member?.initial ??
+      entry.member?.name?.charAt(0).toUpperCase() ??
+      "?",
+    profileImageUrl: entry.member?.profileImageUrl ?? "",
+    car: mapRsvpVehicle(entry.vehicle),
+    status,
+  };
+}
 
 // Shown while the real stats are loading
 const PLACEHOLDER_STATS: EventStatItem[] = [
@@ -129,6 +154,7 @@ export function EventsPage() {
       waitlistCount: eventDetails.wait,
       attendanceRate: Math.round((eventDetails.rsvp / eventDetails.totalCount) * 100) || 0,
       attendees: [],
+      notes: "",
       // raw fields for edit pre-fill
       _raw: null,
     });
@@ -139,22 +165,24 @@ export function EventsPage() {
       const response = await eventsApi.getDetail(eventDetails.id);
       const detail = response.data;
 
-      // Map rsvpList from API — split by status into confirmed / waitlist
-      const rsvpList = detail.rsvpList ?? [];
+      const confirmedRsvps = (detail.rsvpList ?? []).filter(
+        (entry) => entry.status?.toLowerCase() !== "waitlist",
+      );
+      const waitlistRsvps =
+        detail.waitlistList && detail.waitlistList.length > 0
+          ? detail.waitlistList
+          : (detail.rsvpList ?? []).filter(
+              (entry) => entry.status?.toLowerCase() === "waitlist",
+            );
 
-      const attendees = rsvpList.map((r) => ({
-        name: r.member?.name ?? "—",
-        initial: r.member?.initial ?? (r.member?.name?.charAt(0).toUpperCase() ?? "?"),
-        profileImageUrl: r.member?.profileImageUrl ?? "",
-        car: r.vehicle?.name ?? "—",
-        status:
-          r.status?.toLowerCase() === "waitlist"
-            ? ("WAITLIST" as const)
-            : ("CONFIRMED" as const),
-      }));
+      const attendees = [
+        ...confirmedRsvps.map((entry) => mapRsvpToAttendee(entry, "CONFIRMED")),
+        ...waitlistRsvps.map((entry) => mapRsvpToAttendee(entry, "WAITLIST")),
+      ];
 
-      const attendingCount = detail.attendingCount ?? 0;
+      const attendingCount = detail.attendingCount ?? confirmedRsvps.length;
       const capacity = detail.capacity ?? eventDetails.totalCount;
+      const waitlistCount = detail.waitlistCount ?? waitlistRsvps.length;
 
       setSelectedEventData({
         id: eventDetails.id,
@@ -164,11 +192,12 @@ export function EventsPage() {
         date: eventDetails.date,
         rsvpsCount: attendingCount,
         capacity,
-        waitlistCount: detail.waitlistCount ?? 0,
-        attendanceRate: capacity
-          ? Math.round((attendingCount / capacity) * 100)
-          : 0,
+        waitlistCount,
+        attendanceRate:
+          detail.attendanceRate ??
+          (capacity ? Math.round((attendingCount / capacity) * 100) : 0),
         attendees,
+        notes: detail.notes ?? "",
         _raw: detail,
       });
     } catch (err) {
@@ -181,6 +210,7 @@ export function EventsPage() {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isSendingUpdate, setIsSendingUpdate] = useState(false);
+  const [isSavingNotes, setIsSavingNotes] = useState(false);
 
   const handleSendUpdate = async () => {
     if (!selectedEventData?.id) return;
@@ -188,6 +218,7 @@ export function EventsPage() {
     try {
       await eventsApi.sendUpdate(selectedEventData.id);
       showSuccess("Update sent to RSVP'd members!");
+      setIsPopupOpen(false);
     } catch (err) {
       console.error("Failed to send event update:", err);
       showError("Failed to send update.");
@@ -209,6 +240,30 @@ export function EventsPage() {
       showError("Failed to delete event.");
     } finally {
       setIsDeleting(false);
+    }
+  };
+
+  const handleSaveNotes = async (notes: string) => {
+    if (!selectedEventData?.id) return;
+    setIsSavingNotes(true);
+    try {
+      const response = await eventsApi.updateNotes(selectedEventData.id, { notes });
+      const savedNotes = response.data?.notes ?? notes;
+      setSelectedEventData((current: typeof selectedEventData) =>
+        current
+          ? {
+              ...current,
+              notes: savedNotes,
+              _raw: current._raw ? { ...current._raw, notes: savedNotes } : current._raw,
+            }
+          : current,
+      );
+      showSuccess("Event notes saved.");
+    } catch (err) {
+      console.error("Failed to save event notes:", err);
+      showError("Failed to save event notes.");
+    } finally {
+      setIsSavingNotes(false);
     }
   };
 
@@ -295,8 +350,10 @@ export function EventsPage() {
         onEditClick={handleEditClick}
         onSendUpdateClick={handleSendUpdate}
         onDeleteClick={handleDeleteEvent}
+        onSaveNotes={handleSaveNotes}
         isSendingUpdate={isSendingUpdate}
         isDeleting={isDeleting}
+        isSavingNotes={isSavingNotes}
       />
     </div>
   );

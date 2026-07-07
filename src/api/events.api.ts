@@ -6,6 +6,8 @@ import type {
   EventsListResponse,
   EventStatsResponse,
   EventDetailResponse,
+  UpdateEventNotesRequest,
+  UpdateEventNotesResponse,
 } from "@/types/api";
 
 export const eventsApi = {
@@ -47,5 +49,11 @@ export const eventsApi = {
   sendUpdate: (id: string | number) =>
     apiClient<unknown>(API_ENDPOINTS.events.sendUpdate(id), {
       method: "POST",
+    }),
+
+  updateNotes: (id: string | number, payload: UpdateEventNotesRequest) =>
+    apiClient<UpdateEventNotesResponse>(API_ENDPOINTS.events.notes(id), {
+      method: "PATCH",
+      body: payload,
     }),
 };

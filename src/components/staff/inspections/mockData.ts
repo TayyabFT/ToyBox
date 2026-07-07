@@ -5,15 +5,16 @@ import type {
 } from "./types";
 
 export const inspectionStats: InspectionStats = {
-  dueToday: { value: "4", subtext: "Inspections Pending" },
-  inProgress: { value: "1", subtext: "Active Now" },
-  completed: { value: "7", subtext: "This Shift" },
-  flagged: { value: "2", subtext: "Needs Review" },
+  dueToday: { value: "4", subtext: "Inspections Pending", summaryKey: "dueToday" },
+  inProgress: { value: "1", subtext: "Active Now", summaryKey: "inProgress" },
+  completed: { value: "7", subtext: "This Shift", summaryKey: "completedThisShift" },
+  flagged: { value: "2", subtext: "Needs Review", summaryKey: "flaggedIssues" },
 };
 
 export const inspectionQueue: InspectionQueueItem[] = [
   {
     id: "ins-0441",
+    reference: "INS-0441",
     vehicle: "Porsche 911 GT3",
     serviceType: "Annual Service",
     bay: "Bay A-02",
@@ -23,6 +24,7 @@ export const inspectionQueue: InspectionQueueItem[] = [
   },
   {
     id: "ins-0442",
+    reference: "INS-0442",
     vehicle: "Mercedes-AMG GT",
     serviceType: "Pre-Service",
     bay: "Bay B-05",
@@ -32,6 +34,7 @@ export const inspectionQueue: InspectionQueueItem[] = [
   },
   {
     id: "ins-0443",
+    reference: "INS-0443",
     vehicle: "Ferrari 488",
     serviceType: "Annual Service",
     bay: "Bay C-01",
@@ -41,6 +44,7 @@ export const inspectionQueue: InspectionQueueItem[] = [
   },
   {
     id: "ins-0440",
+    reference: "INS-0440",
     vehicle: "Aston Martin DBS",
     serviceType: "Handover",
     bay: "Bay D-03",
@@ -77,7 +81,9 @@ export const activeInspection: ActiveInspection = {
     tag: "Rear-Left Interior Light",
     notes:
       "Rear-left interior dome light not illuminating. Bulb appears intact — possible wiring fault. Flagged for electrical review before handover.",
+    itemKey: "3",
   },
   odometer: "28,890",
   fuelLevel: "3/4 Tank",
+  photos: [],
 };

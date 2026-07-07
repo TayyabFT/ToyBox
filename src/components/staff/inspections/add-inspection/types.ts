@@ -21,11 +21,12 @@ export type AddInspectionFormState = {
 };
 
 export const FUEL_LEVEL_OPTIONS = [
-  { value: "Empty", label: "Empty" },
+  { value: "", label: "Not set" },
+  { value: "0", label: "Empty" },
   { value: "1/4", label: "1/4" },
   { value: "1/2", label: "1/2" },
   { value: "3/4", label: "3/4" },
-  { value: "Full", label: "Full" },
+  { value: "1", label: "Full" },
 ] as const;
 
 export function createInitialAddInspectionForm(): AddInspectionFormState {

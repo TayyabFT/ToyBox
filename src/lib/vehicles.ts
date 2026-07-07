@@ -7,7 +7,7 @@ import type {
   VehicleStatsDisplay,
   VehicleStatus,
 } from "@/components/staff/vehicles/types";
-import { vehicleDetails, vehicleStats } from "@/components/staff/vehicles/mockData";
+import { vehicleStats } from "@/components/staff/vehicles/mockData";
 
 const healthCategoryLabels: Record<string, string> = {
   engine_drivetrain: "Engine & Drive",
@@ -238,12 +238,11 @@ function mapHealthMetrics(
 export function mapVehicleDetail(
   raw: InventoryVehicleRaw | undefined,
   listItem?: VehicleListItem,
-): VehicleDetail {
-  const fallback = vehicleDetails["ferrari-296"];
+): VehicleDetail | null {
   const mappedListItem = raw ? mapInventoryVehicle(raw) : listItem;
 
   if (!mappedListItem) {
-    return fallback;
+    return null;
   }
 
   const health = mapHealthMetrics(raw?.health);
@@ -261,9 +260,9 @@ export function mapVehicleDetail(
     mileage: mappedListItem.mileage.replace(" KM", " km"),
     member: mappedListItem.member,
     isOverdue: mappedListItem.status === "overdue",
-    health: systemHealth.length ? systemHealth : fallback.health,
-    condition: condition.length ? condition : fallback.condition,
-    serviceHistory: fallback.serviceHistory,
+    health: systemHealth,
+    condition,
+    serviceHistory: [],
   };
 }
 

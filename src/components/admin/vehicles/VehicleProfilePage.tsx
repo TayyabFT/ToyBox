@@ -50,17 +50,6 @@ function SectionCard({
   );
 }
 
-function ViewAllButton() {
-  return (
-    <button
-      type="button"
-      className="font-roboto cursor-pointer rounded-full border border-accent/15 px-3 py-1 text-[9px] font-semibold tracking-[0.16em] text-primary uppercase transition-colors hover:border-primary/40"
-    >
-      View All
-    </button>
-  );
-}
-
 function InfoRow({ label, value }: { label: string; value: string }) {
   return (
     <li className="flex items-center justify-between gap-4 py-3.5">
@@ -197,7 +186,7 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
       </SectionCard>
 
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-        <SectionCard title="Specifications" action={<ViewAllButton />}>
+        <SectionCard title="Specifications">
           <ul className="divide-y divide-accent/8">
             {detail.specifications.map((spec) => (
               <InfoRow key={spec.label} label={spec.label} value={spec.value} />

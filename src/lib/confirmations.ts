@@ -194,17 +194,24 @@ export function splitConfirmationRequests(
 ): {
   pending: ConfirmationRequestItem[];
   inReview: ConfirmationRequestItem[];
+  confirmed: ConfirmationRequestItem[];
   completed: ConfirmationRequestItem[];
 } {
   const pending: ConfirmationRequestItem[] = [];
   const inReview: ConfirmationRequestItem[] = [];
+  const confirmed: ConfirmationRequestItem[] = [];
   const completed: ConfirmationRequestItem[] = [];
 
   for (const request of requests) {
     const status = request.confirmationStatus;
 
-    if (status === "completed" || status === "confirmed") {
+    if (status === "completed") {
       completed.push(request);
+      continue;
+    }
+
+    if (status === "confirmed") {
+      confirmed.push(request);
       continue;
     }
 
@@ -216,7 +223,7 @@ export function splitConfirmationRequests(
     pending.push(request);
   }
 
-  return { pending, inReview, completed };
+  return { pending, inReview, confirmed, completed };
 }
 
 export function createEmptyConfirmationStats(): ConfirmationStatsDisplay {

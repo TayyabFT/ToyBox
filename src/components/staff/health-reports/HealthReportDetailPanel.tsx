@@ -1,6 +1,11 @@
+"use client";
+
+import { useState } from "react";
 import { DownloadArrow } from "@/components/common/Svgs";
 import { ServiceHistory } from "@/components/staff/vehicles/ServiceHistory";
-import { FlaggedIssuesSection } from "./FlaggedIssuesSection";
+import { downloadHealthReportPdf } from "@/lib/downloadHealthReportPdf";
+import { showError } from "@/lib/toast";
+// import { FlaggedIssuesSection } from "./FlaggedIssuesSection";
 import { HealthReportOverdueBanner } from "./HealthReportOverdueBanner";
 import { HealthReportOverview } from "./HealthReportOverview";
 import { SystemBreakdownSection } from "./SystemBreakdownSection";
@@ -11,11 +16,27 @@ type HealthReportDetailPanelProps = {
 };
 
 export function HealthReportDetailPanel({ report }: HealthReportDetailPanelProps) {
+  const [downloading, setDownloading] = useState(false);
+
   const criticalCount = report.systemMetrics.filter(
     (metric) => metric.tone === "pink",
   ).length;
 
   const cardClass = "overflow-hidden rounded-2xl border border-accent/10 bg-card";
+
+  const handleDownloadPdf = async () => {
+    setDownloading(true);
+
+    try {
+      await downloadHealthReportPdf(report);
+    } catch (error) {
+      showError(
+        error instanceof Error ? error.message : "Failed to download health report PDF.",
+      );
+    } finally {
+      setDownloading(false);
+    }
+  };
 
   return (
     <div className="space-y-4">
@@ -30,17 +51,19 @@ export function HealthReportDetailPanel({ report }: HealthReportDetailPanelProps
           <div className="flex flex-wrap items-center gap-2">
             <button
               type="button"
-              className="font-roboto flex cursor-pointer items-center gap-2 rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:bg-accent/8"
+              onClick={() => void handleDownloadPdf()}
+              disabled={downloading}
+              className="font-roboto flex cursor-pointer items-center gap-2 rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:bg-accent/8 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <DownloadArrow />
-              Download PDF
+              {downloading ? "Downloading..." : "Download PDF"}
             </button>
-            <button
+            {/* <button
               type="button"
               className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90"
             >
               Book Service
-            </button>
+            </button> */}
           </div>
         </div>
       </section>
@@ -56,11 +79,13 @@ export function HealthReportDetailPanel({ report }: HealthReportDetailPanelProps
         />
       </section>
 
+      {/* Flagged Issues — hidden for now
       {report.flaggedIssues.length > 0 && (
         <section className={cardClass}>
           <FlaggedIssuesSection issues={report.flaggedIssues} />
         </section>
       )}
+      */}
 
       <section className={cardClass}>
         <div className="px-5 py-5">

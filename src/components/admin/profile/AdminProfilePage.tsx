@@ -163,7 +163,7 @@ function ProfilePageContent({
   onMobileUpdated,
 }: {
   data: PageData;
-  onMobileUpdated: (mobile: string) => void;
+  onMobileUpdated: (mobile: string, mobileCountryCode: string) => void;
 }) {
   const { overview, profile, sessions, activity } = data;
   const [editOpen, setEditOpen] = useState(false);
@@ -206,8 +206,11 @@ function ProfilePageContent({
     setSaving(true);
 
     try {
-      await adminProfileApi.updateProfile({ mobile });
-      onMobileUpdated(mobile);
+      const res = await adminProfileApi.updateProfile({ mobile });
+      onMobileUpdated(
+        res.data?.mobile ?? mobile,
+        res.data?.mobileCountryCode ?? "",
+      );
       showSuccess("Phone number updated.");
       setEditOpen(false);
     } catch (error) {
@@ -496,10 +499,13 @@ export function AdminProfilePage() {
   return (
     <ProfilePageContent
       data={pageData}
-      onMobileUpdated={(mobile) =>
+      onMobileUpdated={(mobile, mobileCountryCode) =>
         setPageData((prev) =>
           prev
-            ? { ...prev, profile: { ...prev.profile, mobile } }
+            ? {
+                ...prev,
+                profile: { ...prev.profile, mobile, mobileCountryCode },
+              }
             : prev,
         )
       }

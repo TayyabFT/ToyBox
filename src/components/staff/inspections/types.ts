@@ -2,6 +2,7 @@ import type { VehicleStatus } from "@/components/staff/vehicles/types";
 
 export type InspectionQueueItem = {
   id: string;
+  reference: string;
   vehicle: string;
   serviceType: string;
   bay: string;
@@ -9,6 +10,12 @@ export type InspectionQueueItem = {
   time: string;
   status: VehicleStatus;
 };
+
+export type InspectionSummaryKey =
+  | "dueToday"
+  | "inProgress"
+  | "completedThisShift"
+  | "flaggedIssues";
 
 export type InspectionStepId = "exterior" | "interior" | "mechanical" | "tyres";
 
@@ -24,6 +31,15 @@ export type InspectionChecklistItem = {
   id: string;
   label: string;
   state: ChecklistItemState;
+  stepId?: InspectionStepId;
+};
+
+export type InspectionPhoto = {
+  id: string;
+  url: string;
+  itemKey?: string;
+  caption?: string;
+  createdAt?: string;
 };
 
 export type ActiveInspection = {
@@ -39,15 +55,18 @@ export type ActiveInspection = {
   flaggedIssue?: {
     tag: string;
     notes: string;
+    itemKey?: string;
   };
   odometer: string;
   fuelLevel: string;
   notes?: string;
+  photos: InspectionPhoto[];
+  statusKey?: string;
 };
 
 export type InspectionStats = {
-  dueToday: { value: string; subtext: string };
-  inProgress: { value: string; subtext: string };
-  completed: { value: string; subtext: string };
-  flagged: { value: string; subtext: string };
+  dueToday: { value: string; subtext: string; summaryKey: InspectionSummaryKey };
+  inProgress: { value: string; subtext: string; summaryKey: InspectionSummaryKey };
+  completed: { value: string; subtext: string; summaryKey: InspectionSummaryKey };
+  flagged: { value: string; subtext: string; summaryKey: InspectionSummaryKey };
 };

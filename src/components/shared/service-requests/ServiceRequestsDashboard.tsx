@@ -36,6 +36,7 @@ type ServiceRequestsDashboardProps = {
   loadStats: () => Promise<ServiceRequestStat[]>;
   activeJobPanel?: React.ReactNode;
   staffMode?: boolean;
+  staffContent?: React.ReactNode;
 };
 
 const PREVIEW_COUNT = 2;
@@ -48,6 +49,7 @@ export function ServiceRequestsDashboard({
   loadStats,
   activeJobPanel,
   staffMode = false,
+  staffContent,
 }: ServiceRequestsDashboardProps) {
   const [activeFilter, setActiveFilter] = useState<ServiceRequestFilter>("all");
 
@@ -127,10 +129,22 @@ export function ServiceRequestsDashboard({
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
+    if (staffMode) {
+      setTransportLoading(false);
+      setMaintenanceLoading(false);
+      setDetailingLoading(false);
+      return;
+    }
+
     loadTransportRequests();
     loadMaintenanceRequests();
     loadDetailingBookings();
-  }, [loadTransportRequests, loadMaintenanceRequests, loadDetailingBookings]);
+  }, [
+    staffMode,
+    loadTransportRequests,
+    loadMaintenanceRequests,
+    loadDetailingBookings,
+  ]);
 
   const filteredTransport = useMemo(
     () => filterTransportJobs(transportJobs, activeFilter),
@@ -176,39 +190,43 @@ export function ServiceRequestsDashboard({
 
       <ServiceRequestsStatsRow loadStats={loadStats} />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-        {showTransportSection ? (
-          <TransportSection
-            meta={transportMeta}
-            jobs={previewTransport}
-            seeAllHref={`${basePath}/service-requests/transport`}
-            loading={transportLoading}
-            staffMode={staffMode}
-          />
-        ) : null}
-        {showMaintenanceSection ? (
-          <MaintenanceSection
-            meta={maintenanceMeta}
-            jobs={previewMaintenance}
-            seeAllHref={`${basePath}/service-requests/maintenance`}
-            loading={maintenanceLoading}
-            staffMode={staffMode}
-          />
-        ) : null}
-        {showDetailingSection ? (
-          <DetailingSection
-            meta={detailingMeta}
-            jobs={previewDetailing}
-            seeAllHref={`${basePath}/service-requests/detailing`}
-            loading={detailingLoading}
-            staffMode={staffMode}
-          />
-        ) : null}
-        {showActiveJob &&
-          (activeJobPanel ?? (
-            <ActiveJobDetailPanel detail={activeJobDetail} />
-          ))}
-      </div>
+      {staffMode ? (
+        staffContent
+      ) : (
+        <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
+          {showTransportSection ? (
+            <TransportSection
+              meta={transportMeta}
+              jobs={previewTransport}
+              seeAllHref={`${basePath}/service-requests/transport`}
+              loading={transportLoading}
+              staffMode={staffMode}
+            />
+          ) : null}
+          {showMaintenanceSection ? (
+            <MaintenanceSection
+              meta={maintenanceMeta}
+              jobs={previewMaintenance}
+              seeAllHref={`${basePath}/service-requests/maintenance`}
+              loading={maintenanceLoading}
+              staffMode={staffMode}
+            />
+          ) : null}
+          {showDetailingSection ? (
+            <DetailingSection
+              meta={detailingMeta}
+              jobs={previewDetailing}
+              seeAllHref={`${basePath}/service-requests/detailing`}
+              loading={detailingLoading}
+              staffMode={staffMode}
+            />
+          ) : null}
+          {showActiveJob &&
+            (activeJobPanel ?? (
+              <ActiveJobDetailPanel detail={activeJobDetail} />
+            ))}
+        </div>
+      )}
     </div>
   );
 }

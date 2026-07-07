@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { AnalyticsPage } from "@/components/admin/analytics";
+import { ClubhousePage } from "@/components/admin/clubhouse";
 import { CommunicationsPage } from "@/components/admin/communications";
 import { ConfirmationsPage } from "@/components/admin/confirmations";
 import { ConciergePage } from "@/components/admin/concierge";
@@ -44,6 +45,10 @@ export default async function AdminSectionPage({ params }: PageProps) {
 
   if (navItem.id === "events") {
     return <EventsPage />;
+  }
+
+  if (navItem.id === "clubhouse") {
+    return <ClubhousePage />;
   }
 
   if (navItem.id === "vehicles") {

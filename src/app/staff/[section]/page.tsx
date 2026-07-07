@@ -6,6 +6,8 @@ import { ConciergePage } from "@/components/staff/concierge";
 import { InspectionsPage } from "@/components/staff/inspections";
 import { HealthReportsPage } from "@/components/staff/health-reports";
 import { ServiceRequestsPage } from "@/components/staff/service-requests";
+import { PhotoUploadsPage } from "@/components/staff/photo-uploads";
+import { OpUpdatesPage } from "@/components/staff/op-updates";
 import { staffNavItems } from "@/lib/staffNav";
 
 type PageProps = {
@@ -44,6 +46,14 @@ const page = async ({ params }: PageProps) => {
 
   if (navItem.id === "service-requests") {
     return <ServiceRequestsPage />;
+  }
+
+  if (navItem.id === "photo-uploads") {
+    return <PhotoUploadsPage />;
+  }
+
+  if (navItem.id === "op-updates") {
+    return <OpUpdatesPage />;
   }
 
   return (

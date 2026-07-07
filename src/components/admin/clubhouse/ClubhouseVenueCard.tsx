@@ -1,0 +1,99 @@
+import type { ReactNode } from "react";
+import { ClubhouseVenueStatusBadge } from "./ClubhouseVenueStatusBadge";
+import type { ClubhouseVenueCard } from "./types";
+
+type ClubhouseVenueCardProps = {
+  venue: ClubhouseVenueCard;
+};
+
+function formatCapacity(
+  occupied: number,
+  capacity: number,
+  suffix?: string,
+): ReactNode {
+  const suffixText = suffix ? ` ${suffix}` : "";
+
+  return (
+    <>
+      <span className="font-medium text-primary">{occupied}</span>
+      <span className="text-secondary">
+        {" "}
+        / {capacity}
+        {suffixText}
+      </span>
+    </>
+  );
+}
+
+export function ClubhouseVenueCardItem({ venue }: ClubhouseVenueCardProps) {
+  const progressPercent =
+    venue.capacity > 0
+      ? Math.min(100, Math.round((venue.occupied / venue.capacity) * 100))
+      : 0;
+
+  return (
+    <article className="flex h-full flex-col rounded-2xl border border-accent/12 bg-card p-5">
+      <div className="flex items-start justify-between gap-3">
+        <h2 className="font-copperplate text-[15px] leading-tight tracking-[0.06em] uppercase">
+          {venue.title.before ? (
+            <span className="text-foreground">{venue.title.before}</span>
+          ) : null}
+          <span className="text-accent">{venue.title.highlight}</span>
+          {venue.title.after ? (
+            <span className="text-foreground">{venue.title.after}</span>
+          ) : null}
+        </h2>
+        <ClubhouseVenueStatusBadge
+          label={venue.statusLabel}
+          tone={venue.statusTone}
+        />
+      </div>
+
+      <p className="mt-2 font-roboto text-[10px] tracking-[0.12em] text-secondary uppercase">
+        {venue.subtitle}
+      </p>
+
+      <div className="mt-5 space-y-2">
+        <div className="h-[3px] overflow-hidden rounded-full bg-accent/10">
+          <div
+            className="h-full rounded-full bg-primary transition-all duration-500"
+            style={{ width: `${progressPercent}%` }}
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-3">
+          <span className="font-roboto text-[9px] tracking-[0.12em] text-secondary uppercase">
+            {venue.progressLabel}
+          </span>
+          <span className="font-roboto text-[9px] tracking-[0.1em] uppercase">
+            {formatCapacity(
+              venue.occupied,
+              venue.capacity,
+              venue.capacitySuffix,
+            )}
+          </span>
+        </div>
+      </div>
+
+      <ul className="mt-5 space-y-3 border-t border-accent/8 pt-4">
+        {venue.details.map((detail) => (
+          <li
+            key={detail.label}
+            className="flex items-start justify-between gap-4"
+          >
+            <span
+              className={`font-roboto text-[11px] tracking-[0.02em] ${
+                detail.labelTone === "muted" ? "text-secondary" : "text-primary"
+              }`}
+            >
+              {detail.label}
+            </span>
+            <span className="font-roboto text-right text-[11px] tracking-[0.02em] text-muted">
+              {detail.value}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  );
+}

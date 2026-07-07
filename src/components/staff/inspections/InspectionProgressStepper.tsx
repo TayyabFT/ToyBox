@@ -1,12 +1,14 @@
 import { ActivityCheck } from "@/components/common/Svgs";
-import type { InspectionStep } from "./types";
+import type { InspectionStep, InspectionStepId } from "./types";
 
 type InspectionProgressStepperProps = {
   steps: InspectionStep[];
+  onStepSelect?: (stepId: InspectionStepId) => void;
 };
 
 export function InspectionProgressStepper({
   steps,
+  onStepSelect,
 }: InspectionProgressStepperProps) {
   return (
     <div>
@@ -19,15 +21,22 @@ export function InspectionProgressStepper({
               key={step.id}
               className={`flex items-center ${isLast ? "" : "min-w-0 flex-1"}`}
             >
-              <div className="flex shrink-0 flex-col items-center">
+              <button
+                type="button"
+                onClick={() => onStepSelect?.(step.id)}
+                disabled={!onStepSelect}
+                className={`flex shrink-0 flex-col items-center ${
+                  onStepSelect ? "cursor-pointer" : "cursor-default"
+                }`}
+              >
                 <span
-                  className={`flex size-8 items-center justify-center rounded-full border text-[11px] font-semibold ${
+                  className={`flex size-8 items-center justify-center rounded-full border text-[11px] font-semibold transition-opacity ${
                     step.state === "complete"
                       ? "border-teal/40 bg-teal/15 text-teal"
                       : step.state === "active"
                         ? "border-primary bg-primary text-dark"
                         : "border-accent/20 bg-elevated text-secondary"
-                  }`}
+                  } ${onStepSelect ? "hover:opacity-85" : ""}`}
                 >
                   {step.state === "complete" ? (
                     <ActivityCheck color="var(--teal)" className="size-3.5" />
@@ -35,7 +44,7 @@ export function InspectionProgressStepper({
                     index + 1
                   )}
                 </span>
-              </div>
+              </button>
 
               {!isLast && (
                 <span
@@ -51,9 +60,14 @@ export function InspectionProgressStepper({
 
       <div className="mt-2 flex">
         {steps.map((step, index) => (
-          <div
+          <button
             key={step.id}
-            className={`flex-1 text-center ${index === 0 ? "text-left" : ""} ${index === steps.length - 1 ? "text-right" : ""}`}
+            type="button"
+            onClick={() => onStepSelect?.(step.id)}
+            disabled={!onStepSelect}
+            className={`flex-1 text-center ${index === 0 ? "text-left" : ""} ${index === steps.length - 1 ? "text-right" : ""} ${
+              onStepSelect ? "cursor-pointer" : "cursor-default"
+            }`}
           >
             <span
               className={`font-roboto text-[9px] tracking-[0.08em] uppercase ${
@@ -66,7 +80,7 @@ export function InspectionProgressStepper({
             >
               {step.label}
             </span>
-          </div>
+          </button>
         ))}
       </div>
     </div>

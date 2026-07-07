@@ -18,6 +18,7 @@ import {
 import { showError } from "@/lib/toast";
 import { StatCard } from "@/components/staff/overview/StatCard";
 import { CompletedTodayPanel } from "./CompletedTodayPanel";
+import { ConfirmedBookingsPanel } from "./ConfirmedBookingsPanel";
 import { ConfirmationsGreeting } from "./ConfirmationsGreeting";
 import { InReviewBookingsPanel } from "./InReviewBookingsPanel";
 import { PendingConfirmationsPanel } from "./PendingConfirmationsPanel";
@@ -63,7 +64,7 @@ export function ConfirmationsPage() {
     loadConfirmations();
   }, [loadConfirmations]);
 
-  const { pending, inReview, completed } = useMemo(
+  const { pending, inReview, confirmed, completed } = useMemo(
     () => splitConfirmationRequests(requests),
     [requests],
   );
@@ -115,19 +116,24 @@ export function ConfirmationsPage() {
             loading={loading}
             onOfferVehicle={setOfferRequest}
           />
+          <ConfirmedBookingsPanel
+            requests={confirmed}
+            confirmedCount={confirmed.length}
+            loading={loading}
+          />
+        </div>
+
+        <div className="space-y-6 xl:col-span-2">
+          <InReviewBookingsPanel
+            requests={inReview}
+            pendingCount={inReviewCount || inReview.length}
+            loading={loading}
+          />
           <CompletedTodayPanel
             requests={completed}
             completedCount={
               Number.parseInt(stats.completedToday.value, 10) || completed.length
             }
-            loading={loading}
-          />
-        </div>
-
-        <div className="xl:col-span-2">
-          <InReviewBookingsPanel
-            requests={inReview}
-            pendingCount={inReviewCount || inReview.length}
             loading={loading}
           />
         </div>

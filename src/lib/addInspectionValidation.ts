@@ -97,6 +97,72 @@ export function hasAddInspectionErrors(
   return Object.values(errors).some(Boolean);
 }
 
+export function normalizeBayForApi(bay: string): string {
+  return bay.trim().replace(/^bay\s+/i, "").trim();
+}
+
+export function normalizeFuelLevelForApi(fuelLevel: string): string | undefined {
+  const trimmed = fuelLevel.trim();
+
+  if (!trimmed || trimmed === "—") {
+    return undefined;
+  }
+
+  const normalized = trimmed.toLowerCase();
+
+  if (normalized === "empty") return "0";
+  if (normalized === "full") return "1";
+
+  return trimmed.replace(/\s+Tank$/i, "").trim() || undefined;
+}
+
+export function normalizeOdometerForApi(value?: string): string | undefined {
+  const trimmed = value?.trim();
+
+  if (!trimmed || trimmed === "—") {
+    return undefined;
+  }
+
+  const digits = trimmed.replace(/,/g, "").replace(/[^\d]/g, "");
+
+  return digits || undefined;
+}
+
+export function resolveApiFieldName(
+  field?: string,
+): keyof AddInspectionFormState | null {
+  if (!field?.trim()) {
+    return null;
+  }
+
+  const tail = field.trim().split(".").pop() ?? field.trim();
+  const camel = tail.replace(/_([a-z])/g, (_, char: string) => char.toUpperCase());
+  const formFields: Array<keyof AddInspectionFormState> = [
+    "vehicleId",
+    "memberId",
+    "inspectionType",
+    "scheduledAt",
+    "assignedStaffId",
+    "odometerReading",
+    "fuelLevel",
+    "bay",
+  ];
+
+  if (formFields.includes(camel as keyof AddInspectionFormState)) {
+    return camel as keyof AddInspectionFormState;
+  }
+
+  const lowered = tail.toLowerCase();
+
+  for (const formField of formFields) {
+    if (lowered === formField.toLowerCase()) {
+      return formField;
+    }
+  }
+
+  return null;
+}
+
 export function buildCreateInspectionBody(
   form: AddInspectionFormState,
 ): StaffInspectionCreateRequest | null {
@@ -123,43 +189,30 @@ export function buildCreateInspectionBody(
     memberId: form.memberId.trim(),
     inspectionType,
     scheduledAt: scheduledDate.toISOString(),
-    bay: form.bay.trim(),
+    bay: normalizeBayForApi(form.bay),
     assignedStaffId: form.assignedStaffId.trim(),
     odometerReading: form.odometerReading.trim() || undefined,
-    fuelLevel: form.fuelLevel.trim() || undefined,
+    fuelLevel: normalizeFuelLevelForApi(form.fuelLevel),
   };
 }
 
 export type CreateInspectionResult =
-  | { ok: true }
+  | { ok: true; createdId?: string }
   | { ok: false; message?: string; fieldErrors?: AddInspectionFieldErrors };
 
 export function mapApiValidationErrors(
   errors?: ApiFieldError[],
 ): AddInspectionFieldErrors {
   const mapped: AddInspectionFieldErrors = {};
-  const formFields: Array<keyof AddInspectionFormState> = [
-    "vehicleId",
-    "memberId",
-    "inspectionType",
-    "scheduledAt",
-    "bay",
-    "assignedStaffId",
-    "odometerReading",
-    "fuelLevel",
-  ];
 
   for (const item of errors ?? []) {
-    const field = item.field?.trim();
+    const field = resolveApiFieldName(item.field);
 
     if (!field) {
       continue;
     }
 
-    if (formFields.includes(field as keyof AddInspectionFormState)) {
-      mapped[field as keyof AddInspectionFormState] =
-        item.message?.trim() || "Invalid value";
-    }
+    mapped[field] = item.message?.trim() || "Invalid value";
   }
 
   return mapped;
