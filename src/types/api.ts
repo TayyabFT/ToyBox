@@ -543,10 +543,11 @@ export type AdminSourcingVehicle = {
   imageUrl?: string;
 };
 
-export type AdminInReviewBookingRaw = {
+export type AdminBookingRaw = {
   id?: number | string;
   sourcingRequestId?: number | string;
   referenceNumber?: string;
+  confirmationStatus?: string;
   member?: AdminSourcingMember;
   vehicle?: AdminSourcingVehicle;
   offerStartDate?: string;
@@ -559,7 +560,10 @@ export type AdminInReviewBookingRaw = {
     | string;
   status?: string;
   assignedAt?: string;
+  confirmedAt?: string;
 };
+
+export type AdminInReviewBookingRaw = AdminBookingRaw;
 
 export type AdminStaffOnDuty = {
   id?: number | string;
@@ -571,7 +575,10 @@ export type AdminStaffOnDuty = {
 
 export type AdminSourcingRequestsData = {
   summary?: SourcingSummary;
-  inReviewBookings?: AdminInReviewBookingRaw[];
+  pendingBookings?: AdminBookingRaw[];
+  inReviewBookings?: AdminBookingRaw[];
+  confirmedBookings?: AdminBookingRaw[];
+  completedTodayBookings?: AdminBookingRaw[];
   staffOnDuty?: AdminStaffOnDuty[];
   requests?: SourcingRequestRaw[];
   total?: number;
@@ -1825,6 +1832,13 @@ export type ChatMarkReadResponse = ApiResponse<{
   memberId: string;
   markedRead: boolean;
 }>;
+
+export type MemberChatInitiateRequest = {
+  initialMessage?: string;
+};
+
+export type MemberChatConversationResponse = ApiResponse<ChatConversation>;
+export type MemberChatMessagesResponse = ApiResponse<ChatMessagesData>;
 
 export type CreateEventRequest = {
   title: string;

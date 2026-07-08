@@ -1,6 +1,9 @@
 import {
+  ACCEPTED_VEHICLE_IMAGE_TYPES,
   DOC_FIELDS,
   HEALTH_CATEGORIES,
+  MAX_VEHICLE_IMAGES,
+  MAX_VEHICLE_IMAGE_BYTES,
   type AddVehicleFormState,
   type DocsForm,
   type HealthForm,
@@ -119,6 +122,26 @@ function validateChassisNo(value: string): string | undefined {
   return undefined;
 }
 
+function validateVehicleImages(files: File[]): string | undefined {
+  if (files.length > MAX_VEHICLE_IMAGES) {
+    return `You can upload up to ${MAX_VEHICLE_IMAGES} images`;
+  }
+
+  if (files.some((file) => file.size > MAX_VEHICLE_IMAGE_BYTES)) {
+    return "Each image must be 1MB or smaller";
+  }
+
+  if (
+    files.some(
+      (file) => !ACCEPTED_VEHICLE_IMAGE_TYPES.includes(file.type as (typeof ACCEPTED_VEHICLE_IMAGE_TYPES)[number]),
+    )
+  ) {
+    return "Only JPEG, PNG, WEBP, and GIF images are allowed";
+  }
+
+  return undefined;
+}
+
 export function validateVehicleInfoStep(
   form: VehicleInfoForm,
 ): VehicleInfoErrors {
@@ -132,6 +155,7 @@ export function validateVehicleInfoStep(
     drive: requireText(form.drive, "Drive"),
     zeroToHundred: requireText(form.zeroToHundred, "0-100 km/h"),
     topSpeed: requireText(form.topSpeed, "Top speed"),
+    vehicleImages: validateVehicleImages(form.vehicleImages),
   };
 }
 

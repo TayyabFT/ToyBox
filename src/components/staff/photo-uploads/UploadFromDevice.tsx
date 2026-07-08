@@ -1,8 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { CloudUpload } from "@/components/common/Svgs";
-import { CameraRollIcon, FilesAppIcon } from "./icons";
+import { CameraRollIcon, FilesAppIcon, UploadFromDeviceIcon } from "./icons";
 
 type UploadFromDeviceProps = {
   actionLoading?: boolean;
@@ -30,15 +29,13 @@ export function UploadFromDevice({
         type="button"
         disabled={actionLoading}
         onClick={openPicker}
-        className="mb-4 flex w-full cursor-pointer flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-accent/20 bg-dark px-4 py-10 text-center transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-60"
+        className="photo-upload-drop-zone mb-4 flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-accent/20 px-4 py-10 text-center transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        <span className="flex size-11 items-center justify-center rounded-xl border border-accent/15 bg-surface/60">
-          <CloudUpload className="size-5" color="var(--muted)" />
-        </span>
-        <span className="font-roboto text-[12px] font-medium text-foreground">
+        <UploadFromDeviceIcon className="photo-upload-icon-accent size-7" />
+        <span className="font-roboto text-sm font-medium text-foreground mt-5">
           Drop photos here or tap to browse
         </span>
-        <span className="font-roboto text-[10px] tracking-[0.1em] text-section-label uppercase">
+        <span className="font-roboto text-[10px] tracking-[0.1em] text-section-label uppercase mt-2">
           JPG · PNG · Max 20 MB Each
         </span>
       </button>
@@ -48,19 +45,19 @@ export function UploadFromDevice({
           type="button"
           disabled={actionLoading}
           onClick={openPicker}
-          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-accent/20 bg-surface py-2.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-accent/20 bg-surface py-2.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <CameraRollIcon className="size-3.5" />
+          <CameraRollIcon className="photo-upload-icon-muted size-2.5" />
           Camera Roll
         </button>
         <button
           type="button"
           disabled={actionLoading}
           onClick={openPicker}
-          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-accent/20 bg-surface py-2.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-full border border-accent/20 bg-surface py-2.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <FilesAppIcon className="size-3.5" />
-          Import from Files
+          <FilesAppIcon className="photo-upload-icon-muted size-2.5" />
+          Import from PC
         </button>
       </div>
 

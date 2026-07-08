@@ -14,6 +14,15 @@ export const HEALTH_CATEGORIES = [
   { key: "exterior_body", label: "Exterior & Body" },
 ] as const;
 
+export const MAX_VEHICLE_IMAGES = 5;
+export const MAX_VEHICLE_IMAGE_BYTES = 1024 * 1024; // 1MB
+export const ACCEPTED_VEHICLE_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/png",
+  "image/webp",
+  "image/gif",
+] as const;
+
 export const DOC_FIELDS = [
   { key: "vehicleRegistration", label: "Vehicle Registration" },
   { key: "insuranceCertificate", label: "Insurance Certificate" },
@@ -33,6 +42,7 @@ export type VehicleInfoForm = {
   drive: string;
   zeroToHundred: string;
   topSpeed: string;
+  vehicleImages: File[];
 };
 
 export type OwnershipInfoForm = {
@@ -77,6 +87,7 @@ export const initialVehicleInfo: VehicleInfoForm = {
   drive: "",
   zeroToHundred: "",
   topSpeed: "",
+  vehicleImages: [],
 };
 
 export const initialOwnershipInfo: OwnershipInfoForm = {

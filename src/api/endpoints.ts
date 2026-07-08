@@ -122,6 +122,12 @@ export const API_ENDPOINTS = {
     markRead: (memberId: string | number) =>
       `/api/v1/admin/chat/${memberId}/read`,
   },
+  memberChat: {
+    conversation: "/api/v1/chat/conversation",
+    initiate: "/api/v1/chat/initiate",
+    messages: "/api/v1/chat/messages",
+    read: "/api/v1/chat/read",
+  },
   events: {
     createevent: "/api/v1/events",
     getevents: "/api/v1/events/all",

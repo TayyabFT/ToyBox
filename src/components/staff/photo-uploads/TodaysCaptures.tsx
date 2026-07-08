@@ -55,7 +55,7 @@ export function TodaysCaptures({
           type="button"
           disabled={actionLoading || summary.pendingCount === 0}
           onClick={() => void onUploadAll()}
-          className="font-roboto cursor-pointer rounded-full border border-[#D4A84724] px-5 py-2 text-[10px] font-semibold tracking-[0.1em] text-[#B8AE96] uppercase transition-colors hover:border-primary/35 hover:bg-accent/8 disabled:cursor-not-allowed disabled:opacity-60"
+          className="photo-upload-outline-btn font-roboto cursor-pointer rounded-full border px-5 py-2 text-[10px] font-semibold tracking-[0.1em] uppercase transition-colors hover:border-primary/35 hover:bg-accent/8 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Upload All
         </button>
@@ -86,16 +86,16 @@ export function TodaysCaptures({
         </div>
       )}
 
-      <div className="mt-4 flex flex-col gap-3 rounded-xl border border-accent/12 bg-surface px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="photo-upload-pending-banner mt-7 flex flex-col gap-3 rounded-xl border px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <span className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-accent/18 bg-accent/8 text-primary">
-            <ImportIcon className="size-4" />
+          <span className="text-primary">
+            <ImportIcon className="size-6" />
           </span>
-          <div>
-            <p className="font-roboto text-[12px] font-medium text-foreground">
+          <div className="space-y-0.5">
+            <p className="font-roboto text-[13px] font-medium text-foreground">
               {summary.pendingCount} photos pending upload
             </p>
-            <p className="font-roboto text-[10px] tracking-[0.06em] text-section-label uppercase">
+            <p className="font-roboto text-[11px] tracking-[0.06em] text-section-label uppercase">
               Will sync when on network · {summary.totalSizeMb} total
             </p>
           </div>
@@ -105,7 +105,7 @@ export function TodaysCaptures({
           type="button"
           disabled={actionLoading || summary.pendingCount === 0}
           onClick={() => void onUploadNow()}
-          className="font-roboto shrink-0 cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          className="photo-upload-pending-banner-btn font-roboto shrink-0 cursor-pointer rounded-full border px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Upload Now
         </button>
@@ -133,7 +133,7 @@ function CaptureTile({
 
   return (
     <div
-      className={`group relative aspect-square overflow-hidden rounded-xl border bg-dark transition-colors ${
+      className={`photo-upload-capture-tile group relative aspect-square overflow-hidden rounded-xl border transition-colors ${
         selected
           ? "border-primary/50 ring-1 ring-primary/25"
           : isFlagged
@@ -211,10 +211,10 @@ function AddPhotoTile({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#D4A84729] bg-dark text-[#4A4338] transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+      className="photo-upload-dashed-tile flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
     >
       <span className="font-roboto text-[10px] tracking-[0.08em] uppercase flex flex-col items-center justify-center">
-        <p className="text-3xl text-[#D4A84799]">+</p>
+        <p className="photo-upload-dashed-tile-accent text-3xl">+</p>
         Add Photo
       </span>
     </button>
@@ -226,10 +226,10 @@ function UploadFileTile({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-[#D4A84729] bg-dark text-[#4A4338] transition-colors hover:border-primary/35 hover:text-primary"
+      className="photo-upload-dashed-tile flex aspect-square cursor-pointer flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed transition-colors hover:border-primary/35 hover:text-primary"
     >
       <span className="font-roboto text-[10px] tracking-[0.08em] uppercase flex flex-col items-center justify-center gap-1.5">
-        <UploadFileArrowIcon className="size-7 text-[#D4A84799]" />
+        <UploadFileArrowIcon className="photo-upload-dashed-tile-accent size-7" />
         Upload File
       </span>
     </button>

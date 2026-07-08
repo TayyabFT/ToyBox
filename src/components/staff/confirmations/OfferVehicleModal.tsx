@@ -63,7 +63,7 @@ function OfferDateField({
           aria-invalid={Boolean(error)}
           onChange={(event) => onChange(event.target.value)}
           disabled={disabled}
-          className={`font-roboto w-full cursor-pointer rounded-xl border bg-dark px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 ${
+          className={`staff-modal-date-field font-roboto w-full cursor-pointer rounded-xl border bg-input-muted px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0 ${
             error
               ? "border-red-500 focus:border-red-500"
               : "border-accent/20 focus:border-accent/40"
@@ -218,8 +218,9 @@ export function OfferVehicleModal({
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
             Bookings
           </p>
-          <h2 className="mt-2 font-copperplate text-[22px] uppercase text-primary">
-            Offer a Vehicle
+          <h2 className="mt-2 font-copperplate text-[22px] uppercase">
+            <span className="text-foreground">Offer a </span>
+            <span className="text-accent">Vehicle</span>
           </h2>
           <button
             type="button"
@@ -254,7 +255,7 @@ export function OfferVehicleModal({
                   }
                 }}
                 disabled={loadingVehicles || submitting || vehicles.length === 0}
-                className={`font-roboto w-full appearance-none rounded-xl border bg-dark px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+                className={`font-roboto w-full appearance-none rounded-xl border bg-input-muted px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
                   errors.vehicleId
                     ? "border-red-500 focus:border-red-500"
                     : "border-accent/20 focus:border-accent/40"
@@ -287,7 +288,7 @@ export function OfferVehicleModal({
             <p className="font-roboto text-[10px] tracking-[0.12em] text-primary uppercase">
               Offer to Member
             </p>
-            <div className="font-roboto rounded-xl border border-accent/20 bg-dark px-4 py-3.5 text-sm text-foreground">
+            <div className="font-roboto rounded-xl border border-accent/20 bg-input-muted px-4 py-3.5 text-sm text-foreground">
               {request.memberName}
             </div>
           </div>

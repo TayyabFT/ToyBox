@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { eventsApi } from "@/api/events.api";
 import type { EventResponse } from "@/types/api";
 import { isApiError, isNetworkFailure } from "@/lib/apiError";

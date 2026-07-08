@@ -34,8 +34,8 @@ export function InspectionProgressStepper({
                     step.state === "complete"
                       ? "border-teal/40 bg-teal/15 text-teal"
                       : step.state === "active"
-                        ? "border-primary bg-primary text-dark"
-                        : "border-accent/20 bg-elevated text-secondary"
+                        ? "border-accent bg-accent text-dark"
+                        : "border-accent/25 bg-input-muted text-secondary"
                   } ${onStepSelect ? "hover:opacity-85" : ""}`}
                 >
                   {step.state === "complete" ? (

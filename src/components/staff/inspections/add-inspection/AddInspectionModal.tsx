@@ -51,7 +51,7 @@ function Field({ id, label, error, children }: FieldProps) {
       <label
         htmlFor={id}
         className={`font-roboto block text-[10px] tracking-[0.12em] uppercase ${
-          error ? "text-red-500" : "text-primary"
+          error ? "text-red-500" : "text-secondary"
         }`}
       >
         {label}
@@ -65,18 +65,21 @@ function Field({ id, label, error, children }: FieldProps) {
 }
 
 const selectClass = (hasError: boolean) =>
-  `font-roboto w-full cursor-pointer appearance-none rounded-xl border bg-dark px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
+  `font-roboto w-full cursor-pointer appearance-none rounded-xl border bg-input-muted px-4 py-3.5 pr-10 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${
     hasError
       ? "border-red-500 focus:border-red-500"
       : "border-accent/20 focus:border-accent/40"
   }`;
 
 const inputClass = (hasError: boolean) =>
-  `font-roboto w-full rounded-xl border bg-dark px-4 py-3.5 text-sm text-foreground outline-none transition-colors disabled:cursor-not-allowed disabled:opacity-60 [color-scheme:dark] ${
+  `font-roboto w-full rounded-xl border bg-input-muted px-4 py-3.5 text-sm text-foreground outline-none transition-colors placeholder:text-secondary/70 disabled:cursor-not-allowed disabled:opacity-60 ${
     hasError
       ? "border-red-500 focus:border-red-500"
       : "border-accent/20 focus:border-accent/40"
   }`;
+
+const dateInputClass = (hasError: boolean) =>
+  `${inputClass(hasError)} staff-modal-date-field`;
 
 function resolveVehicleBay(item?: InventoryVehicleRaw): string {
   const raw =
@@ -283,8 +286,9 @@ export function AddInspectionModal({
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
             Inspections
           </p>
-          <h2 className="mt-2 font-copperplate text-[22px] uppercase text-primary">
-            Add Inspection
+          <h2 className="mt-2 font-copperplate text-[22px] uppercase">
+            <span className="text-foreground">Add </span>
+            <span className="text-accent">Inspection</span>
           </h2>
           <button
             type="button"
@@ -382,7 +386,7 @@ export function AddInspectionModal({
               disabled={submitting}
               aria-invalid={Boolean(errors.scheduledAt)}
               onChange={(event) => updateField("scheduledAt", event.target.value)}
-              className={inputClass(Boolean(errors.scheduledAt))}
+              className={dateInputClass(Boolean(errors.scheduledAt))}
             />
           </Field>
 

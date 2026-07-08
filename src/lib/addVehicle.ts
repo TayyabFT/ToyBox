@@ -33,7 +33,10 @@ function parsePurchasedAt(value: string): string {
 export { validateAddVehicleForm } from "@/lib/addVehicleValidation";
 
 export function hasDocumentFiles(form: AddVehicleFormState): boolean {
-  return Object.values(form.docs).some((file) => file !== null);
+  return (
+    Object.values(form.docs).some((file) => file !== null) ||
+    form.vehicleInfo.vehicleImages.length > 0
+  );
 }
 
 export function buildAddVehicleJsonPayload(
@@ -104,6 +107,10 @@ export function buildAddVehicleFormData(form: AddVehicleFormState): FormData {
     if (file) {
       formData.append(field.key, file);
     }
+  }
+
+  for (const image of form.vehicleInfo.vehicleImages) {
+    formData.append("vehicleImages", image);
   }
 
   return formData;

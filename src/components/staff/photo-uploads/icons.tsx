@@ -261,23 +261,36 @@ export function PreServiceIcon({ className }: IconProps) {
 
 export function CameraRollIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className ?? "size-3.5"}>
-      <rect x="2" y="5" width="12" height="8" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
-      <path d="M2 5V4h3v1M6 3.5h4v1.5" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round" />
-      <circle cx="8" cy="9" r="2" stroke="currentColor" strokeWidth="1.3" />
+    <svg viewBox="0 0 10 10" fill="none" aria-hidden className={className ?? "size-2.5"}>
+      <path
+        d="M7.39415 1.49548H1.94581C1.51595 1.49548 1.16748 1.84396 1.16748 2.27382V7.72215C1.16748 8.15201 1.51595 8.50048 1.94581 8.50048H7.39415C7.82401 8.50048 8.17248 8.15201 8.17248 7.72215V2.27382C8.17248 1.84396 7.82401 1.49548 7.39415 1.49548Z"
+        stroke="currentColor"
+        strokeWidth="0.778333"
+      />
+      <path
+        d="M3.30811 4.22009C3.63063 4.22009 3.89209 3.95863 3.89209 3.63611C3.89209 3.31358 3.63063 3.05212 3.30811 3.05212C2.98558 3.05212 2.72412 3.31358 2.72412 3.63611C2.72412 3.95863 2.98558 4.22009 3.30811 4.22009Z"
+        stroke="currentColor"
+        strokeWidth="0.778333"
+      />
+      <path
+        d="M8.17247 6.16544L6.22663 4.2196L1.9458 8.50044"
+        stroke="currentColor"
+        strokeWidth="0.778333"
+      />
     </svg>
   );
 }
 
 export function FilesAppIcon({ className }: IconProps) {
   return (
-    <svg viewBox="0 0 16 16" fill="none" aria-hidden className={className ?? "size-3.5"}>
+    <svg viewBox="0 0 10 10" fill="none" aria-hidden className={className ?? "size-2.5"}>
       <path
-        d="M2.5 5.5A1.5 1.5 0 0 1 4 4h3l1 1.5h4A1.5 1.5 0 0 1 13.5 7v4.5A1.5 1.5 0 0 1 12 13H4a1.5 1.5 0 0 1-1.5-1.5v-6Z"
+        d="M8.3335 1.25H1.66683C1.20659 1.25 0.833496 1.6231 0.833496 2.08333V6.25C0.833496 6.71024 1.20659 7.08333 1.66683 7.08333H8.3335C8.79373 7.08333 9.16683 6.71024 9.16683 6.25V2.08333C9.16683 1.6231 8.79373 1.25 8.3335 1.25Z"
         stroke="currentColor"
-        strokeWidth="1.3"
-        strokeLinejoin="round"
+        strokeWidth="0.833333"
       />
+      <path d="M3.3335 8.75H6.66683" stroke="currentColor" strokeWidth="0.833333" />
+      <path d="M5 7.08337V8.75004" stroke="currentColor" strokeWidth="0.833333" />
     </svg>
   );
 }
@@ -316,6 +329,24 @@ export function UploadFileArrowIcon({ className }: IconProps) {
         strokeWidth="1.125"
       />
       <path d="M9 11.25V2.25" stroke="currentColor" strokeWidth="1.125" />
+    </svg>
+  );
+}
+
+export function UploadFromDeviceIcon({ className }: IconProps) {
+  return (
+    <svg viewBox="0 0 28 28" fill="none" aria-hidden className={className ?? "size-7"}>
+      <path
+        d="M24.5 17.5V22.1667C24.5 22.7855 24.2542 23.379 23.8166 23.8166C23.379 24.2542 22.7855 24.5 22.1667 24.5H5.83333C5.21449 24.5 4.621 24.2542 4.18342 23.8166C3.74583 23.379 3.5 22.7855 3.5 22.1667V17.5"
+        stroke="currentColor"
+        strokeWidth="1.63333"
+      />
+      <path
+        d="M8.1665 11.6666L13.9998 17.5L19.8332 11.6666"
+        stroke="currentColor"
+        strokeWidth="1.63333"
+      />
+      <path d="M14 17.5V3.5" stroke="currentColor" strokeWidth="1.63333" />
     </svg>
   );
 }

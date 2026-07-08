@@ -17,6 +17,7 @@ import {
   Message,
   NavAnalytics,
   NavCommunications,
+  NavGarage,
   Sunburst,
   User,
   VehicleCalendar,
@@ -27,7 +28,7 @@ import { getUnreadConversationCount } from "@/lib/concierge";
 import { useTheme } from "@/components/common/ThemeProvider";
 import { adminManageNav, adminOperationsNav } from "@/lib/adminNav";
 import { staffManagementNav, staffOperationsNav } from "@/lib/staffNav";
-import { memberNav } from "@/lib/memberNav";
+import { memberNav, memberServicesNav, memberAccountNav } from "@/lib/memberNav";
 import type { UserRole } from "@/lib/auth";
 
 type BadgeTone = "gold" | "pink" | "teal";
@@ -91,7 +92,11 @@ const MEMBER_SIDEBAR: SidebarSpec = {
     label: "MEMBER",
     className: "border-teal/28 bg-teal/12 text-teal",
   },
-  sections: [{ title: "Menu", items: memberNav }],
+  sections: [
+    { title: "Menu", items: memberNav },
+    { title: "Services", items: memberServicesNav },
+    { title: "Account", items: memberAccountNav },
+  ],
 };
 
 const SIDEBAR_SPECS: Record<UserRole, SidebarSpec> = {
@@ -118,6 +123,7 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   "service-requests": (active) => <Sunburst active={active} />,
   "photo-uploads": (active) => <Camera active={active} />,
   vehicles: (active) => <User active={active} />,
+  garage: (active) => <NavGarage active={active} />,
   concierge: (active) => <Message active={active} />,
   confirmations: (active) => <Checkbox active={active} />,
   "op-updates": (active) => <Edit active={active} />,
@@ -129,10 +135,20 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   communications: (active) => <NavCommunications active={active} />,
   finance: (active) => <Finance active={active} />,
   analytics: (active) => <NavAnalytics active={active} />,
+  // Member-specific
+  marketplace: (active) => <Sunburst active={active} />,
+  "hub-store": (active) => <Building active={active} />,
+  profile: (active) => <User active={active} />,
+  help: (active) => <Message active={active} />,
 };
 
 function isNavActive(pathname: string, href: string, base: string): boolean {
-  if (href === base || href === `${base}/overview`) {
+  // Home route: exact match only
+  if (href === base) {
+    return pathname === base;
+  }
+  // Overview alias
+  if (href === `${base}/overview`) {
     return pathname === base || pathname === href;
   }
 

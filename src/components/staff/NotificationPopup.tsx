@@ -37,7 +37,7 @@ export function NotificationPopup({
       >
         <div className="flex items-start justify-between border-b border-accent/12 px-5 py-3">
           <div className="space-y-1">
-            <h2 className="font-copperplate text-white">
+            <h2 className="font-copperplate text-foreground">
               Notifications
             </h2>
             {unreadCount > 0 && (

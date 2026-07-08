@@ -172,7 +172,7 @@ export function MemberChatPanel({
           </div>
 
           <div className="shrink-0 border-t border-accent/6 p-5">
-            <div className="flex items-center gap-3 rounded-xl border border-accent/14 bg-dark h-12">
+            <div className="flex items-center gap-3 rounded-xl border border-accent/14 bg-input-muted h-12">
               <input
                 type="text"
                 value={draft}
@@ -180,7 +180,7 @@ export function MemberChatPanel({
                 onKeyDown={handleKeyDown}
                 disabled={sending}
                 placeholder={`Reply to ${chatTitle}...`}
-                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-secondary outline-none placeholder:text-secondary disabled:opacity-50"
+                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-foreground outline-none placeholder:text-secondary/70 disabled:opacity-50"
               />
               <button
                 type="button"

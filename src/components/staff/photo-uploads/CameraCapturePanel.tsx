@@ -143,7 +143,7 @@ export function CameraCapturePanel({
           <CornerBrackets />
 
           {showRecBadge ? (
-            <span className="font-roboto absolute right-5 top-5 z-20 flex items-center gap-1.5 rounded-full border border-[#D899994D] bg-[#D8999926] px-2.5 py-1 text-[9px] font-semibold tracking-[0.1em] text-pink uppercase">
+            <span className="font-roboto absolute right-5 top-5 z-20 flex items-center gap-1.5 rounded-full border border-pink/30 bg-pink/15 px-2.5 py-1 text-[9px] font-semibold tracking-[0.1em] text-pink uppercase">
               <RecDotIcon className="size-2 text-pink" />
               Rec
             </span>
@@ -195,12 +195,12 @@ export function CameraCapturePanel({
             </div>
           ) : null}
 
-          <p className="font-roboto absolute bottom-4 left-5 z-20 text-[10px] tracking-[0.1em] text-[#D4A84780] uppercase">
+          <p className="photo-upload-viewfinder-caption font-roboto absolute bottom-4 left-5 z-20 text-[10px] tracking-[0.1em] uppercase">
             {cameraContext.caption}
           </p>
         </div>
       </section>
-      <div className="grid grid-cols-[repeat(3,minmax(0,1fr))_auto_repeat(3,minmax(0,1fr))] items-center gap-2 bg-[#1A1612] px-3 py-5 rounded-xl border border-[#D4A84714]">
+      <div className="photo-upload-mode-bar grid grid-cols-[repeat(3,minmax(0,1fr))_auto_repeat(3,minmax(0,1fr))] items-center gap-2 rounded-xl border px-3 py-5">
         {leftModes.map((mode) => (
           <CaptureModeButton
             key={mode.id}
@@ -251,7 +251,7 @@ function CaptureModeButton({
       className={`font-roboto flex w-full cursor-pointer flex-col items-center gap-1.5 rounded-xl border px-2 py-3 text-[9px] tracking-[0.08em] uppercase transition-colors ${
         active
           ? "border-primary/40 bg-primary/10 text-primary"
-          : "border-transparent text-secondary hover:border-[#D4A8472E] hover:bg-[#D4A84714] hover:text-[#D4A847]"
+          : "border-transparent text-secondary hover:border-accent/18 hover:bg-accent/8 hover:text-accent"
       }`}
     >
       <Icon className="size-5" color="currentColor" />

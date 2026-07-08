@@ -1,4 +1,4 @@
-import type { AdminInReviewBookingRaw, SourcingRequestRaw } from "@/types/api";
+import type { AdminBookingRaw } from "@/types/api";
 import { confirmationStats as fallbackStats } from "@/components/admin/confirmations/mockData";
 import type {
   BookingItem,
@@ -7,10 +7,7 @@ import type {
   ConfirmationStatItem,
   PendingBookingItem,
 } from "@/components/admin/confirmations/types";
-import {
-  mapConfirmationSummary,
-  mapSourcingRequest,
-} from "@/lib/confirmations";
+import { mapConfirmationSummary } from "@/lib/confirmations";
 
 function formatApiDate(value?: string): string {
   if (!value?.trim()) {
@@ -51,7 +48,40 @@ function formatDateRange(start?: string, end?: string): string {
   return `${formattedStart} – ${formattedEnd}`;
 }
 
-function mapAdminPendingStatus(item: SourcingRequestRaw): ConfirmationBadgeTone {
+function getAdminBookingVehicle(item: AdminBookingRaw): string {
+  return (
+    item.vehicle?.displayName?.trim() ||
+    [item.vehicle?.make, item.vehicle?.model].filter(Boolean).join(" ").trim() ||
+    "—"
+  );
+}
+
+function getAdminBookingSchedule(
+  item: AdminBookingRaw,
+  fallbackDate?: string,
+): string {
+  const preferredDates =
+    item.preferredDates && typeof item.preferredDates === "object"
+      ? item.preferredDates
+      : undefined;
+
+  const schedule = formatDateRange(
+    preferredDates?.start || item.offerStartDate,
+    preferredDates?.end || item.offerEndDate,
+  );
+
+  if (schedule !== "—") {
+    return schedule;
+  }
+
+  if (fallbackDate) {
+    return formatApiDate(fallbackDate);
+  }
+
+  return "—";
+}
+
+function mapAdminPendingStatus(item: AdminBookingRaw): ConfirmationBadgeTone {
   const status = `${item.confirmationStatus ?? ""} ${item.status ?? ""}`
     .trim()
     .toLowerCase()
@@ -64,34 +94,12 @@ function mapAdminPendingStatus(item: SourcingRequestRaw): ConfirmationBadgeTone 
   return "awaiting";
 }
 
-function getPendingBookingIcon(
-  item: SourcingRequestRaw,
-): "check" | "car" | "circle" {
-  if (
-    item.pendingOffer &&
-    typeof item.pendingOffer === "object" &&
-    item.pendingOffer.vehicle
-  ) {
+function getPendingBookingIcon(item: AdminBookingRaw): "check" | "car" | "circle" {
+  if (item.vehicle?.imageUrl?.trim()) {
     return "car";
   }
 
   return "circle";
-}
-
-function isConfirmedRequest(item: SourcingRequestRaw): boolean {
-  const status = `${item.confirmationStatus ?? ""} ${item.status ?? ""}`
-    .trim()
-    .toLowerCase();
-
-  return status.includes("confirmed") || status.includes("completed");
-}
-
-function isCompletedTodayRequest(item: SourcingRequestRaw): boolean {
-  const status = (item.confirmationStatus ?? item.status ?? "")
-    .trim()
-    .toLowerCase();
-
-  return status.includes("completed");
 }
 
 export function mapAdminConfirmationStats(data: unknown): ConfirmationStatItem[] {
@@ -123,114 +131,63 @@ export function mapAdminConfirmationStats(data: unknown): ConfirmationStatItem[]
 }
 
 export function mapAdminPendingBookings(
-  requests: SourcingRequestRaw[] | undefined,
+  bookings: AdminBookingRaw[] | undefined,
 ): PendingBookingItem[] {
-  return (requests ?? []).flatMap((item, index) => {
-    const mapped = mapSourcingRequest(item);
-
-    if (!mapped || isConfirmedRequest(item)) {
-      return [];
-    }
-
-    return [
-      {
-        id: mapped.id,
-        index: index + 1,
-        title: mapped.vehicle,
-        bookingRef: mapped.reference,
-        staff: mapped.member,
-        bay: "—",
-        price: "—",
-        status: mapAdminPendingStatus(item),
-        icon: getPendingBookingIcon(item),
-      },
-    ];
-  });
+  return (bookings ?? []).map((item, index) => ({
+    id: String(item.id ?? item.sourcingRequestId ?? ""),
+    index: index + 1,
+    title: getAdminBookingVehicle(item),
+    bookingRef: item.referenceNumber?.trim() || "—",
+    staff: item.member?.name?.trim().toUpperCase() || "—",
+    bay: "—",
+    price: "—",
+    status: mapAdminPendingStatus(item),
+    icon: getPendingBookingIcon(item),
+  }));
 }
 
 export function mapAdminConfirmedBookings(
-  requests: SourcingRequestRaw[] | undefined,
+  bookings: AdminBookingRaw[] | undefined,
 ): BookingItem[] {
-  return (requests ?? [])
-    .filter(isConfirmedRequest)
-    .flatMap((item) => {
-      const mapped = mapSourcingRequest(item);
-
-      if (!mapped) {
-        return [];
-      }
-
-      return [
-        {
-          id: mapped.id,
-          vehicle: mapped.vehicle,
-          reference: mapped.reference,
-          member: mapped.member,
-          schedule: mapped.schedule,
-          status: "confirmed" as ConfirmationBadgeTone,
-        },
-      ];
-    });
+  return (bookings ?? []).map((item) => ({
+    id: String(item.id ?? item.sourcingRequestId ?? ""),
+    vehicle: getAdminBookingVehicle(item),
+    reference: item.referenceNumber?.trim() || "—",
+    member: item.member?.name?.trim().toUpperCase() || "—",
+    schedule: getAdminBookingSchedule(item),
+    status: "confirmed" as ConfirmationBadgeTone,
+  }));
 }
 
-export function mapAdminInReviewBookings(
-  bookings: AdminInReviewBookingRaw[] | undefined,
-) {
-  return (bookings ?? []).map((item) => {
-    const preferredDates =
-      item.preferredDates && typeof item.preferredDates === "object"
-        ? item.preferredDates
-        : undefined;
-
-    const schedule = formatDateRange(
-      preferredDates?.start || item.offerStartDate,
-      preferredDates?.end || item.offerEndDate,
-    );
-
-    const vehicle =
-      item.vehicle?.displayName?.trim() ||
-      [item.vehicle?.make, item.vehicle?.model].filter(Boolean).join(" ").trim() ||
-      "—";
-
-    return {
-      id: String(item.id ?? item.sourcingRequestId ?? ""),
-      vehicle,
-      member: item.member?.name?.trim().toUpperCase() || "—",
-      schedule: schedule === "—" ? formatApiDate(item.assignedAt) : schedule,
-    };
-  });
+export function mapAdminInReviewBookings(bookings: AdminBookingRaw[] | undefined) {
+  return (bookings ?? []).map((item) => ({
+    id: String(item.id ?? item.sourcingRequestId ?? ""),
+    vehicle: getAdminBookingVehicle(item),
+    member: item.member?.name?.trim().toUpperCase() || "—",
+    schedule: getAdminBookingSchedule(item, item.assignedAt),
+  }));
 }
 
 export function mapAdminCompletedToday(
-  requests: SourcingRequestRaw[] | undefined,
+  bookings: AdminBookingRaw[] | undefined,
 ): CompletedTodayItem[] {
-  return (requests ?? [])
-    .filter(isCompletedTodayRequest)
-    .flatMap((item) => {
-      const mapped = mapSourcingRequest(item);
+  return (bookings ?? []).map((item) => {
+    const confirmedAt = item.confirmedAt
+      ? new Date(item.confirmedAt).toLocaleTimeString("en-GB", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })
+      : "—";
 
-      if (!mapped) {
-        return [];
-      }
-
-      const confirmedAt = item.createdAt
-        ? new Date(item.createdAt).toLocaleTimeString("en-GB", {
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: false,
-          })
-        : "—";
-
-      return [
-        {
-          id: mapped.id,
-          title: mapped.vehicle,
-          bookingRef: mapped.reference,
-          confirmedAt,
-          assignee: mapped.member,
-        },
-      ];
-    });
+    return {
+      id: String(item.id ?? item.sourcingRequestId ?? ""),
+      title: getAdminBookingVehicle(item),
+      bookingRef: item.referenceNumber?.trim() || "—",
+      confirmedAt,
+      assignee: item.member?.name?.trim().toUpperCase() || "—",
+    };
+  });
 }
 
 export function getAdminInReviewCount(data: unknown): number {

@@ -1,4 +1,5 @@
 import { AddVehicleField } from "./AddVehicleField";
+import { AddVehicleImageUploadField } from "./AddVehicleImageUploadField";
 import type { VehicleInfoForm } from "./types";
 import type { VehicleInfoErrors } from "@/lib/addVehicleValidation";
 
@@ -94,6 +95,11 @@ export function VehicleInfoStep({
         value={value.topSpeed}
         error={errors?.topSpeed}
         onChange={(event) => updateField("topSpeed", event.target.value)}
+      />
+      <AddVehicleImageUploadField
+        files={value.vehicleImages}
+        error={errors?.vehicleImages}
+        onChange={(vehicleImages) => updateField("vehicleImages", vehicleImages)}
       />
     </div>
   );

@@ -28,7 +28,6 @@ import type {
 } from "./types";
 
 const ADMIN_SOURCING_QUERY = {
-  status: "Request received",
   limit: 50,
   offset: 0,
 };
@@ -50,10 +49,10 @@ export function ConfirmationsPage() {
       const { data } = response;
 
       setStats(mapAdminConfirmationStats(data));
-      setPendingBookings(mapAdminPendingBookings(data.requests));
-      setConfirmedBookings(mapAdminConfirmedBookings(data.requests));
+      setPendingBookings(mapAdminPendingBookings(data.pendingBookings));
+      setConfirmedBookings(mapAdminConfirmedBookings(data.confirmedBookings));
       setInReviewBookings(mapAdminInReviewBookings(data.inReviewBookings));
-      setCompletedToday(mapAdminCompletedToday(data.requests));
+      setCompletedToday(mapAdminCompletedToday(data.completedTodayBookings));
       setInReviewCount(getAdminInReviewCount(data));
     } catch (error) {
       const message =
