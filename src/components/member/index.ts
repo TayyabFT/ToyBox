@@ -4,6 +4,7 @@ export { MemberProfileCard } from "./MemberProfileCard";
 
 // Garage — all in the garage subfolder
 export { MemberGaragePage } from "./garage/MemberGaragePage";
+export { MemberVehicleDetailPage } from "./garage/MemberVehicleDetailPage";
 
 // Profile — all in the profile subfolder
 export { MemberProfilePage } from "./profile/MemberProfilePage";

@@ -22,6 +22,64 @@ export type GarageVehicle = {
   lastInspectedValue: string;
 };
 
+// ── Vehicle detail page ─────────────────────────────────────────────────────
+
+export type MemberVehicleSpecs = {
+  make: string;
+  model: string;
+  year: string;
+  engine: string;
+  power: string;
+  transmission: string;
+  drive: string;
+  zeroToHundred: string;
+  topSpeed: string;
+};
+
+export type MemberVehicleOwnership = {
+  colour: string;
+  chassisNo: string;
+  plate: string;
+  purchased: string;
+  storageBay: string;
+  mileage: string;
+};
+
+export type MemberVehicleHealthTone = "good" | "warning" | "critical";
+
+export type MemberVehicleHealthMetric = {
+  label: string;
+  percentage: number;
+  note: string;
+};
+
+export type MemberVehicleRequestItem = {
+  id: string;
+  title: string;
+  subtitle: string;
+  icon: "transport" | "detailing" | "maintenance" | "sourcing";
+  highlighted?: boolean;
+};
+
+export type MemberVehicleDetail = {
+  id: string;
+  make: string;
+  model: string;
+  detail: string;
+  imageUrl: string;
+  statusTone: GarageVehicleStatusTone;
+  statusLabel?: string;
+  bayLabel?: string;
+  stats: GarageVehicleStat[];
+  lastInspectedLabel: string;
+  lastInspectedValue: string;
+  requests: MemberVehicleRequestItem[];
+  specs: MemberVehicleSpecs;
+  ownership: MemberVehicleOwnership;
+  health: MemberVehicleHealthMetric[];
+  healthCtaLabel: string;
+};
+
 export type GarageFilterKey =
   | "all"
   | "ready"

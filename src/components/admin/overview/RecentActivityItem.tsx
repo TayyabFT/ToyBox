@@ -25,7 +25,7 @@ export function RecentActivityItem({
   children,
 }: RecentActivityItemProps) {
   return (
-    <div className="flex items-start gap-3 border-b border-white/5 py-4 transition-colors last:border-b-0 hover:bg-[#1A1A1A]">
+    <div className="flex min-w-0 items-start gap-3 border-b border-white/5 py-4 pr-1 transition-colors last:border-b-0 hover:bg-[#1A1A1A]">
       <span className="font-roboto w-10 shrink-0 pt-1 text-[11px] tracking-[0.04em] text-[#6B665E]">
         {time}
       </span>
@@ -41,7 +41,7 @@ export function RecentActivityItem({
       </p>
 
       <span
-        className={`font-roboto shrink-0 pt-1 text-[10px] tracking-[0.04em] ${
+        className={`font-roboto max-w-[4.5rem] shrink-0 truncate pt-1 text-right text-[10px] tracking-[0.04em] ${
           categoryTone === "critical" ? "text-pink" : "text-[#6B665E]"
         }`}
       >

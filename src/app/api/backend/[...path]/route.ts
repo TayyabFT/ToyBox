@@ -6,6 +6,7 @@ import {
   isUpstreamUnreachableBody,
   refreshUpstreamTokens,
   SERVER_UNAVAILABLE_BODY,
+  upstreamFetch,
   upstreamHeaders,
   type RotatedTokens,
 } from "@/lib/server/upstream";
@@ -59,7 +60,7 @@ async function handle(request: NextRequest, context: RouteContext) {
     }
 
     try {
-      return await fetch(target, {
+      return await upstreamFetch(target, {
         method,
         headers,
         body: bodyBuffer ? new Uint8Array(bodyBuffer) : undefined,

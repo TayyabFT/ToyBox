@@ -6,7 +6,7 @@ export function MemberGarageHeader({ onAddClick }: MemberGarageHeaderProps) {
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="space-y-2">
-        <p className="font-roboto text-[10px] tracking-[0.18em] text-primary uppercase">
+        <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           Your Collection
         </p>
         <h1 className="font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground uppercase">

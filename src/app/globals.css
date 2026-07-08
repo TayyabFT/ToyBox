@@ -548,6 +548,10 @@ h6 {
 .Toastify__toast--enter {
   animation-duration: 0.35s !important;
 }
+.Custom__Scrollbar {
+  scrollbar-gutter: stable;
+}
+
 .Custom__Scrollbar::-webkit-scrollbar {
   width: 6px;
 }

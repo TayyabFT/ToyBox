@@ -1,8 +1,8 @@
 import { normalizeHttpError, normalizeRequestError } from "@/lib/apiError";
+import { logBackendUrlOnce } from "@/lib/logBackendUrl";
 import type { ApiFieldError } from "@/types/api";
 
 const PROXY_PREFIX = "/api/backend";
-
 type RequestOptions = {
   method?: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
   body?: unknown;
@@ -27,6 +27,8 @@ export async function apiClient<T>(
   endpoint: string,
   options: RequestOptions = {},
 ): Promise<T> {
+  logBackendUrlOnce();
+
   const { method = "GET", body, formData } = options;
 
   const headers: HeadersInit = {};

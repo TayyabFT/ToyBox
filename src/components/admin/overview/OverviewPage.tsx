@@ -165,11 +165,10 @@ export function AdminOverviewPage() {
     initial: item.memberName.charAt(0).toUpperCase(),
     memberName: item.memberName.toUpperCase(),
     memberMeta: `No. ${item.memberNumber} · ${item.requestType}`,
+    memberAvatarUrl: item.memberAvatarUrl || undefined,
     request: item.vehicleLabel ? `${item.title} · ${item.vehicleLabel}` : item.title,
     priority: (item.urgency === "urgent" ? "urgent" : "high") as "urgent" | "high",
     waiting: `${item.waitingMinutes}m`,
-    assignedName: "—",
-    assignedTone: "human" as const,
   }));
 
   const staffRows = (staffOnShift?.members ?? []).map((m) => ({
@@ -301,7 +300,7 @@ export function AdminOverviewPage() {
             />
             <section className={`${overviewPanelClass} flex flex-col ${hasQueue ? "h-110" : ""}`}>
               {hasQueue ? (
-                <div className="flex-1 overflow-y-auto Custom__Scrollbar">
+                <div className="flex-1 overflow-x-hidden overflow-y-auto Custom__Scrollbar">
                   <OpenRequestsTable rows={queueRows} />
                 </div>
               ) : (
@@ -323,25 +322,27 @@ export function AdminOverviewPage() {
             />
             <section className={`${overviewPanelClass} flex flex-col ${hasActivity ? "h-110" : ""}`}>
               {hasActivity ? (
-                <div className="flex-1 overflow-y-auto Custom__Scrollbar">
-                  {(recentActivity?.items ?? []).map((item) => {
-                    const tone = mapActivityTone(item.sourceType);
-                    return (
-                      <RecentActivityItem
-                        key={item.id}
-                        time={formatTime(item.time)}
-                        icon={<ActivityIcon sourceType={item.sourceType} />}
-                        iconTone={tone}
-                        category={item.sourceType}
-                        categoryTone={tone === "pink" ? "critical" : "default"}
-                      >
-                        <ActivityHighlight>{item.actor}</ActivityHighlight> {item.action}
-                        {item.subject ? (
-                          <> <ActivityHighlight>{item.subject}</ActivityHighlight></>
-                        ) : null}
-                      </RecentActivityItem>
-                    );
-                  })}
+                <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden Custom__Scrollbar">
+                  <div className="pr-3">
+                    {(recentActivity?.items ?? []).map((item) => {
+                      const tone = mapActivityTone(item.sourceType);
+                      return (
+                        <RecentActivityItem
+                          key={item.id}
+                          time={formatTime(item.time)}
+                          icon={<ActivityIcon sourceType={item.sourceType} />}
+                          iconTone={tone}
+                          category={item.sourceType}
+                          categoryTone={tone === "pink" ? "critical" : "default"}
+                        >
+                          <ActivityHighlight>{item.actor}</ActivityHighlight> {item.action}
+                          {item.subject ? (
+                            <> <ActivityHighlight>{item.subject}</ActivityHighlight></>
+                          ) : null}
+                        </RecentActivityItem>
+                      );
+                    })}
+                  </div>
                 </div>
               ) : (
                 <EmptyState message="No recent activity" />

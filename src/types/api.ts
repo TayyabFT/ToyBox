@@ -2248,11 +2248,19 @@ export type AdminOverviewCriticalAlerts = {
 
 export type AdminOverviewConciergeQueueItem = {
   id: string;
+  conversationId?: string;
+  itemKind?: string;
+  memberId?: string;
   memberName: string;
   memberNumber: string;
+  memberAvatarUrl?: string;
   requestType: string;
   title: string;
+  lastMessage?: string;
+  lastMessageAt?: string;
+  status?: string;
   urgency: string;
+  unreadCount?: number;
   waitingMinutes: number;
   vehicleLabel: string;
 };

@@ -1,4 +1,4 @@
-import type { GarageFilter, GarageVehicle } from "./types";
+import type { GarageFilter, GarageVehicle, MemberVehicleDetail } from "./types";
 
 export const garageVehicles: GarageVehicle[] = [
   {
@@ -55,3 +55,153 @@ export const garageFilters: GarageFilter[] = [
   { key: "modern", label: "Modern" },
   { key: "classic", label: "Classic" },
 ];
+
+export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
+  "2": {
+    id: "2",
+    make: "Rolls-Royce",
+    model: "Ghost Black Badge",
+    detail: "2024 · V12 Extended Wheelbase",
+    imageUrl:
+      "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?w=1000&q=80",
+    statusTone: "ready",
+    statusLabel: "Ready",
+    bayLabel: "Bay 02 · B",
+    stats: [
+      { value: "12,847", label: "Miles" },
+      { value: "9mo", label: "Service" },
+      { value: "47/47", label: "Inspected" },
+      { value: "5.2L", label: "Engine" },
+    ],
+    lastInspectedLabel: "Last inspected",
+    lastInspectedValue: "05:48 today",
+    requests: [
+      {
+        id: "transport",
+        title: "Transport & Delivery",
+        subtitle: "Pickup or drop-off",
+        icon: "transport",
+        highlighted: true,
+      },
+      {
+        id: "detailing",
+        title: "Detailing & Wash",
+        subtitle: "Full detail or wash",
+        icon: "detailing",
+      },
+      {
+        id: "maintenance",
+        title: "Maintenance & Service",
+        subtitle: "Repairs & scheduled",
+        icon: "maintenance",
+      },
+      {
+        id: "sourcing",
+        title: "Vehicle Sourcing",
+        subtitle: "Acquire & find cars",
+        icon: "sourcing",
+      },
+    ],
+    specs: {
+      make: "Rolls Royce",
+      model: "Huracán STO",
+      year: "2022",
+      engine: "5.2L Naturally Aspirated V10",
+      power: "640 hp . 565 Nm",
+      transmission: "7-speed LDF dual-clutch",
+      drive: "Rear-wheel drive",
+      zeroToHundred: "3.0 seconds",
+      topSpeed: "310 km/h",
+    },
+    ownership: {
+      colour: "Nero Assassino",
+      chassisNo: "2OZHWEC2ZF0NLA1490122",
+      plate: "Dubai . A12345",
+      purchased: "Jan 2022",
+      storageBay: "Bay A-04, Level 1",
+      mileage: "12,450 km",
+    },
+    health: [
+      { label: "Engine & Drivetrain", percentage: 96, note: "All systems nominal . No fault codes" },
+      { label: "Tyres", percentage: 91, note: "Tread depth good . Pressure normal" },
+      { label: "Brakes", percentage: 64, note: "Front pads wearing . Service recommended within 2,000 km" },
+      { label: "Fluids", percentage: 95, note: "Engine oil . Coolant . Brake fluid all OK" },
+      { label: "Battery", percentage: 89, note: "12V auxiliary . Good condition" },
+      { label: "Exterior & Body", percentage: 98, note: "No damage recorded . Paint in excellent condition" },
+    ],
+    healthCtaLabel: "Request Brake Service",
+  },
+  "1": {
+    id: "1",
+    make: "Bentley",
+    model: "Continental GT Speed",
+    detail: "2023 · W12 Mulliner Edition",
+    imageUrl:
+      "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?w=1000&q=80",
+    statusTone: "ready",
+    statusLabel: "Ready",
+    stats: [
+      { value: "8,412", label: "Miles" },
+      { value: "12mo", label: "Service" },
+      { value: "47/47", label: "Inspected" },
+      { value: "6.0L", label: "Engine" },
+    ],
+    lastInspectedLabel: "Last inspected",
+    lastInspectedValue: "06:14 today",
+    requests: [
+      {
+        id: "transport",
+        title: "Transport & Delivery",
+        subtitle: "Pickup or drop-off",
+        icon: "transport",
+        highlighted: true,
+      },
+      {
+        id: "detailing",
+        title: "Detailing & Wash",
+        subtitle: "Full detail or wash",
+        icon: "detailing",
+      },
+      {
+        id: "maintenance",
+        title: "Maintenance & Service",
+        subtitle: "Repairs & scheduled",
+        icon: "maintenance",
+      },
+      {
+        id: "sourcing",
+        title: "Vehicle Sourcing",
+        subtitle: "Acquire & find cars",
+        icon: "sourcing",
+      },
+    ],
+    specs: {
+      make: "Bentley",
+      model: "Continental GT Speed",
+      year: "2023",
+      engine: "6.0L W12 Twin-Turbo",
+      power: "650 hp . 900 Nm",
+      transmission: "8-speed dual-clutch",
+      drive: "All-wheel drive",
+      zeroToHundred: "3.5 seconds",
+      topSpeed: "335 km/h",
+    },
+    ownership: {
+      colour: "Beluga Black",
+      chassisNo: "SCBFC7ZA1PC123456",
+      plate: "Dubai . F1383B",
+      purchased: "Mar 2023",
+      storageBay: "Bay B-02, Level 1",
+      mileage: "8,412 km",
+    },
+    health: [
+      { label: "Engine & Drivetrain", percentage: 94, note: "All systems nominal . No fault codes" },
+      { label: "Tyres", percentage: 88, note: "Tread depth good . Pressure normal" },
+      { label: "Brakes", percentage: 90, note: "Pads within service life" },
+      { label: "Fluids", percentage: 97, note: "Engine oil . Coolant . Brake fluid all OK" },
+      { label: "Battery", percentage: 92, note: "12V auxiliary . Good condition" },
+      { label: "Exterior & Body", percentage: 99, note: "No damage recorded . Paint in excellent condition" },
+    ],
+    healthCtaLabel: "Request Detailing",
+  },
+};

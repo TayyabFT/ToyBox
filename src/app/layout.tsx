@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Roboto } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
 import ToastProvider from "@/components/common/ToastProvider";
+import { ApiBackendUrlLog } from "@/components/common/ApiBackendUrlLog";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import "./globals.css";
 
@@ -38,6 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col font-body Custom__Scrollbar">
         <StoreProvider>
           <ThemeProvider>
+            <ApiBackendUrlLog />
             {children}
             <ToastProvider />
           </ThemeProvider>

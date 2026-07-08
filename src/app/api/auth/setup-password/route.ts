@@ -5,6 +5,7 @@ import {
   buildUpstreamUrl,
   getUpstreamBaseUrl,
   SERVER_UNAVAILABLE_BODY,
+  upstreamFetch,
   upstreamHeaders,
 } from "@/lib/server/upstream";
 
@@ -18,7 +19,7 @@ export async function POST(request: NextRequest) {
   let upstream: Response;
 
   try {
-    upstream = await fetch(buildUpstreamUrl(API_ENDPOINTS.auth.setupPassword), {
+    upstream = await upstreamFetch(buildUpstreamUrl(API_ENDPOINTS.auth.setupPassword), {
       method: "POST",
       headers: upstreamHeaders({ "content-type": "application/json" }),
       body: JSON.stringify(payload),
