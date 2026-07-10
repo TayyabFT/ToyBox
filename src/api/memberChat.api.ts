@@ -3,13 +3,12 @@ import { API_ENDPOINTS } from "@/api/endpoints";
 import type {
   ApiError,
   ApiResponse,
-  ChatSendMessageRequest,
-  ChatSendMessageResponse,
-  MemberChatConversationResponse,
-  MemberChatInitiateRequest,
-  MemberChatMessagesResponse,
   ChatInitiateResponse,
-  ChatMarkReadResponse,
+  ChatSendMessageResponse,
+  MemberChatInboxResponse,
+  MemberChatInitiateRequest,
+  MemberChatSendMessageRequest,
+  MemberChatThreadMessagesResponse,
 } from "@/types/api";
 
 function ensureSuccess<T>(response: ApiResponse<T>): ApiResponse<T> {
@@ -25,21 +24,19 @@ function ensureSuccess<T>(response: ApiResponse<T>): ApiResponse<T> {
 }
 
 export const memberChatApi = {
-  getConversation: async () =>
+  getInbox: async () =>
     ensureSuccess(
-      await apiClient<MemberChatConversationResponse>(
-        API_ENDPOINTS.memberChat.conversation,
+      await apiClient<MemberChatInboxResponse>(API_ENDPOINTS.memberChat.messages),
+    ),
+
+  getMessages: async (contactId: string) =>
+    ensureSuccess(
+      await apiClient<MemberChatThreadMessagesResponse>(
+        `${API_ENDPOINTS.memberChat.messages}?contactId=${encodeURIComponent(contactId)}`,
       ),
     ),
 
-  getMessages: async () =>
-    ensureSuccess(
-      await apiClient<MemberChatMessagesResponse>(
-        API_ENDPOINTS.memberChat.messages,
-      ),
-    ),
-
-  sendMessage: async (body: ChatSendMessageRequest) =>
+  sendMessage: async (body: MemberChatSendMessageRequest) =>
     ensureSuccess(
       await apiClient<ChatSendMessageResponse>(API_ENDPOINTS.memberChat.messages, {
         method: "POST",
@@ -52,13 +49,6 @@ export const memberChatApi = {
       await apiClient<ChatInitiateResponse>(API_ENDPOINTS.memberChat.initiate, {
         method: "POST",
         body,
-      }),
-    ),
-
-  markRead: async () =>
-    ensureSuccess(
-      await apiClient<ChatMarkReadResponse>(API_ENDPOINTS.memberChat.read, {
-        method: "PATCH",
       }),
     ),
 };

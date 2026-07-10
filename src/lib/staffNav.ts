@@ -50,6 +50,12 @@ export const staffOperationsNav: StaffNavItem[] = [
     section: "operations",
     badge: { count: 6, tone: "teal" },
   },
+  {
+    id: "clubhouse",
+    label: "Club House",
+    href: `${STAFF_BASE}/clubhouse`,
+    section: "management",
+  },
 ];
 
 export const staffManagementNav: StaffNavItem[] = [

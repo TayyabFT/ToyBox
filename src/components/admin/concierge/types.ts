@@ -38,7 +38,7 @@ export type ConciergeLogisticsItem = {
 
 export type ConciergeChatMessage = {
   id: string;
-  sender: "staff" | "member";
+  sender: "staff" | "member" | "admin";
   senderName: string;
   time: string;
   message: string;

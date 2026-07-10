@@ -183,8 +183,16 @@ export function ConciergePage() {
     }
   }
 
+  const isChatOpen = Boolean(selectedRequest?.apiMemberId);
+
   return (
-    <div className="space-y-6 p-8">
+    <div
+      className={
+        isChatOpen
+          ? "flex h-[calc(100vh-72px)] flex-col gap-6 overflow-hidden p-8"
+          : "space-y-6 p-8"
+      }
+    >
       <ConciergeGreeting
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
@@ -194,7 +202,13 @@ export function ConciergePage() {
         <ConciergeAlertBar alert={alert} onHandle={handleHandleAlert} />
       )}
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      <div
+        className={
+          isChatOpen
+            ? "grid min-h-0 flex-1 grid-cols-1 gap-6 xl:grid-cols-3"
+            : "grid grid-cols-1 gap-6 xl:grid-cols-3"
+        }
+      >
         <OpenRequestsPanel
           requests={filteredRequests}
           activeCount={activeCount}
@@ -203,11 +217,11 @@ export function ConciergePage() {
           onSelect={handleSelectRequest}
         />
 
-        <div className="col-span-2 space-y-6">
-          {/* <RequestDetailPanel
-            detail={selectedDetail}
-            loading={detailLoading}
-          /> */}
+        <div
+          className={
+            isChatOpen ? "col-span-2 flex min-h-0 flex-col" : "col-span-2"
+          }
+        >
           <MemberChatPanel
             memberId={selectedRequest?.apiMemberId ?? null}
             memberName={selectedRequest?.member ?? "Member"}

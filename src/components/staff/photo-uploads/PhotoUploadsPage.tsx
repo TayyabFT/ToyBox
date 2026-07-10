@@ -18,7 +18,6 @@ export function PhotoUploadsPage() {
     showRecBadge,
     viewfinderPreviewUrl,
     viewfinderZoom,
-    header,
     tabs,
     cameraContext,
     todayCaptures,
@@ -57,7 +56,6 @@ export function PhotoUploadsPage() {
   return (
     <div className="space-y-8 p-8">
       <PhotoUploadsGreeting
-        header={header}
         activeFilter={activeFilter}
         tabs={tabs}
         onFilterChange={changeFilter}

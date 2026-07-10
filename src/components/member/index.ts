@@ -23,5 +23,10 @@ export { MemberClubSection } from "./dashboard/MemberClubSection";
 export { MemberNewsSection } from "./dashboard/MemberNewsSection";
 export { MemberActivitySection } from "./dashboard/MemberActivitySection";
 
+// Diary — dedicated member journal page
+export { MemberDiary } from "./diary/MemberDiary";
+
+// Events — member events page
+export { MemberEvents } from "./events";
 // Concierge
 export { MemberConciergePage } from "./concierge";

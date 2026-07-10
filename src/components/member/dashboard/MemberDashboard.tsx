@@ -1,6 +1,6 @@
 "use client";
 
-import { memberDashboardMock } from "@/components/member/dashboard/mockData";
+import { useCallback, useEffect } from "react";
 import { MemberGreeting } from "@/components/member/dashboard/MemberGreeting";
 import { MembershipCard } from "@/components/member/dashboard/MembershipCard";
 import { ClubBanner } from "@/components/member/dashboard/ClubBanner";
@@ -11,9 +11,28 @@ import { MemberDiarySection } from "@/components/member/dashboard/MemberDiarySec
 import { MemberClubSection } from "@/components/member/dashboard/MemberClubSection";
 import { MemberNewsSection } from "@/components/member/dashboard/MemberNewsSection";
 import { MemberActivitySection } from "@/components/member/dashboard/MemberActivitySection";
+import { MemberDashboardSkeleton } from "@/components/member/dashboard/MemberDashboardSkeleton";
+import { showError } from "@/lib/toast";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { fetchMemberDashboard } from "@/store/slices/memberDashboardSlice";
 
 export function MemberDashboard() {
-  const data = memberDashboardMock;
+  const dispatch = useAppDispatch();
+  const { data, quickActions, loading, loaded, error } = useAppSelector(
+    (state) => state.memberDashboard,
+  );
+
+  const loadDashboard = useCallback(async (force?: boolean) => {
+    const result = await dispatch(fetchMemberDashboard(force));
+
+    if (fetchMemberDashboard.rejected.match(result)) {
+      showError((result.payload as string) ?? "Failed to load dashboard");
+    }
+  }, [dispatch]);
+
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
 
   const today = new Date();
   const sublabel = today.toLocaleDateString("en-US", {
@@ -23,13 +42,51 @@ export function MemberDashboard() {
     year: "numeric",
   });
 
+  // Initial load — show full skeleton until the first response resolves.
+  if (loading && !loaded) {
+    return <MemberDashboardSkeleton />;
+  }
+
+  // First load failed with no cached data — show a full-page retry message.
+  if (error && !loaded) {
+    return (
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center">
+        <div className="space-y-2">
+          <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
+            Dashboard Unavailable
+          </h2>
+          <p className="font-roboto max-w-sm text-sm text-secondary/80">
+            {error}. Please check your connection and try again.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => loadDashboard(true)}
+          className="font-roboto rounded-lg border border-accent/30 bg-accent/5 px-5 py-2.5 text-[11px] font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:border-accent/50 hover:bg-accent/10"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6 p-8">
+      {error && (
+        <div className="flex items-center justify-between font-roboto rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
+          <span>{error}</span>
+          <button
+            type="button"
+            onClick={() => loadDashboard(true)}
+            className="rounded bg-red-500/20 px-2.5 py-1 text-xs font-semibold hover:bg-red-500/30 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      )}
 
-      {/* 1 ── Greeting */}
       <MemberGreeting memberName={data.memberName} sublabel={sublabel} />
 
-      {/* 2 ── Hero Row: Membership Card (left) + Club Banner slider (right) */}
       <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-2">
         <MembershipCard
           memberName={data.memberName}
@@ -37,30 +94,27 @@ export function MemberDashboard() {
           membershipTier={data.membershipTier}
           memberSince={data.memberSince}
         />
-        <ClubBanner />
+        <ClubBanner venues={data.clubVenues} />
       </div>
 
-      {/* 3 ── KPI Stats — 4 equal cards */}
       <MemberStatsRow kpis={data.kpis} />
 
-      {/* 4 ── Quick Actions — 4 action tiles */}
-      <MemberQuickActions />
+      <MemberQuickActions actions={quickActions} />
 
-      {/* 5 ── Two-column: Your Collection (left) + Your Diary (right) */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <MemberCollectionSection vehicles={data.vehicles} />
         <MemberDiarySection events={data.diary} />
       </div>
 
-      {/* 6 ── The Club — 3 venue cards full width */}
-      <MemberClubSection venues={data.clubVenues} />
+      <MemberClubSection
+        venues={data.clubVenues}
+        statusLine={data.clubStatusLine}
+      />
 
-      {/* 7 ── Bottom two-column: From The Club (left) + Recent Activity (right) */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <MemberNewsSection items={data.news} />
         <MemberActivitySection items={data.recentActivity} />
       </div>
-
     </div>
   );
 }

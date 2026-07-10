@@ -10,6 +10,9 @@ import { mapChatMessages } from "@/lib/chat";
 import { showError } from "@/lib/toast";
 
 type ConciergeChatPanelProps = {
+  enabled?: boolean;
+  contactId?: string;
+  chatTitle?: string;
   onMessageSent?: () => void | Promise<void>;
 };
 
@@ -17,10 +20,15 @@ function isChatNotInitiated(message: string): boolean {
   return message.toLowerCase().includes("initiate");
 }
 
-export function ConciergeChatPanel({ onMessageSent }: ConciergeChatPanelProps) {
+export function ConciergeChatPanel({
+  enabled = true,
+  contactId,
+  chatTitle = "Concierge Team",
+  onMessageSent,
+}: ConciergeChatPanelProps) {
   const [draft, setDraft] = useState("");
   const [messages, setMessages] = useState<ConciergeChatMessage[]>([]);
-  const [hasActiveConversation, setHasActiveConversation] = useState(false);
+  const [conversationActive, setConversationActive] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -33,20 +41,22 @@ export function ConciergeChatPanel({ onMessageSent }: ConciergeChatPanelProps) {
   }, []);
 
   const loadMessages = useCallback(async () => {
+    if (!enabled || !contactId) {
+      setMessages([]);
+      setConversationActive(false);
+      return;
+    }
+
     setLoading(true);
 
     try {
-      const response = await memberChatApi.getMessages();
+      const response = await memberChatApi.getMessages(contactId);
       const nextMessages = response.data.messages ?? [];
 
       setMessages(mapChatMessages(nextMessages));
-      setHasActiveConversation(
-        Boolean(response.data.conversation || nextMessages.length > 0),
+      setConversationActive(
+        Boolean(response.data.conversationId || nextMessages.length > 0),
       );
-
-      if (nextMessages.length > 0) {
-        await memberChatApi.markRead();
-      }
     } catch (error) {
       const message =
         (error as { message?: string }).message ?? "Failed to load chat";
@@ -56,11 +66,11 @@ export function ConciergeChatPanel({ onMessageSent }: ConciergeChatPanelProps) {
       }
 
       setMessages([]);
-      setHasActiveConversation(false);
+      setConversationActive(false);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [contactId, enabled]);
 
   useEffect(() => {
     void loadMessages();
@@ -76,18 +86,21 @@ export function ConciergeChatPanel({ onMessageSent }: ConciergeChatPanelProps) {
 
   async function handleSend() {
     const body = draft.trim();
-    if (!body || sending) return;
+    if (!enabled || !contactId || !body || sending) return;
 
     setSending(true);
 
     try {
       try {
-        await memberChatApi.sendMessage({ body });
+        await memberChatApi.sendMessage({ contactId, body });
       } catch (error) {
         const message = (error as { message?: string }).message ?? "";
 
         if (isChatNotInitiated(message)) {
-          await memberChatApi.initiate({ initialMessage: body });
+          await memberChatApi.initiate({
+            targetId: contactId,
+            initialMessage: body,
+          });
         } else {
           throw error;
         }
@@ -115,66 +128,76 @@ export function ConciergeChatPanel({ onMessageSent }: ConciergeChatPanelProps) {
 
   return (
     <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
-      <div className="shrink-0 px-5 pt-5">
-        <SectionHeader
-          title="Concierge Chat"
-          badge={
-            hasActiveConversation
-              ? { label: "online", tone: "green" }
-              : undefined
-          }
-        />
-      </div>
-
-      <div
-        ref={messagesContainerRef}
-        className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto p-5"
-      >
-        <div className="space-y-4 pr-1">
-          {loading && messages.length === 0 && (
-            <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-              Loading chat...
-            </p>
-          )}
-
-          {!loading && messages.length === 0 && (
-            <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-              No messages yet
-            </p>
-          )}
-
-          {messages.map((message) => (
-            <ChatMessage
-              key={message.id}
-              message={message}
-              viewerRole="member"
+      {!enabled ? (
+        <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
+          <p className="font-roboto text-[11px] tracking-[0.06em] text-secondary uppercase">
+            Select a request to view chat
+          </p>
+        </div>
+      ) : (
+        <>
+          <div className="shrink-0 px-5 pt-5">
+            <SectionHeader
+              title={`Member Chat — ${chatTitle}`}
+              badge={
+                conversationActive
+                  ? { label: "online", tone: "green" }
+                  : undefined
+              }
             />
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <div className="shrink-0 border-t border-accent/6 p-5">
-        <div className="flex h-12 items-center gap-3 rounded-xl border border-accent/14 bg-input-muted">
-          <input
-            type="text"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            onKeyDown={handleKeyDown}
-            disabled={sending}
-            placeholder="Message concierge team..."
-            className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-foreground outline-none placeholder:text-secondary/70 disabled:opacity-50"
-          />
-          <button
-            type="button"
-            aria-label="Send message"
-            disabled={sending || !draft.trim()}
-            onClick={() => void handleSend()}
-            className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-gold-bright to-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          <div
+            ref={messagesContainerRef}
+            className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto p-5"
           >
-            <VehicleSend color="var(--dark)" />
-          </button>
-        </div>
-      </div>
+            <div className="space-y-4 pr-1">
+              {loading && messages.length === 0 && (
+                <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
+                  Loading chat...
+                </p>
+              )}
+
+              {!loading && messages.length === 0 && (
+                <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
+                  No messages yet
+                </p>
+              )}
+
+              {messages.map((message) => (
+                <ChatMessage
+                  key={message.id}
+                  message={message}
+                  viewerRole="member"
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="shrink-0 border-t border-accent/6 p-5">
+            <div className="flex h-12 items-center gap-3 rounded-xl border border-accent/14 bg-input-muted">
+              <input
+                type="text"
+                value={draft}
+                onChange={(event) => setDraft(event.target.value)}
+                onKeyDown={handleKeyDown}
+                disabled={sending}
+                placeholder={`Reply to ${chatTitle}...`}
+                className="font-roboto min-w-0 flex-1 bg-transparent p-4 text-sm tracking-[0.02em] text-foreground outline-none placeholder:text-secondary/70 disabled:opacity-50"
+              />
+              <button
+                type="button"
+                aria-label="Send message"
+                disabled={sending || !draft.trim()}
+                onClick={() => void handleSend()}
+                className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-gold-bright to-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <VehicleSend color="var(--dark)" />
+              </button>
+            </div>
+          </div>
+        </>
+      )}
     </section>
   );
 }

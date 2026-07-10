@@ -7,6 +7,14 @@ export type MemberVehicleItem = {
   imageUrl?: string;
   lastService?: string;
   mileage?: string;
+  // New fields for Figma design
+  year?: string;
+  engine?: string;
+  bay?: string;
+  odometer?: string;
+  inspected?: string;
+  returns?: string;
+  engineer?: string;
 };
 
 export type MemberDiaryEvent = {
@@ -16,6 +24,13 @@ export type MemberDiaryEvent = {
   dateLabel: string;
   monthLabel: string;
   dayLabel: string;
+  dayName?: string;       // e.g. "SUN", "TUE", "MAY"
+  dateShort?: string;     // e.g. "SAT 26 APR"
+  time?: string;          // e.g. "19:00"
+  membersCount?: number;  // e.g. 12
+  attendingCount?: number;// e.g. 18
+  attendingMembers?: { name: string; initial: string }[];
+  userStatus?: "going" | "rsvp" | null;
   tag: string;
   tagTone: "gold" | "teal" | "pink";
   imageUrl?: string;
@@ -30,22 +45,32 @@ export type MemberClubVenue = {
   imageUrl: string;
   tag?: string;
   tagTone?: "gold" | "teal" | "pink";
+  iconKey?: "clubhouse" | "lounge" | "suites";
+  footerLeft?: string;
+  actionLabel?: string;
+  href?: string;
 };
 
 export type MemberNewsItem = {
   id: string;
   title: string;
+  titlePrefix?: string;
+  titleHighlight?: string;
   subtitle: string;
   timeLabel: string;
+  category?: string;
+  isUnread?: boolean;
   imageUrl?: string;
 };
 
 export type MemberActivityItem = {
   id: string;
   title: string;
+  titlePrefix?: string;
+  titleHighlight?: string;
   detail: string;
   timeLabel: string;
-  tone: "gold" | "teal" | "pink" | "default";
+  tone?: "gold" | "teal" | "pink" | "default";
 };
 
 export type MemberKpi = {
@@ -64,6 +89,7 @@ export type MemberDashboardData = {
   kpis: MemberKpi[];
   vehicles: MemberVehicleItem[];
   diary: MemberDiaryEvent[];
+  clubStatusLine?: string;
   clubVenues: MemberClubVenue[];
   news: MemberNewsItem[];
   recentActivity: MemberActivityItem[];

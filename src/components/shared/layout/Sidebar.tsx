@@ -5,7 +5,6 @@ import Image from "next/image";
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import {
-  Building,
   Calendar,
   Camera,
   Checkbox,
@@ -14,8 +13,12 @@ import {
   Finance,
   Grid,
   Members,
+  HelpSupport,
   Message,
+  AskSteve,
+  TermsPrivacy,
   NavAnalytics,
+  NavClubhouse,
   NavCommunications,
   NavGarage,
   Sunburst,
@@ -24,7 +27,9 @@ import {
   Wrench,
 } from "@/components/common/Svgs";
 import { chatApi } from "@/api/chat.api";
+import { memberChatApi } from "@/api/memberChat.api";
 import { getUnreadConversationCount } from "@/lib/concierge";
+import { getMemberUnreadMessageCount } from "@/lib/memberConcierge";
 import { useTheme } from "@/components/common/ThemeProvider";
 import { adminManageNav, adminOperationsNav } from "@/lib/adminNav";
 import { staffManagementNav, staffOperationsNav } from "@/lib/staffNav";
@@ -125,21 +130,23 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   vehicles: (active) => <User active={active} />,
   garage: (active) => <NavGarage active={active} />,
   concierge: (active) => <Message active={active} />,
+  "ask-steve": (active) => <AskSteve active={active} />,
   confirmations: (active) => <Checkbox active={active} />,
   "op-updates": (active) => <Edit active={active} />,
   members: (active) => <Members active={active} />,
   staff: (active) => <Members active={active} />,
   events: (active) => <Calendar active={active} />,
-  clubhouse: (active) => <Building active={active} />,
+  clubhouse: (active) => <NavClubhouse active={active} />,
   workshop: (active) => <Wrench active={active} />,
   communications: (active) => <NavCommunications active={active} />,
   finance: (active) => <Finance active={active} />,
   analytics: (active) => <NavAnalytics active={active} />,
   // Member-specific
+  diary: (active) => <Calendar active={active} />,
   marketplace: (active) => <Sunburst active={active} />,
-  "hub-store": (active) => <Building active={active} />,
   profile: (active) => <User active={active} />,
-  help: (active) => <Message active={active} />,
+  help: (active) => <HelpSupport active={active} />,
+  "terms-privacy": (active) => <TermsPrivacy active={active} />,
 };
 
 function isNavActive(pathname: string, href: string, base: string): boolean {
@@ -220,6 +227,41 @@ function NavSection({
   );
 }
 
+function StaffShiftCard() {
+  const [currentTime, setCurrentTime] = useState("");
+
+  useEffect(() => {
+    function updateTime() {
+      setCurrentTime(
+        new Date().toLocaleTimeString([], {
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+      );
+    }
+
+    updateTime();
+    const interval = window.setInterval(updateTime, 1000);
+
+    return () => window.clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="shrink-0 px-4 py-4">
+      <div className="space-y-1 rounded-xl border border-teal/18 bg-teal/4 px-4 py-3">
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-roboto text-sm text-teal">Current Shift</p>
+          <p className="font-roboto text-sm text-foreground">{currentTime}</p>
+        </div>
+        <h3 className="font-copperplate text-lg text-foreground">
+          07:00 — 15:00
+        </h3>
+        <p className="font-roboto text-sm text-secondary">5h 18m remaining</p>
+      </div>
+    </div>
+  );
+}
+
 export function Sidebar({ role }: { role: UserRole }) {
   const spec = SIDEBAR_SPECS[role];
   const pathname = usePathname();
@@ -228,18 +270,28 @@ export function Sidebar({ role }: { role: UserRole }) {
   const [conciergeUnreadCount, setConciergeUnreadCount] = useState(0);
 
   useEffect(() => {
-    if (role !== "staff") return;
+    if (role !== "staff" && role !== "member") return;
 
     let cancelled = false;
 
     async function loadConciergeUnreadCount() {
       try {
-        const response = await chatApi.getConversations();
+        if (role === "staff") {
+          const response = await chatApi.getConversations();
 
-        if (!cancelled) {
-          setConciergeUnreadCount(
-            getUnreadConversationCount(response.data.conversations),
-          );
+          if (!cancelled) {
+            setConciergeUnreadCount(
+              getUnreadConversationCount(response.data.conversations),
+            );
+          }
+        } else {
+          const response = await memberChatApi.getInbox();
+
+          if (!cancelled) {
+            setConciergeUnreadCount(
+              getMemberUnreadMessageCount(response.data.conversations),
+            );
+          }
         }
       } catch {
         if (!cancelled) {
@@ -259,14 +311,27 @@ export function Sidebar({ role }: { role: UserRole }) {
     () =>
       spec.sections.map((section) => ({
         ...section,
-        items: section.items.map((item) =>
-          role === "staff" && item.id === "concierge" && conciergeUnreadCount > 0
-            ? {
-                ...item,
-                badge: { count: conciergeUnreadCount, tone: "gold" as const },
-              }
-            : item,
-        ),
+        items: section.items.map((item) => {
+          if (item.id !== "concierge" || conciergeUnreadCount <= 0) {
+            return item;
+          }
+
+          if (role === "staff") {
+            return {
+              ...item,
+              badge: { count: conciergeUnreadCount, tone: "gold" as const },
+            };
+          }
+
+          if (role === "member") {
+            return {
+              ...item,
+              badge: { count: conciergeUnreadCount, tone: "pink" as const },
+            };
+          }
+
+          return item;
+        }),
       })),
     [spec, role, conciergeUnreadCount],
   );
@@ -303,19 +368,7 @@ export function Sidebar({ role }: { role: UserRole }) {
         </nav>
       </div>
 
-      {spec.showShiftCard && (
-        <div className="shrink-0 px-4 py-4">
-          <div className="space-y-1 rounded-xl border border-teal/18 bg-teal/4 px-4 py-3">
-            <p className="font-roboto text-sm text-teal">Current Shift</p>
-            <h3 className="font-copperplate text-lg text-foreground">
-              07:00 — 15:00
-            </h3>
-            <p className="font-roboto text-sm text-secondary">
-              5h 18m remaining
-            </p>
-          </div>
-        </div>
-      )}
+      {spec.showShiftCard ? <StaffShiftCard /> : null}
     </aside>
   );
 }

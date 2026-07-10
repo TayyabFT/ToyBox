@@ -1,10 +1,13 @@
 import Link from "next/link";
+import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import type { GarageVehicle, GarageVehicleStatusTone } from "./types";
 
 const statusToneClass: Record<GarageVehicleStatusTone, string> = {
   ready: "border-teal/30 bg-teal/10 text-teal",
   in_service: "border-pink/30 bg-pink/10 text-pink",
   away: "border-accent/25 bg-accent/8 text-secondary",
+  stored: "border-accent/20 bg-accent/6 text-foreground-soft",
+  in_review: "border-info/30 bg-info/10 text-info",
 };
 
 type MemberGarageCardProps = {
@@ -14,12 +17,31 @@ type MemberGarageCardProps = {
 export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-accent/10 bg-card">
-      <div className="relative h-[220px] w-full">
-        <img
-          src={vehicle.imageUrl}
-          alt={`${vehicle.make} ${vehicle.model}`}
-          className="h-full w-full object-cover"
-        />
+      <div className="relative h-[220px] w-full bg-elevated">
+        {vehicle.imageUrl ? (
+          <img
+            src={vehicle.imageUrl}
+            alt={`${vehicle.make} ${vehicle.model}`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path
+                d="M4 16H5.5L6.5 13H17.5L18.5 16H20"
+                stroke="var(--muted)"
+                strokeWidth="1"
+              />
+              <path
+                d="M4 16H20V18.5C20 18.78 19.78 19 19.5 19H4.5C4.22 19 4 18.78 4 18.5V16Z"
+                stroke="var(--muted)"
+                strokeWidth="1"
+              />
+              <circle cx="7" cy="18.5" r="1" fill="var(--muted)" />
+              <circle cx="17" cy="18.5" r="1" fill="var(--muted)" />
+            </svg>
+          </div>
+        )}
 
         {vehicle.statusLabel && (
           <span
@@ -48,13 +70,16 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
           </p>
         </div>
 
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid min-w-0 grid-cols-3 gap-2">
           {vehicle.stats.map((stat) => (
-            <div key={stat.label}>
-              <p className="font-copperplate text-[20px] leading-none text-foreground">
+            <div key={stat.label} className="min-w-0 overflow-hidden">
+              <p
+                className="font-copperplate truncate text-[18px] leading-tight tabular-nums text-foreground"
+                title={stat.value}
+              >
                 {stat.value}
               </p>
-              <p className="font-roboto mt-1.5 text-[9px] tracking-[0.12em] text-secondary uppercase">
+              <p className="font-roboto mt-1.5 truncate text-[9px] tracking-[0.12em] text-secondary uppercase">
                 {stat.label}
               </p>
             </div>
@@ -72,19 +97,11 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
           </div>
 
           <Link
-            href={`/member/vehicles/${vehicle.id}`}
+            href={`/member/garage/${vehicle.id}`}
             className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
           >
             Details
-            <svg width="10" height="10" viewBox="0 0 12 12" fill="none" aria-hidden>
-              <path
-                d="M4.5 2.5L8 6L4.5 9.5"
-                stroke="currentColor"
-                strokeWidth="1.2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <MemberGarageChevronRight className="size-[10px]" color="currentColor" />
           </Link>
         </div>
       </div>

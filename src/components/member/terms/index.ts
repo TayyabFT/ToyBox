@@ -1,0 +1,1 @@
+export { TermsPrivacyPage } from "./TermsPrivacyPage";

@@ -22,6 +22,7 @@ import { VehiclesGreeting } from "./VehiclesGreeting";
 import { VehicleListPanel } from "./VehicleListPanel";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { AddVehicleModal } from "./add-vehicle";
+import { AddSlotsModal } from "./add-slots";
 import type { VehicleListItem, VehicleStatsDisplay } from "./types";
 
 export function VehiclesPage() {
@@ -32,6 +33,7 @@ export function VehiclesPage() {
   const [selectedId, setSelectedId] = useState("");
   const [loading, setLoading] = useState(true);
   const [addVehicleOpen, setAddVehicleOpen] = useState(false);
+  const [addSlotsOpen, setAddSlotsOpen] = useState(false);
   const [stats, setStats] = useState<VehicleStatsDisplay>(createEmptyVehicleStats());
 
   const loadInventory = useCallback(async () => {
@@ -82,7 +84,10 @@ export function VehiclesPage() {
 
   return (
     <div className="space-y-8 p-8">
-      <VehiclesGreeting onAddVehicle={() => setAddVehicleOpen(true)} />
+      <VehiclesGreeting
+        onAddSlots={() => setAddSlotsOpen(true)}
+        onAddVehicle={() => setAddVehicleOpen(true)}
+      />
 
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
         <StatCard
@@ -133,6 +138,11 @@ export function VehiclesPage() {
           <VehicleDetailPanel detail={detail} loading={loading} />
         </div>
       </div>
+
+      <AddSlotsModal
+        open={addSlotsOpen}
+        onClose={() => setAddSlotsOpen(false)}
+      />
 
       <AddVehicleModal
         open={addVehicleOpen}

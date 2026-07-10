@@ -1,18 +1,63 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { authApi } from "@/api/auth.api";
 import { EditPencil, StarFilled } from "@/components/common/Svgs";
+import { mapMemberProfileData } from "@/lib/memberProfile";
 import { memberProfileMock } from "./mockData";
 import { MemberProfileSettingsGrid } from "./MemberProfileSettingsGrid";
+import type { MemberProfileData } from "./types";
 
 function getInitial(name: string): string {
   return name.trim().charAt(0).toUpperCase() || "A";
 }
 
 export function MemberProfilePage() {
-  const data = memberProfileMock;
+  const [data, setData] = useState<MemberProfileData>(memberProfileMock);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadProfile() {
+      setLoading(true);
+      setError(null);
+
+      try {
+        const response = await authApi.getProfile();
+        if (!cancelled) {
+          setData(mapMemberProfileData(response.data));
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(
+            (err as { message?: string }).message ?? "Failed to load profile",
+          );
+          setData(memberProfileMock);
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadProfile();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
     <div className="space-y-7 p-8">
+      {error ? (
+        <p className="font-roboto rounded-xl border border-pink/20 bg-pink/5 px-4 py-3 text-[12px] text-pink">
+          {error}
+        </p>
+      ) : null}
+
       {/* Hero header */}
       <section
         className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
@@ -30,15 +75,23 @@ export function MemberProfilePage() {
         </button>
 
         <div className="flex items-center gap-6">
-          <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
-            <span className="font-copperplate text-[34px] text-[#C9A84C]">
-              {getInitial(data.name)}
+          {data.profileImageUrl ? (
+            <img
+              src={data.profileImageUrl}
+              alt={data.name}
+              className="size-24 shrink-0 rounded-full border-2 border-[#C9A84C] object-cover shadow-[0_0_34px_rgba(201,168,76,0.30)]"
+            />
+          ) : (
+            <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
+              <span className="font-copperplate text-[34px] text-[#C9A84C]">
+                {getInitial(data.name)}
+              </span>
             </span>
-          </span>
+          )}
 
           <div className="min-w-0 space-y-2.5">
             <h1 className="font-copperplate text-[30px] leading-none tracking-[0.03em] text-[#F2EAD5]">
-              {data.name}
+              {loading ? "Loading..." : data.name}
             </h1>
 
             <p className="font-roboto text-[11px] tracking-[0.1em] text-secondary uppercase">
@@ -63,7 +116,7 @@ export function MemberProfilePage() {
             className="rounded-2xl border border-accent/12 bg-card px-5 py-4"
           >
             <p className="font-copperplate text-[28px] leading-none text-foreground">
-              {stat.value}
+              {loading ? "—" : stat.value}
             </p>
             <p className="font-roboto mt-2.5 text-[10px] tracking-[0.14em] text-secondary uppercase">
               {stat.label}

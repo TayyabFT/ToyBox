@@ -1,5 +1,5 @@
-import { MemberGaragePage } from "@/components/member";
+import { redirect } from "next/navigation";
 
-export default function MemberVehiclesPage() {
-  return <MemberGaragePage />;
+export default function MemberVehiclesRedirectPage() {
+  redirect("/member/garage");
 }

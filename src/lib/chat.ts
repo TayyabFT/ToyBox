@@ -13,9 +13,18 @@ function formatChatTime(iso: string): string {
 }
 
 export function mapChatMessage(message: ChatMessage): ConciergeChatMessage {
+  const senderType = message.senderType?.toLowerCase() ?? "";
+  let sender: ConciergeChatMessage["sender"] = "staff";
+
+  if (senderType === "member") {
+    sender = "member";
+  } else if (senderType === "admin") {
+    sender = "admin";
+  }
+
   return {
     id: message.id,
-    sender: message.senderType === "member" ? "member" : "staff",
+    sender,
     senderName: message.senderName,
     time: formatChatTime(message.createdAt),
     message: message.body,

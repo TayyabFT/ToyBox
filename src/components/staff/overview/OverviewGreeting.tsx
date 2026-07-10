@@ -1,3 +1,8 @@
+import {
+  formatStaffDisplayDate,
+  getStaffShiftLabel,
+} from "@/lib/staffShift";
+
 type OverviewGreetingProps = {
   displayDate: string;
   shiftLabel: string;
@@ -21,15 +26,15 @@ function formatStaffName(name: string): string {
 }
 
 export function OverviewGreeting({
-  displayDate,
-  shiftLabel,
   staffName,
   timeRemainingLabel,
 }: OverviewGreetingProps) {
   const firstName = formatStaffName(staffName);
+  const dateLabel = formatStaffDisplayDate();
+  const shiftLabel = getStaffShiftLabel();
   const meta = timeRemainingLabel
-    ? `${displayDate} · ${shiftLabel} · ${timeRemainingLabel} left`
-    : `${displayDate} · ${shiftLabel}`;
+    ? `${dateLabel} · ${shiftLabel} · ${timeRemainingLabel} left`
+    : `${dateLabel} · ${shiftLabel}`;
 
   return (
     <div className="space-y-3">

@@ -27,8 +27,8 @@ export function MemberVehicleSpecsCard({
         <span className="text-primary">Info</span>
       </h2>
 
-      <div className="mt-4 grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
+      <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 ">
+        <div className="border border-accent/10 rounded-lg p-4">
           <p className="font-roboto mb-1 text-[9px] tracking-[0.14em] text-secondary/70 uppercase">
             Vehicle Specs
           </p>
@@ -55,7 +55,7 @@ export function MemberVehicleSpecsCard({
           </div>
         </div>
 
-        <div>
+        <div className="border border-accent/10 rounded-lg p-4">
           <p className="font-roboto mb-1 text-[9px] tracking-[0.14em] text-secondary/70 uppercase">
             Ownership Info
           </p>

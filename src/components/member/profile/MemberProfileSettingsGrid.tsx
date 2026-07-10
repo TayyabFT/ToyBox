@@ -1,15 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MemberProfileSettingsIcon } from "./MemberProfileSettingsIcons";
 import { MemberProfileSettingsToggle } from "./MemberProfileSettingsToggle";
 import type {
+  MemberProfileDetailField,
   MemberProfileSettingsAction,
   MemberProfileSettingsItem,
   MemberProfileSettingsSection,
 } from "./types";
 
-function SettingsChevron() {
+function SettingsChevron({ open }: { open?: boolean }) {
   return (
     <svg
       width="10"
@@ -17,7 +18,9 @@ function SettingsChevron() {
       viewBox="0 0 10 10"
       fill="none"
       aria-hidden
-      className="shrink-0 text-accent/50"
+      className={`shrink-0 text-accent/50 transition-transform ${
+        open ? "rotate-90" : ""
+      }`}
     >
       <path
         d="M3 2L6.5 5L3 8"
@@ -35,29 +38,77 @@ function SettingsRowAction({
   itemId,
   toggleEnabled,
   onToggle,
+  expanded,
+  canExpand,
 }: {
   action: MemberProfileSettingsAction;
   itemId: string;
   toggleEnabled: boolean;
   onToggle: (id: string, enabled: boolean) => void;
+  expanded: boolean;
+  canExpand: boolean;
 }) {
   if (action.type === "link") {
-    return <SettingsChevron />;
+    return <SettingsChevron open={expanded} />;
   }
 
   if (action.type === "status") {
     return (
-      <span className="font-roboto shrink-0 text-[10px] font-semibold tracking-[0.1em] text-accent uppercase">
-        {action.value}
-      </span>
+      <div className="flex shrink-0 items-center gap-2">
+        <span className="font-roboto text-[10px] font-semibold tracking-[0.1em] text-accent uppercase">
+          {action.value}
+        </span>
+        {canExpand ? <SettingsChevron open={expanded} /> : null}
+      </div>
     );
   }
 
   return (
-    <MemberProfileSettingsToggle
-      enabled={toggleEnabled}
-      onChange={(enabled) => onToggle(itemId, enabled)}
-    />
+    <div
+      className="shrink-0"
+      onClick={(event) => event.stopPropagation()}
+      onKeyDown={(event) => event.stopPropagation()}
+    >
+      <MemberProfileSettingsToggle
+        enabled={toggleEnabled}
+        onChange={(enabled) => onToggle(itemId, enabled)}
+      />
+    </div>
+  );
+}
+
+function SettingsDetailPanel({
+  fields,
+  expanded,
+}: {
+  fields: MemberProfileDetailField[];
+  expanded: boolean;
+}) {
+  return (
+    <div
+      className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+        expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+      }`}
+    >
+      <div className="overflow-hidden">
+        <div className="mx-4 mb-4 rounded-xl border border-accent/12 bg-elevated px-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+          {fields.map((field) => (
+            <div
+              key={field.label}
+              className="flex items-center justify-between gap-4 border-b border-accent/8 py-3 last:border-b-0"
+            >
+              <span className="font-roboto inline-flex items-center gap-2 text-[10px] tracking-[0.1em] text-secondary uppercase">
+                <span className="size-1 shrink-0 rounded-full bg-accent/60" />
+                {field.label}
+              </span>
+              <span className="font-roboto max-w-[58%] text-right text-[11.5px] font-medium tracking-[0.02em] text-foreground">
+                {field.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -65,12 +116,17 @@ function SettingsRow({
   item,
   toggleEnabled,
   onToggle,
+  expanded,
+  onExpand,
 }: {
   item: MemberProfileSettingsItem;
   toggleEnabled: boolean;
   onToggle: (id: string, enabled: boolean) => void;
+  expanded: boolean;
+  onExpand: (id: string) => void;
 }) {
-  const isInteractive = item.action.type === "link";
+  const canExpand = Boolean(item.detailFields?.length);
+  const isInteractive = canExpand;
 
   const content = (
     <>
@@ -88,6 +144,8 @@ function SettingsRow({
         itemId={item.id}
         toggleEnabled={toggleEnabled}
         onToggle={onToggle}
+        expanded={expanded}
+        canExpand={canExpand}
       />
     </>
   );
@@ -96,7 +154,10 @@ function SettingsRow({
     return (
       <button
         type="button"
-        className="flex w-full cursor-pointer items-center gap-3 rounded-lg px-1 py-3.5 text-left transition-colors hover:bg-accent/5"
+        onClick={() => onExpand(item.id)}
+        className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-1 py-3.5 text-left transition-colors ${
+          expanded ? "bg-accent/8" : "hover:bg-accent/5"
+        }`}
       >
         {content}
       </button>
@@ -112,10 +173,14 @@ function SettingsSectionCard({
   section,
   toggleState,
   onToggle,
+  openItemId,
+  onExpand,
 }: {
   section: MemberProfileSettingsSection;
   toggleState: Record<string, boolean>;
   onToggle: (id: string, enabled: boolean) => void;
+  openItemId: string | null;
+  onExpand: (id: string) => void;
 }) {
   return (
     <section className="space-y-2">
@@ -123,19 +188,38 @@ function SettingsSectionCard({
         {section.title}
       </h2>
 
-      <div className="rounded-2xl border border-accent/12 bg-card px-4 py-1">
-        {section.items.map((item) => (
-          <SettingsRow
-            key={item.id}
-            item={item}
-            toggleEnabled={
-              item.action.type === "toggle"
-                ? toggleState[item.id]
-                : false
-            }
-            onToggle={onToggle}
-          />
-        ))}
+      <div className="overflow-hidden rounded-2xl border border-accent/12 bg-card">
+        {section.items.map((item, index) => {
+          const expanded = openItemId === item.id;
+
+          return (
+            <div
+              key={item.id}
+              className={index > 0 ? "border-t border-accent/8" : ""}
+            >
+              <div className="px-4 py-1">
+                <SettingsRow
+                  item={item}
+                  toggleEnabled={
+                    item.action.type === "toggle"
+                      ? toggleState[item.id]
+                      : false
+                  }
+                  onToggle={onToggle}
+                  expanded={expanded}
+                  onExpand={onExpand}
+                />
+              </div>
+
+              {item.detailFields?.length ? (
+                <SettingsDetailPanel
+                  fields={item.detailFields}
+                  expanded={expanded}
+                />
+              ) : null}
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -167,9 +251,18 @@ export function MemberProfileSettingsGrid({
   const [toggleState, setToggleState] = useState(() =>
     buildInitialToggleState(sections),
   );
+  const [openItemId, setOpenItemId] = useState<string | null>(null);
+
+  useEffect(() => {
+    setToggleState(buildInitialToggleState(sections));
+  }, [sections]);
 
   function handleToggle(id: string, enabled: boolean) {
     setToggleState((current) => ({ ...current, [id]: enabled }));
+  }
+
+  function handleExpand(id: string) {
+    setOpenItemId((current) => (current === id ? null : id));
   }
 
   return (
@@ -180,6 +273,8 @@ export function MemberProfileSettingsGrid({
           section={section}
           toggleState={toggleState}
           onToggle={handleToggle}
+          openItemId={openItemId}
+          onExpand={handleExpand}
         />
       ))}
     </div>

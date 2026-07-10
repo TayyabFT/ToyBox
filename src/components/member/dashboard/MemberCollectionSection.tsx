@@ -1,38 +1,67 @@
 import Link from "next/link";
 import type { MemberVehicleItem } from "./types";
 import { MemberVehicleRow } from "./MemberVehicleRow";
+import { MemberSectionEmpty } from "./MemberSectionEmpty";
+import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
 
 type MemberCollectionSectionProps = {
   vehicles: MemberVehicleItem[];
 };
 
 export function MemberCollectionSection({ vehicles }: MemberCollectionSectionProps) {
+  // Count vehicles by status
+  const readyCount = vehicles.filter((v) => v.status === "ready").length;
+  const inServiceCount = vehicles.filter((v) => v.status === "in_service").length;
+  
   return (
-    <div className="space-y-3">
-      {/* Figma header: Copperplate ~11px, white + gold split, subtitle muted */}
-      <div className="flex items-center justify-between gap-3 pb-1">
-        <div className="space-y-0.5">
-          <h2 className="font-copperplate text-[11px] tracking-[0.06em] leading-tight uppercase">
-            <span className="text-foreground">Your </span>
-            <span className="text-primary">Collection</span>
+    <div className="space-y-4">
+      {/* Header */}
+      <div className="flex items-end justify-between">
+        <div className="space-y-1">
+          <h2 className={dashboardSectionHeadingClass}>
+            <span className={dashboardSectionHeadingPrefixClass}>Your </span>
+            <span className={dashboardSectionHeadingAccentClass}>Collection</span>
           </h2>
-          <p className="font-roboto text-[9px] tracking-[0.14em] text-secondary/70 uppercase">
-            {vehicles.length} vehicles in storage
+          <p className={dashboardSectionSubtitleClass}>
+            {vehicles.length} Motor Cars · {readyCount} Ready
+            {inServiceCount > 0 && `, ${inServiceCount} In Service`}
           </p>
         </div>
         <Link
-          href="/member/vehicles"
-          className="font-roboto text-[9px] tracking-[0.16em] text-primary uppercase transition-colors hover:text-accent"
+          href="/member/garage"
+          className="flex items-center gap-1.5 rounded-lg border border-accent/20 bg-transparent px-4 py-2 transition-all hover:border-accent/35 hover:bg-accent/5"
         >
-          View All →
+          <span className="font-roboto text-[10px] font-semibold tracking-[0.14em] text-accent uppercase">
+            View All
+          </span>
+          <svg
+            width="12"
+            height="12"
+            viewBox="0 0 12 12"
+            fill="none"
+          >
+            <path
+              d="M4.5 2.5L8 6L4.5 9.5"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="stroke-accent"
+            />
+          </svg>
         </Link>
       </div>
 
       {/* Vehicle list */}
-      <div className="space-y-2.5">
-        {vehicles.map((v) => (
-          <MemberVehicleRow key={v.id} vehicle={v} />
-        ))}
+      <div className="space-y-3">
+        {vehicles.length === 0 ? (
+          <MemberSectionEmpty
+            title="No Vehicles Yet"
+            description="Vehicles added to your garage will appear here."
+          />
+        ) : (
+          vehicles.map((v) => <MemberVehicleRow key={v.id} vehicle={v} />)
+        )}
       </div>
     </div>
   );

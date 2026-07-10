@@ -1,11 +1,11 @@
-import { MemberVehicleDetailPage } from "@/components/member";
+import { redirect } from "next/navigation";
 
 type PageProps = {
   params: Promise<{ id: string }>;
 };
 
-export default async function MemberVehicleDetailRoutePage({ params }: PageProps) {
+export default async function MemberVehicleDetailRedirectPage({ params }: PageProps) {
   const { id } = await params;
 
-  return <MemberVehicleDetailPage vehicleId={id} />;
+  redirect(`/member/garage/${id}`);
 }

@@ -1,4 +1,8 @@
-import type { InventoryVehicleRaw, VehicleInventorySummaryStat } from "@/types/api";
+import type {
+  InventoryVehicleNoteRaw,
+  InventoryVehicleRaw,
+  VehicleInventorySummaryStat,
+} from "@/types/api";
 import type {
   HealthMetric,
   VehicleDetail,
@@ -120,6 +124,65 @@ function resolveInventoryMember(item: InventoryVehicleRaw): string {
   }
 
   return "ASSIGNED";
+}
+
+function resolveInventoryImageUrl(item: InventoryVehicleRaw): string {
+  const candidates = [
+    item.imageUrl,
+    item.image,
+    item.images?.[0],
+    item.imageUrls?.[0],
+    item.vehicleInfo?.imageUrl,
+    item.vehicleInfo?.images?.[0],
+  ];
+
+  for (const candidate of candidates) {
+    const value = candidate?.trim();
+    if (value) return value;
+  }
+
+  return "";
+}
+
+function normalizeInventoryNoteEntry(
+  entry: string | InventoryVehicleNoteRaw,
+): string | null {
+  if (typeof entry === "string") {
+    const value = entry.trim();
+    return value || null;
+  }
+
+  const value =
+    entry.note?.trim() ||
+    entry.text?.trim() ||
+    entry.body?.trim() ||
+    "";
+
+  return value || null;
+}
+
+function resolveInventoryNotes(item: InventoryVehicleRaw): string[] {
+  const sources = [item.notes, item.staffNotes];
+  const resolved: string[] = [];
+
+  for (const source of sources) {
+    if (!source) continue;
+
+    if (typeof source === "string") {
+      const value = source.trim();
+      if (value) resolved.push(value);
+      continue;
+    }
+
+    if (Array.isArray(source)) {
+      for (const entry of source) {
+        const value = normalizeInventoryNoteEntry(entry);
+        if (value) resolved.push(value);
+      }
+    }
+  }
+
+  return [...new Set(resolved)];
 }
 
 export function mapInventoryVehicle(
@@ -259,6 +322,8 @@ export function mapVehicleDetail(
     bay: mappedListItem.bay,
     mileage: mappedListItem.mileage.replace(" KM", " km"),
     member: mappedListItem.member,
+    imageUrl: raw ? resolveInventoryImageUrl(raw) : undefined,
+    notes: raw ? resolveInventoryNotes(raw) : [],
     isOverdue: mappedListItem.status === "overdue",
     health: systemHealth,
     condition,

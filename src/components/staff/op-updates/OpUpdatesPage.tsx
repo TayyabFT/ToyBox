@@ -10,7 +10,6 @@ import { useStaffOperationalUpdates } from "./useStaffOperationalUpdates";
 
 export function OpUpdatesPage() {
   const {
-    header,
     tabs,
     broadcast,
     feedItems,
@@ -57,7 +56,6 @@ export function OpUpdatesPage() {
   return (
     <div className="space-y-6 p-8">
       <OpUpdatesGreeting
-        header={header}
         activeFilter={activeFilter}
         tabs={tabs}
         onFilterChange={setActiveFilter}

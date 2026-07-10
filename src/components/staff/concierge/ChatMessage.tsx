@@ -12,7 +12,12 @@ export function ChatMessage({
   const isOwnMessage =
     viewerRole === "member"
       ? message.sender === "member"
-      : message.sender === "staff";
+      : message.sender === "staff" || message.sender === "admin";
+
+  const incomingBubbleClass =
+    message.sender === "admin"
+      ? "rounded-tl-sm border border-accent/14 bg-accent/7"
+      : "rounded-tl-sm border border-teal/14 bg-teal/7";
 
   return (
     <div
@@ -25,7 +30,7 @@ export function ChatMessage({
         className={`max-w-[85%] rounded-xl px-4 py-3 text-foreground ${
           isOwnMessage
             ? "rounded-tr-sm border border-accent/10 bg-accent/7"
-            : "rounded-tl-sm border border-teal/14 bg-teal/7"
+            : incomingBubbleClass
         }`}
       >
         <p className="font-roboto text-[12px] leading-relaxed tracking-[0.02em]">

@@ -1,7 +1,8 @@
 import { VehicleDetailAlert } from "./VehicleDetailAlert";
+import { VehicleDetailImage } from "./VehicleDetailImage";
+import { VehicleDetailNotes } from "./VehicleDetailNotes";
 import { VehicleInfoGrid } from "./VehicleInfoGrid";
 import { HealthConditionGrid } from "./HealthConditionGrid";
-import { ServiceHistory } from "./ServiceHistory";
 // import { QuickActions } from "./QuickActions";
 // import { StaffNote } from "./StaffNote";
 import type { VehicleDetail } from "./types";
@@ -27,6 +28,7 @@ export function VehicleDetailPanel({
 
   return (
     <section className="overflow-hidden rounded-2xl border border-accent/12 bg-card">
+      <VehicleDetailImage imageUrl={detail.imageUrl} name={detail.name} />
       <VehicleDetailAlert isOverdue={detail.isOverdue} />
 
       <VehicleInfoGrid
@@ -42,9 +44,7 @@ export function VehicleDetailPanel({
         condition={detail.condition}
       />
 
-      <div className="border-t border-accent/10 px-5 py-6 sm:px-6 sm:py-7">
-        <ServiceHistory entries={detail.serviceHistory} />
-      </div>
+      <VehicleDetailNotes notes={detail.notes} />
     </section>
   );
 }

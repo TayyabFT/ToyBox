@@ -1999,6 +1999,38 @@ export function Building({
   );
 }
 
+export function NavClubhouse({
+  active,
+  inverted,
+  stroke: strokeOverride,
+  className,
+}: SvgIconProps) {
+  const stroke = getNavStroke(active, inverted, strokeOverride);
+
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.75 7L7 1.75L12.25 7"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+      <path
+        d="M2.91675 5.83337V11.6667H11.0834V5.83337"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+    </svg>
+  );
+}
+
 export function Wrench({
   active,
   inverted,
@@ -2792,6 +2824,59 @@ export function EditPencil({ className, color = "#C9A84C" }: TopbarIconProps) {
   );
 }
 
+export function ActionGarage({ className, color = "#D4A847" }: TopbarIconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+      <path
+        d="M2.25 6.75L9 2.25L15.75 6.75V15C15.75 15.3978 15.592 15.7794 15.3107 16.0607C15.0294 16.342 14.6478 16.5 14.25 16.5H3.75C3.35218 16.5 2.97064 16.342 2.68934 16.0607C2.40804 15.7794 2.25 15.3978 2.25 15V6.75Z"
+        stroke={color}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+export function ActionConcierge({ className, color = "#D4A847" }: TopbarIconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+      <path
+        d="M15.75 9C15.75 12.3 12.75 15 9 15C7.9694 15.0083 6.94815 14.804 6 14.4L2.25 15.75L3.6 12.6C2.76729 11.5806 2.29293 10.3156 2.25 9C2.25 5.7 5.25 3 9 3C12.75 3 15.75 5.7 15.75 9Z"
+        stroke={color}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+export function ActionBook({ className, color = "#D4A847" }: TopbarIconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+      <path
+        d="M14.25 3H3.75C2.92157 3 2.25 3.67157 2.25 4.5V15C2.25 15.8284 2.92157 16.5 3.75 16.5H14.25C15.0784 16.5 15.75 15.8284 15.75 15V4.5C15.75 3.67157 15.0784 3 14.25 3Z"
+        stroke={color}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
+export function ActionSource({ className, color = "#D4A847" }: TopbarIconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+      <path
+        d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
+        stroke={color}
+        strokeWidth="1.2"
+      />
+      <path
+        d="M15.75 15.75L12.4875 12.4875"
+        stroke={color}
+        strokeWidth="1.2"
+      />
+    </svg>
+  );
+}
+
 export type DetailGlyphName =
   | "mail"
   | "phone"
@@ -3159,3 +3244,1183 @@ export function CaptureServiceSignOff({
     </svg>
   );
 }
+
+type MemberVehicleRequestIconProps = {
+  className?: string;
+  highlighted?: boolean;
+};
+
+const MEMBER_REQUEST_ICON_MUTED = "#3A3A42";
+const MEMBER_REQUEST_ICON_ACCENT = "#FB923C";
+const MEMBER_REQUEST_ICON_GOLD = "#C9A86C";
+
+export function MemberVehicleTransportIcon({
+  className,
+  highlighted = false,
+}: MemberVehicleRequestIconProps) {
+  const activeStroke = highlighted ? MEMBER_REQUEST_ICON_ACCENT : MEMBER_REQUEST_ICON_MUTED;
+  const trackStroke = highlighted ? MEMBER_REQUEST_ICON_GOLD : MEMBER_REQUEST_ICON_MUTED;
+
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M3 10C3 6.13 6.13 3 10 3"
+        stroke={activeStroke}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 3C13.87 3 17 6.13 17 10C17 13.87 13.87 17 10 17"
+        stroke={trackStroke}
+        strokeOpacity={0.4}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+      />
+      <path
+        d="M10 7V10L12.5 12.5"
+        stroke={activeStroke}
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberVehicleDetailingIcon({
+  className,
+  highlighted = false,
+}: MemberVehicleRequestIconProps) {
+  const fill = highlighted ? MEMBER_REQUEST_ICON_GOLD : MEMBER_REQUEST_ICON_MUTED;
+
+  return (
+    <svg
+      width="19"
+      height="19"
+      viewBox="0 0 19 19"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <mask
+        id="member-vehicle-detailing-mask"
+        style={{ maskType: "luminance" }}
+        maskUnits="userSpaceOnUse"
+        x="0"
+        y="0"
+        width="19"
+        height="19"
+      >
+        <path d="M0 0H18.8423V18.8423H0V0Z" fill="white" />
+      </mask>
+      <g mask="url(#member-vehicle-detailing-mask)">
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M7.11785 6.49524C6.0618 6.51897 5.0181 6.57326 4.35996 6.69756C4.16385 6.73459 3.94546 6.81344 3.72742 7.06893C3.4689 7.37188 2.90725 8.52885 2.59291 9.21448C2.56819 9.26835 2.5435 9.32182 2.51835 9.37463H2.05225L2.22166 9.05284C2.24376 9.01086 2.21684 8.95904 2.17121 8.95663C1.31119 8.91123 0.500239 9.09112 0.0649182 9.56559C-0.0279249 9.66681 -0.0216091 9.82844 0.088302 9.90858C0.411372 10.1442 0.964148 10.204 1.66148 10.182C1.70827 10.1805 1.75018 10.1513 1.77001 10.1068L1.87479 9.87154H2.23907C2.18887 9.94338 2.13406 10.0129 2.07299 10.0797C1.94875 10.2157 1.67038 10.3534 1.4007 10.4868C1.23439 10.5691 1.07128 10.6498 0.949745 10.7274C0.914646 10.7498 0.879946 10.772 0.845889 10.7938C0.568104 10.9722 0.381636 11.227 0.25648 11.5234C0.16882 11.731 0.111238 11.959 0.0734272 12.1956C0.000883567 12.6495 0.00111614 13.1346 0.0013233 13.5668C0.0013779 13.6807 0.0014306 13.7909 0.000151145 13.8958L7.63295e-05 14.0469C-0.000152457 14.3553 -0.000389899 14.6753 0.00774171 14.9985C0.0263236 15.737 0.088607 16.4917 0.29456 17.1604C0.29456 17.7017 0.416377 18.8417 1.13115 18.8417H3.53305C4.03465 18.8643 4.12175 17.9736 4.12175 17.6645H14.7206C14.7206 18.2827 14.7206 18.8417 15.3094 18.8417H17.7113C18.1733 18.8417 18.5479 18.1497 18.5479 17.2961V17.1604C18.5534 17.1427 18.558 17.1246 18.5619 17.1063C18.782 16.0689 18.8423 14.9244 18.8423 13.8958C18.8295 12.846 18.8097 11.316 17.9966 10.7938C17.963 10.7723 17.9288 10.7505 17.8943 10.7284L17.8927 10.7274C17.7712 10.6498 17.6081 10.5691 17.4417 10.4868C17.172 10.3534 16.8937 10.2157 16.7695 10.0797C16.7104 10.015 16.6572 9.94791 16.6083 9.87861L16.9618 9.87855L17.0665 10.1138C17.0864 10.1583 17.1283 10.1875 17.1751 10.189C17.8724 10.2111 18.4252 10.1512 18.7483 9.91558C18.8582 9.83545 18.8645 9.67382 18.7716 9.5726C18.3363 9.09812 17.5254 8.9183 16.6654 8.96364C16.6197 8.96605 16.5928 9.01787 16.6149 9.05985L16.7843 9.3817H16.3274C16.3011 9.32653 16.2753 9.27077 16.2495 9.21448C15.9352 8.52885 15.3735 7.37188 15.115 7.06893C14.897 6.81344 14.6798 6.72759 14.4825 6.69756C14.3443 6.6766 14.2003 6.65758 14.0515 6.64038C14.0258 6.7585 13.9943 6.87438 13.9572 6.98779C14.2896 7.02577 14.5319 7.06828 14.6342 7.1145C15.0288 7.29292 15.6459 8.46167 16.1748 9.83533C16.2428 10.0117 16.1069 10.1989 15.9241 10.1854C10.9281 9.96987 7.90687 9.97782 2.91842 10.1856C2.73566 10.199 2.59985 10.0119 2.66749 9.83539C3.19357 8.46308 3.79416 7.30187 4.20851 7.1145C4.49309 6.9859 5.83654 6.88616 7.19328 6.83181C7.16284 6.7217 7.13758 6.60941 7.11785 6.49524ZM2.91842 17.1063C2.85209 16.567 2.30352 16.054 1.65931 15.788C1.3066 15.6423 0.923048 15.484 0.571073 15.2545C0.59614 15.8015 0.706073 16.383 1.49299 16.6385L2.91842 17.1063ZM1.09349 12.3462L0.983567 12.3157C0.893136 12.2905 0.795922 12.3137 0.753962 12.4015C0.704077 12.5059 0.661405 12.6526 0.627796 12.7935C0.561158 13.0728 0.596877 13.2743 0.798836 13.5808C1.17777 14.1556 1.77006 14.1556 2.66749 14.1556C3.23864 14.1556 3.87957 13.9636 4.12187 13.8267C3.63796 13.053 2.4193 12.7145 1.09349 12.3462ZM15.9057 17.1063C15.9721 16.567 16.5309 16.054 17.1751 15.788C17.5278 15.6423 17.9113 15.484 18.2634 15.2545C18.2383 15.8015 18.1181 16.383 17.3311 16.6385L15.9057 17.1063ZM14.7206 13.8267C15.2179 13.0316 16.4909 12.6707 17.8589 12.2902C17.9493 12.2652 18.0466 12.2883 18.0885 12.3761C18.1383 12.4805 18.181 12.6272 18.2147 12.7681C18.2813 13.0474 18.2456 13.249 18.0436 13.5553C17.6646 14.1303 17.0665 14.1328 16.1748 14.1303C15.6097 14.1303 14.9629 13.9636 14.7206 13.8267ZM5.75737 16.4868C5.52611 16.4868 4.71057 16.6626 4.71057 16.8794C4.71057 16.9878 4.80431 17.0757 4.91993 17.0757H13.9223C14.038 17.0757 14.1317 16.9878 14.1317 16.8794C14.1317 16.6626 13.3162 16.4868 13.0849 16.4868H5.75737ZM4.71057 13.8371C4.71057 13.6746 4.84238 13.5427 5.00498 13.5427H13.8373C13.9999 13.5427 14.1317 13.6746 14.1317 13.8371C14.1317 14.6501 13.4726 15.3092 12.6597 15.3092H6.18262C5.36963 15.3092 4.71057 14.6501 4.71057 13.8371Z"
+          fill={fill}
+        />
+        <path
+          fillRule="evenodd"
+          clipRule="evenodd"
+          d="M16.121 1.17744C15.8678 1.17744 15.625 1.27803 15.4459 1.45706L13.9415 2.96151L14.1316 3.15157L13.3351 3.94806L13.521 4.1339C13.6383 4.2512 13.6383 4.44139 13.521 4.55869L13.3191 4.7605C13.4632 5.10778 13.5428 5.48861 13.5428 5.88802C13.5428 7.51399 12.2246 8.83212 10.5986 8.83212C8.97268 8.83212 7.65454 7.51399 7.65454 5.88802C7.65454 4.26203 8.97268 2.94391 10.5986 2.94391C10.998 2.94391 11.3789 3.02344 11.7262 3.16754L11.928 2.96572C12.0453 2.84842 12.2355 2.84842 12.3527 2.96572L12.5386 3.15157L13.3351 2.35509L13.5251 2.54515L15.0296 1.0407C15.3191 0.751238 15.7117 0.588623 16.121 0.588623H16.2069C17.0119 0.588623 17.6645 1.2412 17.6645 2.04619C17.6645 2.29985 17.5983 2.54912 17.4724 2.76935L17.1784 3.28393C16.9652 3.65716 17.2347 4.12155 17.6645 4.12155H18.5477C18.7103 4.12155 18.8421 4.25337 18.8421 4.41596C18.8421 4.57856 18.7103 4.71037 18.5477 4.71037H17.6645C16.7825 4.71037 16.2296 3.75757 16.6672 2.99179L16.9612 2.47721C17.0362 2.34595 17.0757 2.19738 17.0757 2.04619C17.0757 1.5664 16.6867 1.17744 16.2069 1.17744H16.121ZM10.7645 4.12923C10.7099 4.12415 10.6546 4.12155 10.5986 4.12155C9.62303 4.12155 8.83218 4.91243 8.83218 5.88802C8.83218 6.86363 9.62303 7.65448 10.5986 7.65448C11.5743 7.65448 12.3651 6.86363 12.3651 5.88802C12.3651 5.8321 12.3625 5.77679 12.3575 5.7222L11.3439 6.73574C10.904 7.17565 10.1908 7.17565 9.75092 6.73574C9.31101 6.29583 9.31101 5.58266 9.75092 5.14278L10.7645 4.12923Z"
+          fill={fill}
+        />
+        <path
+          d="M5.00501 1.76648L5.4026 2.84094L6.47707 3.23853L5.4026 3.63612L5.00501 4.71059L4.60742 3.63612L3.53296 3.23853L4.60742 2.84094L5.00501 1.76648Z"
+          fill={fill}
+        />
+        <path
+          d="M1.4721 4.71057L1.71065 5.35525L2.35533 5.5938L1.71065 5.83236L1.4721 6.47704L1.23354 5.83236L0.588867 5.5938L1.23354 5.35525L1.4721 4.71057Z"
+          fill={fill}
+        />
+        <path
+          d="M1.76631 1.17737L1.92535 1.60715L2.35513 1.76619L1.92535 1.92522L1.76631 2.35501L1.60728 1.92522L1.17749 1.76619L1.60728 1.60715L1.76631 1.17737Z"
+          fill={fill}
+        />
+      </g>
+    </svg>
+  );
+}
+
+export function MemberVehicleMaintenanceIcon({
+  className,
+  highlighted = false,
+}: MemberVehicleRequestIconProps) {
+  const fill = highlighted ? MEMBER_REQUEST_ICON_GOLD : MEMBER_REQUEST_ICON_MUTED;
+
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.00371 18.9759C1.54895 19.521 2.48695 19.5506 3.04121 18.9963L8.73918 13.2983C9.13078 13.4481 9.55578 13.5304 10 13.5304C11.9496 13.5304 13.5305 11.9496 13.5305 9.99995C13.5305 9.4562 13.4074 8.94136 13.1879 8.48159L10.4895 11.18H9.51328L8.82305 10.4894V9.51362L11.5227 6.81401C11.0617 6.59331 10.5453 6.46948 10 6.46948C8.05039 6.46948 6.46953 8.05034 6.46953 9.99995C6.46953 10.4442 6.55184 10.8692 6.70164 11.2608L1.00371 16.9588C0.44668 17.5158 0.44668 18.4189 1.00371 18.9759Z"
+        fill={fill}
+      />
+      <path
+        d="M20 11.25V8.75L18.6348 8.5793C18.5402 8.00273 18.3898 7.44531 18.1891 6.9125L19.2852 6.08242L18.0352 3.91758L16.7668 4.45273C16.4012 4.00742 15.9926 3.59883 15.5473 3.2332L16.0824 1.96484L13.9176 0.714844L13.0875 1.81094C12.5547 1.61016 11.9973 1.45977 11.4207 1.36523L11.25 0H8.75L8.5793 1.36523C8.00273 1.45977 7.44531 1.61016 6.9125 1.81094L6.08242 0.714844L3.91758 1.96484L4.45273 3.2332C4.00742 3.59883 3.59883 4.00742 3.2332 4.45273L1.96484 3.91758L0.714844 6.08242L1.81094 6.9125C1.61016 7.44531 1.45977 8.00273 1.36523 8.5793L0 8.75V11.25L1.36523 11.4207C1.45977 11.9973 1.61016 12.5547 1.81094 13.0875L0.714844 13.9176L1.32715 14.978L3.96754 12.3377C3.68539 11.6123 3.53027 10.8239 3.53027 10C3.53027 6.43258 6.43258 3.53027 10 3.53027C13.5674 3.53027 16.4697 6.43258 16.4697 10C16.4697 13.5674 13.5674 16.4697 10 16.4697C9.17605 16.4697 8.38781 16.3145 7.66246 16.0323L5.02199 18.6728L6.08242 19.2852L6.9125 18.1891C7.44531 18.3898 8.00273 18.5402 8.5793 18.6348L8.75 20H11.25L11.4207 18.6348C11.9973 18.5402 12.5547 18.3898 13.0875 18.1891L13.9176 19.2852L16.0824 18.0352L15.5473 16.7668C15.9926 16.4012 16.4012 15.9926 16.7668 15.5473L18.0352 16.0824L19.2852 13.9176L18.1891 13.0875C18.3898 12.5547 18.5402 11.9973 18.6348 11.4207L20 11.25Z"
+        fill={fill}
+      />
+    </svg>
+  );
+}
+
+export function MemberVehicleSourcingIcon({
+  className,
+  highlighted = false,
+}: MemberVehicleRequestIconProps) {
+  const fill = highlighted ? MEMBER_REQUEST_ICON_GOLD : MEMBER_REQUEST_ICON_MUTED;
+
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M19.8529 16.3664C20.3434 15.4021 20.1977 14.1973 19.3908 13.3909C18.3886 12.3883 16.7625 12.3883 15.7605 13.3909C14.7579 14.3931 14.7579 16.0192 15.7605 17.0212C16.5667 17.8281 17.7715 17.9741 18.736 17.4833L20.2107 18.9582L21.3278 17.8411L19.8529 16.3664ZM17.5758 16.1934C17.0303 16.1934 16.5883 15.7514 16.5883 15.2062C16.5883 14.6606 17.0303 14.2187 17.5758 14.2187C18.1211 14.2187 18.563 14.6606 18.563 15.2062C18.563 15.7514 18.1211 16.1934 17.5758 16.1934Z"
+        fill={fill}
+      />
+      <path
+        d="M13.4287 16.5885V14.2187C13.4287 12.4807 14.8503 11.0591 16.5883 11.0591H21.3278V4.73962H15.0084L10.2688 9.47917L2.36963 11.0591V16.5885H4.34436V16.1935C4.34436 14.0159 6.11624 12.244 8.29407 12.244C10.4719 12.244 12.2438 14.0159 12.2438 16.1935V16.5885H13.4287Z"
+        fill={fill}
+      />
+      <path
+        d="M8.29411 13.429C6.7675 13.429 5.5293 14.6672 5.5293 16.1935C5.5293 17.7201 6.7675 18.9584 8.29411 18.9584C9.82072 18.9584 11.0589 17.7201 11.0589 16.1935C11.0589 14.6672 9.82072 13.429 8.29411 13.429ZM8.29411 17.3784C7.64006 17.3784 7.10923 16.8478 7.10923 16.1935C7.10923 15.5395 7.64006 15.0086 8.29411 15.0086C8.94817 15.0086 9.479 15.5395 9.479 16.1935C9.479 16.8478 8.94817 17.3784 8.29411 17.3784Z"
+        fill={fill}
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageChevronRight({
+  className,
+  color = "currentColor",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="11"
+      height="11"
+      viewBox="0 0 12 12"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M4.5 2.5L8 6L4.5 9.5"
+        stroke={color}
+        strokeWidth="1.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageRefreshIcon({
+  className,
+  color = "currentColor",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M13.5 8A5.5 5.5 0 1 1 8 2.5"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M13.5 3.5V6.5H10.5"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageSuccessCheck({
+  className,
+  color = "#0D0D0D",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="28"
+      height="28"
+      viewBox="0 0 28 28"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M7 14.5L11.5 19L21 9.5"
+        stroke={color}
+        strokeWidth="2.4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageTransportSuccessCheck({
+  className,
+  color = "white",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="26"
+      height="26"
+      viewBox="0 0 26 26"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M6.5 13.5L10.5 17.5L19.5 8"
+        stroke={color}
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageReviewTargetIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="22"
+      height="22"
+      viewBox="0 0 22 22"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
+        stroke={color}
+        strokeWidth="1.5"
+      />
+      <path
+        d="M11 15C13.2091 15 15 13.2091 15 11C15 8.79086 13.2091 7 11 7C8.79086 7 7 8.79086 7 11C7 13.2091 8.79086 15 11 15Z"
+        stroke={color}
+        strokeWidth="1.4"
+      />
+      <path d="M11 1V4.5" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M11 17.5V21" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M1 11H4.5" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+      <path d="M17.5 11H21" stroke={color} strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function MemberGarageConciergeChatIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="15"
+      height="13"
+      viewBox="0 0 15 13"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M1.1499 0.650391H13.1499C13.2825 0.650391 13.4097 0.703069 13.5035 0.796837C13.5972 0.890606 13.6499 1.01778 13.6499 1.15039V8.15039C13.6499 8.283 13.5972 8.41018 13.5035 8.50394C13.4097 8.59771 13.2825 8.65039 13.1499 8.65039H3.6499L0.649902 11.1504V1.15039C0.649902 1.01778 0.702581 0.890606 0.796349 0.796837C0.890117 0.703069 1.01729 0.650391 1.1499 0.650391Z"
+        stroke={color}
+        strokeWidth="1.3"
+      />
+    </svg>
+  );
+}
+
+export function MemberServiceCentreStarIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M9.00002 2L10.5 5.5H14L11.3 7.7L12.3 11L9.00002 9.2L5.70002 11L6.70002 7.7L3.90002 5.5H7.50002L9.00002 2Z" stroke="#C9A84C" stroke-width="1.3" stroke-linejoin="round"/>
+    <path d="M9 13V16M6 16H12" stroke="#C9A84C" stroke-width="1.3" stroke-linecap="round"/>
+    </svg>
+    
+  );
+}
+
+export function MemberServiceCentreWorkshopIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg  className={className} width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M15 8H3C2.44772 8 2 8.44772 2 9V15C2 15.5523 2.44772 16 3 16H15C15.5523 16 16 15.5523 16 15V9C16 8.44772 15.5523 8 15 8Z" stroke="#F1EAD7" stroke-opacity="0.6" stroke-width="1.3"/>
+    <path d="M5 8V6C5 4.93913 5.42143 3.92172 6.17157 3.17157C6.92172 2.42143 7.93913 2 9 2C10.0609 2 11.0783 2.42143 11.8284 3.17157C12.5786 3.92172 13 4.93913 13 6V8" stroke="#F1EAD7" stroke-opacity="0.6" stroke-width="1.3" stroke-linecap="round"/>
+    <path d="M9 13.5C9.82843 13.5 10.5 12.8284 10.5 12C10.5 11.1716 9.82843 10.5 9 10.5C8.17157 10.5 7.5 11.1716 7.5 12C7.5 12.8284 8.17157 13.5 9 13.5Z" fill="#F1EAD7" fill-opacity="0.6"/>
+    </svg>
+    
+  );
+}
+
+export function MemberGarageReviewLockIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M5.5 8V5.75C5.5 3.95507 6.95507 2.5 8.75 2.5H9.25C11.0449 2.5 12.5 3.95507 12.5 5.75V8"
+        stroke={color}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.5 8H13.5C14.3284 8 15 8.67157 15 9.5V13.5C15 14.3284 14.3284 15 13.5 15H4.5C3.67157 15 3 14.3284 3 13.5V9.5C3 8.67157 3.67157 8 4.5 8Z"
+        stroke={color}
+        strokeWidth="1.3"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 11.25V12.75"
+        stroke={color}
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageSourcingReviewIcon({
+  className,
+  color = "#C9A84C",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
+        stroke={color}
+        strokeWidth="1.275"
+      />
+      <path
+        d="M15.7498 15.75L12.4873 12.4875"
+        stroke={color}
+        strokeWidth="1.275"
+      />
+    </svg>
+  );
+}
+
+export function MemberGarageUploadOutlineIcon({
+  className,
+  color = "currentColor",
+}: TopbarIconProps) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M7 9.91667V4.08333"
+        stroke={color}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+      />
+      <path
+        d="M4.66667 6.41667L7 4.08333L9.33333 6.41667"
+        stroke={color}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M2.91667 11.0833H11.0833"
+        stroke={color}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function MemberVehicleDocumentFileIcon({
+  className,
+  color = "currentColor",
+  showCheck = false,
+}: TopbarIconProps & { showCheck?: boolean }) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M10.5 1.5H4.5C3.67157 1.5 3 2.17157 3 3V15C3 15.8284 3.67157 16.5 4.5 16.5H13.5C14.3284 16.5 15 15.8284 15 15V6L10.5 1.5Z"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10.5 1.5V6H15"
+        stroke={color}
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+      />
+      {showCheck ? (
+        <path
+          d="M6.75 11.25L7.875 12.375L11.25 9"
+          stroke={color}
+          strokeWidth="1.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      ) : (
+        <>
+          <path d="M6.75 9.75H11.25" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+          <path d="M6.75 12H9.75" stroke={color} strokeWidth="1.2" strokeLinecap="round" />
+        </>
+      )}
+    </svg>
+  );
+}
+
+export function HelpCall({
+  stroke = "#0A0806",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M18.3332 14.1V16.6C18.3341 16.8321 18.2866 17.0618 18.1936 17.2745C18.1006 17.4871 17.9643 17.678 17.7933 17.8349C17.6222 17.9918 17.4203 18.1113 17.2005 18.1856C16.9806 18.26 16.7477 18.2876 16.5165 18.2667C13.9522 17.9881 11.489 17.1118 9.32486 15.7084C7.31139 14.4289 5.60431 12.7219 4.32486 10.7084C2.91651 8.53438 2.04007 6.0592 1.76653 3.48337C1.7457 3.25293 1.77309 3.02067 1.84695 2.80139C1.9208 2.58211 2.03951 2.38061 2.1955 2.20972C2.3515 2.03883 2.54137 1.9023 2.75302 1.80881C2.96468 1.71532 3.19348 1.66692 3.42486 1.66671H5.92486C6.32928 1.66273 6.72136 1.80594 7.028 2.06965C7.33464 2.33336 7.53493 2.69958 7.59153 3.10004C7.69705 3.9001 7.89274 4.68565 8.17486 5.44171C8.28698 5.73998 8.31125 6.06414 8.24478 6.37577C8.17832 6.68741 8.02392 6.97347 7.79986 7.20004L6.74153 8.25837C7.92783 10.3447 9.65524 12.0721 11.7415 13.2584L12.7999 12.2C13.0264 11.976 13.3125 11.8216 13.6241 11.7551C13.9358 11.6887 14.2599 11.7129 14.5582 11.825C15.3143 12.1072 16.0998 12.3029 16.8999 12.4084C17.3047 12.4655 17.6744 12.6694 17.9386 12.9813C18.2029 13.2932 18.3433 13.6914 18.3332 14.1Z"
+        stroke={stroke}
+        strokeWidth="1.33333"
+      />
+    </svg>
+  );
+}
+
+export function HelpMessage({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M17.5 10C17.5 13.6667 14.1667 16.6667 10 16.6667C8.85489 16.6759 7.72017 16.4489 6.66667 16L2.5 17.5L4 14C3.07477 12.8673 2.5477 11.4618 2.5 10C2.5 6.33337 5.83333 3.33337 10 3.33337C14.1667 3.33337 17.5 6.33337 17.5 10Z"
+        stroke={stroke}
+        strokeWidth="1.33333"
+      />
+    </svg>
+  );
+}
+
+export function HelpRequest({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M11.6663 1.66663H4.99967C4.55765 1.66663 4.13372 1.84222 3.82116 2.15478C3.5086 2.46734 3.33301 2.89127 3.33301 3.33329V16.6666C3.33301 17.1087 3.5086 17.5326 3.82116 17.8451C4.13372 18.1577 4.55765 18.3333 4.99967 18.3333H14.9997C15.4417 18.3333 15.8656 18.1577 16.1782 17.8451C16.4907 17.5326 16.6663 17.1087 16.6663 16.6666V6.66663L11.6663 1.66663Z"
+        stroke={stroke}
+        strokeWidth="1.33333"
+      />
+      <path
+        d="M11.667 1.66663V6.66663H16.667"
+        stroke={stroke}
+        strokeWidth="1.33333"
+      />
+    </svg>
+  );
+}
+
+export function HelpTopicVehicles({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden
+      className={className ?? "size-5"}
+    >
+      <path
+        d="M4.16699 14.1667H15.8337L14.5837 8.33337H5.41699L4.16699 14.1667Z"
+        stroke={stroke}
+      />
+      <path
+        d="M6.25 15.8333C6.94036 15.8333 7.5 15.2736 7.5 14.5833C7.5 13.8929 6.94036 13.3333 6.25 13.3333C5.55964 13.3333 5 13.8929 5 14.5833C5 15.2736 5.55964 15.8333 6.25 15.8333Z"
+        stroke={stroke}
+      />
+      <path
+        d="M13.75 15.8333C14.4404 15.8333 15 15.2736 15 14.5833C15 13.8929 14.4404 13.3333 13.75 13.3333C13.0596 13.3333 12.5 13.8929 12.5 14.5833C12.5 15.2736 13.0596 15.8333 13.75 15.8333Z"
+        stroke={stroke}
+      />
+    </svg>
+  );
+}
+
+export function HelpTopicEvents({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={className ?? "size-5"}
+    >
+      <path
+        d="M12.6667 2.66663H3.33333C2.59695 2.66663 2 3.26358 2 3.99996V13.3333C2 14.0697 2.59695 14.6666 3.33333 14.6666H12.6667C13.403 14.6666 14 14.0697 14 13.3333V3.99996C14 3.26358 13.403 2.66663 12.6667 2.66663Z"
+        stroke={stroke}
+      />
+    </svg>
+  );
+}
+
+export function HelpTopicBilling({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={className ?? "size-5"}
+    >
+      <path
+        d="M12.6667 3.33337H3.33333C2.59695 3.33337 2 3.93033 2 4.66671V11.3334C2 12.0698 2.59695 12.6667 3.33333 12.6667H12.6667C13.403 12.6667 14 12.0698 14 11.3334V4.66671C14 3.93033 13.403 3.33337 12.6667 3.33337Z"
+        stroke={stroke}
+      />
+      <path d="M2 6.66663H14" stroke={stroke} />
+    </svg>
+  );
+}
+
+export function HelpTopicMembership({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden
+      className={className ?? "size-5"}
+    >
+      <g clipPath="url(#help-topic-membership-clip)">
+        <path
+          d="M7.99967 1.33337L9.99967 6.00004H14.6663L10.9997 8.66671L12.333 13.3334L7.99967 10.6667L3.66634 13.3334L4.99967 8.66671L1.33301 6.00004H5.99967L7.99967 1.33337Z"
+          stroke={stroke}
+        />
+      </g>
+      <defs>
+        <clipPath id="help-topic-membership-clip">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function HelpSearch({
+  stroke = "#D4A847",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M8.25 14.25C11.5637 14.25 14.25 11.5637 14.25 8.25C14.25 4.93629 11.5637 2.25 8.25 2.25C4.93629 2.25 2.25 4.93629 2.25 8.25C2.25 11.5637 4.93629 14.25 8.25 14.25Z"
+        stroke={stroke}
+        strokeWidth="1.275"
+      />
+      <path
+        d="M15.7498 15.75L12.4873 12.4875"
+        stroke={stroke}
+        strokeWidth="1.275"
+      />
+    </svg>
+  );
+}
+
+export function HelpFaqChevron({
+  open = false,
+  stroke = "#D4A847",
+  className,
+}: {
+  open?: boolean;
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className={`shrink-0 transition-transform ${open ? "rotate-180" : ""} ${className ?? ""}`}
+    >
+      <path
+        d="M3.5 5.25L7 8.75L10.5 5.25"
+        stroke={stroke}
+        strokeWidth="1.1"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function getNavFill(active?: boolean, inverted?: boolean, fill?: string) {
+  if (fill) return fill;
+  if (inverted && active) return "var(--dark)";
+  return active ? "var(--nav-icon-active)" : "var(--muted)";
+}
+
+export function TermsPrivacy({
+  active,
+  inverted,
+  stroke: fillOverride,
+  className,
+}: SvgIconProps) {
+  const fill = getNavFill(active, inverted, fillOverride);
+
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 13 13"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <g clipPath="url(#terms-privacy-clip)">
+        <path
+          d="M11.6924 2.11755L6.84023 0.0939209C6.64219 0.00759277 6.41367 0.00759277 6.21309 0.0939209L1.36348 2.11501C1.06133 2.24197 0.863281 2.53396 0.863281 2.8615V7.34802C0.863281 10.4685 3.40488 13.0051 6.52539 13.0051C9.6459 13.0051 12.1875 10.466 12.1875 7.34802V2.8615C12.1875 2.5365 11.992 2.24451 11.6924 2.11755ZM11.1719 7.35056C11.1719 9.90994 9.08477 11.992 6.52539 11.992C3.96602 11.992 1.87891 9.90994 1.87891 7.35056V3.00115L6.52539 1.06384L11.1719 3.00115V7.35056Z"
+          fill={fill}
+        />
+        <path
+          d="M4.62617 6.11916C4.45098 5.9008 4.13105 5.86525 3.91269 6.04045C3.69433 6.21564 3.65879 6.53556 3.83398 6.75392L4.97148 8.17326C4.97402 8.1758 4.97656 8.17834 4.97656 8.18088C4.9791 8.18595 4.98418 8.18849 4.98672 8.19357C4.98926 8.19611 4.9918 8.20119 4.99687 8.20373L5.00957 8.21642C5.01211 8.21896 5.01719 8.2215 5.01973 8.22658L5.03242 8.23927L5.04258 8.24943C5.04765 8.25197 5.05019 8.25705 5.05527 8.25959C5.06289 8.26466 5.07051 8.27228 5.07812 8.27736C5.08066 8.27736 5.08066 8.2799 5.0832 8.2799C5.09082 8.28498 5.09844 8.29005 5.10351 8.29259C5.10605 8.29513 5.10859 8.29513 5.11113 8.29767C5.11875 8.30021 5.12383 8.30529 5.13144 8.30783C5.13398 8.31037 5.13652 8.31037 5.13906 8.31291C5.14414 8.31545 5.15176 8.31798 5.15683 8.32306C5.15937 8.3256 5.16191 8.3256 5.16445 8.32814C5.16953 8.33068 5.17715 8.33322 5.18223 8.33576C5.18476 8.33576 5.1873 8.3383 5.19238 8.3383C5.19746 8.34084 5.20508 8.34338 5.21015 8.34338C5.21269 8.34338 5.21777 8.34591 5.22031 8.34591C5.22539 8.34845 5.23301 8.34845 5.23808 8.35099C5.24062 8.35099 5.2457 8.35353 5.24824 8.35353C5.25332 8.35607 5.26094 8.35607 5.26601 8.35861C5.26855 8.35861 5.27363 8.36115 5.27617 8.36115C5.28125 8.36115 5.28887 8.36369 5.29394 8.36369C5.29902 8.36369 5.30156 8.36369 5.30664 8.36623C5.31172 8.36623 5.3168 8.36623 5.32441 8.36877H5.36504C5.37773 8.36877 5.39043 8.36877 5.40566 8.36623H5.41582C5.42598 8.36623 5.43613 8.36369 5.44629 8.36369C5.45137 8.36369 5.4539 8.36115 5.45898 8.36115C5.4666 8.35861 5.47676 8.35861 5.48437 8.35607C5.48945 8.35607 5.49453 8.35353 5.49961 8.35099L5.52246 8.34338C5.52754 8.34084 5.53262 8.34084 5.53769 8.3383L5.56055 8.33068L5.57578 8.32306C5.5834 8.32052 5.59101 8.31545 5.59609 8.31291L5.61133 8.30529C5.62402 8.29767 5.63418 8.29259 5.64687 8.28498L9.30566 5.85255C9.53926 5.69767 9.60273 5.38283 9.44785 5.14923C9.29297 4.91564 8.97812 4.85216 8.74453 5.00705L5.47168 7.18302L4.62617 6.11916Z"
+          fill={fill}
+        />
+      </g>
+      <defs>
+        <clipPath id="terms-privacy-clip">
+          <rect width="13" height="13" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function HelpSupport({
+  active,
+  inverted,
+  stroke: strokeOverride,
+  className,
+}: SvgIconProps) {
+  const stroke = getNavStroke(active, inverted, strokeOverride);
+
+  return (
+    <svg
+      width="15"
+      height="14"
+      viewBox="0 0 15 14"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M7.0127 13.5C10.6096 13.5 13.5254 10.5899 13.5254 7C13.5254 3.41015 10.6096 0.5 7.0127 0.5C3.41583 0.5 0.5 3.41015 0.5 7C0.5 10.5899 3.41583 13.5 7.0127 13.5Z"
+        stroke={stroke}
+      />
+      <path
+        d="M4.95508 5.44537C4.95508 4.3419 5.84717 3.44739 6.94765 3.44739C8.04812 3.44739 8.96464 4.20806 8.94026 5.44537C8.96464 7.41028 6.95669 7.02161 6.95669 8.58168"
+        stroke={stroke}
+        strokeLinecap="round"
+      />
+      <path
+        d="M7.03027 10.3739V10.7466"
+        stroke={stroke}
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function AskSteve({
+  active,
+  className,
+}: {
+  active?: boolean;
+  className?: string;
+}) {
+  if (active) {
+    return (
+      <svg
+        width="30"
+        height="30"
+        viewBox="0 0 30 30"
+        fill="none"
+        aria-hidden
+        className={className}
+      >
+        <g filter="url(#ask-steve-active-filter)">
+          <rect
+            x="6"
+            y="4"
+            width="18"
+            height="18"
+            rx="9"
+            fill="url(#ask-steve-active-gradient)"
+            shapeRendering="crispEdges"
+          />
+          <rect
+            x="6.05"
+            y="4.05"
+            width="17.9"
+            height="17.9"
+            rx="8.95"
+            stroke="var(--primary)"
+            strokeWidth="0.1"
+            shapeRendering="crispEdges"
+          />
+        </g>
+        <defs>
+          <filter
+            id="ask-steve-active-filter"
+            x="0"
+            y="0"
+            width="30"
+            height="30"
+            filterUnits="userSpaceOnUse"
+            colorInterpolationFilters="sRGB"
+          >
+            <feFlood floodOpacity="0" result="BackgroundImageFix" />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feOffset dy="2" />
+            <feGaussianBlur stdDeviation="3" />
+            <feComposite in2="hardAlpha" operator="out" />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0.831373 0 0 0 0 0.658824 0 0 0 0 0.278431 0 0 0 0.4 0"
+            />
+            <feBlend
+              mode="normal"
+              in2="BackgroundImageFix"
+              result="effect1_dropShadow"
+            />
+            <feBlend
+              mode="normal"
+              in="SourceGraphic"
+              in2="effect1_dropShadow"
+              result="shape"
+            />
+            <feColorMatrix
+              in="SourceAlpha"
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+              result="hardAlpha"
+            />
+            <feOffset dy="-1" />
+            <feGaussianBlur stdDeviation="1" />
+            <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+            <feColorMatrix
+              type="matrix"
+              values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"
+            />
+            <feBlend mode="normal" in2="shape" result="effect2_innerShadow" />
+          </filter>
+          <radialGradient
+            id="ask-steve-active-gradient"
+            cx="0"
+            cy="0"
+            r="1"
+            gradientUnits="userSpaceOnUse"
+            gradientTransform="translate(15 13) scale(12.7279)"
+          >
+            <stop stopColor="var(--muted)" stopOpacity="0.32" />
+            <stop offset="0.65" stopColor="var(--primary)" stopOpacity="0" />
+          </radialGradient>
+        </defs>
+      </svg>
+    );
+  }
+
+  return (
+    <svg
+      width="30"
+      height="30"
+      viewBox="0 0 30 30"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <g filter="url(#ask-steve-default-filter)">
+        <rect
+          x="6"
+          y="4"
+          width="18"
+          height="18"
+          rx="9"
+          fill="url(#ask-steve-default-gradient)"
+          shapeRendering="crispEdges"
+        />
+        <rect
+          x="6.05"
+          y="4.05"
+          width="17.9"
+          height="17.9"
+          rx="8.95"
+          stroke="#C9A84C"
+          strokeWidth="0.1"
+          shapeRendering="crispEdges"
+        />
+      </g>
+      <defs>
+        <filter
+          id="ask-steve-default-filter"
+          x="0"
+          y="0"
+          width="30"
+          height="30"
+          filterUnits="userSpaceOnUse"
+          colorInterpolationFilters="sRGB"
+        >
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="2" />
+          <feGaussianBlur stdDeviation="3" />
+          <feComposite in2="hardAlpha" operator="out" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0.831373 0 0 0 0 0.658824 0 0 0 0 0.278431 0 0 0 0.4 0"
+          />
+          <feBlend
+            mode="normal"
+            in2="BackgroundImageFix"
+            result="effect1_dropShadow"
+          />
+          <feBlend
+            mode="normal"
+            in="SourceGraphic"
+            in2="effect1_dropShadow"
+            result="shape"
+          />
+          <feColorMatrix
+            in="SourceAlpha"
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+            result="hardAlpha"
+          />
+          <feOffset dy="-1" />
+          <feGaussianBlur stdDeviation="1" />
+          <feComposite in2="hardAlpha" operator="arithmetic" k2="-1" k3="1" />
+          <feColorMatrix
+            type="matrix"
+            values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0"
+          />
+          <feBlend mode="normal" in2="shape" result="effect2_innerShadow" />
+        </filter>
+        <radialGradient
+          id="ask-steve-default-gradient"
+          cx="0"
+          cy="0"
+          r="1"
+          gradientUnits="userSpaceOnUse"
+          gradientTransform="translate(15 13) scale(12.7279)"
+        >
+          <stop stopColor="#B8AE96" stopOpacity="0.32" />
+          <stop offset="0.65" stopColor="#C9A84C" stopOpacity="0" />
+        </radialGradient>
+      </defs>
+    </svg>
+  );
+}
+
+export function AskStevePromptActivity({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <g clipPath="url(#ask-steve-prompt-activity-clip)">
+        <path
+          d="M7.99967 14.6667C11.6816 14.6667 14.6663 11.6819 14.6663 8.00004C14.6663 4.31814 11.6816 1.33337 7.99967 1.33337C4.31778 1.33337 1.33301 4.31814 1.33301 8.00004C1.33301 11.6819 4.31778 14.6667 7.99967 14.6667Z"
+          stroke={stroke}
+          strokeWidth="1.06667"
+        />
+        <path d="M8 4V8L10.6667 9.33333" stroke={stroke} strokeWidth="1.06667" />
+      </g>
+      <defs>
+        <clipPath id="ask-steve-prompt-activity-clip">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function AskStevePromptDrive({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <g clipPath="url(#ask-steve-prompt-drive-clip)">
+        <path
+          d="M14 6.66663C14 11.3333 8 15.3333 8 15.3333C8 15.3333 2 11.3333 2 6.66663C2 5.07533 2.63214 3.5492 3.75736 2.42399C4.88258 1.29877 6.4087 0.666626 8 0.666626C9.5913 0.666626 11.1174 1.29877 12.2426 2.42399C13.3679 3.5492 14 5.07533 14 6.66663Z"
+          stroke={stroke}
+          strokeWidth="1.06667"
+        />
+        <path
+          d="M8 8.66663C9.10457 8.66663 10 7.7712 10 6.66663C10 5.56206 9.10457 4.66663 8 4.66663C6.89543 4.66663 6 5.56206 6 6.66663C6 7.7712 6.89543 8.66663 8 8.66663Z"
+          stroke={stroke}
+          strokeWidth="1.06667"
+        />
+      </g>
+      <defs>
+        <clipPath id="ask-steve-prompt-drive-clip">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function AskStevePromptAcquisition({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <path
+        d="M7.33333 12.6667C10.2789 12.6667 12.6667 10.2789 12.6667 7.33333C12.6667 4.38781 10.2789 2 7.33333 2C4.38781 2 2 4.38781 2 7.33333C2 10.2789 4.38781 12.6667 7.33333 12.6667Z"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+      <path d="M13.9996 14L11.0996 11.1" stroke={stroke} strokeWidth="1.06667" />
+    </svg>
+  );
+}
+
+export function AskStevePromptRecommendations({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <path
+        d="M12.6667 2.66663H3.33333C2.59695 2.66663 2 3.26358 2 3.99996V13.3333C2 14.0697 2.59695 14.6666 3.33333 14.6666H12.6667C13.403 14.6666 14 14.0697 14 13.3333V3.99996C14 3.26358 13.403 2.66663 12.6667 2.66663Z"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+    </svg>
+  );
+}
+
+export function AskStevePromptVehicles({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" aria-hidden className={className ?? "size-4"}>
+      <path
+        d="M3.95801 13.4583H15.0413L13.8538 7.91663H5.14551L3.95801 13.4583Z"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+      <path
+        d="M5.9375 15.0416C6.59334 15.0416 7.125 14.51 7.125 13.8541C7.125 13.1983 6.59334 12.6666 5.9375 12.6666C5.28166 12.6666 4.75 13.1983 4.75 13.8541C4.75 14.51 5.28166 15.0416 5.9375 15.0416Z"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+      <path
+        d="M13.0625 15.0416C13.7183 15.0416 14.25 14.51 14.25 13.8541C14.25 13.1983 13.7183 12.6666 13.0625 12.6666C12.4067 12.6666 11.875 13.1983 11.875 13.8541C11.875 14.51 12.4067 15.0416 13.0625 15.0416Z"
+        stroke={stroke}
+        strokeWidth="1.06667"
+      />
+    </svg>
+  );
+}
+
+export function AskStevePromptAdvisory({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
+      <g clipPath="url(#ask-steve-prompt-advisory-clip)">
+        <path
+          d="M7.99967 1.33337L9.99967 6.00004H14.6663L10.9997 8.66671L12.333 13.3334L7.99967 10.6667L3.66634 13.3334L4.99967 8.66671L1.33301 6.00004H5.99967L7.99967 1.33337Z"
+          stroke={stroke}
+          strokeWidth="1.06667"
+        />
+      </g>
+      <defs>
+        <clipPath id="ask-steve-prompt-advisory-clip">
+          <rect width="16" height="16" fill="white" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+}
+
+export function AskSteveSuggestionArrow({
+  stroke = "currentColor",
+  className,
+}: {
+  stroke?: string;
+  className?: string;
+}) {
+  return (
+    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" aria-hidden className={className}>
+      <g opacity="0.6">
+        <path
+          d="M2.70801 6.50004H10.2913M6.49967 10.2917L10.2913 6.50004L6.49967 2.70837"
+          stroke={stroke}
+          strokeWidth="0.866667"
+        />
+      </g>
+    </svg>
+  );
+}
+

@@ -13,6 +13,21 @@ export const API_ENDPOINTS = {
     readAll: "/api/v1/notifications/inbox/read-all",
     markRead: (id: string | number) => `/api/v1/notifications/inbox/${id}/read`,
   },
+  member: {
+    dashboard: "/api/v1/dashboard",
+    diary: "/api/v1/members/diary",
+  },
+  memberVehicles: {
+    list: "/api/v1/vehicles",
+    detail: (id: string | number) => `/api/v1/vehicles/${id}`,
+  },
+  memberTransport: {
+    requests: "/api/v1/transport/requests",
+  },
+  clubhouse: {
+    spaces: "/api/v1/clubhouse/spaces",
+    overview: "/api/v1/clubhouse/overview",
+  },
   vehicles: {
     inventory: "/api/v1/admin/vehicles/inventory",
     admin: "/api/v1/admin/vehicles",
@@ -83,6 +98,9 @@ export const API_ENDPOINTS = {
     photos: (id: string | number) => `/api/v1/staff/inspections/${id}/photos`,
     submit: (id: string | number) => `/api/v1/staff/inspections/${id}/submit`,
   },
+  staffParking: {
+    slots: "/api/v1/staff/parking/slots",
+  },
   staffHealthReports: {
     vehicles: "/api/v1/staff/health-reports/vehicles",
     vehicleDetail: (id: string | number) =>
@@ -123,20 +141,27 @@ export const API_ENDPOINTS = {
       `/api/v1/admin/chat/${memberId}/read`,
   },
   memberChat: {
-    conversation: "/api/v1/chat/conversation",
     initiate: "/api/v1/chat/initiate",
     messages: "/api/v1/chat/messages",
-    read: "/api/v1/chat/read",
   },
   events: {
-    createevent: "/api/v1/events",
-    getevents: "/api/v1/events/all",
-    getstats: "/api/v1/events/stats",
-    update: (id: string | number) => `/api/v1/events/${id}`,
+    createevent: "/api/v1/admin/events",
+    getevents: "/api/v1/admin/events/all",
+    getstats: "/api/v1/admin/events/stats",
+    update: (id: string | number) => `/api/v1/admin/events/${id}`,
     detail: (id: string | number) => `/api/v1/admin/events/${id}`,
-    delete: (id: string | number) => `/api/v1/events/${id}`,
-    sendUpdate: (id: string | number) => `/api/v1/events/${id}/send-update`,
+    delete: (id: string | number) => `/api/v1/admin/events/${id}`,
+    sendUpdate: (id: string | number) =>
+      `/api/v1/admin/events/${id}/send-update`,
     notes: (id: string | number) => `/api/v1/admin/events/${id}/notes`,
+  },
+  /** Member-facing events — uses the public/optionalAuth routes */
+  memberEvents: {
+    list:      "/api/v1/events",
+    join:      (id: string) => `/api/v1/events/${id}/join`,
+    leave:     (id: string) => `/api/v1/events/${id}/leave`,
+    waitlist:  (id: string) => `/api/v1/events/${id}/waitlist`,
+    detail:    (id: string) => `/api/v1/events/${id}`,
   },
   communications: {
     stats: "/api/v1/admin/communications/stats",
@@ -157,5 +182,12 @@ export const API_ENDPOINTS = {
   adminAnalytics: {
     stats: "/api/v1/admin/analytics/stats",
     dashboard: "/api/v1/admin/analytics",
+  },
+  ai: {
+    conversation: "/api/v1/ai/conversation",
+    conversationReset: "/api/v1/ai/conversation/reset",
+    conversationMessages: (id: string | number) =>
+      `/api/v1/ai/conversations/${id}/messages`,
+    query: "/api/v1/ai/query",
   },
 } as const;

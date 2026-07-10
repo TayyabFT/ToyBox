@@ -41,7 +41,7 @@ export function StatCard({
         ? "text-pink"
         : `text-pink ${statCardHoverLabelClass}`
       : isFeaturedLight
-        ? "text-white/70"
+        ? "text-foreground/70"
         : `text-secondary ${statCardHoverLabelClass}`;
 
   return (
@@ -58,7 +58,7 @@ export function StatCard({
           className={[
             "font-roboto text-[12px] tracking-[0.14em] uppercase",
             isFeaturedLight
-              ? "text-white/70"
+              ? "text-foreground/70"
               : ["text-secondary", statCardHoverLabelClass].join(" "),
           ].join(" ")}
         >
@@ -68,7 +68,7 @@ export function StatCard({
           className={[
             "flex size-10 shrink-0 items-center justify-center rounded-lg border [&_svg]:size-4",
             isFeaturedLight
-              ? "border-white/15 bg-white/10 text-white"
+              ? "border-foreground/15 bg-foreground/10 text-foreground"
               : [
                   "border-accent/18 bg-accent/8 text-accent",
                   statCardHoverIconClass,
@@ -84,7 +84,7 @@ export function StatCard({
           className={[
             "font-copperplate text-[34px] leading-none tracking-[0.02em]",
             isFeaturedLight
-              ? "text-white"
+              ? "text-foreground"
               : ["text-foreground", statCardHoverValueClass].join(" "),
           ].join(" ")}
         >

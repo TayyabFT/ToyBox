@@ -28,8 +28,78 @@ function EmptySectionMessage({ message }: { message: string }) {
   );
 }
 
+const SYSTEM_ALERTS_PREVIEW_COUNT = 6;
+const STAFF_ON_DUTY_PREVIEW_COUNT = 6;
+const SCROLL_THRESHOLD = 10;
+
+function ViewMoreButton({ onClick }: { onClick: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
+    >
+      View more
+    </button>
+  );
+}
+
+type OverviewExpandableListProps<T extends { id: string }> = {
+  items: T[];
+  visibleItems: T[];
+  expanded: boolean;
+  loading: boolean;
+  emptyMessage: string;
+  hasMore: boolean;
+  scrollClassName: string;
+  onViewMore: () => void;
+  renderItem: (item: T) => React.ReactNode;
+};
+
+function OverviewExpandableList<T extends { id: string }>({
+  items,
+  visibleItems,
+  expanded,
+  loading,
+  emptyMessage,
+  hasMore,
+  scrollClassName,
+  onViewMore,
+  renderItem,
+}: OverviewExpandableListProps<T>) {
+  const shouldScroll = expanded && items.length > SCROLL_THRESHOLD;
+
+  return (
+    <div className="flex flex-col">
+      <div
+        className={`space-y-2.5 ${
+          shouldScroll
+            ? `Custom__Scrollbar overflow-y-auto pr-1 ${scrollClassName}`
+            : ""
+        }`}
+      >
+        {!loading && items.length === 0 ? (
+          <EmptySectionMessage message={emptyMessage} />
+        ) : (
+          visibleItems.map((item) => (
+            <div key={item.id}>{renderItem(item)}</div>
+          ))
+        )}
+      </div>
+
+      {hasMore ? (
+        <div className="mt-3 flex justify-end border-t border-accent/8 pt-3">
+          <ViewMoreButton onClick={onViewMore} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export function OverviewPage() {
   const [loading, setLoading] = useState(true);
+  const [showAllAlerts, setShowAllAlerts] = useState(false);
+  const [showAllStaff, setShowAllStaff] = useState(false);
   const [overview, setOverview] = useState<StaffOverviewDisplay>(
     createEmptyStaffOverviewDisplay(),
   );
@@ -46,6 +116,8 @@ export function OverviewPage() {
       setOverview(
         mapStaffOverview(overviewResponse.data, jobsResponse?.data),
       );
+      setShowAllAlerts(false);
+      setShowAllStaff(false);
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
@@ -85,6 +157,22 @@ export function OverviewPage() {
           tone: "green" as const,
         }
       : undefined;
+
+  const visibleAlerts = showAllAlerts
+    ? overview.systemAlerts.items
+    : overview.systemAlerts.items.slice(0, SYSTEM_ALERTS_PREVIEW_COUNT);
+
+  const visibleStaff = showAllStaff
+    ? overview.staffOnDuty.items
+    : overview.staffOnDuty.items.slice(0, STAFF_ON_DUTY_PREVIEW_COUNT);
+
+  const hasMoreAlerts =
+    overview.systemAlerts.items.length > SYSTEM_ALERTS_PREVIEW_COUNT &&
+    !showAllAlerts;
+
+  const hasMoreStaff =
+    overview.staffOnDuty.items.length > STAFF_ON_DUTY_PREVIEW_COUNT &&
+    !showAllStaff;
 
   return (
     <div className="space-y-8 p-8">
@@ -175,46 +263,52 @@ export function OverviewPage() {
         </section>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-3">
         <section className="rounded-2xl border border-accent/10 bg-[var(--section-canvas)] p-5">
           <SectionHeader title="System Alerts" badge={alertsBadge} />
 
-          <div className="space-y-2.5">
-            {!loading && overview.systemAlerts.items.length === 0 ? (
-              <EmptySectionMessage message="No system alerts" />
-            ) : (
-              overview.systemAlerts.items.map((alert) => (
-                <SystemAlertItem
-                  key={alert.id}
-                  message={alert.message}
-                  time={alert.time}
-                  icon={resolveOverviewIcon(alert.iconKey)}
-                />
-              ))
+          <OverviewExpandableList
+            items={overview.systemAlerts.items}
+            visibleItems={visibleAlerts}
+            expanded={showAllAlerts}
+            loading={loading}
+            emptyMessage="No system alerts"
+            hasMore={hasMoreAlerts}
+            scrollClassName="overview-alerts-list-scroll"
+            onViewMore={() => setShowAllAlerts(true)}
+            renderItem={(alert) => (
+              <SystemAlertItem
+                message={alert.message}
+                time={alert.time}
+                icon={resolveOverviewIcon(alert.iconKey)}
+              />
             )}
-          </div>
+          />
         </section>
 
         <section className="rounded-2xl border border-accent/10 bg-surface p-5">
           <SectionHeader title="Staff on Duty" badge={staffBadge} />
 
-          <div className="space-y-2.5">
-            {!loading && overview.staffOnDuty.items.length === 0 ? (
-              <EmptySectionMessage message="No staff on duty" />
-            ) : (
-              overview.staffOnDuty.items.map((staff) => (
-                <StaffDutyItem
-                  key={staff.id}
-                  initial={staff.initial}
-                  name={staff.name}
-                  role={staff.role}
-                  avatarClass={staff.avatarClass}
-                  statusTone={staff.statusTone}
-                  highlight={staff.highlight}
-                />
-              ))
+          <OverviewExpandableList
+            items={overview.staffOnDuty.items}
+            visibleItems={visibleStaff}
+            expanded={showAllStaff}
+            loading={loading}
+            emptyMessage="No staff on duty"
+            hasMore={hasMoreStaff}
+            scrollClassName="overview-staff-list-scroll"
+            onViewMore={() => setShowAllStaff(true)}
+            renderItem={(staff) => (
+              <StaffDutyItem
+                initial={staff.initial}
+                name={staff.name}
+                role={staff.role}
+                avatarClass={staff.avatarClass}
+                statusTone={staff.statusTone}
+                highlight={staff.highlight}
+              />
             )}
-          </div>
+          />
         </section>
 
         <section className="space-y-4">

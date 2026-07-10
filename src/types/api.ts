@@ -44,25 +44,536 @@ export type AuthProfileSectionRaw = {
   items?: AuthProfileFieldRaw[];
 };
 
+export type AuthProfilePersonalInformation = {
+  title?: string;
+  subtitle?: string;
+  name?: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+};
+
+export type AuthProfileWorkProfile = {
+  title?: string;
+  subtitle?: string;
+  jobTitle?: string;
+  role?: string;
+  status?: string;
+};
+
+export type AuthProfileNotificationsSection = {
+  title?: string;
+  subtitle?: string;
+  pushEnabled?: boolean;
+  emailEnabled?: boolean;
+  smsEnabled?: boolean;
+  path?: string;
+};
+
+export type AuthProfilePrivacySection = {
+  title?: string;
+  subtitle?: string;
+  biometricUnlockEnabled?: boolean;
+  profileVisibility?: string;
+  showAtClub?: boolean;
+  eventsAttendanceVisibility?: string;
+  vehicleVisibility?: string;
+  path?: string;
+};
+
+export type AuthProfileSecuritySection = {
+  title?: string;
+  subtitle?: string;
+  twoFactorEnabled?: boolean;
+  statusLabel?: string;
+};
+
+export type AuthProfileDownloadDataSection = {
+  title?: string;
+  subtitle?: string;
+  available?: boolean;
+};
+
+export type AuthProfileSectionsNested = {
+  account?: {
+    personalInformation?: AuthProfilePersonalInformation;
+    workProfile?: AuthProfileWorkProfile;
+    billing?: { title?: string; subtitle?: string };
+    membership?: { title?: string; subtitle?: string; tier?: string; status?: string };
+  };
+  preferences?: {
+    notifications?: AuthProfileNotificationsSection;
+    privacy?: AuthProfilePrivacySection;
+    security?: AuthProfileSecuritySection;
+  };
+  vehiclePreferences?: Record<string, { title?: string; subtitle?: string; value?: string }>;
+  connected?: {
+    downloadMyData?: AuthProfileDownloadDataSection;
+    stevesMemory?: { title?: string; subtitle?: string };
+  };
+};
+
+export type AuthProfileRoleDetailUser = {
+  memberNumber?: string;
+  memberCode?: string;
+  membershipTier?: string;
+  profileImageUrl?: string;
+};
+
+export type AuthProfileRoleDetail = {
+  user?: AuthProfileRoleDetailUser;
+  jobTitle?: string;
+  accountStatus?: string;
+};
+
+export type AuthProfileStats = {
+  tasksCompleted?: number;
+  tasksTotal?: number;
+  vehiclesHandled?: number;
+  inspectionsDone?: number;
+  photosUploaded?: number;
+  serviceConfirmations?: number;
+  daysEmployed?: number;
+  vehicles?: number;
+  vehicleCount?: number;
+  activeBookings?: number;
+  eventsAttended?: number;
+  memberDays?: number;
+  milesDriven?: number;
+};
+
 export type AuthProfileData = {
+  id?: string;
   role?: string;
   panel?: AuthProfilePanel | string;
   name?: string;
   fullName?: string;
   displayName?: string;
+  firstName?: string;
+  lastName?: string;
+  displayHandle?: string;
   jobTitle?: string;
   membershipTier?: string;
+  membershipTierLabel?: string;
   tier?: string;
   email?: string;
+  mobile?: string;
+  mobileCountryCode?: string;
+  phone?: string;
+  residence?: string;
+  address?: string;
   avatarUrl?: string;
   profileImageUrl?: string;
+  profileImage?: string;
+  coverImageUrl?: string;
+  memberSince?: string;
+  memberNumber?: string;
+  memberNumberLabel?: string;
+  memberDays?: number;
+  twoFactorEnabled?: boolean;
+  roleDetail?: AuthProfileRoleDetail;
+  stats?: AuthProfileStats;
   headerStats?: AuthProfileHeaderStatRaw[];
   sections?:
     | Record<string, AuthProfileSectionRaw>
-    | AuthProfileSectionRaw[];
+    | AuthProfileSectionRaw[]
+    | AuthProfileSectionsNested;
+  privacySettings?: AuthProfilePrivacySection;
 };
 
 export type AuthProfileResponse = ApiResponse<AuthProfileData>;
+
+export type MemberDashboardStatsRaw = {
+  vehicles?: number;
+  priorityVehicles?: number;
+  unreadNotifications?: number;
+  activeBookings?: number;
+  activeDetailing?: number;
+  activeMaintenance?: number;
+  activeTransport?: number;
+  activeSourcing?: number;
+  activeRequests?: number;
+};
+
+export type MemberDashboardGarageVehicleRaw = {
+  id?: string | number;
+  displayName?: string;
+  make?: string;
+  model?: string;
+  year?: string | number;
+  imageUrl?: string | null;
+  status?: string;
+  statusKey?: string;
+  statusLabel?: string;
+  storageBay?: string | null;
+  healthPercent?: number | null;
+  colour?: string;
+  engine?: string | null;
+  mileage?: string | null;
+  lastServicedAt?: string | null;
+};
+
+export type GarageVehicleBayRaw = {
+  raw?: string;
+  normalized?: string;
+  label?: string;
+  short?: string;
+  level?: string;
+};
+
+export type GarageLastInspectedRaw =
+  | ""
+  | {
+      label: string;
+      at: string;
+      relative: string;
+    };
+
+export type GarageServiceInfoRaw = {
+  label?: string;
+  months?: number;
+  isDue?: boolean;
+  display?: string;
+};
+
+export type GarageVehicleRaw = {
+  id: string;
+  displayName?: string;
+  make?: string;
+  model?: string;
+  year?: number;
+  subtitle?: string;
+  imageUrl?: string;
+  colour?: string;
+  vehicleType?: string;
+  collectionEra?: string;
+  isPriority?: boolean;
+  status?: string;
+  statusKey?: string;
+  statusLabel?: string;
+  memberId?: string;
+  healthPercent?: number;
+  storageBay?: string;
+  bay?: GarageVehicleBayRaw;
+  mileage?: number;
+  mileageLabel?: string;
+  /** Pre-formatted display strings the API now sends directly. */
+  miles?: string;
+  service?: string | GarageServiceInfoRaw;
+  inspected?: string;
+  /** Old shape for the service interval, now only under this key. */
+  serviceInterval?: GarageServiceInfoRaw;
+  inspection?: {
+    passed?: number | "";
+    total?: number;
+    display?: string;
+    lastInspected?: GarageLastInspectedRaw;
+  };
+  metrics?: {
+    miles?: { value?: number; label?: string; display?: string };
+    service?: GarageServiceInfoRaw;
+    inspected?: { passed?: number | ""; total?: number; display?: string; label?: string };
+  };
+  lastInspected?: GarageLastInspectedRaw;
+  title?: string;
+};
+
+export type GarageTabRaw = {
+  key: string;
+  label: string;
+  count: number;
+  vehicleType?: string;
+};
+
+export type GarageVehiclesData = {
+  filter?: string;
+  vehicleType?: string;
+  garageStatus?: string;
+  search?: string;
+  count?: number;
+  vehicleTypeTabs?: GarageTabRaw[];
+  statusTabs?: GarageTabRaw[];
+  tabs?: GarageTabRaw[];
+  vehicles: GarageVehicleRaw[];
+};
+
+export type GarageVehiclesResponse = ApiResponse<GarageVehiclesData>;
+
+export type MemberVehicleQuickActionRaw = {
+  key?: string;
+  type?: string;
+  label?: string;
+};
+
+export type MemberVehicleQuickStatsRaw = {
+  mileage?: string;
+  lastServiced?: string;
+  engine?: string;
+  storageLocation?: string;
+  fuelType?: string;
+  fuelLevel?: string;
+  fuelStatus?: string;
+};
+
+export type MemberVehicleHealthItemRaw = {
+  category?: string;
+  label?: string;
+  percentage?: number;
+  note?: string;
+};
+
+export type MemberVehicleDetailsRaw = {
+  id?: string;
+  displayName?: string;
+  make?: string;
+  model?: string;
+  year?: number;
+  imageUrl?: string;
+  colour?: string;
+  vehicleType?: string;
+  isPriority?: boolean;
+  status?: string;
+  statusKey?: string;
+  memberId?: string;
+  ownerName?: string;
+  quickStats?: MemberVehicleQuickStatsRaw;
+  healthSummary?: {
+    overallPercent?: number;
+    highlights?: MemberVehicleHealthItemRaw[];
+  };
+  quickActions?: MemberVehicleQuickActionRaw[];
+  recentActions?: unknown[];
+};
+
+export type MemberVehicleHealthReportRaw = {
+  vehicleId?: string;
+  displayName?: string;
+  overallPercent?: number;
+  items?: MemberVehicleHealthItemRaw[];
+  generatedAt?: string;
+  download?: {
+    fileName?: string;
+    contentType?: string;
+    data?: unknown;
+  };
+};
+
+export type MemberVehicleDocumentItemRaw = {
+  key?: string;
+  label?: string;
+  url?: string;
+  expiresAt?: string;
+  uploadedAt?: string;
+  isUploaded?: boolean;
+};
+
+export type MemberVehicleDocumentSectionRaw = {
+  key?: string;
+  title?: string;
+  items?: MemberVehicleDocumentItemRaw[];
+};
+
+export type MemberVehicleDocumentsRaw = {
+  vehicleId?: string;
+  displayName?: string;
+  sections?: MemberVehicleDocumentSectionRaw[];
+};
+
+export type MemberVehicleSpecsSectionRaw = {
+  make?: string;
+  model?: string;
+  year?: number;
+  vin?: string;
+  engineType?: string;
+  transmission?: string;
+  fuelType?: string;
+  exteriorColor?: string;
+  interiorColor?: string;
+  brand?: string;
+  engine?: string;
+  power?: string;
+  maxPower?: string;
+  drive?: string;
+  zeroToHundred?: string;
+  topSpeed?: string;
+  colour?: string;
+  maxTorque?: string;
+  fuelEfficiency?: string;
+  ownerName?: string;
+  plate?: string;
+  purchasedAt?: string;
+  location?: string;
+  mileage?: string;
+};
+
+export type MemberVehicleSpecsRaw = {
+  vehicleId?: string;
+  displayName?: string;
+  generalInfo?: MemberVehicleSpecsSectionRaw;
+  vehicleSpecs?: MemberVehicleSpecsSectionRaw;
+  performance?: MemberVehicleSpecsSectionRaw;
+  ownershipInfo?: MemberVehicleSpecsSectionRaw;
+};
+
+export type MemberVehicleRequestsRaw = {
+  active?: unknown[];
+  past?: unknown[];
+  all?: unknown[];
+};
+
+export type MemberVehicleDetailData = {
+  id: string;
+  displayName?: string;
+  details?: MemberVehicleDetailsRaw;
+  healthReport?: MemberVehicleHealthReportRaw;
+  documents?: MemberVehicleDocumentsRaw;
+  specs?: MemberVehicleSpecsRaw;
+  requests?: MemberVehicleRequestsRaw;
+  _meta?: {
+    include?: string[];
+    hint?: string;
+  };
+};
+
+export type MemberVehicleDetailResponse = ApiResponse<MemberVehicleDetailData>;
+
+export type MemberTransportRequestType =
+  | "pickup_from_storage"
+  | "return_to_storage"
+  | "custom_transfer"
+  | "transport_delivery";
+
+export type CreateMemberTransportRequestBody = {
+  memberId: string;
+  vehicleId: string;
+  serviceType: MemberTransportRequestType;
+  requestType: MemberTransportRequestType;
+  deliveryAddress?: string;
+  pickupAddress?: string;
+  dropoffAddress?: string;
+  preferredDate: string;
+  timeWindowStart: string;
+  timeWindowEnd: string;
+  timeWindow: string;
+  notes?: string;
+};
+
+export type MemberTransportRequestData = {
+  id?: string | number;
+  referenceNumber?: string;
+  requestNumber?: string;
+  memberId?: string;
+  vehicleId?: string;
+  serviceType?: string;
+  requestType?: string;
+  deliveryAddress?: string;
+  pickupAddress?: string;
+  dropoffAddress?: string;
+  preferredDate?: string;
+  scheduledDate?: string;
+  timeWindowStart?: string;
+  timeWindowEnd?: string;
+  timeWindow?: string;
+  notes?: string;
+  storageLocation?: string;
+  pickupLocation?: string;
+  dropoffLocation?: string;
+  scheduledAt?: string;
+  status?: string;
+  createdAt?: string;
+};
+
+export type CreateMemberTransportRequestResponse =
+  ApiResponse<MemberTransportRequestData>;
+
+export type AttendingMemberPreview = {
+  name: string;
+  initial: string;
+};
+
+export type MemberDashboardEventRaw = {
+  id?: string | number;
+  title?: string;
+  location?: string;
+  startsAt?: string;
+  imageUrl?: string | null;
+  category?: string;
+  isFeatured?: boolean;
+  attendingCount?: number;
+  attendingMembers?: AttendingMemberPreview[];
+  isJoined?: boolean;
+  myRsvp?: { status?: string; isFavorite?: boolean } | null;
+  status?: string;
+};
+
+export type MemberDashboardQuickActionRaw = {
+  key?: string;
+  label?: string;
+  path?: string;
+};
+
+export type MemberDashboardSummaryData = {
+  memberId?: string;
+  stats?: MemberDashboardStatsRaw;
+  garage?: {
+    count?: number;
+    vehicles?: MemberDashboardGarageVehicleRaw[];
+  };
+  events?: {
+    featured?: MemberDashboardEventRaw[];
+    thisWeek?: MemberDashboardEventRaw[];
+  };
+  quickActions?: MemberDashboardQuickActionRaw[];
+};
+
+export type MemberDashboardSummaryResponse =
+  ApiResponse<MemberDashboardSummaryData>;
+
+// ── Clubhouse ────────────────────────────────────────────────────────────────
+
+export type ClubhouseSpaceRaw = {
+  id: string;
+  areaType: string;
+  title: string;
+  description?: string | null;
+  action?: string;
+  statusLabel?: string;
+  capacity?: number | null;
+  coverImage?: string | null;
+  images?: string[];
+  // Restaurant-specific
+  openingTime?: string | null;
+  closingTime?: string | null;
+  cuisineType?: string | null;
+  // Lounge-specific
+  type?: string | null;
+  isAvailable24x7?: boolean;
+  // Suite-specific
+  location?: string | null;
+  roomCount?: number;
+  addOns?: string[];
+};
+
+export type ClubhouseSpacesData = {
+  spaces: ClubhouseSpaceRaw[];
+  total: number;
+  occasions?: string[];
+};
+
+export type ClubhouseOverviewData = {
+  name: string;
+  totalSpaces: number;
+  counts: {
+    restaurant: number;
+    privateLounge: number;
+    suiteLounge: number;
+  };
+  occasions?: string[];
+  spaces: ClubhouseSpaceRaw[];
+};
+
+export type ClubhouseSpacesResponse = ApiResponse<ClubhouseSpacesData>;
+export type ClubhouseOverviewResponse = ApiResponse<ClubhouseOverviewData>;
 
 export type ApiFieldError = {
   field?: string;
@@ -132,6 +643,7 @@ export type RefreshTokenResponse = ApiResponse<SignInData>;
 
 export type InboxNotificationRaw = {
   id: number | string;
+  type?: string;
   title?: string;
   subject?: string;
   heading?: string;
@@ -151,13 +663,13 @@ export type InboxNotificationRaw = {
 export type NotificationInboxData =
   | InboxNotificationRaw[]
   | {
-      items?: InboxNotificationRaw[];
-      notifications?: InboxNotificationRaw[];
-      records?: InboxNotificationRaw[];
-      data?: InboxNotificationRaw[];
-      inbox?: InboxNotificationRaw[];
-      unreadCount?: number;
-    };
+    items?: InboxNotificationRaw[];
+    notifications?: InboxNotificationRaw[];
+    records?: InboxNotificationRaw[];
+    data?: InboxNotificationRaw[];
+    inbox?: InboxNotificationRaw[];
+    unreadCount?: number;
+  };
 
 export type NotificationItem = {
   id: string;
@@ -181,12 +693,24 @@ export type InventoryVehicleInfoRaw = {
   make?: string;
   model?: string;
   year?: number;
+  imageUrl?: string;
+  images?: string[];
 };
 
 export type InventoryOwnershipInfoRaw = {
   storageBay?: string;
   mileage?: string;
   plate?: string;
+};
+
+export type InventoryVehicleNoteRaw = {
+  id?: string | number;
+  note?: string;
+  text?: string;
+  body?: string;
+  createdAt?: string;
+  author?: string;
+  authorName?: string;
 };
 
 export type InventoryVehicleRaw = {
@@ -200,6 +724,12 @@ export type InventoryVehicleRaw = {
   storageBay?: string;
   mileage?: string;
   plate?: string;
+  imageUrl?: string;
+  image?: string;
+  images?: string[];
+  imageUrls?: string[];
+  notes?: string | InventoryVehicleNoteRaw[] | null;
+  staffNotes?: string | InventoryVehicleNoteRaw[] | null;
   vehicleInfo?: InventoryVehicleInfoRaw;
   ownershipInfo?: InventoryOwnershipInfoRaw;
   health?: InventoryVehicleHealthRaw[];
@@ -225,15 +755,15 @@ export type VehicleInventorySummary = {
 export type VehicleInventoryData =
   | InventoryVehicleRaw[]
   | {
-      vehicles?: InventoryVehicleRaw[];
-      items?: InventoryVehicleRaw[];
-      records?: InventoryVehicleRaw[];
-      data?: InventoryVehicleRaw[];
-      summary?: VehicleInventorySummary;
-      total?: number;
-      limit?: number;
-      offset?: number;
-    };
+    vehicles?: InventoryVehicleRaw[];
+    items?: InventoryVehicleRaw[];
+    records?: InventoryVehicleRaw[];
+    data?: InventoryVehicleRaw[];
+    summary?: VehicleInventorySummary;
+    total?: number;
+    limit?: number;
+    offset?: number;
+  };
 
 export type VehicleInventoryResponse = ApiResponse<VehicleInventoryData>;
 
@@ -553,11 +1083,11 @@ export type AdminBookingRaw = {
   offerStartDate?: string;
   offerEndDate?: string;
   preferredDates?:
-    | {
-        start?: string;
-        end?: string;
-      }
-    | string;
+  | {
+    start?: string;
+    end?: string;
+  }
+  | string;
   status?: string;
   assignedAt?: string;
   confirmedAt?: string;
@@ -1084,18 +1614,18 @@ export type StaffOverviewData = {
   kpis?: StaffOverviewKpiRaw[] | Record<string, StaffOverviewKpiRaw>;
   quickActions?: StaffOverviewQuickActionRaw[];
   priorityTasks?:
-    | StaffOverviewTaskRaw[]
-    | StaffOverviewListSectionRaw<StaffOverviewTaskRaw>;
+  | StaffOverviewTaskRaw[]
+  | StaffOverviewListSectionRaw<StaffOverviewTaskRaw>;
   schedule?:
-    | StaffOverviewScheduleEventRaw[]
-    | StaffOverviewListSectionRaw<StaffOverviewScheduleEventRaw>;
+  | StaffOverviewScheduleEventRaw[]
+  | StaffOverviewListSectionRaw<StaffOverviewScheduleEventRaw>;
   systemAlerts?:
-    | StaffOverviewAlertRaw[]
-    | StaffOverviewListSectionRaw<StaffOverviewAlertRaw>;
+  | StaffOverviewAlertRaw[]
+  | StaffOverviewListSectionRaw<StaffOverviewAlertRaw>;
   staffOnDuty?: StaffOverviewStaffOnDutyRaw[];
   shiftStats?:
-    | StaffOverviewShiftStatRaw[]
-    | StaffOverviewListSectionRaw<StaffOverviewShiftStatRaw>;
+  | StaffOverviewShiftStatRaw[]
+  | StaffOverviewListSectionRaw<StaffOverviewShiftStatRaw>;
   yourAssignment?: StaffOverviewAssignmentRaw;
 };
 
@@ -1817,6 +2347,36 @@ export type ChatSendMessageRequest = {
   body: string;
 };
 
+export type ChatContact = {
+  id: string;
+  name: string;
+  role: string;
+};
+
+export type MemberChatThread = {
+  conversationId: string;
+  contact: ChatContact;
+  lastMessage?: string;
+  lastMessageAt?: string;
+  unreadForMember?: number;
+  status?: string;
+};
+
+export type MemberChatInboxData = {
+  conversations: MemberChatThread[];
+};
+
+export type MemberChatThreadMessagesData = {
+  conversationId: string;
+  contact?: ChatContact;
+  messages: ChatMessage[];
+};
+
+export type MemberChatSendMessageRequest = {
+  contactId: string;
+  body: string;
+};
+
 export type ChatConversationsResponse = ApiResponse<ChatConversationsData>;
 export type ChatMessagesResponse = ApiResponse<ChatMessagesData>;
 export type ChatSendMessageResponse = ApiResponse<{
@@ -1834,10 +2394,13 @@ export type ChatMarkReadResponse = ApiResponse<{
 }>;
 
 export type MemberChatInitiateRequest = {
+  targetId: string;
   initialMessage?: string;
 };
 
-export type MemberChatConversationResponse = ApiResponse<ChatConversation>;
+export type MemberChatInboxResponse = ApiResponse<MemberChatInboxData>;
+export type MemberChatThreadMessagesResponse =
+  ApiResponse<MemberChatThreadMessagesData>;
 export type MemberChatMessagesResponse = ApiResponse<ChatMessagesData>;
 
 export type CreateEventRequest = {
@@ -1975,11 +2538,11 @@ export type EventRsvpRaw = {
     profileImageUrl?: string;
   };
   vehicle?:
-    | string
-    | {
-        id?: string | number;
-        name?: string;
-      };
+  | string
+  | {
+    id?: string | number;
+    name?: string;
+  };
 };
 
 // Full detail response returned by GET /api/v1/admin/events/:id
@@ -2608,3 +3171,160 @@ export type AdminAnalyticsDashboardData = {
 
 export type AdminAnalyticsDashboardResponse =
   ApiResponse<AdminAnalyticsDashboardData>;
+
+// ── Member-facing Events ────────────────────────────────────────────────────
+
+/** Single event row as returned by GET /api/v1/events (member-facing, grouped or flat) */
+export type MemberEventRaw = {
+  id: string;
+  title: string;
+  description?: string;
+  category?: string;        // "drives" | "auctions" | "dining" | "track" | etc.
+  location?: string;
+  startsAt?: string;        // ISO date-time
+  endsAt?: string;          // ISO date-time
+  isAllDay?: boolean;
+  imageUrl?: string;
+  isFeatured?: boolean;
+  capacity?: number | null;
+  attendingCount?: number;
+  waitlistCount?: number;
+  spotsRemaining?: number | null;
+  accessType?: string;
+  status?: string;
+  isJoined?: boolean;
+  myRsvp?: {
+    id: string;
+    isFavorite?: boolean;
+    status?: "going" | "waitlist";
+    joinedAt?: string;
+  } | null;
+  attendingMembers?: { name: string; initial: string }[];
+};
+
+/** Response from GET /api/v1/events?grouped=true */
+export type MemberEventsGroupedData = {
+  grouped: true;
+  featured: MemberEventRaw[];
+  thisWeek: MemberEventRaw[];
+  nextMonth: MemberEventRaw[];
+};
+
+/** Response from GET /api/v1/events (flat) */
+export type MemberEventsFlatData = {
+  grouped: false;
+  events: MemberEventRaw[];
+  total: number;
+  limit: number;
+  offset: number;
+};
+
+export type MemberEventsGroupedResponse = ApiResponse<MemberEventsGroupedData>;
+export type MemberEventsFlatResponse = ApiResponse<MemberEventsFlatData>;
+
+export type MemberEventsRsvpResponse = ApiResponse<{
+  id?: string;
+  status?: string;
+  message?: string;
+}>;
+
+export type AiConversation = {
+  id?: string;
+  conversationId?: string;
+  memberId?: string;
+  status?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  lastMessageAt?: string;
+};
+
+export type AiMessage = {
+  id: string;
+  conversationId?: string;
+  role?: "user" | "assistant" | string;
+  senderType?: string;
+  senderName?: string;
+  query?: string;
+  body?: string;
+  content?: string;
+  answer?: string;
+  response?: string;
+  createdAt?: string;
+};
+
+export type AiConversationData = {
+  conversation?: AiConversation | null;
+  messages?: AiMessage[];
+};
+
+export type AiMessagesData = {
+  conversationId?: string;
+  conversation?: AiConversation | null;
+  messages: AiMessage[];
+};
+
+export type AiQueryRequest = {
+  memberId?: string;
+  query: string;
+  conversationId?: string;
+  newConversation?: boolean;
+};
+
+export type AiQueryData = {
+  conversationId?: string;
+  conversation?: AiConversation;
+  answer?: string;
+  reply?: string;
+  response?: string;
+  message?: AiMessage;
+  userMessage?: AiMessage;
+  assistantMessage?: AiMessage;
+  messages?: AiMessage[];
+};
+
+export type AiConversationResponse = ApiResponse<AiConversationData>;
+export type AiMessagesResponse = ApiResponse<AiMessagesData>;
+export type AiQueryResponse = ApiResponse<AiQueryData>;
+export type AiResetConversationResponse = ApiResponse<{
+  conversation?: AiConversation;
+}>;
+
+export type ParkingSlotType =
+  | "standard"
+  | "covered"
+  | "oversized"
+  | "ev"
+  | "premium";
+
+export type ParkingSlotStatus =
+  | "available"
+  | "occupied"
+  | "maintenance"
+  | "reserved";
+
+export type StaffParkingSlotCreateRequest = {
+  slotCode: string;
+  level: string;
+  zone: string;
+  label: string;
+  slotType: ParkingSlotType | string;
+  openTime: string;
+  closeTime: string;
+  status: ParkingSlotStatus | string;
+  notes?: string;
+};
+
+export type StaffParkingSlotRaw = {
+  id?: string | number;
+  slotCode?: string;
+  level?: string;
+  zone?: string;
+  label?: string;
+  slotType?: string;
+  openTime?: string;
+  closeTime?: string;
+  status?: string;
+  notes?: string;
+};
+
+export type StaffParkingSlotCreateResponse = ApiResponse<StaffParkingSlotRaw>;

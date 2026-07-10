@@ -127,10 +127,16 @@ export function MemberChatPanel({
     }
   }
 
+  const isChatOpen = memberId !== null;
+
   return (
-    <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
+    <section
+      className={`flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card ${
+        isChatOpen ? "h-full min-h-0" : ""
+      }`}
+    >
       {memberId === null ? (
-        <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
+        <div className="flex flex-col items-center justify-center py-16 text-center">
           <p className="font-roboto text-[11px] tracking-[0.06em] text-secondary uppercase">
             Select a request to view chat
           </p>

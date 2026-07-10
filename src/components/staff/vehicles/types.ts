@@ -43,6 +43,8 @@ export type VehicleDetail = {
   mileage: string;
   member: string;
   memberBadge?: string;
+  imageUrl?: string;
+  notes: string[];
   isOverdue: boolean;
   health: HealthMetric[];
   condition: HealthMetric[];

@@ -57,6 +57,80 @@ export const garageFilters: GarageFilter[] = [
 ];
 
 export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
+  "3": {
+    id: "3",
+    make: "Porsche",
+    model: "991 GT3",
+    detail: "2021 · GT3 Touring",
+    imageUrl:
+      "https://images.unsplash.com/photo-1631295868223-63265b40d9e4?w=1000&q=80",
+    statusTone: "ready",
+    statusLabel: "Ready",
+    bayLabel: "Bay 07-B",
+    stats: [
+      { value: "6,240", label: "Miles" },
+      { value: "6mo", label: "Service" },
+      { value: "47/47", label: "Inspected" },
+      { value: "4.0L", label: "Engine" },
+    ],
+    lastInspectedLabel: "Last inspected",
+    lastInspectedValue: "07:02 today",
+    requests: [
+      {
+        id: "transport",
+        title: "Transport & Delivery",
+        subtitle: "Pickup or drop-off",
+        icon: "transport",
+      },
+      {
+        id: "detailing",
+        title: "Detailing & Wash",
+        subtitle: "Full detail or wash",
+        icon: "detailing",
+      },
+      {
+        id: "maintenance",
+        title: "Maintenance & Service",
+        subtitle: "Repairs & scheduled",
+        icon: "maintenance",
+      },
+      {
+        id: "sourcing",
+        title: "Vehicle Sourcing",
+        subtitle: "Acquire & find cars",
+        icon: "sourcing",
+      },
+    ],
+    specs: {
+      make: "Porsche",
+      model: "911 GT3",
+      year: "2021",
+      engine: "4.0L Naturally Aspirated Flat-6",
+      power: "503 hp . 470 Nm",
+      transmission: "7-speed PDK dual-clutch",
+      drive: "Rear-wheel drive",
+      zeroToHundred: "3.4 seconds",
+      topSpeed: "318 km/h",
+    },
+    ownership: {
+      colour: "Guards Red",
+      chassisNo: "WP0AC2A99MS123456",
+      plate: "Dubai . P99137",
+      purchased: "Jun 2021",
+      storageBay: "Bay 07-B, Level 1",
+      mileage: "6,240 km",
+    },
+    health: [
+      { label: "Engine & Drivetrain", percentage: 97, note: "All systems nominal . No fault codes" },
+      { label: "Tyres", percentage: 93, note: "Tread depth good . Pressure normal" },
+      { label: "Brakes", percentage: 85, note: "Pads within service life" },
+      { label: "Fluids", percentage: 96, note: "Engine oil . Coolant . Brake fluid all OK" },
+      { label: "Battery", percentage: 90, note: "12V auxiliary . Good condition" },
+      { label: "Exterior & Body", percentage: 99, note: "No damage recorded . Paint in excellent condition" },
+    ],
+    healthCtaLabel: "Request Detailing",
+    documents: [],
+  },
   "2": {
     id: "2",
     make: "Rolls-Royce",
@@ -81,7 +155,6 @@ export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
         title: "Transport & Delivery",
         subtitle: "Pickup or drop-off",
         icon: "transport",
-        highlighted: true,
       },
       {
         id: "detailing",
@@ -130,6 +203,7 @@ export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
       { label: "Exterior & Body", percentage: 98, note: "No damage recorded . Paint in excellent condition" },
     ],
     healthCtaLabel: "Request Brake Service",
+    documents: [],
   },
   "1": {
     id: "1",
@@ -154,7 +228,6 @@ export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
         title: "Transport & Delivery",
         subtitle: "Pickup or drop-off",
         icon: "transport",
-        highlighted: true,
       },
       {
         id: "detailing",
@@ -203,5 +276,6 @@ export const garageVehicleDetails: Record<string, MemberVehicleDetail> = {
       { label: "Exterior & Body", percentage: 99, note: "No damage recorded . Paint in excellent condition" },
     ],
     healthCtaLabel: "Request Detailing",
+    documents: [],
   },
 };

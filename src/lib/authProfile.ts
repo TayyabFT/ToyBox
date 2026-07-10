@@ -4,6 +4,7 @@ import type {
   AuthProfileHeaderStatRaw,
   AuthProfilePanel,
   AuthProfileSectionRaw,
+  AuthProfileSectionsNested,
 } from "@/types/api";
 
 export type ProfileHeaderStatView = {
@@ -128,10 +129,25 @@ function mapSection(
   };
 }
 
+function isNestedProfileSections(
+  sections?: AuthProfileData["sections"],
+): sections is AuthProfileSectionsNested {
+  if (!sections || Array.isArray(sections)) {
+    return false;
+  }
+
+  return (
+    "account" in sections ||
+    "preferences" in sections ||
+    "connected" in sections ||
+    "vehiclePreferences" in sections
+  );
+}
+
 function mapSections(
   sections?: AuthProfileData["sections"],
 ): ProfileSectionView[] {
-  if (!sections) {
+  if (!sections || isNestedProfileSections(sections)) {
     return [];
   }
 

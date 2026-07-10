@@ -1,45 +1,45 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import type { MemberClubVenue } from "./types";
 
 type Slide = {
-  id: number;
+  id: string;
   imageUrl: string;
   headline: React.ReactNode;
   subtitle: string;
   cta?: { label: string; href: string };
 };
 
-const slides: Slide[] = [
+const defaultSlides: Slide[] = [
   {
-    id: 1,
+    id: "1",
     imageUrl:
       "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1200&q=85",
     headline: (
       <>
         <span className="text-white">Your </span>
-        <span className="text-primary">Private </span>
+        <span className="text-accent">Private </span>
         <br />
         <span className="text-white">Automotive </span>
-        <span className="text-primary">Club.</span>
+        <span className="text-accent">Club.</span>
       </>
     ),
     subtitle:
       "An exclusive membership experience built around the world's finest automobiles — curated for those who demand the extraordinary.",
-    cta: { label: "Explore the Club", href: "/member" },
+    cta: { label: "Explore the Club", href: "/member/concierge" },
   },
   {
-    id: 2,
+    id: "2",
     imageUrl:
       "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?w=1200&q=85",
     headline: (
       <>
         <span className="text-white">White-Glove </span>
-        <span className="text-primary">Care</span>
+        <span className="text-accent">Care</span>
         <br />
         <span className="text-white">At Every </span>
-        <span className="text-primary">Turn.</span>
+        <span className="text-accent">Turn.</span>
       </>
     ),
     subtitle:
@@ -47,16 +47,16 @@ const slides: Slide[] = [
     cta: { label: "Book a Service", href: "/member/concierge" },
   },
   {
-    id: 3,
+    id: "3",
     imageUrl:
       "https://images.unsplash.com/photo-1562141961-b6cbb3b74fd4?w=1200&q=85",
     headline: (
       <>
         <span className="text-white">Secure </span>
-        <span className="text-primary">Vehicle</span>
+        <span className="text-accent">Vehicle</span>
         <br />
         <span className="text-white">Seamless </span>
-        <span className="text-primary">Service.</span>
+        <span className="text-accent">Service.</span>
       </>
     ),
     subtitle:
@@ -65,7 +65,51 @@ const slides: Slide[] = [
   },
 ];
 
-export function ClubBanner() {
+function formatVenueHeadline(name: string): React.ReactNode {
+  const words = name.trim().split(/\s+/).filter(Boolean);
+
+  if (words.length <= 1) {
+    return <span className="text-white">{name}</span>;
+  }
+
+  const accent = words.pop();
+
+  return (
+    <>
+      <span className="text-white">{words.join(" ")} </span>
+      <span className="text-accent">{accent}</span>
+    </>
+  );
+}
+
+function buildSlidesFromVenues(venues: MemberClubVenue[]): Slide[] {
+  return venues.slice(0, 3).map((venue) => ({
+    id: venue.id,
+    imageUrl: venue.imageUrl,
+    headline: formatVenueHeadline(venue.name),
+    subtitle:
+      venue.description ||
+      "Restaurant, bar and private spaces — reserved exclusively for members.",
+    cta: {
+      label: venue.actionLabel ?? "Reserve",
+      href: venue.href ?? "/member/concierge",
+    },
+  }));
+}
+
+type ClubBannerProps = {
+  venues?: MemberClubVenue[];
+};
+
+export function ClubBanner({ venues }: ClubBannerProps) {
+  const slides = useMemo(() => {
+    if (venues?.length) {
+      return buildSlidesFromVenues(venues);
+    }
+
+    return defaultSlides;
+  }, [venues]);
+
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
 
@@ -83,11 +127,15 @@ export function ClubBanner() {
 
   // Auto-advance every 5 seconds
   useEffect(() => {
+    setCurrent(0);
+  }, [slides]);
+
+  useEffect(() => {
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [slides.length]);
 
   const slide = slides[current];
   const slideNumber = String(current + 1).padStart(2, "0");
@@ -164,7 +212,7 @@ export function ClubBanner() {
                 className={[
                   "h-[3px] cursor-pointer rounded-full transition-all duration-300",
                   i === current
-                    ? "w-6 bg-primary"
+                    ? "w-6 bg-accent"
                     : "w-3 bg-white/25 hover:bg-white/40",
                 ].join(" ")}
               />

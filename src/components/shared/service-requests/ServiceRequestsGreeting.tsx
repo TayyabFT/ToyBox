@@ -1,3 +1,4 @@
+import { StaffShiftMeta } from "@/components/staff/StaffShiftMeta";
 import { ServiceRequestsFilterTabs } from "./ServiceRequestsFilterTabs";
 import type { ServiceRequestFilter } from "./types";
 
@@ -13,10 +14,7 @@ export function ServiceRequestsGreeting({
   return (
     <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
       <div className="space-y-3">
-        <p className="font-roboto text-xs tracking-[0.14em] uppercase">
-          <span className="text-foreground">Saturday, 17 July 2026 · </span>
-          <span className="text-primary">Morning Shift</span>
-        </p>
+        <StaffShiftMeta split />
         <h1 className="font-copperplate text-[32px] leading-tight">
           <span className="text-foreground">Service </span>
           <span className="text-primary">Requests</span>

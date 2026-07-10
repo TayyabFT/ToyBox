@@ -1,55 +1,150 @@
 import Link from "next/link";
 import type { MemberNewsItem } from "./types";
+import { MemberSectionEmpty } from "./MemberSectionEmpty";
+import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
 
 type MemberNewsSectionProps = {
   items: MemberNewsItem[];
 };
 
-function NewsRow({ item }: { item: MemberNewsItem }) {
+function NewsCard({ item }: { item: MemberNewsItem }) {
+  const titlePrefix = item.titlePrefix ?? item.title;
+  const titleHighlight = item.titleHighlight;
+
   return (
-    <div className="flex items-center gap-3 py-3 border-b border-accent/6 last:border-0">
-      {/* Thumbnail */}
-      <div className="h-11 w-14 shrink-0 overflow-hidden rounded-lg bg-elevated">
-        {item.imageUrl && (
-          <img src={item.imageUrl} alt="" className="h-full w-full object-cover" />
-        )}
+    <Link
+      href="/member"
+      className="group relative block overflow-hidden rounded-2xl border border-accent/22 bg-[#11100e] shadow-[inset_0_1px_0_rgba(197,160,89,0.1)] transition-colors hover:border-accent/32"
+    >
+      {/* Figma-style layered card surface */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background: `
+            radial-gradient(ellipse 90% 80% at -8% -10%, rgba(197, 160, 89, 0.34) 0%, rgba(197, 160, 89, 0.1) 34%, transparent 62%),
+            linear-gradient(128deg, rgba(62, 52, 36, 0.42) 0%, rgba(24, 21, 17, 0.94) 38%, rgba(11, 10, 9, 1) 100%)
+          `,
+        }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 opacity-70"
+        style={{
+          background:
+            "linear-gradient(to top right, rgba(48, 40, 30, 0.28) 0%, transparent 48%)",
+        }}
+      />
+
+      <div className="relative flex gap-4 p-4">
+        {/* Thumbnail */}
+        <div className="size-[72px] shrink-0 overflow-hidden rounded-xl bg-elevated flex items-center justify-center">
+          {item.imageUrl ? (
+            <img
+              src={item.imageUrl}
+              alt=""
+              className="h-full w-full object-cover"
+              onError={(e) => {
+                const img = e.currentTarget;
+                img.style.display = "none";
+                const placeholder = img.nextElementSibling as HTMLElement | null;
+                if (placeholder) placeholder.style.display = "flex";
+              }}
+            />
+          ) : null}
+          {/* Placeholder shown when no image or broken URL */}
+          <div
+            className="h-full w-full flex-col items-center justify-center gap-1.5 rounded-xl"
+            style={{ display: item.imageUrl ? "none" : "flex", background: "rgba(197,160,89,0.06)" }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <rect x="3" y="5" width="18" height="14" rx="3" stroke="rgba(197,160,89,0.45)" strokeWidth="1.2" />
+              <path d="M3 17L7 13L10 16L14 11L21 17" stroke="rgba(197,160,89,0.45)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="8.5" cy="9.5" r="1.5" fill="rgba(197,160,89,0.45)" />
+            </svg>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="min-w-0 flex-1 space-y-1.5 pr-4">
+          <p className="font-roboto text-[9px] tracking-[0.1em] uppercase">
+            <span className="font-semibold text-accent">{item.category}</span>
+            <span className="text-secondary/50"> · {item.timeLabel}</span>
+          </p>
+
+          <h3 className="font-roboto text-[12px] font-bold leading-snug tracking-[0.03em] text-white uppercase">
+            {titlePrefix}
+            {titleHighlight && (
+              <>
+                {" "}
+                <span className="text-accent">{titleHighlight}</span>
+              </>
+            )}
+          </h3>
+
+          <p className="font-roboto line-clamp-2 text-[11px] leading-relaxed text-secondary/75">
+            {item.subtitle}
+          </p>
+        </div>
       </div>
-      {/* Text */}
-      <div className="min-w-0 flex-1 space-y-0.5">
-        <p className="font-roboto truncate text-[11px] font-medium text-foreground">{item.title}</p>
-        <p className="font-roboto line-clamp-2 text-[10px] leading-snug tracking-[0.01em] text-secondary/70">{item.subtitle}</p>
-      </div>
-      {/* Arrow */}
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className="shrink-0 text-accent/30">
-        <path d="M5 3L9 7L5 11" stroke="currentColor" strokeWidth="1" strokeLinecap="round" />
-      </svg>
-    </div>
+
+      {/* Unread indicator */}
+      {item.isUnread && (
+        <span
+          aria-label="Unread"
+          className="absolute right-3.5 top-3.5 size-2 rounded-full bg-accent shadow-[0_0_6px_rgba(212,168,71,0.55)]"
+        />
+      )}
+    </Link>
   );
 }
 
 export function MemberNewsSection({ items }: MemberNewsSectionProps) {
+  const unreadCount = items.filter((item) => item.isUnread).length;
+
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex items-center justify-between gap-3 pb-1">
-        <div className="space-y-0.5">
-          <h2 className="font-copperplate text-[11px] tracking-[0.06em] uppercase">
-            <span className="text-foreground">From </span>
-            <span className="text-primary">The Club</span>
+      <div className="flex items-start justify-between gap-4">
+        <div className="space-y-1">
+          <h2 className={dashboardSectionHeadingClass}>
+            <span className={dashboardSectionHeadingPrefixClass}>From The </span>
+            <span className={dashboardSectionHeadingAccentClass}>Club</span>
           </h2>
-          <p className="font-roboto text-[9px] tracking-[0.14em] text-secondary/70 uppercase">Latest news</p>
+          <p className={dashboardSectionSubtitleClass}>
+            {unreadCount} unread bulletins
+          </p>
         </div>
         <Link
           href="/member"
-          className="font-roboto text-[9px] tracking-[0.16em] text-primary uppercase transition-colors hover:text-accent"
+          className="flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-transparent px-3 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5"
         >
-          All →
+          <span className="font-roboto text-[10px] font-semibold tracking-[0.16em] text-accent uppercase">
+            All
+          </span>
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
+            <path
+              d="M3.5 2L7 5L3.5 8"
+              stroke="currentColor"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="stroke-accent"
+            />
+          </svg>
         </Link>
       </div>
-      <div className="rounded-xl border border-accent/8 bg-card px-4 py-1">
-        {items.map((item) => (
-          <NewsRow key={item.id} item={item} />
-        ))}
+
+      {/* Bulletin cards */}
+      <div className="space-y-3">
+        {items.length === 0 ? (
+          <MemberSectionEmpty
+            title="No Bulletins"
+            description="Club news and announcements will show up here."
+          />
+        ) : (
+          items.map((item) => <NewsCard key={item.id} item={item} />)
+        )}
       </div>
     </div>
   );

@@ -3,6 +3,11 @@ export type MemberProfileStat = {
   label: string;
 };
 
+export type MemberProfileDetailField = {
+  label: string;
+  value: string;
+};
+
 export type MemberProfileSettingsAction =
   | { type: "link" }
   | { type: "status"; value: string }
@@ -14,6 +19,7 @@ export type MemberProfileSettingsItem = {
   subtitle: string;
   icon: MemberProfileSettingsIconKey;
   action: MemberProfileSettingsAction;
+  detailFields?: MemberProfileDetailField[];
 };
 
 export type MemberProfileSettingsSection = {
@@ -40,6 +46,7 @@ export type MemberProfileData = {
   handle: string;
   memberNumber: string;
   tier: string;
+  profileImageUrl?: string;
   stats: MemberProfileStat[];
   settingsSections: MemberProfileSettingsSection[];
 };

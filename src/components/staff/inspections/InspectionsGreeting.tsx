@@ -1,24 +1,15 @@
 import { PlusSmall } from "@/components/common/Svgs";
+import { StaffShiftMeta } from "@/components/staff/StaffShiftMeta";
 
 type InspectionsGreetingProps = {
   onAddInspection: () => void;
 };
 
 export function InspectionsGreeting({ onAddInspection }: InspectionsGreetingProps) {
-  const today = new Date().toLocaleDateString("en-GB", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-
   return (
     <div className="flex items-end justify-between gap-4">
       <div className="space-y-3">
-        <p className="font-roboto text-xs tracking-[0.14em] uppercase">
-          <span className="text-foreground">{today} · </span>
-          <span className="text-primary">Staff Shift</span>
-        </p>
+        <StaffShiftMeta split />
         <h1 className="font-copperplate text-[32px] leading-tight">
           <span className="text-foreground">Vehicle </span>
           <span className="text-primary">Inspections</span>

@@ -5,7 +5,12 @@ export type GarageVehicleStat = {
   label: string;
 };
 
-export type GarageVehicleStatusTone = "ready" | "in_service" | "away";
+export type GarageVehicleStatusTone =
+  | "ready"
+  | "in_service"
+  | "away"
+  | "stored"
+  | "in_review";
 
 export type GarageVehicle = {
   id: string;
@@ -53,12 +58,32 @@ export type MemberVehicleHealthMetric = {
   note: string;
 };
 
+export type MemberVehicleDocumentBadgeTone = "valid" | "expiring" | "expired";
+
+export type MemberVehicleDocumentIconTone =
+  | "red"
+  | "blue"
+  | "orange"
+  | "green"
+  | "greenCheck";
+
+export type MemberVehicleDocument = {
+  key: string;
+  title: string;
+  subtitle: string;
+  url: string;
+  iconTone: MemberVehicleDocumentIconTone;
+  badge?: {
+    label: string;
+    tone: MemberVehicleDocumentBadgeTone;
+  };
+};
+
 export type MemberVehicleRequestItem = {
   id: string;
   title: string;
   subtitle: string;
   icon: "transport" | "detailing" | "maintenance" | "sourcing";
-  highlighted?: boolean;
 };
 
 export type MemberVehicleDetail = {
@@ -78,6 +103,7 @@ export type MemberVehicleDetail = {
   ownership: MemberVehicleOwnership;
   health: MemberVehicleHealthMetric[];
   healthCtaLabel: string;
+  documents: MemberVehicleDocument[];
 };
 
 export type GarageFilterKey =
@@ -86,7 +112,9 @@ export type GarageFilterKey =
   | "in_service"
   | "away"
   | "modern"
-  | "classic";
+  | "classic"
+  | "stored"
+  | "in_review";
 
 export type GarageFilter = {
   key: GarageFilterKey;

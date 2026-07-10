@@ -1,73 +1,117 @@
+"use client";
+
+import { useState } from "react";
+import {
+  MemberGarageChevronRight,
+  MemberVehicleDetailingIcon,
+  MemberVehicleMaintenanceIcon,
+  MemberVehicleSourcingIcon,
+  MemberVehicleTransportIcon,
+} from "@/components/common/Svgs";
+import { DetailingWashModal } from "./detailing-wash/DetailingWashModal";
+import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServiceModal";
+import { TransportDeliveryModal } from "./transport-delivery/TransportDeliveryModal";
+import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
 import type { MemberVehicleRequestItem } from "./types";
 
 function RequestIcon({ icon }: { icon: MemberVehicleRequestItem["icon"] }) {
+  const iconClass = icon === "sourcing" ? "size-5" : "size-[18px]";
+
   if (icon === "transport") {
     return (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-        <circle cx="8" cy="8" r="5.5" stroke="currentColor" strokeWidth="1.1" />
-        <path
-          d="M8 5V8L10 9.5"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinecap="round"
-          strokeLinejoin="round"
+      <span className="relative flex size-[18px] items-center justify-center">
+        <MemberVehicleTransportIcon
+          className={`${iconClass} transition-opacity group-hover:opacity-0`}
         />
-      </svg>
+        <MemberVehicleTransportIcon
+          className={`${iconClass} absolute opacity-0 transition-opacity group-hover:opacity-100`}
+          highlighted
+        />
+      </span>
     );
   }
 
   if (icon === "detailing") {
-    return (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-        <path
-          d="M3 9.5H4.2L5 7.5H11L11.8 9.5H13"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinejoin="round"
-        />
-        <path
-          d="M2.5 9.5H13.5V11.5C13.5 12 13 12.5 12.5 12.5H3.5C3 12.5 2.5 12 2.5 11.5V9.5Z"
-          stroke="currentColor"
-          strokeWidth="1.1"
-        />
-        <path
-          d="M5 3.5L5.6 4.7M8 3L8 4.5M11 3.5L10.4 4.7"
-          stroke="currentColor"
-          strokeWidth="1.1"
-          strokeLinecap="round"
-        />
-      </svg>
-    );
+    return <MemberVehicleDetailingIcon className={iconClass} />;
   }
 
   if (icon === "maintenance") {
-    return (
-      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-        <path
-          d="M9.9 2.9c-.6.6-.8 1.5-.5 2.3L3.5 11c-.5.5-.5 1.3 0 1.8s1.3.5 1.8 0l5.8-5.9c.8.3 1.7.1 2.3-.5.6-.6.8-1.6.4-2.5l-2 2-1.4-1.4 2-2c-.9-.4-1.9-.2-2.5.5Z"
-          stroke="currentColor"
-          strokeWidth="1"
-          strokeLinejoin="round"
-        />
-      </svg>
-    );
+    return <MemberVehicleMaintenanceIcon className={iconClass} />;
   }
 
+  return <MemberVehicleSourcingIcon className={iconClass} />;
+}
+
+function RequestRowContent({ request }: { request: MemberVehicleRequestItem }) {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden>
-      <circle cx="7" cy="7" r="4" stroke="currentColor" strokeWidth="1.1" />
-      <path d="M10 10L13 13" stroke="currentColor" strokeWidth="1.1" strokeLinecap="round" />
-    </svg>
+    <>
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent/8 transition-colors group-hover:bg-primary/15">
+        <RequestIcon icon={request.icon} />
+      </span>
+
+      <div className="min-w-0 flex-1">
+        <p className="font-roboto text-[13px] font-medium text-foreground">
+          {request.title}
+        </p>
+        <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
+          {request.subtitle}
+        </p>
+      </div>
+
+      <span className="hidden size-7 shrink-0 items-center justify-center rounded-full bg-primary text-dark group-hover:flex">
+        <MemberGarageChevronRight className="size-[11px]" />
+      </span>
+    </>
   );
 }
 
 type MemberVehicleRequestsCardProps = {
+  vehicleId: string;
+  vehicleName: string;
   requests: MemberVehicleRequestItem[];
 };
 
 export function MemberVehicleRequestsCard({
+  vehicleId,
+  vehicleName,
   requests,
 }: MemberVehicleRequestsCardProps) {
+  const [isTransportOpen, setIsTransportOpen] = useState(false);
+  const [isDetailingOpen, setIsDetailingOpen] = useState(false);
+  const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
+  const [isSourcingOpen, setIsSourcingOpen] = useState(false);
+
+  const rowClassName =
+    "group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-dark px-4 py-3.5 text-left transition-colors hover:border-primary/40 hover:bg-primary/6";
+
+  function handleRequestClick(requestId: MemberVehicleRequestItem["id"]) {
+    if (requestId === "transport") {
+      setIsTransportOpen(true);
+      return;
+    }
+
+    if (requestId === "detailing") {
+      setIsDetailingOpen(true);
+      return;
+    }
+
+    if (requestId === "maintenance") {
+      setIsMaintenanceOpen(true);
+      return;
+    }
+
+    if (requestId === "sourcing") {
+      setIsSourcingOpen(true);
+    }
+  }
+
+  const interactiveRequestIds = new Set<MemberVehicleRequestItem["id"]>([
+    "transport",
+    "detailing",
+    "maintenance",
+    "sourcing",
+  ]);
+
   return (
     <div className="rounded-2xl border border-accent/10 bg-card p-5">
       <h2 className="font-copperplate text-[15px] uppercase">
@@ -76,50 +120,48 @@ export function MemberVehicleRequestsCard({
       </h2>
 
       <div className="mt-4 space-y-2.5">
-        {requests.map((request) => (
-          <div
-            key={request.id}
-            className={`flex cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 transition-colors ${
-              request.highlighted
-                ? "border-primary/40 bg-primary/6 hover:bg-primary/10"
-                : "border-transparent bg-dark hover:border-accent/15"
-            }`}
-          >
-            <span
-              className={`flex size-9 shrink-0 items-center justify-center rounded-lg ${
-                request.highlighted
-                  ? "bg-primary/15 text-primary"
-                  : "bg-accent/8 text-secondary"
-              }`}
+        {requests.map((request) =>
+          interactiveRequestIds.has(request.id) ? (
+            <button
+              key={request.id}
+              type="button"
+              onClick={() => handleRequestClick(request.id)}
+              className={rowClassName}
             >
-              <RequestIcon icon={request.icon} />
-            </span>
-
-            <div className="min-w-0 flex-1">
-              <p className="font-roboto text-[13px] font-medium text-foreground">
-                {request.title}
-              </p>
-              <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
-                {request.subtitle}
-              </p>
+              <RequestRowContent request={request} />
+            </button>
+          ) : (
+            <div key={request.id} className={rowClassName}>
+              <RequestRowContent request={request} />
             </div>
-
-            {request.highlighted && (
-              <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-dark">
-                <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden>
-                  <path
-                    d="M4.5 2.5L8 6L4.5 9.5"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              </span>
-            )}
-          </div>
-        ))}
+          ),
+        )}
       </div>
+
+      <TransportDeliveryModal
+        vehicleId={vehicleId}
+        vehicleName={vehicleName}
+        open={isTransportOpen}
+        onClose={() => setIsTransportOpen(false)}
+      />
+
+      <DetailingWashModal
+        vehicleId={vehicleId}
+        vehicleName={vehicleName}
+        open={isDetailingOpen}
+        onClose={() => setIsDetailingOpen(false)}
+      />
+
+      <MaintenanceServiceModal
+        vehicleId={vehicleId}
+        open={isMaintenanceOpen}
+        onClose={() => setIsMaintenanceOpen(false)}
+      />
+
+      <VehicleSourcingModal
+        open={isSourcingOpen}
+        onClose={() => setIsSourcingOpen(false)}
+      />
     </div>
   );
 }
