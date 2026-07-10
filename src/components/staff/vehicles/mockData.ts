@@ -15,6 +15,7 @@ export const vehicleDetails: Record<string, VehicleDetail> = {
     mileage: "41,200 km",
     member: "Khalid Al Mansoori",
     memberBadge: "FOUNDING",
+    notes: [],
     isOverdue: true,
     health: [
       { label: "Engine & Drive", value: 38, tone: "pink" },
