@@ -30,3 +30,6 @@ export { MemberDiary } from "./diary/MemberDiary";
 export { MemberEvents } from "./events";
 // Concierge
 export { MemberConciergePage } from "./concierge";
+
+// The Club
+export { MemberTheClubPage } from "./the-club/MemberTheClubPage";

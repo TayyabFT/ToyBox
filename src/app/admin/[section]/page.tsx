@@ -7,6 +7,7 @@ import { ConciergePage } from "@/components/admin/concierge";
 import { EventsPage } from "@/components/admin/events";
 import { MembersPage } from "@/components/admin/members";
 import { AdminOverviewPage } from "@/components/admin/overview";
+import { ParkingPage } from "@/components/admin/parking";
 import { ServiceRequestsPage } from "@/components/admin/service-requests";
 import { WorkshopPage } from "@/components/admin/workshop";
 import { StaffPage } from "@/components/admin/staff";
@@ -49,6 +50,10 @@ export default async function AdminSectionPage({ params }: PageProps) {
 
   if (navItem.id === "clubhouse") {
     return <ClubhousePage />;
+  }
+
+  if (navItem.id === "parking") {
+    return <ParkingPage />;
   }
 
   if (navItem.id === "vehicles") {

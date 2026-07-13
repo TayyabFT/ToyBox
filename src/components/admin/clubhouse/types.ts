@@ -37,6 +37,7 @@ export type ClubhouseVenueCard = {
   capacity: number;
   capacitySuffix?: string;
   details: ClubhouseVenueDetail[];
+  href?: string;
 };
 
 export type ClubhouseVenuesDisplay = ClubhouseVenueCard[];

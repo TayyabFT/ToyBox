@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { OverviewPage } from "@/components/staff/overview";
 import { VehiclesPage } from "@/components/staff/vehicles";
+import { ParkingPage } from "@/components/staff/parking";
 import { ConfirmationsPage } from "@/components/staff/confirmations";
 import { ConciergePage } from "@/components/staff/concierge";
 import { InspectionsPage } from "@/components/staff/inspections";
@@ -27,6 +28,10 @@ const page = async ({ params }: PageProps) => {
 
   if (navItem.id === "vehicles") {
     return <VehiclesPage />;
+  }
+
+  if (navItem.id === "parking") {
+    return <ParkingPage />;
   }
 
   if (navItem.id === "bookings") {

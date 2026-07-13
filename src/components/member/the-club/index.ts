@@ -1,0 +1,1 @@
+export { MemberTheClubPage } from "./MemberTheClubPage";

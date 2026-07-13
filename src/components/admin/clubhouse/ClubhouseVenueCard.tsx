@@ -1,4 +1,5 @@
-import type { ReactNode } from "react";
+import Link from "next/link";
+import type { ElementType, ReactNode } from "react";
 import { ClubhouseVenueStatusBadge } from "./ClubhouseVenueStatusBadge";
 import type { ClubhouseVenueCard } from "./types";
 
@@ -31,8 +32,20 @@ export function ClubhouseVenueCardItem({ venue }: ClubhouseVenueCardProps) {
       ? Math.min(100, Math.round((venue.occupied / venue.capacity) * 100))
       : 0;
 
+  const Container: ElementType = venue.href ? Link : "article";
+  const containerProps = venue.href
+    ? { href: venue.href }
+    : {};
+
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-accent/12 bg-card p-5">
+    <Container
+      {...containerProps}
+      className={`flex h-full flex-col rounded-2xl border border-accent/12 bg-card p-5${
+        venue.href
+          ? " transition-colors hover:border-primary/40 hover:bg-accent/5"
+          : ""
+      }`}
+    >
       <div className="flex items-start justify-between gap-3">
         <h2 className="font-copperplate text-[15px] leading-tight tracking-[0.06em] uppercase">
           {venue.title.before ? (
@@ -94,6 +107,6 @@ export function ClubhouseVenueCardItem({ venue }: ClubhouseVenueCardProps) {
           </li>
         ))}
       </ul>
-    </article>
+    </Container>
   );
 }

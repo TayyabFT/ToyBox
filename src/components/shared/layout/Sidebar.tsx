@@ -21,6 +21,7 @@ import {
   NavClubhouse,
   NavCommunications,
   NavGarage,
+  NavParking,
   Sunburst,
   User,
   VehicleCalendar,
@@ -128,6 +129,7 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   "service-requests": (active) => <Sunburst active={active} />,
   "photo-uploads": (active) => <Camera active={active} />,
   vehicles: (active) => <User active={active} />,
+  parking: (active) => <NavParking active={active} />,
   garage: (active) => <NavGarage active={active} />,
   concierge: (active) => <Message active={active} />,
   "ask-steve": (active) => <AskSteve active={active} />,
@@ -142,6 +144,7 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   finance: (active) => <Finance active={active} />,
   analytics: (active) => <NavAnalytics active={active} />,
   // Member-specific
+  "the-club": (active) => <NavClubhouse active={active} />,
   diary: (active) => <Calendar active={active} />,
   marketplace: (active) => <Sunburst active={active} />,
   profile: (active) => <User active={active} />,

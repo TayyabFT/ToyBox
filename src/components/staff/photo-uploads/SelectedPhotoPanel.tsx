@@ -74,7 +74,7 @@ export function SelectedPhotoPanel({
               type="button"
               disabled={actionLoading}
               onClick={onCancelEdit}
-              className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+              className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-input-muted px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-accent/35 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
             >
               Cancel
             </button>
@@ -83,7 +83,7 @@ export function SelectedPhotoPanel({
               type="button"
               disabled={actionLoading}
               onClick={onStartEdit}
-              className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-lg border border-accent/20 bg-surface px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-60"
+              className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-lg border border-accent/20 bg-input-muted px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-accent uppercase transition-colors hover:border-accent/35 disabled:cursor-not-allowed disabled:opacity-60"
             >
               <EditIcon className="size-3" />
               Edit
@@ -97,8 +97,8 @@ export function SelectedPhotoPanel({
         </div>
       </div>
 
-      <div className="relative mb-4 aspect-[16/10] overflow-hidden rounded-xl border border-accent/12 bg-dark">
-        <span className="font-roboto absolute right-3 top-3 rounded-md border border-accent/18 bg-surface/70 px-2 py-1 text-[9px] font-semibold tracking-[0.1em] text-secondary uppercase">
+      <div className="photo-upload-capture-tile relative mb-4 aspect-[16/10] overflow-hidden rounded-xl border border-accent/15">
+        <span className="font-roboto absolute right-3 top-3 rounded-md border border-accent/18 bg-card/90 px-2 py-1 text-[9px] font-semibold tracking-[0.1em] text-secondary uppercase shadow-sm">
           {photo.index}
         </span>
 
@@ -111,7 +111,7 @@ export function SelectedPhotoPanel({
           />
         ) : (
           <div className="flex h-full flex-col items-center justify-center gap-3">
-            <span className="flex size-12 items-center justify-center rounded-xl border border-accent/18 bg-surface/50 text-secondary">
+            <span className="flex size-12 items-center justify-center rounded-xl border border-accent/18 bg-elevated text-secondary">
               <CaptureCameraIcon className="size-6" />
             </span>
             <p className="font-roboto text-[10px] tracking-[0.12em] text-section-label uppercase">
@@ -146,7 +146,7 @@ export function SelectedPhotoPanel({
           {photo.categoryTags.map((tag) => (
             <span
               key={tag}
-              className="font-roboto rounded-md border border-accent/18 bg-surface px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] text-secondary uppercase"
+              className="font-roboto rounded-md border border-accent/18 bg-input-muted px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] text-secondary uppercase"
             >
               {tag}
             </span>
@@ -169,10 +169,10 @@ export function SelectedPhotoPanel({
             value={draft.caption}
             disabled={actionLoading}
             onChange={(event) => onDraftChange({ caption: event.target.value })}
-            className="font-roboto min-h-[96px] w-full rounded-xl border border-accent/12 bg-dark px-4 py-3 text-[12px] leading-relaxed text-foreground outline-none focus:border-primary/35"
+            className="font-roboto min-h-[96px] w-full rounded-xl border border-accent/15 bg-input-muted px-4 py-3 text-[12px] leading-relaxed text-foreground outline-none focus:border-accent/40"
           />
         ) : (
-          <div className="rounded-xl border border-accent/12 bg-dark px-4 py-3">
+          <div className="rounded-xl border border-accent/15 bg-input-muted px-4 py-3">
             <p className="font-roboto text-[12px] leading-relaxed text-foreground">
               {photo.caption || "—"}
             </p>
@@ -185,7 +185,7 @@ export function SelectedPhotoPanel({
           type="button"
           disabled={actionLoading}
           onClick={() => void onUpload()}
-          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-accent/20 bg-surface py-2.5 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-60"
+          className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-accent/20 bg-input-muted py-2.5 text-[10px] font-semibold tracking-[0.1em] text-accent uppercase transition-colors hover:border-accent/35 disabled:cursor-not-allowed disabled:opacity-60"
         >
           <ImportIcon className="size-3.5" />
           Upload
@@ -205,7 +205,7 @@ export function SelectedPhotoPanel({
 
 function InfoBox({ value }: { value: string }) {
   return (
-    <div className="rounded-lg border border-accent/12 bg-dark px-3 py-2.5 text-center font-roboto text-[10px] tracking-[0.06em] text-foreground uppercase">
+    <div className="rounded-lg border border-accent/15 bg-input-muted px-3 py-2.5 text-center font-roboto text-[10px] tracking-[0.06em] text-foreground uppercase">
       {value}
     </div>
   );

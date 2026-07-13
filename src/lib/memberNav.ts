@@ -35,6 +35,7 @@ export const allMemberNavItems: MemberNavItem[] = [
   ...memberNav,
   ...memberServicesNav,
   ...memberAccountNav,
+  { id: "the-club", label: "The Club", href: `${MEMBER_BASE}/the-club` },
 ];
 
 export function isMemberNavActive(pathname: string, href: string): boolean {

@@ -1,5 +1,9 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import type { MemberClubVenue } from "./types";
+import { ReservationModal } from "@/components/member/the-club/ReservationModal";
 import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
 
 type MemberClubSectionProps = {
@@ -44,12 +48,19 @@ function VenueIcon({ iconKey }: { iconKey?: MemberClubVenue["iconKey"] }) {
   );
 }
 
-function VenueCard({ venue }: { venue: MemberClubVenue }) {
+export function VenueCard({
+  venue,
+  onClick,
+}: {
+  venue: MemberClubVenue;
+  onClick?: (e: React.MouseEvent) => void;
+}) {
   const href = venue.href ?? "/member/concierge";
 
   return (
     <Link
       href={href}
+      onClick={onClick}
       className="group relative block min-w-0 flex-1 overflow-hidden rounded-[18px]"
     >
       <div className="relative h-[320px] w-full bg-[#0d0c09]">
@@ -148,6 +159,8 @@ function VenueCard({ venue }: { venue: MemberClubVenue }) {
 }
 
 export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps) {
+  const [selectedVenue, setSelectedVenue] = useState<MemberClubVenue | null>(null);
+
   return (
     <div className="space-y-4">
       {/* Header */}
@@ -164,7 +177,7 @@ export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps
           )}
         </div>
         <Link
-          href="/member/concierge"
+          href="/member/the-club"
           className="flex shrink-0 items-center gap-1.5 rounded-full border border-accent/30 bg-transparent px-3.5 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5"
         >
           <span className="font-roboto text-[10px] font-semibold tracking-[0.14em] text-accent uppercase">
@@ -186,9 +199,24 @@ export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps
       {/* 3 equal venue cards */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {venues.map((venue) => (
-          <VenueCard key={venue.id} venue={venue} />
+          <VenueCard
+            key={venue.id}
+            venue={venue}
+            onClick={(e) => {
+              e.preventDefault();
+              setSelectedVenue(venue);
+            }}
+          />
         ))}
       </div>
+
+      {selectedVenue && (
+        <ReservationModal
+          venue={selectedVenue}
+          allVenues={venues}
+          onClose={() => setSelectedVenue(null)}
+        />
+      )}
     </div>
   );
 }

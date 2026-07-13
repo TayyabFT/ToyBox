@@ -27,7 +27,7 @@ const defaultSlides: Slide[] = [
     ),
     subtitle:
       "An exclusive membership experience built around the world's finest automobiles — curated for those who demand the extraordinary.",
-    cta: { label: "Explore the Club", href: "/member/concierge" },
+    cta: { label: "Explore the Club", href: "/member/the-club" },
   },
   {
     id: "2",

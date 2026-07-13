@@ -51,7 +51,7 @@ export function RecentUploads({
         </h2>
         <button
           type="button"
-          className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-lg border border-accent/20 bg-surface px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-primary/35 hover:text-primary"
+          className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-lg border border-accent/20 bg-input-muted px-3 py-1.5 text-[10px] font-semibold tracking-[0.1em] text-secondary uppercase transition-colors hover:border-accent/35 hover:text-primary"
         >
           <FilterIcon className="size-3" />
           Filter
@@ -101,11 +101,11 @@ function UploadRow({
       onClick={onSelect}
       className={`flex w-full items-center gap-3 rounded-xl border px-3 py-2.5 text-left transition-colors ${
         selected
-          ? "border-primary/35 bg-primary/5"
-          : "border-accent/10 bg-surface hover:border-primary/25"
+          ? "border-accent/35 bg-accent/8"
+          : "border-accent/15 bg-input-muted hover:border-accent/35"
       }`}
     >
-      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-accent/15 bg-dark text-secondary">
+      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-accent/15 bg-elevated text-secondary">
         <CaptureCameraIcon className="size-4" />
       </span>
 

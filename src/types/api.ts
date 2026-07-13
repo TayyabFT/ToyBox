@@ -175,9 +175,9 @@ export type AuthProfileData = {
   stats?: AuthProfileStats;
   headerStats?: AuthProfileHeaderStatRaw[];
   sections?:
-    | Record<string, AuthProfileSectionRaw>
-    | AuthProfileSectionRaw[]
-    | AuthProfileSectionsNested;
+  | Record<string, AuthProfileSectionRaw>
+  | AuthProfileSectionRaw[]
+  | AuthProfileSectionsNested;
   privacySettings?: AuthProfilePrivacySection;
 };
 
@@ -224,10 +224,10 @@ export type GarageVehicleBayRaw = {
 export type GarageLastInspectedRaw =
   | ""
   | {
-      label: string;
-      at: string;
-      relative: string;
-    };
+    label: string;
+    at: string;
+    relative: string;
+  };
 
 export type GarageServiceInfoRaw = {
   label?: string;
@@ -574,6 +574,233 @@ export type ClubhouseOverviewData = {
 
 export type ClubhouseSpacesResponse = ApiResponse<ClubhouseSpacesData>;
 export type ClubhouseOverviewResponse = ApiResponse<ClubhouseOverviewData>;
+
+export type ClubhouseSlotAvailability = {
+  timeSlot: string;
+  available: boolean;
+  seatsRemaining: number | null;
+};
+
+export type ClubhouseAvailabilityData = {
+  areaId: string;
+  areaTitle: string;
+  date: string;
+  capacity: number | null;
+  requestedGuests: number;
+  slots: ClubhouseSlotAvailability[];
+};
+
+export type ClubhouseAvailabilityResponse = ApiResponse<ClubhouseAvailabilityData>;
+
+export type ClubhouseReservationConfirmation = {
+  title: string;
+  confirmationNumber: string;
+  areaTitle: string;
+  date: string;
+  timeSlot: string;
+  guests: number;
+  dateTimeLabel: string;
+  status: string;
+};
+
+export type ClubhouseReservationResponseData = {
+  id: string;
+  referenceNumber: string;
+  confirmationNumber: string;
+  areaTitle: string;
+  date: string;
+  timeSlot: string;
+  guests: number;
+  dateTimeLabel: string;
+  status: string;
+  confirmation: ClubhouseReservationConfirmation;
+  costBreakdown: {
+    tableHold: number;
+    estimatedMinimum: number;
+    total: number;
+    currency: string;
+  };
+  message: string;
+};
+
+export type ClubhouseReservationResponse = ApiResponse<ClubhouseReservationResponseData>;
+export type CreateAdminClubhouseRestaurantBody = {
+  restaurantName: string;
+  openingTime: string;
+  closingTime: string;
+  numberOfTables: number;
+  capacity: number;
+  cuisineType: string;
+  imageUrls?: string[];
+  status: string;
+};
+
+export type CreateAdminClubhousePrivateLoungeBody = {
+  loungeTitle: string;
+  type: string;
+  isAvailable24x7: boolean;
+  capacity: number;
+  maintenanceIntervalHours: number;
+  imageUrls?: string[];
+  status: string;
+};
+
+export type CreateAdminClubhouseSuiteLoungeBody = {
+  suiteTitle: string;
+  location: string;
+  suites: string[];
+  roomType: string;
+  capacity: number;
+  addOns?: string[];
+  imageUrls?: string[];
+  notes?: string;
+  status: string;
+};
+
+export type AdminClubhouseAreaData = {
+  id?: string;
+  areaType?: string;
+  title?: string;
+  status?: string;
+};
+
+export type CreateAdminClubhouseAreaResponse = ApiResponse<AdminClubhouseAreaData>;
+
+export type AdminClubhouseRestaurantRaw = {
+  id: string;
+  areaType: string;
+  restaurantName: string;
+  openingTime: string;
+  closingTime: string;
+  numberOfTables: number;
+  capacity: number;
+  totalCapacity: number;
+  booked: number;
+  capacityLabel: string;
+  cuisineType: string;
+  images: string[];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type AdminClubhouseRestaurantListData = {
+  items?: AdminClubhouseRestaurantRaw[];
+  total?: number;
+  limit?: number;
+  offset?: number;
+};
+
+export type AdminClubhouseRestaurantListResponse =
+  ApiResponse<AdminClubhouseRestaurantListData>;
+
+// ── Staff Clubhouse ────────────────────────────────────────────────────────────
+
+export type StaffClubhouseReservationStatus =
+  | "pending"
+  | "confirmed"
+  | "prep"
+  | "cancelled"
+  | string;
+
+export type StaffClubhouseReservationRaw = {
+  id?: string | number;
+  status?: string;
+  time?: string;
+  timeSlot?: string;
+  date?: string;
+  guests?: number;
+  pax?: number;
+  occasion?: string;
+  specialRequests?: string;
+  arrivalNote?: string;
+  zone?: string;
+  zoneType?: string;
+  venueTitle?: string;
+  venue?: string;
+  memberName?: string;
+  memberNumber?: string;
+  memberTier?: unknown;
+  memberInitial?: string;
+  member?: {
+    id?: string | number;
+    name?: string;
+    fullName?: string;
+    memberNumber?: string | number;
+    number?: string | number;
+    tier?: unknown;
+    tierLabel?: string;
+    membershipTier?: string;
+    initial?: string;
+  };
+  confirmedBy?: string;
+  confirmedAt?: string;
+  confirmedByName?: string;
+  statusDetail?: string;
+};
+
+export type StaffClubhouseReservationEditableStatus = "confirmed" | "prep";
+
+export type StaffClubhouseReservationUpdateRequest = {
+  guests?: number;
+  occasion?: string;
+  specialRequests?: string;
+  arrivalNote?: string;
+  timeSlot?: string;
+  date?: string;
+  status?: StaffClubhouseReservationEditableStatus;
+};
+
+export type StaffClubhouseReservationCancelRequest = {
+  reason?: string;
+};
+
+export type StaffClubhouseReservationMessageRequest = {
+  initialMessage?: string;
+};
+
+export type StaffClubhouseZoneTabRaw = {
+  id?: string;
+  key?: string;
+  label?: string;
+  value?: string;
+};
+
+export type StaffClubhouseSummaryRaw = {
+  dateLabel?: string;
+  displayDate?: string;
+  shiftLabel?: string;
+  shift?: string;
+  confirmedCount?: number;
+  confirmed?: number;
+  walkInCount?: number;
+  walkIns?: number;
+  pendingCount?: number;
+  pending?: number;
+  prepCount?: number;
+  prep?: number;
+  zoneTabs?: StaffClubhouseZoneTabRaw[];
+  filters?: StaffClubhouseZoneTabRaw[];
+  tabs?: StaffClubhouseZoneTabRaw[];
+};
+
+export type StaffClubhouseReservationsListData =
+  | StaffClubhouseReservationRaw[]
+  | {
+      reservations?: StaffClubhouseReservationRaw[];
+      items?: StaffClubhouseReservationRaw[];
+      records?: StaffClubhouseReservationRaw[];
+      data?: StaffClubhouseReservationRaw[];
+    };
+
+export type StaffClubhouseSummaryResponse =
+  ApiResponse<StaffClubhouseSummaryRaw>;
+export type StaffClubhouseReservationsListResponse =
+  ApiResponse<StaffClubhouseReservationsListData>;
+export type StaffClubhouseReservationDetailResponse =
+  ApiResponse<StaffClubhouseReservationRaw>;
+export type StaffClubhouseReservationMutationResponse =
+  ApiResponse<StaffClubhouseReservationRaw>;
 
 export type ApiFieldError = {
   field?: string;
@@ -3324,7 +3551,135 @@ export type StaffParkingSlotRaw = {
   openTime?: string;
   closeTime?: string;
   status?: string;
+  isActive?: boolean;
+  notes?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type StaffParkingSlotUpdateRequest = {
+  slotCode?: string;
+  level?: string;
+  zone?: string;
+  label?: string;
+  slotType?: ParkingSlotType | string;
+  openTime?: string;
+  closeTime?: string;
+  status?: ParkingSlotStatus | string;
+  isActive?: boolean;
+  notes?: string;
+  metadata?: Record<string, unknown>;
+};
+
+export type StaffParkingSummaryStatRaw = {
+  key?: string;
+  label?: string;
+  value?: string | number;
+  subLabel?: string;
+  subtext?: string;
+  subtitle?: string;
+};
+
+export type StaffParkingSlotsSummaryRaw = {
+  total?: StaffParkingSummaryStatRaw;
+  totalSlots?: StaffParkingSummaryStatRaw;
+  available?: StaffParkingSummaryStatRaw;
+  occupied?: StaffParkingSummaryStatRaw;
+  maintenance?: StaffParkingSummaryStatRaw;
+  reserved?: StaffParkingSummaryStatRaw;
+  active?: StaffParkingSummaryStatRaw;
+  inactive?: StaffParkingSummaryStatRaw;
+};
+
+export type StaffParkingSlotsListData =
+  | StaffParkingSlotRaw[]
+  | {
+    slots?: StaffParkingSlotRaw[];
+    items?: StaffParkingSlotRaw[];
+    records?: StaffParkingSlotRaw[];
+    data?: StaffParkingSlotRaw[];
+  };
+
+export type StaffParkingSlotsListResponse = ApiResponse<StaffParkingSlotsListData>;
+export type StaffParkingSlotDetailResponse = ApiResponse<StaffParkingSlotRaw>;
+export type StaffParkingSlotCreateResponse = ApiResponse<StaffParkingSlotRaw>;
+export type StaffParkingSlotUpdateResponse = ApiResponse<StaffParkingSlotRaw>;
+export type StaffParkingSlotDeleteResponse = ApiResponse<unknown>;
+export type StaffParkingSlotsSummaryResponse =
+  ApiResponse<StaffParkingSlotsSummaryRaw>;
+
+export type ParkingSessionStatus =
+  | "pending"
+  | "accepted"
+  | "active"
+  | "completed"
+  | "cancelled"
+  | string;
+
+export type StaffParkingSessionRaw = {
+  id?: string | number;
+  status?: string;
+  referenceNumber?: string;
+  reference?: string;
+  memberName?: string;
+  member?: {
+    id?: string | number;
+    name?: string;
+    fullName?: string;
+  };
+  vehicleName?: string;
+  vehicle?: {
+    id?: string | number;
+    name?: string;
+    make?: string;
+    model?: string;
+    registration?: string;
+    plate?: string;
+  };
+  slotCode?: string;
+  slot?: {
+    id?: string | number;
+    slotCode?: string;
+    zone?: string;
+    label?: string;
+    level?: string;
+  };
+  requestedAt?: string;
+  createdAt?: string;
+  acceptedAt?: string;
+  startedAt?: string;
+  completedAt?: string;
+  staffNotes?: string;
+  memberNotes?: string;
   notes?: string;
 };
 
-export type StaffParkingSlotCreateResponse = ApiResponse<StaffParkingSlotRaw>;
+export type StaffParkingSessionAcceptRequest = {
+  staffNotes?: string;
+};
+
+export type StaffParkingSessionStartRequest = {
+  staffNotes?: string;
+  notifyMember?: boolean;
+};
+
+export type StaffParkingSessionCompleteRequest = {
+  staffNotes?: string;
+  notifyMember?: boolean;
+};
+
+export type StaffParkingSessionsListData =
+  | StaffParkingSessionRaw[]
+  | {
+    sessions?: StaffParkingSessionRaw[];
+    items?: StaffParkingSessionRaw[];
+    records?: StaffParkingSessionRaw[];
+    data?: StaffParkingSessionRaw[];
+    queue?: StaffParkingSessionRaw[];
+  };
+
+export type StaffParkingSessionsListResponse =
+  ApiResponse<StaffParkingSessionsListData>;
+export type StaffParkingSessionDetailResponse =
+  ApiResponse<StaffParkingSessionRaw>;
+export type StaffParkingSessionMutationResponse =
+  ApiResponse<StaffParkingSessionRaw>;

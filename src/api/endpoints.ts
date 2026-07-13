@@ -27,6 +27,13 @@ export const API_ENDPOINTS = {
   clubhouse: {
     spaces: "/api/v1/clubhouse/spaces",
     overview: "/api/v1/clubhouse/overview",
+    availability: (id: string | number) => `/api/v1/clubhouse/spaces/${id}/availability`,
+    reservations: "/api/v1/clubhouse/reservations",
+  },
+  adminClubhouse: {
+    restaurant: "/api/v1/admin/clubhouse/restaurant",
+    privateLounge: "/api/v1/admin/clubhouse/private-lounge",
+    suiteLounge: "/api/v1/admin/clubhouse/suite-lounge",
   },
   vehicles: {
     inventory: "/api/v1/admin/vehicles/inventory",
@@ -100,6 +107,37 @@ export const API_ENDPOINTS = {
   },
   staffParking: {
     slots: "/api/v1/staff/parking/slots",
+    slotDetail: (id: string | number) => `/api/v1/staff/parking/slots/${id}`,
+    summary: "/api/v1/staff/parking/slots/summary",
+    sessions: "/api/v1/staff/parking/sessions",
+    sessionDetail: (id: string | number) =>
+      `/api/v1/staff/parking/sessions/${id}`,
+    sessionAccept: (id: string | number) =>
+      `/api/v1/staff/parking/sessions/${id}/accept`,
+    sessionStart: (id: string | number) =>
+      `/api/v1/staff/parking/sessions/${id}/start`,
+    sessionComplete: (id: string | number) =>
+      `/api/v1/staff/parking/sessions/${id}/complete`,
+  },
+  adminParking: {
+    slots: "/api/v1/admin/parking/slots",
+    slotDetail: (id: string | number) => `/api/v1/admin/parking/slots/${id}`,
+    summary: "/api/v1/admin/parking/slots/summary",
+    sessions: "/api/v1/admin/parking/sessions",
+    sessionDetail: (id: string | number) =>
+      `/api/v1/admin/parking/sessions/${id}`,
+  },
+  staffClubhouse: {
+    summary: "/api/v1/staff/clubhouse/summary",
+    reservations: "/api/v1/staff/clubhouse/reservations",
+    reservationDetail: (id: string | number) =>
+      `/api/v1/staff/clubhouse/reservations/${id}`,
+    reservationApprove: (id: string | number) =>
+      `/api/v1/staff/clubhouse/reservations/${id}/approve`,
+    reservationCancel: (id: string | number) =>
+      `/api/v1/staff/clubhouse/reservations/${id}/cancel`,
+    reservationMessage: (id: string | number) =>
+      `/api/v1/staff/clubhouse/reservations/${id}/message`,
   },
   staffHealthReports: {
     vehicles: "/api/v1/staff/health-reports/vehicles",

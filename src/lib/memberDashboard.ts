@@ -380,7 +380,7 @@ function resolveVenueFooter(space: ClubhouseSpaceRaw): string | undefined {
   return undefined;
 }
 
-function buildClubStatusLine(clubhouse?: ClubhouseOverviewData | null): string {
+export function buildClubStatusLine(clubhouse?: ClubhouseOverviewData | null): string {
   if (!clubhouse?.totalSpaces) {
     return memberDashboardMock.clubStatusLine ?? "Available to Book";
   }
@@ -406,30 +406,34 @@ function buildClubStatusLine(clubhouse?: ClubhouseOverviewData | null): string {
   return `${summary} · Available to Book`;
 }
 
-function mapClubVenues(clubhouse?: ClubhouseOverviewData | null): import("@/components/member/dashboard/types").MemberClubVenue[] {
+export function mapClubVenues(
+  clubhouse?: ClubhouseOverviewData | null,
+  limit?: number
+): import("@/components/member/dashboard/types").MemberClubVenue[] {
   if (!clubhouse?.spaces?.length) {
     // Fallback to curated mock venues when DB has no spaces seeded yet
     return memberDashboardMock.clubVenues;
   }
 
-  return sortClubSpaces(clubhouse.spaces)
-    .slice(0, 3)
-    .map((space) => {
-      const iconKey = resolveVenueIconKey(space.areaType);
+  const spaces = sortClubSpaces(clubhouse.spaces);
+  const sliced = limit !== undefined ? spaces.slice(0, limit) : spaces;
 
-      return {
-        id: String(space.id),
-        name: space.title,
-        description: space.description ?? "",
-        imageUrl: resolveClubVenueImageUrl(space, iconKey),
-        tag: space.statusLabel?.toUpperCase() ?? "OPEN",
-        tagTone: "gold" as const,
-        iconKey,
-        footerLeft: resolveVenueFooter(space),
-        actionLabel: (space.action ?? "RESERVE").toUpperCase(),
-        href: `/member/concierge?space=${space.id}`,
-      };
-    });
+  return sliced.map((space) => {
+    const iconKey = resolveVenueIconKey(space.areaType);
+
+    return {
+      id: String(space.id),
+      name: space.title,
+      description: space.description ?? "",
+      imageUrl: resolveClubVenueImageUrl(space, iconKey),
+      tag: space.statusLabel?.toUpperCase() ?? "OPEN",
+      tagTone: "gold" as const,
+      iconKey,
+      footerLeft: resolveVenueFooter(space),
+      actionLabel: (space.action ?? "RESERVE").toUpperCase(),
+      href: `/member/concierge?space=${space.id}`,
+    };
+  });
 }
 
 export function mapQuickActions(
@@ -475,7 +479,7 @@ export function mapMemberDashboard(
   const diary = events.map(mapDiaryEvent);
   const news = mapNewsItems(notifications);
   const recentActivity = mapActivityItems(notifications);
-  const clubVenues = mapClubVenues(clubhouse);
+  const clubVenues = mapClubVenues(clubhouse, 3);
   const clubStatusLine = buildClubStatusLine(clubhouse);
 
   return {

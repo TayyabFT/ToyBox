@@ -9,10 +9,20 @@ const statusToneClass: Record<
     dot: "bg-teal",
     label: "Confirmed",
   },
+  pending: {
+    pill: "border-primary/25 bg-primary/8 text-primary",
+    dot: "bg-primary",
+    label: "Pending",
+  },
   prep: {
     pill: "border-accent/25 bg-accent/8 text-accent",
     dot: "bg-accent",
     label: "Prep",
+  },
+  cancelled: {
+    pill: "border-secondary/25 bg-secondary/8 text-secondary",
+    dot: "bg-secondary",
+    label: "Cancelled",
   },
 };
 

@@ -1,26 +1,21 @@
 "use client";
 
-import type { ClubhouseZoneFilter } from "./types";
-
-const filters: { id: ClubhouseZoneFilter; label: string }[] = [
-  { id: "all", label: "All" },
-  { id: "restaurant", label: "Restaurant" },
-  { id: "lounge", label: "Lounge" },
-  { id: "suite", label: "Suite" },
-];
+import type { ClubhouseZoneFilter, ClubhouseZoneTab } from "./types";
 
 type ClubhouseFilterTabsProps = {
   active: ClubhouseZoneFilter;
+  tabs: ClubhouseZoneTab[];
   onChange: (filter: ClubhouseZoneFilter) => void;
 };
 
 export function ClubhouseFilterTabs({
   active,
+  tabs,
   onChange,
 }: ClubhouseFilterTabsProps) {
   return (
     <div className="flex shrink-0 items-center rounded-full border border-accent/10 bg-surface p-1.5">
-      {filters.map((filter) => {
+      {tabs.map((filter) => {
         const isActive = active === filter.id;
 
         return (

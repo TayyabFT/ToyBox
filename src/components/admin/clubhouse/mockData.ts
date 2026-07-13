@@ -31,6 +31,7 @@ export const clubhouseStats: ClubhouseStatsDisplay = {
 export const clubhouseVenues: ClubhouseVenuesDisplay = [
   {
     id: "restaurant",
+    href: "/admin/clubhouse/restaurant",
     title: {
       before: "The ",
       highlight: "Clubhouse",

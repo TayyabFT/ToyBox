@@ -66,6 +66,12 @@ export const staffManagementNav: StaffNavItem[] = [
     section: "management",
   },
   {
+    id: "parking",
+    label: "Parking",
+    href: `${STAFF_BASE}/parking`,
+    section: "management",
+  },
+  {
     id: "concierge",
     label: "Concierge",
     href: `${STAFF_BASE}/concierge`,

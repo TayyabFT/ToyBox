@@ -89,7 +89,7 @@ export function AddVehicleImageUploadField({
         <button
           type="button"
           onClick={openPicker}
-          className={`flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed bg-dark px-4 py-8 text-center transition-colors hover:border-primary/35 ${
+          className={`flex w-full cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed bg-input-muted px-4 py-8 text-center transition-colors hover:border-primary/35 ${
             displayError ? "border-red-500" : "border-accent/20"
           }`}
         >
@@ -140,7 +140,7 @@ export function AddVehicleImageUploadField({
           {files.map((file, index) => (
             <div
               key={`${file.name}-${index}`}
-              className="relative aspect-square overflow-hidden rounded-lg border border-accent/15 bg-dark"
+              className="relative aspect-square overflow-hidden rounded-lg border border-accent/15 bg-input-muted"
             >
               {previews[index] && (
                 <img

@@ -26,8 +26,9 @@ type AddSlotsModalProps = {
   onSuccess?: () => void | Promise<void>;
 };
 
-const fieldBorder = "border-[#D4A8472E]";
-const fieldClass = `font-roboto w-full rounded-xl border ${fieldBorder} bg-[#11100C] px-4 py-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent/60 disabled:cursor-not-allowed disabled:opacity-60`;
+const fieldBorder = "border-accent/18";
+const fieldClass =
+  "font-roboto w-full rounded-xl border border-accent/18 bg-input-muted px-4 py-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent/60 disabled:cursor-not-allowed disabled:opacity-60";
 
 function FieldLabel({
   children,
@@ -76,7 +77,7 @@ function ToggleButton({
       className={`font-roboto cursor-pointer rounded-xl px-2 py-3 text-[10px] tracking-[0.08em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${className} ${
         active
           ? "bg-gradient-to-r from-gold-bright to-primary font-bold text-dark"
-          : `border ${fieldBorder} bg-[#11100C] text-primary hover:border-accent/50`
+          : "border border-accent/18 bg-input-muted text-primary hover:border-accent/50"
       }`}
     >
       {children}
@@ -193,7 +194,7 @@ export function AddSlotsModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className={`relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border ${fieldBorder} bg-[#11100C] shadow-[var(--shadow-modal)]`}
+        className={`relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border ${fieldBorder} bg-card shadow-[var(--shadow-modal)]`}
       >
         <div className={`relative shrink-0 border-b ${fieldBorder} px-5 py-5`}>
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
@@ -205,7 +206,7 @@ export function AddSlotsModal({
         </div>
 
         <div className="Custom__Scrollbar min-h-0 flex-1 space-y-5 overflow-y-auto px-6 py-5">
-          <label className="font-roboto flex cursor-pointer items-center gap-3 rounded-xl border border-[#D4A8472E] bg-[#11100C] px-4 py-3.5">
+          <label className="font-roboto flex cursor-pointer items-center gap-3 rounded-xl border border-accent/18 bg-input-muted px-4 py-3.5">
             <input
               type="checkbox"
               checked={form.createMultiple}
@@ -239,7 +240,7 @@ export function AddSlotsModal({
             <div className="space-y-2">
               <FieldLabel error={errors.slotCount}>Number of Slots</FieldLabel>
               <div
-                className={`flex h-[48px] items-stretch overflow-hidden rounded-xl border ${fieldBorder} bg-[#11100C]`}
+                className={`flex h-[48px] items-stretch overflow-hidden rounded-xl border ${fieldBorder} bg-input-muted`}
               >
                 <button
                   type="button"
@@ -250,11 +251,11 @@ export function AddSlotsModal({
                 >
                   −
                 </button>
-                <div className="w-px bg-[#D4A8472E]" />
+                <div className="w-px bg-accent/18" />
                 <div className="font-roboto flex flex-1 items-center justify-center text-sm text-foreground">
                   {form.slotCount}
                 </div>
-                <div className="w-px bg-[#D4A8472E]" />
+                <div className="w-px bg-accent/18" />
                 <button
                   type="button"
                   onClick={incrementSlots}
@@ -342,7 +343,7 @@ export function AddSlotsModal({
             />
           </div>
 
-          <div className={`rounded-xl border ${fieldBorder} px-4 py-4`}>
+          <div className={`rounded-xl border ${fieldBorder} bg-input-muted px-4 py-4`}>
             <p className="font-roboto text-sm text-foreground">
               Slots to be created
             </p>
@@ -368,7 +369,7 @@ export function AddSlotsModal({
             type="button"
             onClick={handleClose}
             disabled={submitting}
-            className={`font-roboto cursor-pointer rounded-xl border ${fieldBorder} bg-[#11100C] px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-foreground uppercase transition-colors hover:border-accent/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`font-roboto cursor-pointer rounded-xl border ${fieldBorder} bg-input-muted px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-foreground uppercase transition-colors hover:border-accent/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60`}
           >
             Cancel
           </button>

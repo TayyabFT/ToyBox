@@ -139,7 +139,7 @@ export function CameraCapturePanel({
           })}
         </div>
 
-        <div className="relative mb-5 h-[360px] overflow-hidden rounded-xl border border-accent/12 bg-dark">
+        <div className="photo-upload-capture-tile relative mb-5 h-[360px] overflow-hidden rounded-xl border border-accent/15">
           <CornerBrackets />
 
           {showRecBadge ? (
@@ -164,10 +164,10 @@ export function CameraCapturePanel({
               />
             </div>
           ) : (
-            <div className="flex h-full items-center justify-center">
-              <div className="relative size-10">
-                <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-accent" />
-                <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-accent" />
+            <div className="flex h-full items-center justify-center bg-input-muted/40">
+              <div className="relative size-10 opacity-70">
+                <span className="absolute left-1/2 top-0 h-full w-px -translate-x-1/2 bg-accent/70" />
+                <span className="absolute top-1/2 left-0 h-px w-full -translate-y-1/2 bg-accent/70" />
               </div>
             </div>
           )}
@@ -179,7 +179,7 @@ export function CameraCapturePanel({
                 aria-label="Zoom in"
                 onClick={onZoomIn}
                 disabled={previewZoom >= 3}
-                className="font-roboto flex size-8 cursor-pointer items-center justify-center rounded-lg border border-accent/20 bg-surface/90 text-sm font-semibold text-primary transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-50"
+                className="font-roboto flex size-8 cursor-pointer items-center justify-center rounded-lg border border-accent/20 bg-card/95 text-sm font-semibold text-accent shadow-sm transition-colors hover:border-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 +
               </button>
@@ -188,7 +188,7 @@ export function CameraCapturePanel({
                 aria-label="Zoom out"
                 onClick={onZoomOut}
                 disabled={previewZoom <= 1}
-                className="font-roboto flex size-8 cursor-pointer items-center justify-center rounded-lg border border-accent/20 bg-surface/90 text-sm font-semibold text-primary transition-colors hover:border-primary/35 disabled:cursor-not-allowed disabled:opacity-50"
+                className="font-roboto flex size-8 cursor-pointer items-center justify-center rounded-lg border border-accent/20 bg-card/95 text-sm font-semibold text-accent shadow-sm transition-colors hover:border-accent/40 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 −
               </button>
