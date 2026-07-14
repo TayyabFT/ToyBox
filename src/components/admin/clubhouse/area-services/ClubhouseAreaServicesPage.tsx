@@ -8,6 +8,7 @@ import {
   mapAdminClubhouseAreaOverview,
 } from "@/lib/adminClubhouse";
 import { useSetAdminPageSubtitle } from "@/lib/adminPageMeta";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { showError } from "@/lib/toast";
 import { ClubhouseAreaCategoryCard } from "./ClubhouseAreaCategoryCard";
 import { ClubhouseAreaFilterTabs } from "./ClubhouseAreaFilterTabs";
@@ -20,6 +21,48 @@ type ClubhouseAreaServicesPageProps = {
 };
 
 const ALL_FILTER_ID = "all";
+
+function CategoryCardSkeleton() {
+  return (
+    <div className="flex flex-col rounded-2xl border border-accent/12 bg-card p-5">
+      <div className="flex items-start justify-between gap-3">
+        <ShimmerBlock className="h-3.5 w-32" />
+        <ShimmerBlock className="h-5 w-20 rounded-full" />
+      </div>
+      <div className="mt-4 flex items-center justify-between gap-3">
+        <ShimmerBlock className="h-2.5 w-16" />
+        <ShimmerBlock className="h-2.5 w-16" />
+      </div>
+      <div className="mt-4 space-y-2.5 border-t border-accent/8 pt-4">
+        {Array.from({ length: 3 }, (_, index) => (
+          <div key={index} className="flex items-center justify-between gap-4">
+            <ShimmerBlock className="h-2.5 w-24" />
+            <ShimmerBlock className="h-2.5 w-12" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ServiceRowSkeleton({ columnCount }: { columnCount: number }) {
+  return (
+    <tr className="border-b border-accent/8 last:border-b-0">
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-32" />
+        <ShimmerBlock className="mt-1.5 h-2.5 w-24" />
+      </td>
+      {Array.from({ length: columnCount }, (_, index) => (
+        <td key={index} className="px-5 py-4">
+          <ShimmerBlock className="h-3 w-20" />
+        </td>
+      ))}
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-5 w-16 rounded-full" />
+      </td>
+    </tr>
+  );
+}
 
 export function ClubhouseAreaServicesPage({
   areaId,
@@ -102,9 +145,43 @@ export function ClubhouseAreaServicesPage({
       </div>
 
       {loading ? (
-        <p className="font-roboto py-8 text-center text-sm text-secondary">
-          Loading…
-        </p>
+        <div aria-busy="true" aria-live="polite" className="space-y-7">
+          <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+            {Array.from({ length: 3 }, (_, index) => (
+              <CategoryCardSkeleton key={index} />
+            ))}
+          </div>
+
+          <div className="overflow-hidden rounded-2xl border border-accent/12 bg-card">
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[760px] border-collapse">
+                <thead>
+                  <tr className="border-b border-accent/8">
+                    <th className="px-5 py-4 text-left">
+                      <ShimmerBlock className="h-2.5 w-20" />
+                    </th>
+                    {staticConfig.columns.map((column) => (
+                      <th key={column.key} className="px-5 py-4 text-left">
+                        <ShimmerBlock className="h-2.5 w-16" />
+                      </th>
+                    ))}
+                    <th className="px-5 py-4 text-left">
+                      <ShimmerBlock className="h-2.5 w-14" />
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 5 }, (_, index) => (
+                    <ServiceRowSkeleton
+                      key={index}
+                      columnCount={staticConfig.columns.length}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       ) : (
         <>
           <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">

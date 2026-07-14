@@ -73,7 +73,7 @@ export function ClubhousePage() {
       <div className="space-y-7 p-8">
         <ClubhousePageHeader onAddNewClick={() => setIsAddAreaOpen(true)} />
         <ClubhouseStatsRow stats={stats} loading={loading} />
-        <ClubhouseVenuesRow venues={venues} />
+        <ClubhouseVenuesRow venues={venues} loading={loading} />
         <ClubhouseReservationsSection
           reservations={reservations}
           loading={reservationsLoading}

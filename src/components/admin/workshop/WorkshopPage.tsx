@@ -14,6 +14,7 @@ import {
   overviewActionButtonClass,
   overviewPanelClass,
 } from "@/components/admin/overview";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   createEmptyWorkshopStats,
   mapWorkshopBays,
@@ -39,6 +40,26 @@ const statIcons = [
   <ClockIcon key="turnaround" color="currentColor" className="size-4" />,
   <StatMembersIcon key="engineers" className="size-4" />,
 ];
+
+function ActiveBayCardSkeleton() {
+  return (
+    <div className="flex min-h-[220px] flex-col rounded-xl border border-white/5 bg-[#11100C] p-4">
+      <div className="mb-3 flex items-center justify-between gap-3">
+        <ShimmerBlock className="h-2.5 w-14" />
+        <ShimmerBlock className="h-4 w-16 rounded-full" />
+      </div>
+      <div className="mb-3 space-y-1.5">
+        <ShimmerBlock className="h-3.5 w-32" />
+        <ShimmerBlock className="h-2.5 w-40" />
+      </div>
+      <ShimmerBlock className="mb-4 h-8 w-full flex-1" />
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/5 pt-3.5">
+        <ShimmerBlock className="h-2.5 w-24" />
+        <ShimmerBlock className="h-2.5 w-14" />
+      </div>
+    </div>
+  );
+}
 
 export function WorkshopPage() {
   const activeBaysRef = useRef<HTMLDivElement>(null);
@@ -127,12 +148,13 @@ export function WorkshopPage() {
           <WorkshopStatCard
             key={stat.label}
             label={stat.label}
-            value={statsLoading ? "—" : stat.value}
+            value={stat.value}
             footnote={stat.footnote}
             valueTone={stat.valueTone}
             iconTone={stat.iconTone}
             trend={statsLoading ? undefined : stat.trend}
             icon={statIcons[index]}
+            valueLoading={statsLoading}
           />
         ))}
       </div>
@@ -143,11 +165,14 @@ export function WorkshopPage() {
           title=""
           subtitle={baysSubtitle}
         />
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div
+          className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3"
+          aria-busy={baysLoading}
+        >
           {baysLoading ? (
-            <p className="font-roboto col-span-full py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
-              Loading active bays...
-            </p>
+            Array.from({ length: 3 }, (_, index) => (
+              <ActiveBayCardSkeleton key={index} />
+            ))
           ) : activeBays.length > 0 ? (
             activeBays.map((bay) => (
               <ActiveBayCard key={bay.id} bay={bay} />

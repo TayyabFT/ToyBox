@@ -25,26 +25,26 @@ export function ScheduleTimelineItem({
     state ?? (active ? "active" : "upcoming");
 
   const timeClass = {
-    completed: "text-[#4A4540]",
-    active: "font-medium text-[#C5A059]",
-    upcoming: "text-[#6B665E]",
+    completed: "text-section-label",
+    active: "font-medium text-accent",
+    upcoming: "text-secondary",
   }[itemState];
 
   const titleClass = {
-    completed: "text-[#4A4540] line-through decoration-[#4A4540]/60",
-    active: "font-semibold text-[#E7E5E4]",
-    upcoming: "text-[#E7E5E4]",
+    completed: "text-section-label line-through decoration-section-label/60",
+    active: "font-semibold text-foreground-soft",
+    upcoming: "text-foreground-soft",
   }[itemState];
 
   const detailClass = {
-    completed: "text-[#4A4540]",
-    active: "text-[#6B665E]",
-    upcoming: "text-[#6B665E]",
+    completed: "text-section-label",
+    active: "text-secondary",
+    upcoming: "text-secondary",
   }[itemState];
 
   const rowClass =
     itemState === "active"
-      ? "relative rounded-lg bg-gradient-to-r from-[#C5A059]/10 via-[#C5A059]/5 to-transparent px-4 py-3"
+      ? "relative rounded-lg bg-gradient-to-r from-accent/10 via-accent/5 to-transparent px-4 py-3"
       : "px-4 py-3";
 
   return (
@@ -52,7 +52,7 @@ export function ScheduleTimelineItem({
       {itemState === "active" && (
         <span
           aria-hidden
-          className="absolute top-2 bottom-2 left-0 w-[3px] rounded-r-sm bg-[#C5A059]"
+          className="absolute top-2 bottom-2 left-0 w-[3px] rounded-r-sm bg-accent"
         />
       )}
 
@@ -75,7 +75,7 @@ export function ScheduleTimelineItem({
             </p>
           )}
           {statusLabel && itemState === "active" && (
-            <p className="font-roboto text-[10px] tracking-[0.1em] text-[#C5A059] uppercase">
+            <p className="font-roboto text-[10px] tracking-[0.1em] text-accent uppercase">
               {statusLabel}
             </p>
           )}

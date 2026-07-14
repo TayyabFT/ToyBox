@@ -72,6 +72,7 @@ export function EventsPage() {
   useSetAdminPageSubtitle("Events");
 
   const [eventStats, setEventStats] = useState<EventStatItem[]>(PLACEHOLDER_STATS);
+  const [statsLoading, setStatsLoading] = useState(true);
 
   const [refreshKey, setRefreshKey] = useState(0);
 
@@ -82,6 +83,8 @@ export function EventsPage() {
   // Fetch live stats on mount and after create/update
   useEffect(() => {
     async function fetchStats() {
+      setStatsLoading(true);
+
       try {
         const response = await eventsApi.getStats();
         const stats = response.data;
@@ -126,6 +129,8 @@ export function EventsPage() {
       } catch (err) {
         console.error("Failed to load events stats:", err);
         // Keep placeholders on error rather than crashing
+      } finally {
+        setStatsLoading(false);
       }
     }
 
@@ -315,7 +320,7 @@ export function EventsPage() {
       </div>
 
       {/* Analytics Statistics Row */}
-      <EventsStatsRow stats={eventStats} />
+      <EventsStatsRow stats={eventStats} loading={statsLoading} />
       
       {/* Main Grid View */}
       <EventsCard

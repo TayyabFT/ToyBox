@@ -1,3 +1,4 @@
+import { ConfirmationRowSkeletonList } from "./ConfirmationRowSkeleton";
 import { ConfirmationsOutsideHeader } from "./ConfirmationsSectionHeader";
 import { PendingBookingRow } from "./PendingBookingRow";
 import { confirmationInnerClass } from "./panelStyles";
@@ -23,9 +24,7 @@ export function PendingConfirmationsPanel({
 
       <section className={confirmationInnerClass}>
         {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
-            Loading...
-          </p>
+          <ConfirmationRowSkeletonList />
         ) : bookings.length > 0 ? (
           bookings.map((booking) => (
             <PendingBookingRow key={booking.id} booking={booking} />

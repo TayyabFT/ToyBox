@@ -1,3 +1,4 @@
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ParkingSlotListItemRow } from "./ParkingSlotListItemRow";
 import type { ParkingSlotListItem } from "./types";
 
@@ -7,6 +8,19 @@ type ParkingSlotListPanelProps = {
   loading: boolean;
   onSelect: (id: string) => void;
 };
+
+function ParkingSlotRowSkeleton() {
+  return (
+    <div className="flex items-center gap-3 border-b border-accent/6 px-5 py-4 last:border-b-0">
+      <ShimmerBlock className="size-10 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <ShimmerBlock className="h-3 w-20" />
+        <ShimmerBlock className="h-2.5 w-32" />
+      </div>
+      <ShimmerBlock className="h-5 w-16 shrink-0 rounded-full" />
+    </div>
+  );
+}
 
 export function ParkingSlotListPanel({
   slots,
@@ -28,9 +42,11 @@ export function ParkingSlotListPanel({
 
       <div className="Custom__Scrollbar max-h-[520px] overflow-y-auto">
         {loading && (
-          <p className="font-roboto px-5 py-8 text-center text-sm text-secondary">
-            Loading parking slots...
-          </p>
+          <div aria-busy="true" aria-live="polite">
+            {Array.from({ length: 5 }, (_, index) => (
+              <ParkingSlotRowSkeleton key={index} />
+            ))}
+          </div>
         )}
 
         {!loading && slots.length === 0 && (

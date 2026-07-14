@@ -15,6 +15,7 @@ import {
   StatMessageIcon,
 } from "@/components/common/Svgs";
 import { adminOverviewApi } from "@/api/adminOverview.api";
+import { showError } from "@/lib/toast";
 import type { AdminOverviewData } from "@/types/api";
 import { ActivityHighlight, RecentActivityItem } from "./RecentActivityItem";
 import { CriticalAlertItem, criticalAlertsPanelClass } from "./CriticalAlertItem";
@@ -26,6 +27,7 @@ import { ScheduleTimeline, ScheduleTimelineItem } from "./ScheduleTimelineItem";
 import { StaffOnShiftList } from "./StaffOnShiftItem";
 import { StatCard } from "./StatCard";
 import { UrgentAlertBar } from "./UrgentAlertBar";
+import { OverviewPageSkeleton } from "./OverviewPageSkeleton";
 import { overviewPanelClass } from "./panelStyles";
 
 function formatTime(iso: string): string {
@@ -81,8 +83,8 @@ function mapActivityTone(sourceType: string): "gold" | "purple" | "teal" | "pink
 }
 
 function AlertToneIcon({ tone }: { tone: "critical" | "payment" | "warning" | "purple" }) {
-  if (tone === "critical") return <AlertTriangle color="#E57373" className="size-4" />;
-  if (tone === "payment") return <Dollar color="#F0A0A0" className="size-4" />;
+  if (tone === "critical") return <AlertTriangle color="currentColor" className="size-4" />;
+  if (tone === "payment") return <Dollar color="currentColor" className="size-4" />;
   return (
     <svg viewBox="0 0 16 16" className="size-4" fill="none" aria-hidden>
       <circle cx="8" cy="8" r="6.25" stroke="currentColor" strokeWidth="1.25" />
@@ -95,13 +97,22 @@ function AlertToneIcon({ tone }: { tone: "critical" | "payment" | "warning" | "p
 function ActivityIcon({ sourceType }: { sourceType: string }) {
   const s = (sourceType ?? "").toLowerCase();
   const cls = "size-3.5";
-  if (s.includes("concierge") || s.includes("chat")) return <ActivityChat className={cls} />;
-  if (s.includes("ai") || s.includes("auto")) return <ActivityAI className={cls} />;
-  if (s.includes("workshop")) return <ActivityCheck className={cls} />;
-  if (s.includes("vehicle")) return <ActivityKey className={cls} />;
-  if (s.includes("critical") || s.includes("alert"))
-    return <AlertTriangle color="#E57373" className={cls} />;
-  return <ActivityUser className={cls} />;
+  if (s.includes("concierge") || s.includes("chat")) {
+    return <ActivityChat className={cls} color="currentColor" />;
+  }
+  if (s.includes("ai") || s.includes("auto")) {
+    return <ActivityAI className={cls} color="currentColor" />;
+  }
+  if (s.includes("workshop")) {
+    return <ActivityCheck className={cls} color="currentColor" />;
+  }
+  if (s.includes("vehicle")) {
+    return <ActivityKey className={cls} color="currentColor" />;
+  }
+  if (s.includes("critical") || s.includes("alert")) {
+    return <AlertTriangle color="currentColor" className={cls} />;
+  }
+  return <ActivityUser className={cls} color="currentColor" />;
 }
 
 function parseGreeting(text: string, firstName: string): { greeting: string; name: string } {
@@ -126,18 +137,47 @@ function EmptyState({ message }: { message: string }) {
 export function AdminOverviewPage() {
   const criticalAlertsRef = useRef<HTMLElement>(null);
   const [overview, setOverview] = useState<AdminOverviewData | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    adminOverviewApi
-      .getOverview()
-      .then((res) => {
-        if (res?.data) setOverview(res.data);
-      })
-      .catch(() => {});
+    let cancelled = false;
+
+    async function loadOverview() {
+      setLoading(true);
+
+      try {
+        const res = await adminOverviewApi.getOverview();
+
+        if (!cancelled && res?.data) {
+          setOverview(res.data);
+        }
+      } catch (error) {
+        if (!cancelled) {
+          showError(
+            (error as { message?: string }).message ??
+              "Failed to load overview",
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    void loadOverview();
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   function scrollToCriticalAlerts() {
     criticalAlertsRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  if (loading) {
+    return <OverviewPageSkeleton />;
   }
 
   const greeting = overview
@@ -404,7 +444,7 @@ export function AdminOverviewPage() {
           </section>
 
           {/* Today's Schedule */}
-          <section className={`${overviewPanelClass} flex flex-col bg-[#12110f] ${hasSchedule ? "h-110" : ""}`}>
+          <section className={`${overviewPanelClass} flex flex-col ${hasSchedule ? "h-110" : ""}`}>
             <OverviewSectionHeader
               titleSplit={{ before: "Today's", after: "Schedule" }}
               title=""

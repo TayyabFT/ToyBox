@@ -7,6 +7,7 @@ import {
   StarFilled,
   type DetailGlyphName,
 } from "@/components/common/Svgs";
+import { PageLoadingShimmer } from "@/components/common/PageLoadingShimmer";
 import { adminProfileApi } from "@/api/adminProfile.api";
 import { showError, showSuccess } from "@/lib/toast";
 import { useSetAdminPageSubtitle } from "@/lib/adminPageMeta";
@@ -477,13 +478,7 @@ export function AdminProfilePage() {
   }, []);
 
   if (loading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
-          Loading…
-        </p>
-      </div>
-    );
+    return <PageLoadingShimmer />;
   }
 
   if (!pageData) {

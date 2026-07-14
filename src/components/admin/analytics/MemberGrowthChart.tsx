@@ -13,6 +13,7 @@ import {
   type ScriptableContext,
 } from "chart.js";
 import { Line } from "react-chartjs-2";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { MemberGrowthChartData } from "./types";
 
 ChartJS.register(
@@ -180,18 +181,14 @@ export function MemberGrowthChart({ data, status }: MemberGrowthChartProps) {
             {header}
           </p>
           {isLoading ? (
-            <span className="relative block h-[32px] w-32 overflow-hidden rounded bg-accent/8">
-              <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/14 to-transparent" />
-            </span>
+            <ShimmerBlock className="h-[32px] w-32" />
           ) : (
             <p className="font-copperplate text-[32px] leading-none tracking-[0.04em] text-foreground">
               {totalDisplay}
             </p>
           )}
           {isLoading ? (
-            <span className="relative block h-[14px] w-40 overflow-hidden rounded bg-accent/8">
-              <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/14 to-transparent" />
-            </span>
+            <ShimmerBlock className="h-[14px] w-40" />
           ) : (
             <p className="font-roboto text-[11px] tracking-[0.06em] text-teal">
               {subtitle}
@@ -217,9 +214,10 @@ export function MemberGrowthChart({ data, status }: MemberGrowthChartProps) {
 
       <div className="mt-6 h-[200px] w-full">
         {isLoading ? (
-          <div className="relative h-full w-full overflow-hidden rounded-xl bg-accent/6">
-            <div className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/12 to-transparent" />
-          </div>
+          <ShimmerBlock
+            className="h-full w-full rounded-xl bg-accent/6"
+            sweepClassName="via-accent/12"
+          />
         ) : isError ? (
           <div className="flex h-full w-full items-center justify-center rounded-xl border border-dashed border-accent/15">
             <p className="font-roboto text-xs text-secondary">

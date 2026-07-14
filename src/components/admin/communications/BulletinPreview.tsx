@@ -1,5 +1,18 @@
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ToyBoxLogoMark } from "@/components/common/Svgs";
 import type { BulletinDraftPreview, RecentBulletin } from "./types";
+
+function BulletinRowSkeleton() {
+  return (
+    <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
+      <div className="flex items-center justify-between gap-3">
+        <ShimmerBlock className="h-3 w-32" />
+        <ShimmerBlock className="h-2.5 w-10" />
+      </div>
+      <ShimmerBlock className="mt-2 h-2.5 w-24" />
+    </li>
+  );
+}
 
 type BulletinPreviewProps = {
   draft: BulletinDraftPreview;
@@ -90,11 +103,9 @@ export function BulletinPreview({
       >
         <ul className="space-y-3">
           {loading ? (
-            <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
-              <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
-                Loading bulletins...
-              </p>
-            </li>
+            Array.from({ length: 3 }, (_, index) => (
+              <BulletinRowSkeleton key={index} />
+            ))
           ) : bulletins.length === 0 ? (
             <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
               <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">

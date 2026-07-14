@@ -2,10 +2,22 @@
 
 import { useEffect, useState } from "react";
 import { Dropdown, Input } from "@/components/common";
+import { useTheme } from "@/components/common/ThemeProvider";
 import { showToast } from "@/lib/toast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendInvite } from "@/store/slices/adminSlice";
 import type { InviteRole } from "@/types/api";
+
+const LIGHT_PANEL_STYLE = {
+  backgroundColor: "#D0C8BC",
+} as const;
+
+const LIGHT_CTA_STYLE = {
+  backgroundColor: "#D0C8BC",
+  backgroundImage: "linear-gradient(90deg, #8A7D6A 0%, #D0C8BC 100%)",
+  color: "#1A1816",
+  boxShadow: "none",
+} as const;
 
 const roleOptions = [
   { label: "Member", value: "member" },
@@ -59,6 +71,8 @@ export function InviteModal({
 }) {
   const dispatch = useAppDispatch();
   const { inviteLoading } = useAppSelector((state) => state.admin);
+  const { theme } = useTheme();
+  const isLight = theme === "light";
 
   const [role, setRole] = useState(lockedRole ?? "");
   const [email, setEmail] = useState("");
@@ -127,15 +141,18 @@ export function InviteModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      <div className="relative z-10 w-full max-w-md rounded-2xl border border-[#D4A84740] bg-[#11100C] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+      <div
+        className="admin-modal-panel relative z-10 w-full max-w-md rounded-2xl border border-accent/25 p-6 shadow-[var(--shadow-modal)]"
+        style={isLight ? LIGHT_PANEL_STYLE : undefined}
+      >
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg tracking-[0.06em] text-white uppercase">
+          <h2 className="text-lg tracking-[0.06em] text-foreground uppercase">
             Send Invite
           </h2>
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer text-[#7D7460] transition-colors hover:text-white"
+            className="cursor-pointer text-secondary transition-colors hover:text-foreground"
           >
             ✕
           </button>
@@ -206,7 +223,8 @@ export function InviteModal({
             type="button"
             onClick={handleSendInvite}
             disabled={inviteLoading}
-            className="mt-2 w-full cursor-pointer rounded-lg bg-[#C9A84C] py-3 text-sm font-roboto font-semibold tracking-[0.15em] text-[#1a1208] uppercase disabled:opacity-60"
+            className="admin-gold-cta mt-2 w-full cursor-pointer rounded-lg py-3 text-sm font-roboto font-semibold tracking-[0.15em] uppercase disabled:opacity-60"
+            style={isLight ? LIGHT_CTA_STYLE : undefined}
           >
             {inviteLoading ? "Sending..." : "Send Invite"}
           </button>

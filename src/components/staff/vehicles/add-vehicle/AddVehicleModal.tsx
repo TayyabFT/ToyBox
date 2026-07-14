@@ -9,6 +9,7 @@ import {
   type AddVehicleStepErrors,
 } from "@/lib/addVehicleValidation";
 import { showError, showSuccess } from "@/lib/toast";
+import { useTheme } from "@/components/common/ThemeProvider";
 import { AddVehicleStepper } from "./AddVehicleStepper";
 import { VehicleInfoStep } from "./VehicleInfoStep";
 import { OwnershipInfoStep } from "./OwnershipInfoStep";
@@ -21,6 +22,10 @@ import {
 } from "./types";
 import { RightArrow } from "@/components/common";
 
+const LIGHT_PANEL_STYLE = {
+  backgroundColor: "#D0C8BC",
+} as const;
+
 type AddVehicleModalProps = {
   open: boolean;
   onClose: () => void;
@@ -32,6 +37,8 @@ export function AddVehicleModal({
   onClose,
   onSuccess,
 }: AddVehicleModalProps) {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<AddVehicleStepErrors>({});
@@ -113,7 +120,10 @@ export function AddVehicleModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 bg-card shadow-[var(--shadow-modal)]">
+      <div
+        className="admin-modal-panel relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 shadow-[var(--shadow-modal)]"
+        style={isLight ? LIGHT_PANEL_STYLE : undefined}
+      >
         <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">
           <h2 className="mb-8 text-center text-[20px] text-primary">
             {stepTitle}

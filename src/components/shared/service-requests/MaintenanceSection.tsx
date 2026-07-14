@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { JobActionButton } from "./JobActionButton";
 import { MaintenanceJobCard } from "./MaintenanceJobCard";
+import { ServiceJobListSkeleton } from "./ServiceJobListSkeleton";
 import { ServiceSectionHeader } from "./ServiceSectionHeader";
 import type { MaintenanceJob, SectionMeta } from "./types";
 
@@ -23,9 +24,7 @@ export function MaintenanceSection({
 
   return (
     <section
-      className={`rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="rounded-2xl border border-[#D4A8471A] bg-surface p-5"
       aria-busy={loading}
     >
       <ServiceSectionHeader
@@ -48,9 +47,7 @@ export function MaintenanceSection({
       />
 
       {loading && jobs.length === 0 ? (
-        <p className="font-roboto py-6 text-center text-sm text-secondary">
-          Loading maintenance requests...
-        </p>
+        <ServiceJobListSkeleton count={2} />
       ) : null}
 
       {!loading && jobs.length === 0 ? (
@@ -59,11 +56,13 @@ export function MaintenanceSection({
         </p>
       ) : null}
 
-      <div className="space-y-3">
-        {jobs.map((job) => (
-          <MaintenanceJobCard key={job.id} job={job} staffMode={staffMode} />
-        ))}
-      </div>
+      {!loading && jobs.length > 0 ? (
+        <div className="space-y-3">
+          {jobs.map((job) => (
+            <MaintenanceJobCard key={job.id} job={job} staffMode={staffMode} />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

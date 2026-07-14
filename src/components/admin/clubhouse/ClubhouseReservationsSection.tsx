@@ -1,3 +1,4 @@
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ClubhouseReservationStatusBadge } from "./ClubhouseReservationStatusBadge";
 import type { ClubhouseReservationsDisplay } from "./types";
 
@@ -7,6 +8,37 @@ type ClubhouseReservationsSectionProps = {
 };
 
 const columns = ["Time", "Member", "Zone", "Party", "Status", "Notes"] as const;
+
+function ReservationRowSkeleton() {
+  return (
+    <tr className="border-b border-accent/8 last:border-b-0">
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-10" />
+      </td>
+      <td className="px-5 py-4">
+        <div className="flex items-center gap-3">
+          <ShimmerBlock className="size-9 shrink-0 rounded-full" />
+          <div className="min-w-0 space-y-1.5">
+            <ShimmerBlock className="h-3 w-24" />
+            <ShimmerBlock className="h-2.5 w-16" />
+          </div>
+        </div>
+      </td>
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-14" />
+      </td>
+      <td className="px-5 py-4 text-center">
+        <ShimmerBlock className="mx-auto h-3 w-6" />
+      </td>
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-5 w-16 rounded-full" />
+      </td>
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-28" />
+      </td>
+    </tr>
+  );
+}
 
 export function ClubhouseReservationsSection({
   reservations,
@@ -44,14 +76,9 @@ export function ClubhouseReservationsSection({
             </thead>
             <tbody>
               {loading ? (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-5 py-10 text-center font-roboto text-[12px] tracking-[0.04em] text-secondary"
-                  >
-                    Loading reservations...
-                  </td>
-                </tr>
+                Array.from({ length: 4 }, (_, index) => (
+                  <ReservationRowSkeleton key={index} />
+                ))
               ) : reservations.rows.length === 0 ? (
                 <tr>
                   <td

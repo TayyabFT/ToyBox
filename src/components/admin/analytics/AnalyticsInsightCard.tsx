@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { TrendUp } from "@/components/common/Svgs";
 
 type AnalyticsInsightCardStatus = "loading" | "error";
@@ -13,14 +14,6 @@ type AnalyticsInsightCardProps = {
   footerCenter?: string;
   status?: AnalyticsInsightCardStatus;
 };
-
-function ShimmerBlock({ className }: { className: string }) {
-  return (
-    <span className={`relative block overflow-hidden rounded bg-accent/8 ${className}`}>
-      <span className="absolute inset-0 animate-shimmer bg-gradient-to-r from-transparent via-accent/14 to-transparent" />
-    </span>
-  );
-}
 
 export function AnalyticsInsightCard({
   title,

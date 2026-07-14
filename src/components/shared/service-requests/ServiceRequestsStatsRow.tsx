@@ -9,8 +9,15 @@ import {
 } from "@/components/common/Svgs";
 import { StatCard } from "@/components/staff/overview/StatCard";
 import { showError } from "@/lib/toast";
-import { serviceRequestStats as fallbackStats } from "./mockData";
+import { serviceRequestStats as emptyStats } from "./mockData";
 import type { ServiceRequestStat } from "./types";
+
+function createEmptyStats(): ServiceRequestStat[] {
+  return emptyStats.map((stat) => ({
+    ...stat,
+    value: stat.value.includes("%") ? "0%" : "0",
+  }));
+}
 
 function statIcon(icon: ServiceRequestStat["icon"]) {
   switch (icon) {
@@ -32,7 +39,7 @@ type ServiceRequestsStatsRowProps = {
 export function ServiceRequestsStatsRow({
   loadStats,
 }: ServiceRequestsStatsRowProps) {
-  const [stats, setStats] = useState<ServiceRequestStat[]>(fallbackStats);
+  const [stats, setStats] = useState<ServiceRequestStat[]>(createEmptyStats);
   const [loading, setLoading] = useState(true);
 
   const fetchStats = useCallback(async () => {
@@ -46,7 +53,7 @@ export function ServiceRequestsStatsRow({
         "Failed to load service request stats";
 
       showError(message);
-      setStats([]);
+      setStats(createEmptyStats());
     } finally {
       setLoading(false);
     }
@@ -58,9 +65,7 @@ export function ServiceRequestsStatsRow({
 
   return (
     <div
-      className={`grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4"
       aria-busy={loading}
     >
       {stats.map((stat) => (
@@ -70,6 +75,7 @@ export function ServiceRequestsStatsRow({
           value={stat.value}
           subtext={stat.subtext}
           icon={statIcon(stat.icon)}
+          valueLoading={loading}
         />
       ))}
     </div>

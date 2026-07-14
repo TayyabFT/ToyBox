@@ -17,10 +17,14 @@ import type { ParkingSlotsSummaryDisplay } from "./parking-slots/types";
 
 type ParkingSlotsSummaryRowProps = {
   refreshToken?: number;
+  holdReveal?: boolean;
+  onBootstrapComplete?: () => void;
 };
 
 export function ParkingSlotsSummaryRow({
   refreshToken = 0,
+  holdReveal = false,
+  onBootstrapComplete,
 }: ParkingSlotsSummaryRowProps) {
   const [summary, setSummary] = useState<ParkingSlotsSummaryDisplay>(
     createEmptyParkingSlotsSummary(),
@@ -37,12 +41,15 @@ export function ParkingSlotsSummaryRow({
       setSummary(createEmptyParkingSlotsSummary());
     } finally {
       setLoading(false);
+      onBootstrapComplete?.();
     }
-  }, []);
+  }, [onBootstrapComplete]);
 
   useEffect(() => {
     void loadSummary();
   }, [loadSummary, refreshToken]);
+
+  const valueLoading = loading || holdReveal;
 
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
@@ -53,7 +60,7 @@ export function ParkingSlotsSummaryRow({
         icon={<VehicleFleetCar />}
         iconSize="lg"
         iconFit="native"
-        valueLoading={loading}
+        valueLoading={valueLoading}
       />
       <StatCard
         label={summary.available.label}
@@ -61,7 +68,7 @@ export function ParkingSlotsSummaryRow({
         subtext={summary.available.subtext || "OPEN SLOTS"}
         icon={<VehicleFleetReady />}
         iconSize="lg"
-        valueLoading={loading}
+        valueLoading={valueLoading}
       />
       <StatCard
         label={summary.occupied.label}
@@ -69,7 +76,7 @@ export function ParkingSlotsSummaryRow({
         subtext={summary.occupied.subtext || "IN USE"}
         icon={<VehicleFleetInService />}
         iconSize="lg"
-        valueLoading={loading}
+        valueLoading={valueLoading}
       />
       <StatCard
         label={summary.maintenance.label}
@@ -77,7 +84,7 @@ export function ParkingSlotsSummaryRow({
         subtext={summary.maintenance.subtext || "UNDER MAINTENANCE"}
         icon={<VehicleFleetOverdue />}
         iconSize="lg"
-        valueLoading={loading}
+        valueLoading={valueLoading}
       />
     </div>
   );

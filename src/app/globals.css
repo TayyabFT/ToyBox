@@ -111,6 +111,27 @@
   --shell-bg: var(--background);
   --sidebar-bg: var(--shell-bg);
   --font-copperplate: "Copperplate", serif;
+
+  /* Admin invite / add-vehicle modal panel (dark) */
+  --modal-panel-bg: var(--card);
+
+  /* Header CTA buttons (dark) */
+  --admin-cta-bg: var(--primary);
+  --admin-cta-fg: var(--dark);
+  --admin-cta-hover-bg: var(--gold-light);
+
+  /* Profile initial avatar (no photo) — dark */
+  --profile-avatar-fill: linear-gradient(
+    180deg,
+    var(--gold-bright) 0%,
+    var(--gold-deep) 100%
+  );
+  --profile-avatar-border: linear-gradient(
+    180deg,
+    var(--gold-bright) 0%,
+    var(--gold-deep) 100%
+  );
+  --profile-avatar-fg: var(--dark);
 }
 
 [data-theme="light"] {
@@ -189,6 +210,31 @@
   --nav-hover-bg: rgba(26, 24, 22, 0.04);
   --badge-warm: #bfa05a;
   --font-copperplate: "Copperplate", serif;
+
+  /* Modal panel surface (light) */
+  --modal-panel-bg: #d0c8bc;
+
+  /* Header CTA buttons — Invite Member / Staff, Add Vehicle (light) */
+  --admin-cta-bg: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%);
+  --admin-cta-fg: #1a1816;
+  --admin-cta-hover-bg: linear-gradient(90deg, #958770 0%, #d8d1c6 100%);
+
+  /* Profile initial avatar (no photo) — light (Figma fill + shell border) */
+  --profile-avatar-fill: linear-gradient(
+    180deg,
+    rgba(138, 125, 106, 0.4) 0%,
+    rgba(138, 125, 106, 0.3) 46.33%,
+    rgba(138, 125, 106, 0.2) 100%
+  );
+  /* Same shell technique as --stat-card-border: soft #F0EDE6 rim */
+  --profile-avatar-border: radial-gradient(
+    100% 100% at 50% 0%,
+    #ffffff 0%,
+    #f0ede6 18%,
+    #f0ede6 72%,
+    #f0ede6 100%
+  );
+  --profile-avatar-fg: #1a1816;
 }
 
 @theme inline {
@@ -569,6 +615,87 @@ h6 {
 
 .Custom__Scrollbar::-webkit-scrollbar-thumb:hover {
   background: color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+/* Admin member / vehicle profile hero — always dark surface, tokenized accents */
+.admin-entity-hero {
+  background:
+    radial-gradient(90% 130% at 38% -15%,
+      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+      color-mix(in srgb, var(--gold-deep) 10%, transparent) 38%,
+      transparent 68%),
+    var(--dark);
+}
+
+.admin-entity-hero-title {
+  color: var(--f1ead7);
+}
+
+.admin-entity-hero-accent {
+  color: var(--accent);
+}
+
+.admin-entity-hero-avatar {
+  border-color: var(--accent);
+  background: var(--dark);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+.admin-gold-avatar {
+  border: 1px solid transparent;
+  background-image:
+    var(--profile-avatar-fill),
+    var(--profile-avatar-border);
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  color: var(--profile-avatar-fg);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+html[data-theme="light"] .admin-gold-avatar {
+  box-shadow: none;
+}
+
+.admin-gold-cta {
+  background-color: var(--primary);
+  background-image: none;
+  color: var(--dark);
+  box-shadow: var(--shadow-glow-primary);
+  transition:
+    background-color 0.2s ease,
+    background-image 0.2s ease,
+    filter 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.admin-gold-cta:hover {
+  background-color: var(--gold-light);
+  background-image: none;
+}
+
+/* Light theme CTAs — force hex so Tailwind button resets cannot hide the fill */
+html[data-theme="light"] .admin-gold-cta,
+html[data-theme="light"] a.admin-gold-cta {
+  background-color: #d0c8bc !important;
+  background-image: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%) !important;
+  color: #1a1816 !important;
+  box-shadow: none !important;
+}
+
+html[data-theme="light"] .admin-gold-cta:hover,
+html[data-theme="light"] a.admin-gold-cta:hover {
+  background-color: #d0c8bc !important;
+  background-image: linear-gradient(90deg, #958770 0%, #d8d1c6 100%) !important;
+}
+
+.admin-modal-panel {
+  background-color: var(--card);
+  background-image: none;
+}
+
+html[data-theme="light"] .admin-modal-panel {
+  background-color: #d0c8bc !important;
+  background-image: none !important;
 }
 
 .overview-alerts-list-scroll {

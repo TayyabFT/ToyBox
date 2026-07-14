@@ -12,17 +12,17 @@ type CriticalAlertItemProps = {
 };
 
 const toneTypeClass: Record<CriticalAlertTone, string> = {
-  critical: "text-[#E57373]",
-  payment: "text-[#F0A0A0]",
-  warning: "text-[#D4AF37]",
-  purple: "text-[#9575CD]",
+  critical: "text-pink",
+  payment: "text-pink",
+  warning: "text-accent",
+  purple: "text-avatar-purple",
 };
 
 const toneIconBox: Record<CriticalAlertTone, string> = {
-  critical: "border-[#E57373]/35 bg-[#E57373]/10 text-[#E57373]",
-  payment: "border-[#F0A0A0]/35 bg-[#F0A0A0]/10 text-[#F0A0A0]",
-  warning: "border-[#D4AF37]/35 bg-[#D4AF37]/10 text-[#D4AF37]",
-  purple: "border-[#9575CD]/35 bg-[#9575CD]/10 text-[#9575CD]",
+  critical: "border-pink/35 bg-pink/10 text-pink",
+  payment: "border-pink/35 bg-pink/10 text-pink",
+  warning: "border-accent/35 bg-accent/10 text-accent",
+  purple: "border-avatar-purple/35 bg-avatar-purple/10 text-avatar-purple",
 };
 
 export function CriticalAlertItem({
@@ -34,7 +34,7 @@ export function CriticalAlertItem({
   icon,
 }: CriticalAlertItemProps) {
   return (
-    <div className="flex items-start gap-3 border-b border-white/5 py-4 last:border-b-0">
+    <div className="flex items-start gap-3 border-b border-[var(--overview-border)] py-4 last:border-b-0">
       <span
         className={`mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-md border ${toneIconBox[tone]}`}
       >
@@ -48,13 +48,13 @@ export function CriticalAlertItem({
           >
             {typeLabel}
           </span>
-          <span className="font-roboto text-[10px] text-[#6B665E]">·</span>
-          <span className="font-roboto text-[10px] tracking-[0.04em] text-[#6B665E]">
+          <span className="font-roboto text-[10px] text-secondary">·</span>
+          <span className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
             {status}
           </span>
         </div>
         <p className={overviewRowTitleClass}>{title}</p>
-        <p className="font-roboto text-[10px] leading-relaxed tracking-[0.04em] text-[#6B665E]">
+        <p className="font-roboto text-[10px] leading-relaxed tracking-[0.04em] text-secondary">
           {description}
         </p>
       </div>
@@ -63,4 +63,4 @@ export function CriticalAlertItem({
 }
 
 export const criticalAlertsPanelClass =
-  "rounded-2xl border border-[#2D261A] bg-[#0C0C0C] p-6";
+  "rounded-2xl border border-[var(--overview-border)] bg-surface p-6";

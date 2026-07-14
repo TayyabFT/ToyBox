@@ -13,26 +13,40 @@ import type { ParkingSessionDetail, ParkingSessionListItem } from "./types";
 
 type ParkingSessionsSectionProps = {
   refreshToken?: number;
+  /** Keep panels shimmering until the whole page is ready to reveal. */
+  holdReveal?: boolean;
+  onBootstrapComplete?: () => void;
 };
 
 export function ParkingSessionsSection({
   refreshToken = 0,
+  holdReveal = false,
+  onBootstrapComplete,
 }: ParkingSessionsSectionProps) {
   const [sessions, setSessions] = useState<ParkingSessionListItem[]>([]);
   const [selectedId, setSelectedId] = useState("");
   const [detail, setDetail] = useState<ParkingSessionDetail | null>(null);
-  const [listLoading, setListLoading] = useState(true);
+  const [bootstrapLoading, setBootstrapLoading] = useState(true);
   const [detailLoading, setDetailLoading] = useState(false);
 
   const loadSessions = useCallback(async () => {
-    setListLoading(true);
+    setBootstrapLoading(true);
+    setDetail(null);
 
     try {
       const response = await adminParkingApi.getSessions();
       const items = mapParkingSessionsList(response.data);
+      const nextSelectedId = items[0]?.id || "";
 
       setSessions(items);
-      setSelectedId((current) => current || items[0]?.id || "");
+      setSelectedId(nextSelectedId);
+
+      if (nextSelectedId) {
+        const detailResponse = await adminParkingApi.getSession(nextSelectedId);
+        setDetail(mapParkingSessionDetail(detailResponse.data));
+      } else {
+        setDetail(null);
+      }
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
@@ -43,9 +57,10 @@ export function ParkingSessionsSection({
       setSelectedId("");
       setDetail(null);
     } finally {
-      setListLoading(false);
+      setBootstrapLoading(false);
+      onBootstrapComplete?.();
     }
-  }, []);
+  }, [onBootstrapComplete]);
 
   const loadDetail = useCallback(async (id: string) => {
     if (!id) {
@@ -74,14 +89,17 @@ export function ParkingSessionsSection({
     void loadSessions();
   }, [loadSessions, refreshToken]);
 
-  useEffect(() => {
-    if (!selectedId) {
-      setDetail(null);
+  async function handleSelect(id: string) {
+    if (id === selectedId || bootstrapLoading) {
       return;
     }
 
-    void loadDetail(selectedId);
-  }, [loadDetail, selectedId]);
+    setSelectedId(id);
+    await loadDetail(id);
+  }
+
+  const panelsLoading = bootstrapLoading || holdReveal;
+  const detailPanelLoading = panelsLoading || detailLoading;
 
   return (
     <div className="grid grid-cols-1 gap-6 xl:grid-cols-5">
@@ -89,14 +107,14 @@ export function ParkingSessionsSection({
         <ParkingSessionListPanel
           sessions={sessions}
           selectedId={selectedId}
-          loading={listLoading}
-          onSelect={setSelectedId}
+          loading={panelsLoading}
+          onSelect={handleSelect}
         />
       </div>
       <div className="xl:col-span-3">
         <ParkingSessionDetailPanel
           detail={detail}
-          loading={detailLoading && Boolean(selectedId)}
+          loading={detailPanelLoading && Boolean(selectedId || panelsLoading)}
         />
       </div>
     </div>

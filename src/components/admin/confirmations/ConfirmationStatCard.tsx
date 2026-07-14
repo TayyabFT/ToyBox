@@ -1,3 +1,4 @@
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   confirmationStatIconClass,
   confirmationStatLabelClass,
@@ -10,6 +11,7 @@ import type { ConfirmationStatItem } from "./types";
 
 type ConfirmationStatCardProps = ConfirmationStatItem & {
   icon: React.ReactNode;
+  valueLoading?: boolean;
 };
 
 export function ConfirmationStatCard({
@@ -18,8 +20,10 @@ export function ConfirmationStatCard({
   subtext,
   accent = "gold",
   icon,
+  valueLoading = false,
 }: ConfirmationStatCardProps) {
-  const valueClass = accent === "teal" ? confirmationStatValueTealClass : confirmationStatValueClass;
+  const valueClass =
+    accent === "teal" ? confirmationStatValueTealClass : confirmationStatValueClass;
   const subtextClass =
     accent === "teal" ? confirmationStatSubtextTealClass : confirmationStatSubtextClass;
 
@@ -30,7 +34,11 @@ export function ConfirmationStatCard({
         <span className={confirmationStatIconClass}>{icon}</span>
       </div>
 
-      <p className={valueClass}>{value}</p>
+      {valueLoading ? (
+        <ShimmerBlock className="h-[42px] w-16" />
+      ) : (
+        <p className={valueClass}>{value}</p>
+      )}
 
       <p className={subtextClass}>{subtext}</p>
     </div>

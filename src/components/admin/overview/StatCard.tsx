@@ -41,7 +41,7 @@ export function StatCard({
         ? "text-pink"
         : `text-pink ${statCardHoverLabelClass}`
       : isFeaturedLight
-        ? "text-foreground/70"
+        ? "text-[var(--stat-card-hover-fg-muted)]"
         : `text-secondary ${statCardHoverLabelClass}`;
 
   return (
@@ -58,7 +58,7 @@ export function StatCard({
           className={[
             "font-roboto text-[12px] tracking-[0.14em] uppercase",
             isFeaturedLight
-              ? "text-foreground/70"
+              ? "text-[var(--stat-card-hover-fg-muted)]"
               : ["text-secondary", statCardHoverLabelClass].join(" "),
           ].join(" ")}
         >
@@ -68,7 +68,7 @@ export function StatCard({
           className={[
             "flex size-10 shrink-0 items-center justify-center rounded-lg border [&_svg]:size-4",
             isFeaturedLight
-              ? "border-foreground/15 bg-foreground/10 text-foreground"
+              ? "border-[color-mix(in_srgb,var(--stat-card-hover-fg)_15%,transparent)] bg-[color-mix(in_srgb,var(--stat-card-hover-fg)_10%,transparent)] text-[var(--stat-card-hover-fg)]"
               : [
                   "border-accent/18 bg-accent/8 text-accent",
                   statCardHoverIconClass,
@@ -84,7 +84,7 @@ export function StatCard({
           className={[
             "font-copperplate text-[34px] leading-none tracking-[0.02em]",
             isFeaturedLight
-              ? "text-foreground"
+              ? "text-[var(--stat-card-hover-fg)]"
               : ["text-foreground", statCardHoverValueClass].join(" "),
           ].join(" ")}
         >
@@ -105,12 +105,11 @@ export function StatCard({
         {trend && (
           <span
             className={[
-              "font-roboto flex items-center gap-0.5 text-[12px] font-medium tracking-[0.04em] text-teal",
-              !isFeaturedLight &&
-                "group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]",
-            ]
-              .filter(Boolean)
-              .join(" ")}
+              "font-roboto flex items-center gap-0.5 text-[12px] font-medium tracking-[0.04em]",
+              isFeaturedLight
+                ? "text-teal"
+                : "text-teal group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]",
+            ].join(" ")}
           >
             <TrendUp
               className={

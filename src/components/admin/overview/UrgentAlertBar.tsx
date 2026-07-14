@@ -23,8 +23,8 @@ export function UrgentAlertBar({
   return (
     <div className="flex items-center gap-4 rounded-xl border border-pink/20 bg-[var(--critical-banner)] px-6 py-4">
       <div className="flex shrink-0 items-center gap-3">
-        <span className="flex size-9 items-center justify-center rounded-lg border border-pink/30 bg-pink/8">
-          <AlertTriangle color="var(--pink)" className="size-4" />
+        <span className="flex size-9 items-center justify-center rounded-lg border border-pink/30 bg-pink/8 text-pink">
+          <AlertTriangle color="currentColor" className="size-4" />
         </span>
         <span className="font-roboto text-[11px] font-semibold tracking-[0.12em] text-pink uppercase">
           {count} critical

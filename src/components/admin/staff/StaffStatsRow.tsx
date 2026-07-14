@@ -17,9 +17,7 @@ type StaffStatsRowProps = {
 export function StaffStatsRow({ stats, loading = false }: StaffStatsRowProps) {
   return (
     <div
-      className={`grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4"
       aria-busy={loading}
     >
       <StatCard
@@ -27,26 +25,30 @@ export function StaffStatsRow({ stats, loading = false }: StaffStatsRowProps) {
         value={stats.totalStaff.value}
         subtext={stats.totalStaff.subtext}
         trend={stats.totalStaff.trend}
-        icon={<MemberUserStat color="var(--primary)" />}
+        icon={<MemberUserStat color="var(--accent)" />}
+        valueLoading={loading}
       />
       <StatCard
         label={stats.activeStaff.label}
         value={stats.activeStaff.value}
         subtext={stats.activeStaff.subtext}
-        icon={<MemberCheckStat color="var(--primary)" />}
+        icon={<MemberCheckStat color="var(--accent)" />}
+        valueLoading={loading}
       />
       <StatCard
         label={stats.pendingActivation.label}
         value={stats.pendingActivation.value}
         subtext={stats.pendingActivation.subtext}
-        icon={<MemberTargetStat color="var(--primary)" />}
+        icon={<MemberTargetStat color="var(--accent)" />}
+        valueLoading={loading}
       />
       <StatCard
         label={stats.invitedThisMonth.label}
         value={stats.invitedThisMonth.value}
         subtext={stats.invitedThisMonth.subtext}
         trend={stats.invitedThisMonth.trend}
-        icon={<MemberStarStat color="var(--primary)" />}
+        icon={<MemberStarStat color="var(--accent)" />}
+        valueLoading={loading}
       />
     </div>
   );

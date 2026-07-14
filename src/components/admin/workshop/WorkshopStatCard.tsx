@@ -1,3 +1,4 @@
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ChevronDown } from "@/components/common/Svgs";
 
 type WorkshopStatCardProps = {
@@ -8,6 +9,7 @@ type WorkshopStatCardProps = {
   iconTone?: "default" | "pink";
   trend?: string;
   icon: React.ReactNode;
+  valueLoading?: boolean;
 };
 
 function formatTrend(value: string): string {
@@ -43,6 +45,7 @@ export function WorkshopStatCard({
   iconTone = "default",
   trend,
   icon,
+  valueLoading = false,
 }: WorkshopStatCardProps) {
   const iconWrapTone =
     iconTone === "pink"
@@ -62,11 +65,15 @@ export function WorkshopStatCard({
         </span>
       </div>
 
-      <p
-        className={`mt-4 font-copperplate text-[28px] leading-none tracking-[0.03em] uppercase ${getValueClass(valueTone)}`}
-      >
-        {value}
-      </p>
+      {valueLoading ? (
+        <ShimmerBlock className="mt-4 h-[28px] w-16" />
+      ) : (
+        <p
+          className={`mt-4 font-copperplate text-[28px] leading-none tracking-[0.03em] uppercase ${getValueClass(valueTone)}`}
+        >
+          {value}
+        </p>
+      )}
 
       <div className="mt-auto flex items-end justify-between gap-4 pt-4">
         <p className="font-roboto text-[11px] tracking-[0.12em] text-[#7A7268] uppercase group-hover:text-[#0A0806]/55">

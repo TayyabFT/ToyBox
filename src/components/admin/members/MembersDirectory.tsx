@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   MemberProfileArrow,
   MemberStarStat,
@@ -21,7 +22,7 @@ function MemberStatItem({ value, label, showDivider = true }: MemberStatItemProp
         showDivider ? "border-r border-accent/10" : ""
       }`}
     >
-      <p className="font-copperplate text-[28px] leading-none text-primary">
+      <p className="font-copperplate text-[28px] leading-none text-accent">
         {value.toLocaleString()}
       </p>
       <p className="mt-1.5 font-roboto text-[9px] tracking-[0.12em] text-secondary uppercase">
@@ -39,19 +40,19 @@ function MemberProfileCard({ member }: MemberProfileCardProps) {
   return (
     <article className="rounded-2xl border border-accent/12 bg-card p-5">
       <div className="flex items-start gap-4">
-        <span className="flex size-14 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-copperplate text-[22px] text-dark shadow-[0_0_24px_rgba(201,168,76,0.32)]">
+        <span className="admin-gold-avatar flex size-14 shrink-0 items-center justify-center rounded-full font-copperplate text-[22px]">
           {member.initial}
         </span>
 
         <div className="min-w-0 flex-1 space-y-1">
           <div className="flex items-start justify-between gap-3">
-            <h2 className="font-roboto text-[13px] font-semibold tracking-[0.06em] text-primary uppercase">
+            <h2 className="font-roboto text-[13px] font-semibold tracking-[0.06em] text-accent uppercase">
               {member.name}
             </h2>
 
-            <span className="flex shrink-0 items-center gap-1 rounded-full border border-accent/25 px-2.5 py-1">
-              <MemberStarStat color="var(--primary)" className="size-3" />
-              <span className="font-roboto text-[9px] font-medium tracking-[0.1em] text-primary uppercase">
+            <span className="flex shrink-0 items-center gap-1 rounded-full border border-accent/25 px-2.5 py-1 text-accent">
+              <MemberStarStat color="currentColor" className="size-3" />
+              <span className="font-roboto text-[9px] font-medium tracking-[0.1em] uppercase">
                 {member.tier}
               </span>
             </span>
@@ -78,13 +79,59 @@ function MemberProfileCard({ member }: MemberProfileCardProps) {
 
         <Link
           href={`/admin/members/${member.id}`}
-          className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-full border border-accent/25 px-3.5 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-primary uppercase transition-colors hover:border-primary/50 hover:bg-accent/8"
+          className="font-roboto flex cursor-pointer items-center gap-1.5 rounded-full border border-accent/25 px-3.5 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-accent uppercase transition-colors hover:border-accent/50 hover:bg-accent/8"
         >
           Profile
           <MemberProfileArrow className="size-3" />
         </Link>
       </div>
     </article>
+  );
+}
+
+function MemberCardSkeleton() {
+  return (
+    <article className="rounded-2xl border border-accent/12 bg-card p-5">
+      <div className="flex items-start gap-4">
+        <ShimmerBlock className="size-14 rounded-full" />
+        <div className="min-w-0 flex-1 space-y-2">
+          <div className="flex items-start justify-between gap-3">
+            <ShimmerBlock className="h-3.5 w-36" />
+            <ShimmerBlock className="h-6 w-20 rounded-full" />
+          </div>
+          <ShimmerBlock className="h-2.5 w-40" />
+        </div>
+      </div>
+
+      <div className="mt-5 flex gap-2 rounded-xl border border-accent/8 bg-surface/60 px-3 py-4">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="flex flex-1 flex-col items-center gap-2">
+            <ShimmerBlock className="h-7 w-10" />
+            <ShimmerBlock className="h-2 w-12" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mt-4 flex items-center justify-between gap-4 border-t border-accent/8 pt-4">
+        <ShimmerBlock className="h-2.5 w-32" />
+        <ShimmerBlock className="h-7 w-20 rounded-full" />
+      </div>
+    </article>
+  );
+}
+
+function FiltersSkeleton() {
+  const widths = ["w-14", "w-20", "w-24", "w-16", "w-28"];
+
+  return (
+    <div className="flex flex-wrap gap-2" aria-hidden="true">
+      {widths.map((width, index) => (
+        <ShimmerBlock
+          key={index}
+          className={`h-8 rounded-full ${width}`}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -111,32 +158,42 @@ export function MembersDirectory({
 }: MembersDirectoryProps) {
   return (
     <section className="space-y-5">
-      <div className="flex flex-wrap gap-2">
-        {filters.map((filter) => {
-          const isActive = activeTier === filter.key;
+      {loading ? (
+        <FiltersSkeleton />
+      ) : (
+        <div className="flex flex-wrap gap-2">
+          {filters.map((filter) => {
+            const isActive = activeTier === filter.key;
 
-          return (
-            <button
-              key={filter.key}
-              type="button"
-              onClick={() => onTierChange(filter.key as MemberTierFilter)}
-              className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
-                isActive
-                  ? "bg-primary text-dark"
-                  : "border border-accent/25 text-primary hover:border-primary/40"
-              }`}
-            >
-              {filter.label}
-            </button>
-          );
-        })}
-      </div>
-
-      {loading && (
-        <p className="font-roboto py-8 text-center text-sm text-secondary">
-          Loading members...
-        </p>
+            return (
+              <button
+                key={filter.key}
+                type="button"
+                onClick={() => onTierChange(filter.key as MemberTierFilter)}
+                className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
+                  isActive
+                    ? "bg-accent text-dark"
+                    : "border border-accent/25 text-accent hover:border-accent/40"
+                }`}
+              >
+                {filter.label}
+              </button>
+            );
+          })}
+        </div>
       )}
+
+      {loading ? (
+        <div
+          className="grid grid-cols-1 gap-4 xl:grid-cols-2"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          {Array.from({ length: 4 }, (_, index) => (
+            <MemberCardSkeleton key={index} />
+          ))}
+        </div>
+      ) : null}
 
       {!loading && members.length === 0 && (
         <p className="font-roboto py-8 text-center text-sm text-secondary">
@@ -158,7 +215,7 @@ export function MembersDirectory({
             type="button"
             disabled={loadingMore}
             onClick={onLoadMore}
-            className="font-roboto cursor-pointer rounded-full border border-accent/25 px-5 py-2.5 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase transition-colors hover:border-primary/40 disabled:cursor-not-allowed disabled:opacity-60"
+            className="font-roboto cursor-pointer rounded-full border border-accent/25 px-5 py-2.5 text-[10px] font-semibold tracking-[0.12em] text-accent uppercase transition-colors hover:border-accent/40 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loadingMore ? "Loading..." : "Load more"}
           </button>

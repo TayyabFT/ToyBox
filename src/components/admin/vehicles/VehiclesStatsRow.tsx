@@ -51,9 +51,7 @@ export function VehiclesStatsRow({
 
   return (
     <div
-      className={`grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4"
       aria-busy={loading}
     >
       {cards.map(({ key, stat, icon, clickable }) => {
@@ -61,7 +59,7 @@ export function VehiclesStatsRow({
           !!stat.summaryKey && activeSummaryKey === stat.summaryKey;
         const wrapperClass = [
           clickable && onSummaryClick ? "cursor-pointer" : "",
-          isActive ? "rounded-2xl ring-1 ring-primary/50" : "",
+          isActive ? "rounded-2xl ring-1 ring-accent/50" : "",
         ]
           .filter(Boolean)
           .join(" ");

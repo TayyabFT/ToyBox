@@ -1,5 +1,6 @@
 "use client";
 
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ParkingSessionStatusBadge } from "./ParkingSessionStatusBadge";
 import type { ParkingSessionDetail } from "./types";
 
@@ -23,11 +24,38 @@ export function ParkingSessionDetailPanel({
   detail,
   loading,
 }: ParkingSessionDetailPanelProps) {
-  if (loading || !detail) {
+  if (loading) {
+    return (
+      <section
+        className="overflow-hidden rounded-2xl border border-accent/12 bg-card"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-accent/10 px-5 py-4">
+          <div className="space-y-2">
+            <ShimmerBlock className="h-2.5 w-24" />
+            <ShimmerBlock className="h-5 w-28" />
+          </div>
+          <ShimmerBlock className="h-6 w-20 rounded-full" />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 border-b border-accent/10 px-5 py-5 md:grid-cols-4">
+          {Array.from({ length: 10 }, (_, index) => (
+            <div key={index} className="space-y-1.5">
+              <ShimmerBlock className="h-2.5 w-16" />
+              <ShimmerBlock className="h-3.5 w-20" />
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (!detail) {
     return (
       <section className="overflow-hidden rounded-2xl border border-accent/12 bg-card px-5 py-8 text-center">
         <p className="font-roboto text-sm text-secondary">
-          {loading ? "Loading session details..." : "Select a parking request"}
+          Select a parking request
         </p>
       </section>
     );

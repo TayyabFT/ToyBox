@@ -15,15 +15,25 @@ const statIcons = [
 
 type ConfirmationsStatsRowProps = {
   stats?: ConfirmationStatItem[];
+  loading?: boolean;
 };
 
 export function ConfirmationsStatsRow({
   stats = fallbackStats,
+  loading = false,
 }: ConfirmationsStatsRowProps) {
   return (
-    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4">
+    <div
+      className="grid grid-cols-1 gap-4 xl:grid-cols-2 2xl:grid-cols-4"
+      aria-busy={loading}
+    >
       {stats.map((stat, index) => (
-        <ConfirmationStatCard key={stat.label} {...stat} icon={statIcons[index]} />
+        <ConfirmationStatCard
+          key={stat.label}
+          {...stat}
+          icon={statIcons[index]}
+          valueLoading={loading}
+        />
       ))}
     </div>
   );

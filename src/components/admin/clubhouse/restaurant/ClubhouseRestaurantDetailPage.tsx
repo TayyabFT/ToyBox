@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { adminClubhouseApi } from "@/api/adminClubhouse.api";
 import { mapAdminClubhouseRestaurantList } from "@/lib/adminClubhouse";
 import { useSetAdminPageSubtitle } from "@/lib/adminPageMeta";
+import { PageLoadingShimmer } from "@/components/common/PageLoadingShimmer";
 import { showError } from "@/lib/toast";
 import { ClubhouseVenueStatusBadge } from "../ClubhouseVenueStatusBadge";
 import type { ClubhouseRestaurantListItem } from "./types";
@@ -160,13 +161,7 @@ export function ClubhouseRestaurantDetailPage({
   }, [restaurantId]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
-          Loading…
-        </p>
-      </div>
-    );
+    return <PageLoadingShimmer />;
   }
 
   if (!restaurant) {

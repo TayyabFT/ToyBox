@@ -1,14 +1,15 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { ServiceJobListSkeleton } from "./ServiceJobListSkeleton";
 import { ServiceSectionHeader } from "./ServiceSectionHeader";
 import type { SectionMeta } from "./types";
+import type { ReactNode } from "react";
 
 type ServiceSectionListPageProps = {
   backHref: string;
   meta: SectionMeta;
   loading: boolean;
   jobCount: number;
-  loadingText: string;
+  loadingText?: string;
   emptyText: string;
   children: ReactNode;
 };
@@ -18,7 +19,6 @@ export function ServiceSectionListPage({
   meta,
   loading,
   jobCount,
-  loadingText,
   emptyText,
   children,
 }: ServiceSectionListPageProps) {
@@ -32,18 +32,12 @@ export function ServiceSectionListPage({
       </Link>
 
       <section
-        className={`rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
-          loading ? "opacity-70" : ""
-        }`}
+        className="rounded-2xl border border-[#D4A8471A] bg-surface p-5"
         aria-busy={loading}
       >
         <ServiceSectionHeader meta={meta} />
 
-        {loading && jobCount === 0 ? (
-          <p className="font-roboto py-8 text-center text-sm text-secondary">
-            {loadingText}
-          </p>
-        ) : null}
+        {loading && jobCount === 0 ? <ServiceJobListSkeleton count={4} /> : null}
 
         {!loading && jobCount === 0 ? (
           <p className="font-roboto py-8 text-center text-sm text-secondary">
@@ -51,7 +45,9 @@ export function ServiceSectionListPage({
           </p>
         ) : null}
 
-        <div className="space-y-3">{children}</div>
+        {!loading && jobCount > 0 ? (
+          <div className="space-y-3">{children}</div>
+        ) : null}
       </section>
     </div>
   );

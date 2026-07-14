@@ -1,3 +1,4 @@
+import { ConfirmationRowSkeletonList } from "./ConfirmationRowSkeleton";
 import { InReviewBookingRow } from "./InReviewBookingRow";
 import {
   confirmationInReviewPanelClass,
@@ -26,9 +27,7 @@ export function InReviewBookingsPanel({
 
       <div className="space-y-3">
         {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
-            Loading...
-          </p>
+          <ConfirmationRowSkeletonList withIcon={false} />
         ) : bookings.length > 0 ? (
           bookings.map((booking) => (
             <InReviewBookingRow key={booking.id} booking={booking} />

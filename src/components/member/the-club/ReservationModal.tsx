@@ -260,6 +260,9 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
   const selectedSpace = fetchedSpaces.find(s => s.id === selectedSpaceId) ?? null;
   const spaceCapacity: number = selectedSpace?.capacity ?? 12;
 
+  // True when a category is selected but no spaces exist for it (not during loading)
+  const noSpacesAvailable = !loadingSpaces && fetchedSpaces.length === 0;
+
   // Clamp guests whenever the selected space changes (capacity may differ)
   useEffect(() => {
     if (spaceCapacity > 0 && guests > spaceCapacity) {
@@ -553,8 +556,8 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
                 </div>
               </div>
 
-               {/* Guests Selector */}
-              <div className="space-y-1.5">
+              {/* Guests Selector */}
+              <div className={`space-y-1.5 transition-opacity duration-200 ${noSpacesAvailable ? "opacity-40 pointer-events-none select-none" : ""}`}>
                 <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
                   Guests <span className="text-secondary/50">(Pax)</span> <span className="text-red-400">*</span>
                 </label>
@@ -562,7 +565,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
                   <div className="flex items-center bg-[#11100C] border border-accent/15 rounded-xl overflow-hidden p-1">
                     <button
                       onClick={() => setGuests(prev => Math.max(1, prev - 1))}
-                      disabled={guests <= 1}
+                      disabled={guests <= 1 || noSpacesAvailable}
                       className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[18px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       -
@@ -572,7 +575,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
                     </span>
                     <button
                       onClick={() => setGuests(prev => Math.min(spaceCapacity, prev + 1))}
-                      disabled={guests >= spaceCapacity}
+                      disabled={guests >= spaceCapacity || noSpacesAvailable}
                       className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[16px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                     >
                       +
@@ -592,7 +595,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
               </div>
 
               {/* Date Selection */}
-              <div className="space-y-1.5 relative" ref={dateRef}>
+              <div className={`space-y-1.5 relative transition-opacity duration-200 ${noSpacesAvailable ? "opacity-40 pointer-events-none select-none" : ""}`} ref={dateRef}>
                 <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
                   Date <span className="text-red-400">*</span>
                 </label>
@@ -600,8 +603,9 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
                 {/* Trigger button */}
                 <button
                   ref={dateTriggerRef}
+                  disabled={noSpacesAvailable}
                   onClick={() => { setIsDateDropdownOpen(!isDateDropdownOpen); setCalendarView("day"); }}
-                  className={`w-full font-Roboto bg-[#11100C] border px-4 py-3 rounded-xl flex items-center justify-between text-[13px] text-foreground outline-none text-left transition-colors ${isDateDropdownOpen ? "border-accent/40" : "border-accent/15 hover:border-accent/30"}`}
+                  className={`w-full font-Roboto bg-[#11100C] border px-4 py-3 rounded-xl flex items-center justify-between text-[13px] text-foreground outline-none text-left transition-colors disabled:cursor-not-allowed ${isDateDropdownOpen ? "border-accent/40" : "border-accent/15 hover:border-accent/30"}`}
                 >
                   <span className="flex items-center gap-2.5">
                     <IconCalendar />
@@ -759,7 +763,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
               </div>
 
               {/* Time Selection */}
-              <div className="space-y-2">
+              <div className={`space-y-2 transition-opacity duration-200 ${noSpacesAvailable ? "opacity-40 pointer-events-none select-none" : ""}`}>
                 <div className="flex items-center justify-between">
                   <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
                     Time <span className="text-red-400">*</span>
@@ -833,14 +837,15 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
              
 
               {/* Occasion Dropdown */}
-              <div className="space-y-1.5" ref={occasionRef}>
+              <div className={`space-y-1.5 transition-opacity duration-200 ${noSpacesAvailable ? "opacity-40 pointer-events-none select-none" : ""}`} ref={occasionRef}>
                 <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold  text-f1ead7cc uppercase">
                   Occasion <span className="text-secondary/50">(Optional)</span>
                 </label>
                 <div className="relative">
                   <button
+                    disabled={noSpacesAvailable}
                     onClick={() => setIsOccasionDropdownOpen(!isOccasionDropdownOpen)}
-                    className="w-full font-Roboto bg-[#11100C] border border-accent/15 px-4 py-3 rounded-xl flex items-center justify-between text-[13px] text-foreground outline-none text-left"
+                    className="w-full font-Roboto bg-[#11100C] border border-accent/15 px-4 py-3 rounded-xl flex items-center justify-between text-[13px] text-foreground outline-none text-left disabled:cursor-not-allowed"
                   >
                     {selectedOccasion}
                     <svg
@@ -879,7 +884,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
               </div>
 
               {/* Special Requests */}
-              <div className="space-y-1.5">
+              <div className={`space-y-1.5 transition-opacity duration-200 ${noSpacesAvailable ? "opacity-40 pointer-events-none select-none" : ""}`}>
                 <div className="flex items-center justify-between">
                   <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold  text-f1ead7cc uppercase">
                     Special Requests
@@ -890,10 +895,11 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
                 </div>
                 <textarea
                   value={specialRequests}
+                  disabled={noSpacesAvailable}
                   onChange={(e) => setSpecialRequests(e.target.value.slice(0, 250))}
                   rows={3}
                   placeholder="Any special requests (e.g. window seat, dietary requirements)."
-                  className="font-Roboto w-full resize-none rounded-xl border border-accent/10 bg-[#11100C] px-4 py-3 text-[13px] text-foreground outline-none transition-colors placeholder:text-secondary/40 focus:border-accent/40"
+                  className="font-Roboto w-full resize-none rounded-xl border border-accent/10 bg-[#11100C] px-4 py-3 text-[13px] text-foreground outline-none transition-colors placeholder:text-secondary/40 focus:border-accent/40 disabled:cursor-not-allowed"
                 />
               </div>
 
@@ -1156,11 +1162,16 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
         <div className="p-5 pt-2 border-t border-accent/5 space-y-2 bg-[#0A0907]">
           {step === 1 && (
             <>
+              {noSpacesAvailable && (
+                <p className="font-Roboto text-[11px] text-secondary/50 text-center pb-1">
+                  No spaces available for this category.
+                </p>
+              )}
               <button
                 onClick={handleNext}
-                disabled={!selectedTime || !areaId}
+                disabled={!selectedTime || !areaId || noSpacesAvailable}
                 className={`w-full font-Roboto text-dark font-bold text-[11px] py-3 rounded-full uppercase tracking-[0.16em] flex items-center justify-center gap-1.5 transition-all shadow-[0_0_12px_rgba(212,168,71,0.15)] ${
-                  !selectedTime || !areaId
+                  !selectedTime || !areaId || noSpacesAvailable
                     ? "bg-accent/40 opacity-50 cursor-not-allowed"
                     : "bg-accent hover:brightness-110 active:brightness-95 cursor-pointer"
                 }`}

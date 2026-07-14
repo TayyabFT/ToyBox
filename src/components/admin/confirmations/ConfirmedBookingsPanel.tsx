@@ -1,4 +1,5 @@
 import { BookingRow } from "./BookingRow";
+import { ConfirmationRowSkeletonList } from "./ConfirmationRowSkeleton";
 import { ConfirmationsOutsideHeader } from "./ConfirmationsSectionHeader";
 import { confirmationInnerClass } from "./panelStyles";
 import type { BookingItem } from "./types";
@@ -21,9 +22,7 @@ export function ConfirmedBookingsPanel({
 
       <section className={confirmationInnerClass}>
         {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
-            Loading...
-          </p>
+          <ConfirmationRowSkeletonList withIcon={false} />
         ) : bookings.length > 0 ? (
           bookings.map((booking) => (
             <BookingRow key={booking.id} booking={booking} />

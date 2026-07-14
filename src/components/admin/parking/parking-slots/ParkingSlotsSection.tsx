@@ -19,16 +19,25 @@ import { showError, showSuccess } from "@/lib/toast";
 import { EditParkingSlotModal } from "./EditParkingSlotModal";
 import { ParkingSlotDetailPanel } from "./ParkingSlotDetailPanel";
 import { ParkingSlotListPanel } from "./ParkingSlotListPanel";
-import type { ParkingSlotDetail, ParkingSlotListItem, ParkingSlotsSummaryDisplay } from "./types";
+import type {
+  ParkingSlotDetail,
+  ParkingSlotListItem,
+  ParkingSlotsSummaryDisplay,
+} from "./types";
 
 type ParkingSlotsSectionProps = {
   refreshToken?: number;
   showSummary?: boolean;
+  /** Keep panels shimmering until the whole page is ready to reveal. */
+  holdReveal?: boolean;
+  onBootstrapComplete?: () => void;
 };
 
 export function ParkingSlotsSection({
   refreshToken = 0,
   showSummary = true,
+  holdReveal = false,
+  onBootstrapComplete,
 }: ParkingSlotsSectionProps) {
   const [slots, setSlots] = useState<ParkingSlotListItem[]>([]);
   const [selectedId, setSelectedId] = useState("");
@@ -36,13 +45,14 @@ export function ParkingSlotsSection({
   const [summary, setSummary] = useState<ParkingSlotsSummaryDisplay>(
     createEmptyParkingSlotsSummary(),
   );
-  const [listLoading, setListLoading] = useState(true);
+  const [bootstrapLoading, setBootstrapLoading] = useState(true);
   const [detailLoading, setDetailLoading] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
   const loadSlots = useCallback(async () => {
-    setListLoading(true);
+    setBootstrapLoading(true);
+    setDetail(null);
 
     try {
       const [listResponse, summaryResponse] = await Promise.all([
@@ -51,12 +61,20 @@ export function ParkingSlotsSection({
       ]);
 
       const items = mapParkingSlotsList(listResponse.data);
+      const nextSelectedId = items[0]?.id || "";
 
       setSlots(items);
       if (summaryResponse) {
         setSummary(mapParkingSlotsSummary(summaryResponse.data));
       }
-      setSelectedId((current) => current || items[0]?.id || "");
+      setSelectedId(nextSelectedId);
+
+      if (nextSelectedId) {
+        const detailResponse = await adminParkingApi.getSlot(nextSelectedId);
+        setDetail(mapParkingSlotDetail(detailResponse.data));
+      } else {
+        setDetail(null);
+      }
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
@@ -68,9 +86,10 @@ export function ParkingSlotsSection({
       setSelectedId("");
       setDetail(null);
     } finally {
-      setListLoading(false);
+      setBootstrapLoading(false);
+      onBootstrapComplete?.();
     }
-  }, [showSummary]);
+  }, [onBootstrapComplete, showSummary]);
 
   const loadDetail = useCallback(async (id: string) => {
     if (!id) {
@@ -99,14 +118,14 @@ export function ParkingSlotsSection({
     void loadSlots();
   }, [loadSlots, refreshToken]);
 
-  useEffect(() => {
-    if (!selectedId) {
-      setDetail(null);
+  async function handleSelect(id: string) {
+    if (id === selectedId || bootstrapLoading) {
       return;
     }
 
-    void loadDetail(selectedId);
-  }, [loadDetail, selectedId]);
+    setSelectedId(id);
+    await loadDetail(id);
+  }
 
   const handleDeleteSlot = useCallback(async () => {
     if (!selectedId) {
@@ -132,6 +151,9 @@ export function ParkingSlotsSection({
     }
   }, [loadSlots, selectedId]);
 
+  const panelsLoading = bootstrapLoading || holdReveal;
+  const detailPanelLoading = panelsLoading || detailLoading;
+
   return (
     <div className="space-y-6">
       {showSummary ? (
@@ -143,7 +165,7 @@ export function ParkingSlotsSection({
             icon={<VehicleFleetCar />}
             iconSize="lg"
             iconFit="native"
-            valueLoading={listLoading}
+            valueLoading={panelsLoading}
           />
           <StatCard
             label={summary.available.label}
@@ -151,7 +173,7 @@ export function ParkingSlotsSection({
             subtext={summary.available.subtext || "OPEN SLOTS"}
             icon={<VehicleFleetReady />}
             iconSize="lg"
-            valueLoading={listLoading}
+            valueLoading={panelsLoading}
           />
           <StatCard
             label={summary.occupied.label}
@@ -159,7 +181,7 @@ export function ParkingSlotsSection({
             subtext={summary.occupied.subtext || "IN USE"}
             icon={<VehicleFleetInService />}
             iconSize="lg"
-            valueLoading={listLoading}
+            valueLoading={panelsLoading}
           />
           <StatCard
             label={summary.maintenance.label}
@@ -167,7 +189,7 @@ export function ParkingSlotsSection({
             subtext={summary.maintenance.subtext || "UNDER MAINTENANCE"}
             icon={<VehicleFleetOverdue />}
             iconSize="lg"
-            valueLoading={listLoading}
+            valueLoading={panelsLoading}
           />
         </div>
       ) : null}
@@ -177,14 +199,14 @@ export function ParkingSlotsSection({
           <ParkingSlotListPanel
             slots={slots}
             selectedId={selectedId}
-            loading={listLoading}
-            onSelect={setSelectedId}
+            loading={panelsLoading}
+            onSelect={handleSelect}
           />
         </div>
         <div className="xl:col-span-3">
           <ParkingSlotDetailPanel
             detail={detail}
-            loading={detailLoading && Boolean(selectedId)}
+            loading={detailPanelLoading && Boolean(selectedId || panelsLoading)}
             deleting={deleting}
             onEdit={() => setEditOpen(true)}
             onDelete={handleDeleteSlot}

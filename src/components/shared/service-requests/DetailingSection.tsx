@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { DetailingJobCard } from "./DetailingJobCard";
+import { ServiceJobListSkeleton } from "./ServiceJobListSkeleton";
 import { ServiceSectionHeader } from "./ServiceSectionHeader";
 import type { DetailingJob, SectionMeta } from "./types";
 
@@ -22,9 +23,7 @@ export function DetailingSection({
 
   return (
     <section
-      className={`rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="rounded-2xl border border-[#D4A8471A] bg-surface p-5"
       aria-busy={loading}
     >
       <ServiceSectionHeader
@@ -42,9 +41,7 @@ export function DetailingSection({
       />
 
       {loading && jobs.length === 0 ? (
-        <p className="font-roboto py-6 text-center text-sm text-secondary">
-          Loading detailing bookings...
-        </p>
+        <ServiceJobListSkeleton count={2} />
       ) : null}
 
       {!loading && jobs.length === 0 ? (
@@ -53,11 +50,13 @@ export function DetailingSection({
         </p>
       ) : null}
 
-      <div className="space-y-3">
-        {jobs.map((job) => (
-          <DetailingJobCard key={job.id} job={job} staffMode={staffMode} />
-        ))}
-      </div>
+      {!loading && jobs.length > 0 ? (
+        <div className="space-y-3">
+          {jobs.map((job) => (
+            <DetailingJobCard key={job.id} job={job} staffMode={staffMode} />
+          ))}
+        </div>
+      ) : null}
     </section>
   );
 }

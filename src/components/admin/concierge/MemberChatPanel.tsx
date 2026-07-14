@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { adminChatApi } from "@/api/adminChat.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { VehicleSend } from "@/components/common/Svgs";
 import { mapChatMessage, mapChatMessages } from "@/lib/chat";
 import { toResourceId } from "@/lib/resourceId";
@@ -10,6 +11,17 @@ import type { ChatConversation } from "@/types/api";
 import { ChatMessage } from "./ChatMessage";
 import { conciergePanelClass } from "./panelStyles";
 import type { ConciergeChatMessage } from "./types";
+
+function ChatBubbleSkeleton({ align }: { align: "start" | "end" }) {
+  return (
+    <div
+      className={`flex flex-col gap-2 ${align === "end" ? "items-end" : "items-start"}`}
+    >
+      <ShimmerBlock className="h-12 w-2/3 rounded-2xl" />
+      <ShimmerBlock className="h-2.5 w-20" />
+    </div>
+  );
+}
 
 type MemberChatPanelProps = {
   memberId: string | null;
@@ -69,11 +81,14 @@ export function MemberChatPanel({
       if (memberId === null) {
         setMessages([]);
         setConversation(null);
+        setLoading(false);
         return;
       }
 
       if (!silent) {
         setLoading(true);
+        setMessages([]);
+        setConversation(null);
       }
 
       try {
@@ -103,6 +118,7 @@ export function MemberChatPanel({
   );
 
   useEffect(() => {
+    setDraft("");
     void loadMessages();
   }, [loadMessages]);
 
@@ -189,27 +205,30 @@ export function MemberChatPanel({
         ref={messagesContainerRef}
         className="Custom__Scrollbar mb-5 min-h-0 flex-1 space-y-6 overflow-y-auto px-1 py-2"
       >
-        {loading && messages.length === 0 && (
-          <p className="font-roboto py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
-            Loading chat...
-          </p>
-        )}
+        {loading ? (
+          <div className="space-y-6" aria-busy="true" aria-live="polite">
+            <ChatBubbleSkeleton align="start" />
+            <ChatBubbleSkeleton align="end" />
+            <ChatBubbleSkeleton align="start" />
+            <ChatBubbleSkeleton align="end" />
+          </div>
+        ) : messages.length > 0 ? (
+          <>
+            {dateLabel ? (
+              <p className="font-roboto text-center text-[11px] tracking-[0.12em] text-[#6B665E] uppercase">
+                {dateLabel}
+              </p>
+            ) : null}
 
-        {dateLabel && messages.length > 0 && (
-          <p className="font-roboto text-center text-[11px] tracking-[0.12em] text-[#6B665E] uppercase">
-            {dateLabel}
-          </p>
-        )}
-
-        {messages.length > 0 ? (
-          messages.map((message) => (
-            <ChatMessage key={message.id} message={message} />
-          ))
-        ) : !loading ? (
+            {messages.map((message) => (
+              <ChatMessage key={message.id} message={message} />
+            ))}
+          </>
+        ) : (
           <p className="font-roboto py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
             No messages yet
           </p>
-        ) : null}
+        )}
       </div>
 
       <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-[#2A2620] bg-[#0D0C0A] px-5 py-4">

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { OperationStatus, VehicleOperationRow } from "./types";
 
 const FILTERS: { key: "all" | OperationStatus; label: string }[] = [
@@ -13,14 +14,14 @@ const FILTERS: { key: "all" | OperationStatus; label: string }[] = [
 ];
 
 const STATUS_TONE: Record<OperationStatus, string> = {
-  overdue: "border-[var(--pink)]/40 bg-[var(--pink)]/[0.08] text-[var(--pink)]",
-  "in-service": "border-primary/40 bg-primary/[0.08] text-primary",
+  overdue: "border-pink/40 bg-pink/[0.08] text-pink",
+  "in-service": "border-accent/40 bg-accent/[0.08] text-accent",
   ready: "border-teal/40 bg-teal/[0.08] text-teal",
 };
 
 const DOT_TONE: Record<OperationStatus, string> = {
-  overdue: "bg-[var(--pink)]",
-  "in-service": "bg-primary",
+  overdue: "bg-pink",
+  "in-service": "bg-accent",
   ready: "bg-teal",
 };
 
@@ -48,7 +49,7 @@ function ActionButton({
     return (
       <button
         type="button"
-        className="font-roboto cursor-pointer rounded-full bg-[var(--pink)] px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-dark uppercase transition-opacity hover:opacity-90"
+        className="font-roboto cursor-pointer rounded-full bg-pink px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-dark uppercase transition-opacity hover:opacity-90"
       >
         Resolve
       </button>
@@ -70,7 +71,7 @@ function ActionButton({
   return (
     <Link
       href={`/admin/vehicles/${vehicleId}`}
-      className="font-roboto inline-flex rounded-full bg-primary px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-dark uppercase transition-colors hover:bg-[#D4B45C]"
+      className="admin-gold-cta font-roboto inline-flex rounded-full px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] uppercase"
     >
       View
     </Link>
@@ -97,15 +98,13 @@ export function VehicleOperations({
 
   return (
     <section
-      className={`rounded-2xl border border-accent/12 bg-card p-5 ${
-        loading ? "opacity-70" : ""
-      }`}
+      className="rounded-2xl border border-accent/12 bg-card p-5"
       aria-busy={loading}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="space-y-1">
           <h2 className="font-copperplate text-[16px] tracking-[0.06em] text-foreground uppercase">
-            Vehicle <span className="text-primary">Operations</span>
+            Vehicle <span className="text-accent">Operations</span>
           </h2>
           <p className="font-roboto text-[9px] tracking-[0.14em] text-secondary uppercase">
             Active Status Overview
@@ -123,8 +122,8 @@ export function VehicleOperations({
                 onClick={() => onFilterChange(filter.key)}
                 className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[9px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                   isActive
-                    ? "border border-accent/25 bg-accent/10 text-primary"
-                    : "text-secondary hover:text-primary"
+                    ? "border border-accent/25 bg-accent/10 text-accent"
+                    : "text-secondary hover:text-accent"
                 }`}
               >
                 {filter.label}
@@ -151,19 +150,19 @@ export function VehicleOperations({
             <div className="divide-y divide-accent/8" aria-hidden="true">
               {Array.from({ length: 6 }).map((_, index) => (
                 <div key={index} className={`${GRID} px-3 py-4`}>
-                  <div className="h-4 w-8 animate-pulse rounded bg-accent/10" />
+                  <ShimmerBlock className="h-4 w-8" />
                   <div className="flex items-center gap-3">
-                    <div className="size-8 shrink-0 animate-pulse rounded-full bg-accent/10" />
+                    <ShimmerBlock className="size-8 shrink-0 rounded-full" />
                     <div className="space-y-1.5">
-                      <div className="h-3 w-24 animate-pulse rounded bg-accent/10" />
-                      <div className="h-2.5 w-16 animate-pulse rounded bg-accent/10" />
+                      <ShimmerBlock className="h-3 w-24" />
+                      <ShimmerBlock className="h-2.5 w-16" />
                     </div>
                   </div>
-                  <div className="h-3 w-28 animate-pulse rounded bg-accent/10" />
-                  <div className="h-5 w-20 animate-pulse rounded-full bg-accent/10" />
-                  <div className="h-3 w-20 animate-pulse rounded bg-accent/10" />
+                  <ShimmerBlock className="h-3 w-28" />
+                  <ShimmerBlock className="h-5 w-20 rounded-full" />
+                  <ShimmerBlock className="h-3 w-20" />
                   <div className="flex justify-end">
-                    <div className="h-6 w-16 animate-pulse rounded-full bg-accent/10" />
+                    <ShimmerBlock className="h-6 w-16 rounded-full" />
                   </div>
                 </div>
               ))}
@@ -182,7 +181,7 @@ export function VehicleOperations({
                 key={op.id}
                 className={`${GRID} px-3 py-4 transition-colors hover:bg-surface/40`}
               >
-                <span className="font-copperplate text-[15px] text-primary">
+                <span className="font-copperplate text-[15px] text-accent">
                   {op.bay}
                 </span>
 
@@ -196,7 +195,7 @@ export function VehicleOperations({
                       className="size-8 shrink-0 rounded-full object-cover"
                     />
                   ) : (
-                    <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-roboto text-[11px] font-semibold text-dark uppercase">
+                    <span className="admin-gold-avatar flex size-8 shrink-0 items-center justify-center rounded-full font-roboto text-[11px] font-semibold uppercase">
                       {op.initial}
                     </span>
                   )}
@@ -213,7 +212,7 @@ export function VehicleOperations({
                 <p className="font-roboto text-[12px] text-foreground">
                   {op.make}{" "}
                   {op.model ? (
-                    <span className="text-primary italic">{op.model}</span>
+                    <span className="text-accent italic">{op.model}</span>
                   ) : null}
                 </p>
 

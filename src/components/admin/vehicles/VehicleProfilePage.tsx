@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { PageLoadingShimmer } from "@/components/common/PageLoadingShimmer";
 import { VehicleListCarIcon } from "@/components/common/Svgs";
 import { adminVehiclesApi } from "@/api/adminVehicles.api";
 import { mapAdminVehicleDetailsScreen } from "@/lib/adminVehicleDetails";
@@ -19,8 +20,8 @@ type Tone = VehicleActivityHistoryItem["tone"];
 
 const dotToneClass: Record<Tone, string> = {
   teal: "bg-teal",
-  gold: "bg-primary",
-  red: "bg-[#E0685C]",
+  gold: "bg-accent",
+  red: "bg-pink",
 };
 
 const pillToneClass = {
@@ -117,16 +118,10 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
 
   return (
     <div className="space-y-5 p-8">
-      <section
-        className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
-        style={{
-          background:
-            "radial-gradient(90% 130% at 42% -15%, rgba(212,168,71,0.20) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
-        }}
-      >
+      <section className="admin-entity-hero relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9">
         <div className="flex items-center gap-6">
-          <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
-            <VehicleListCarIcon className="h-[22px] w-[44px]" />
+          <span className="admin-entity-hero-avatar flex size-24 shrink-0 items-center justify-center rounded-full border-2 text-accent">
+            <VehicleListCarIcon className="h-[22px] w-[44px]" color="currentColor" />
           </span>
 
           <div className="min-w-0 space-y-2.5">
@@ -138,13 +133,13 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
 
             <h1 className="font-copperplate text-[34px] leading-none tracking-[0.05em]">
               {titleParts.primary && (
-                <span className="text-[#F2EAD5]">{titleParts.primary} </span>
+                <span className="admin-entity-hero-title">{titleParts.primary} </span>
               )}
               {titleParts.accent ? (
-                <span className="text-[#C9A84C]">{titleParts.accent}</span>
+                <span className="admin-entity-hero-accent">{titleParts.accent}</span>
               ) : (
                 !titleParts.primary && (
-                  <span className="text-[#F2EAD5]">{detail.displayName}</span>
+                  <span className="admin-entity-hero-title">{detail.displayName}</span>
                 )
               )}
             </h1>
@@ -171,7 +166,7 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
 
       <SectionCard title="Owner">
         <div className="flex items-center gap-4">
-          <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-[#C9A84C]/70 bg-[#0d0b08] font-copperplate text-[18px] text-[#C9A84C]">
+          <span className="flex size-12 shrink-0 items-center justify-center rounded-full border border-accent/70 bg-dark font-copperplate text-[18px] text-accent">
             {ownerInitial}
           </span>
           <div className="space-y-1">
@@ -196,7 +191,7 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
 
         <SectionCard title="Bay Assignment">
           <div className="flex items-center gap-4 pb-4">
-            <div className="flex size-[52px] shrink-0 flex-col items-center justify-center rounded-xl bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-dark">
+            <div className="admin-gold-avatar flex size-[52px] shrink-0 flex-col items-center justify-center rounded-xl">
               <span className="font-copperplate text-[16px] leading-none">
                 {detail.bayCode}
               </span>
@@ -315,13 +310,7 @@ export function VehicleProfilePage({ vehicleId }: VehicleProfilePageProps) {
   }, [vehicleId]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
-          Loading…
-        </p>
-      </div>
-    );
+    return <PageLoadingShimmer />;
   }
 
   if (!detail) {

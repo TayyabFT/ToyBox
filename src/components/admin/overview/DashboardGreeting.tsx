@@ -16,7 +16,7 @@ export function DashboardGreeting({
       </p>
       <h1 className="font-copperplate text-[36px] leading-[1.1] tracking-[0.04em] uppercase">
         <span className="text-foreground">{greeting}, </span>
-        <span className="text-primary">{name}</span>
+        <span className="text-accent">{name}</span>
       </h1>
     </div>
   );

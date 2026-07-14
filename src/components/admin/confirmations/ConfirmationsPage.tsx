@@ -18,7 +18,6 @@ import { ConfirmationsPageHeader } from "./ConfirmationsPageHeader";
 import { ConfirmationsStatsRow } from "./ConfirmationsStatsRow";
 import { InReviewBookingsPanel } from "./InReviewBookingsPanel";
 import { PendingConfirmationsPanel } from "./PendingConfirmationsPanel";
-import { confirmationStats as fallbackStats } from "./mockData";
 import type {
   BookingItem,
   CompletedTodayItem,
@@ -34,7 +33,9 @@ const ADMIN_SOURCING_QUERY = {
 
 export function ConfirmationsPage() {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<ConfirmationStatItem[]>(fallbackStats);
+  const [stats, setStats] = useState<ConfirmationStatItem[]>(
+    createEmptyAdminConfirmationStats(),
+  );
   const [pendingBookings, setPendingBookings] = useState<PendingBookingItem[]>([]);
   const [confirmedBookings, setConfirmedBookings] = useState<BookingItem[]>([]);
   const [inReviewBookings, setInReviewBookings] = useState<InReviewBooking[]>([]);
@@ -83,7 +84,7 @@ export function ConfirmationsPage() {
   return (
     <div className="space-y-7 p-8">
       <ConfirmationsPageHeader />
-      <ConfirmationsStatsRow stats={stats} />
+      <ConfirmationsStatsRow stats={stats} loading={loading} />
 
       <div className="grid grid-cols-1 items-start gap-6 xl:grid-cols-[1.7fr_1fr]">
         <div className="space-y-6">

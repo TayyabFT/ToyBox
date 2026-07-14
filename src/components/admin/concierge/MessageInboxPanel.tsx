@@ -1,10 +1,26 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { MessageInboxRow } from "./MessageInboxRow";
 import { MessageInboxTabs } from "./MessageInboxTabs";
 import { conciergeListPanelClass } from "./panelStyles";
 import type { ConciergeInboxMessage, MessageInboxFilter } from "./types";
+
+function MessageInboxRowSkeleton() {
+  return (
+    <div className="flex gap-3.5 border-b border-[#1E1A14] px-5 py-4 last:border-b-0">
+      <ShimmerBlock className="size-10 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <div className="flex items-center justify-between gap-3">
+          <ShimmerBlock className="h-3 w-28" />
+          <ShimmerBlock className="h-2.5 w-10" />
+        </div>
+        <ShimmerBlock className="h-2.5 w-full" />
+      </div>
+    </div>
+  );
+}
 
 type MessageInboxPanelProps = {
   messages: ConciergeInboxMessage[];
@@ -59,9 +75,11 @@ export function MessageInboxPanel({
 
       <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto">
         {loading ? (
-          <p className="font-roboto px-5 py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
-            Loading...
-          </p>
+          <div aria-busy="true" aria-live="polite">
+            {Array.from({ length: 4 }, (_, index) => (
+              <MessageInboxRowSkeleton key={index} />
+            ))}
+          </div>
         ) : filteredMessages.length > 0 ? (
           filteredMessages.map((message) => (
             <MessageInboxRow

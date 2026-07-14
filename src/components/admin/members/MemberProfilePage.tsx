@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { StarFilled, VehicleListCarIcon } from "@/components/common/Svgs";
+import { PageLoadingShimmer } from "@/components/common/PageLoadingShimmer";
 import { membersApi } from "@/api/members.api";
 import { mapMemberProfile } from "@/lib/members";
 import { showError } from "@/lib/toast";
@@ -19,9 +20,9 @@ type MemberProfilePageProps = {
 
 function HeaderBadge({ label }: { label: string }) {
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A84C]/35 bg-[#C9A84C]/5 px-3.5 py-1.5">
-      <StarFilled className="size-3" />
-      <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase">
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-accent/35 bg-accent/5 px-3.5 py-1.5 text-accent">
+      <StarFilled className="size-3" color="currentColor" />
+      <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase">
         {label}
       </span>
     </span>
@@ -57,7 +58,7 @@ function ViewAllButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="font-roboto cursor-pointer text-[9px] font-semibold tracking-[0.16em] text-primary uppercase transition-colors hover:text-accent"
+      className="font-roboto cursor-pointer text-[9px] font-semibold tracking-[0.16em] text-accent uppercase transition-colors hover:text-gold-bright"
     >
       View All
     </button>
@@ -97,18 +98,18 @@ function ListModal({
 }
 
 const vehicleStatusClass: Record<string, string> = {
-  primary: "border-[#C9A84C]/40 bg-[#C9A84C]/12 text-[#C9A84C]",
+  primary: "border-accent/40 bg-accent/12 text-accent",
   stored: "border-teal/35 bg-teal/8 text-teal",
 };
 
 const eventStatusClass: Record<string, string> = {
-  registered: "border-[#C9A84C]/40 bg-[#C9A84C]/12 text-[#C9A84C]",
-  invited: "border-[#C9A84C]/25 bg-transparent text-muted",
+  registered: "border-accent/40 bg-accent/12 text-accent",
+  invited: "border-accent/25 bg-transparent text-muted",
 };
 
 function activityDotClass(tone: string): string {
   if (tone === "success") return "bg-teal";
-  return "bg-primary";
+  return "bg-accent";
 }
 
 function VehiclesList({
@@ -133,10 +134,10 @@ function VehiclesList({
       {rows.map((vehicle) => (
         <li
           key={vehicle.id}
-          className="flex items-center gap-3 border-b border-[#D4A8470F] px-5 py-2.5"
+          className="flex items-center gap-3 border-b border-accent/8 px-5 py-2.5"
         >
-          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-[#D4A84726] bg-[#D4A84714]">
-            <VehicleListCarIcon className="h-[9px] w-[18px]" />
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-lg border border-accent/15 bg-accent/8 text-accent">
+            <VehicleListCarIcon className="h-[9px] w-[18px]" color="currentColor" />
           </span>
 
           <div className="min-w-0 flex-1 space-y-0.5">
@@ -223,7 +224,7 @@ function RecentActivityList({ items }: { items: MemberRecentActivityEntry[] }) {
       {items.map((item) => (
         <li
           key={item.id}
-          className="flex gap-3 border-b border-[#D4A8470F] py-2.5"
+          className="flex gap-3 border-b border-accent/8 py-2.5"
         >
           <span
             className={`mt-1.5 size-2 shrink-0 rounded-full ${activityDotClass(item.tone)}`}
@@ -265,22 +266,16 @@ function ProfilePageContent({ profile }: { profile: MemberProfileDetail }) {
   return (
     <div className="space-y-5 p-8">
       {/* Hero header */}
-      <section
-        className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
-        style={{
-          background:
-            "radial-gradient(90% 130% at 38% -15%, rgba(212,168,71,0.22) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
-        }}
-      >
+      <section className="admin-entity-hero relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9">
         <div className="flex items-center gap-6">
-          <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
-            <span className="font-copperplate text-[34px] text-[#C9A84C]">
+          <span className="admin-entity-hero-avatar flex size-24 shrink-0 items-center justify-center rounded-full border-2">
+            <span className="admin-entity-hero-accent font-copperplate text-[34px]">
               {profile.initial}
             </span>
           </span>
 
           <div className="min-w-0 space-y-3">
-            <h1 className="font-copperplate text-[34px] leading-none tracking-[0.05em] text-[#F2EAD5]">
+            <h1 className="admin-entity-hero-title font-copperplate text-[34px] leading-none tracking-[0.05em]">
               {profile.displayName}
             </h1>
 
@@ -289,7 +284,7 @@ function ProfilePageContent({ profile }: { profile: MemberProfileDetail }) {
               <span className="px-1.5 text-secondary/60">·</span>
               Since {profile.memberSince}
               <span className="px-1.5 text-secondary/60">·</span>
-              <span className="font-semibold text-[#C9A84C]">
+              <span className="admin-entity-hero-accent font-semibold">
                 {profile.tierLabel}
               </span>
             </p>
@@ -420,13 +415,7 @@ export function MemberProfilePage({ memberId }: MemberProfilePageProps) {
   }, [memberId]);
 
   if (loading) {
-    return (
-      <div className="flex min-h-[40vh] items-center justify-center">
-        <p className="font-roboto text-[12px] tracking-[0.1em] text-secondary uppercase">
-          Loading…
-        </p>
-      </div>
-    );
+    return <PageLoadingShimmer />;
   }
 
   if (!profile) {

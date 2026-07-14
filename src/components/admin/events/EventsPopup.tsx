@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { ShimmerBlock } from '@/components/common/ShimmerBlock';
 
 interface Attendee {
   name: string;
@@ -72,13 +73,13 @@ export function EventPopup({
       return (
         <div className="space-y-2.5">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="bg-[#121314] rounded-xl p-3 border border-zinc-900/60 flex items-center gap-3 animate-pulse">
-              <div className="w-9 h-9 rounded-full bg-zinc-800 shrink-0" />
+            <div key={i} className="flex items-center gap-3 rounded-xl border border-accent/10 bg-card p-3">
+              <ShimmerBlock className="size-9 shrink-0 rounded-full" />
               <div className="flex-1 space-y-1.5">
-                <div className="h-3 w-32 bg-zinc-800 rounded" />
-                <div className="h-2.5 w-20 bg-zinc-900 rounded" />
+                <ShimmerBlock className="h-3 w-32" />
+                <ShimmerBlock className="h-2.5 w-20" />
               </div>
-              <div className="h-5 w-20 bg-zinc-800 rounded-full" />
+              <ShimmerBlock className="h-5 w-20 rounded-full" />
             </div>
           ))}
         </div>
