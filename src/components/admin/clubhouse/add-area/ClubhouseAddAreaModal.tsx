@@ -23,12 +23,13 @@ const INITIAL_RESTAURANT_FORM: ClubhouseRestaurantFormState = {
   tableCount: "18",
   capacity: "40",
   cuisineType: "asian",
+  restaurantType: "restaurant-reservations",
   ambienceImages: [null, null, null],
 };
 
 const INITIAL_PRIVATE_LOUNGE_FORM: ClubhousePrivateLoungeFormState = {
   loungeTitle: "members-lounge",
-  type: "Long bite",
+  type: "cigar-rooms",
   isAvailable24x7: true,
   capacity: "6",
   maintainTiming: "1 hour",
@@ -41,7 +42,7 @@ const INITIAL_SUITE_LOUNGE_FORM: ClubhouseSuiteLoungeFormState = {
       id: "suite-1",
       suiteTitle: "pc-hotel",
       location: "Ground floor, east wing",
-      roomType: "suite",
+      roomType: "meeting-rooms",
       capacity: "18",
     },
   ],

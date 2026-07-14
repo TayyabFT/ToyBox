@@ -75,7 +75,7 @@ export function StaffCompletedJobsSection({
 
   return (
     <section
-      className={`rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
+      className={`flex flex-col overflow-hidden rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
         loading ? "opacity-70" : ""
       }`}
       aria-busy={loading}
@@ -100,11 +100,15 @@ export function StaffCompletedJobsSection({
         </p>
       ) : null}
 
-      <div className="space-y-3">
-        {jobs.map((job) => (
-          <StaffJobListCard key={job.id} job={job} />
-        ))}
-      </div>
+      {jobs.length > 0 ? (
+        <div className="Custom__Scrollbar mt-1 max-h-[480px] overflow-y-auto pr-1">
+          <div className="space-y-3">
+            {jobs.map((job) => (
+              <StaffJobListCard key={job.id} job={job} />
+            ))}
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import { MemberGarageSourcingReviewIcon } from "@/components/common/Svgs";
+import { ReviewRow } from "../shared/requestFormUi";
 import {
   formatSourcingColourReview,
   formatSourcingKeySpecs,
@@ -17,23 +17,6 @@ function ReviewSearchIcon() {
     <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/35 bg-primary/10">
       <MemberGarageSourcingReviewIcon className="size-[18px]" />
     </span>
-  );
-}
-
-function ReviewRow({
-  label,
-  children,
-  valueClassName = "font-roboto text-[12px] font-semibold text-foreground",
-}: {
-  label: string;
-  children: ReactNode;
-  valueClassName?: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 border-b border-accent/8 py-3 last:border-b-0">
-      <span className="font-roboto shrink-0 text-[11px] text-secondary">{label}</span>
-      <div className={`min-w-0 flex-1 text-right ${valueClassName}`}>{children}</div>
-    </div>
   );
 }
 
@@ -62,32 +45,51 @@ export function VehicleSourcingReviewStep({ form }: VehicleSourcingReviewStepPro
 
       <div className="px-4 py-1">
         <ReviewRow label="Make &amp; Model">
-          {formatSourcingMakeModel(form.make, form.model)}
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {formatSourcingMakeModel(form.make, form.model)}
+          </span>
         </ReviewRow>
 
-        <ReviewRow label="Category">{category.label}</ReviewRow>
+        <ReviewRow label="Category">
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {category.label}
+          </span>
+        </ReviewRow>
 
         <ReviewRow label="Year">
-          {formatSourcingYearRange(form.yearFrom, form.yearTo)}
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {formatSourcingYearRange(form.yearFrom, form.yearTo)}
+          </span>
         </ReviewRow>
 
         <ReviewRow label="Budget">
-          {formatSourcingBudgetReview(form.budget)}
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {formatSourcingBudgetReview(form.budget)}
+          </span>
         </ReviewRow>
 
         <ReviewRow label="Colour">
-          {formatSourcingColourReview(form.preferredColour)}
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {formatSourcingColourReview(form.preferredColour)}
+          </span>
         </ReviewRow>
 
-        <ReviewRow label="Condition">{condition.title}</ReviewRow>
+        <ReviewRow label="Condition">
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {condition.title}
+          </span>
+        </ReviewRow>
 
-        <ReviewRow label="Timeline">{timeline.label}</ReviewRow>
+        <ReviewRow label="Timeline">
+          <span className="font-roboto text-[12px] font-semibold text-foreground">
+            {timeline.label}
+          </span>
+        </ReviewRow>
 
-        <ReviewRow
-          label="Key specs"
-          valueClassName="font-roboto text-[11px] text-secondary"
-        >
-          {formatSourcingKeySpecs(form.keySpecifications)}
+        <ReviewRow label="Key specs">
+          <span className="font-roboto text-[11px] text-secondary">
+            {formatSourcingKeySpecs(form.keySpecifications)}
+          </span>
         </ReviewRow>
       </div>
     </div>

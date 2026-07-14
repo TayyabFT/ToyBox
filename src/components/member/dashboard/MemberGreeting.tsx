@@ -20,8 +20,9 @@ export function MemberGreeting({ memberName, sublabel }: MemberGreetingProps) {
   return (
     <div className="space-y-1">
       {sublabel && (
-        <p className="font-roboto text-[10px] tracking-[0.18em] text-secondary uppercase">
-          {sublabel}
+        <p className="font-Roboto text-[10px] tracking-[0.18em] text-primary uppercase">
+          {/* {sublabel} */}
+          Welcome back
         </p>
       )}
       {/* Figma: ~32px Copperplate, white + gold first name */}

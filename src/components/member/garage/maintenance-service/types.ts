@@ -8,7 +8,8 @@ export type MaintenanceServiceTypeKey =
 
 export type MaintenanceServiceCentreKey = "official-porsche" | "toybox-partner";
 
-export type MaintenanceDateKey = "apr-30" | "may-1" | "may-2" | "may-3";
+/** ISO date string YYYY-MM-DD — generated dynamically from today */
+export type MaintenanceDateKey = string;
 
 export type MaintenanceTimeWindowKey =
   | "morning"

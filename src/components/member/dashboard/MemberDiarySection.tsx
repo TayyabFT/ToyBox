@@ -32,9 +32,9 @@ function splitEventTitle(title: string): { prefix: string; highlight: string } {
 
 function FeaturedCard({ event }: { event: MemberDiaryEvent }) {
   return (
-    <div className="overflow-hidden rounded-[18px] border border-white/6 bg-[#0a0a0a]">
+    <div className="overflow-hidden rounded-[18px] border border-accent/10 bg-card">
       {/* Hero image */}
-      <div className="relative h-[240px] w-full overflow-hidden bg-[#0d0c09]">
+      <div className="relative h-[240px] w-full overflow-hidden bg-surface">
         {event.imageUrl ? (
           <img
             src={event.imageUrl}
@@ -85,7 +85,7 @@ function FeaturedCard({ event }: { event: MemberDiaryEvent }) {
       </div>
 
       {/* Bottom bar: attendees + action */}
-      <div className="flex items-center justify-between gap-3 bg-[#0a0a0a] px-4 py-3.5">
+      <div className="flex items-center justify-between gap-3 bg-card px-4 py-3.5">
         {/* Avatars + attending count */}
         {event.attendingCount != null && event.attendingCount > 0 && (
           <div className="flex items-center gap-2">
@@ -93,7 +93,6 @@ function FeaturedCard({ event }: { event: MemberDiaryEvent }) {
               count={event.attendingCount}
               names={event.attendingMembers?.map((member) => member.name)}
               initials={event.attendingMembers?.map((member) => member.initial)}
-              ringClassName="border-[#0a0a0a]"
             />
             <span className="font-roboto text-[10px] tracking-[0.04em] text-secondary/80">
               {event.attendingCount} attending
@@ -133,14 +132,14 @@ function DiaryRow({ event }: { event: MemberDiaryEvent }) {
   return (
     <Link
       href="/member/events"
-      className="flex items-center gap-3.5 rounded-[16px] border border-white/6 bg-[#0a0a0a] px-4 py-3.5 transition-colors hover:border-accent/20"
+      className="flex items-center gap-3.5 rounded-[16px] border border-white/6 card-view px-4 py-3.5 transition-colors hover:border-accent/20"
     >
       {/* Date column */}
       <div className="flex w-10 shrink-0 flex-col items-center gap-0.5">
         <span className="font-roboto text-[9px] font-medium tracking-[0.12em] text-accent uppercase">
           {event.dayName}
         </span>
-        <span className="font-roboto text-[24px] font-light leading-none text-white">
+        <span className="font-roboto text-[24px] font-light leading-none text-foreground">
           {event.dayLabel}
         </span>
       </div>
@@ -150,7 +149,7 @@ function DiaryRow({ event }: { event: MemberDiaryEvent }) {
 
       {/* Title + subtitle */}
       <div className="min-w-0 flex-1 space-y-1">
-        <p className="font-roboto truncate text-[11px] font-semibold tracking-[0.05em] text-white uppercase">
+        <p className="font-roboto truncate text-[11px] font-semibold tracking-[0.05em] text-foreground uppercase">
           {prefix}
           {highlight && (
             <>

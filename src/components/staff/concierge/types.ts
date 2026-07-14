@@ -39,6 +39,7 @@ export type ConciergeChatMessage = {
   senderName: string;
   time: string;
   message: string;
+  thinking?: boolean;
 };
 
 export type ConciergeRequestDetail = {

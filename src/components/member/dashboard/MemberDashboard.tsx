@@ -87,7 +87,7 @@ export function MemberDashboard() {
 
       <MemberGreeting memberName={data.memberName} sublabel={sublabel} />
 
-      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-2">
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.5fr_1fr] mb-10">
         <MembershipCard
           memberName={data.memberName}
           memberNumber={data.memberNumber}
@@ -101,7 +101,7 @@ export function MemberDashboard() {
 
       <MemberQuickActions actions={quickActions} />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.5fr_1fr] mb-10">
         <MemberCollectionSection vehicles={data.vehicles} />
         <MemberDiarySection events={data.diary} />
       </div>
@@ -111,7 +111,7 @@ export function MemberDashboard() {
         statusLine={data.clubStatusLine}
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-14">
         <MemberNewsSection items={data.news} />
         <MemberActivitySection items={data.recentActivity} />
       </div>

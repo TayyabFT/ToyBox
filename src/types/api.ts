@@ -183,6 +183,19 @@ export type AuthProfileData = {
 
 export type AuthProfileResponse = ApiResponse<AuthProfileData>;
 
+export type UpdateAuthProfileRequest = {
+  firstName?: string;
+  lastName?: string;
+  displayHandle?: string;
+  email?: string;
+  jobTitle?: string;
+  mobile?: string;
+  mobileCountryCode?: string;
+  residence?: string;
+  address?: string;
+  coverImageUrl?: string;
+};
+
 export type MemberDashboardStatsRaw = {
   vehicles?: number;
   priorityVehicles?: number;
@@ -486,6 +499,103 @@ export type MemberTransportRequestData = {
 export type CreateMemberTransportRequestResponse =
   ApiResponse<MemberTransportRequestData>;
 
+// ── Member Detailing Booking ─────────────────────────────────────────────────
+
+export type CreateDetailingBookingBody = {
+  memberId: string;
+  vehicleId: string;
+  packageKey: string;
+  addonKeys?: string[];
+  preferredDate: string;
+  timeWindowStart: string;
+  timeWindowEnd: string;
+  locationKey: string;
+  specialInstructions?: string;
+};
+
+export type DetailingBookingPackageData = {
+  key?: string;
+  name?: string;
+  priceAed?: number;
+  inclusions?: string[];
+};
+
+export type DetailingBookingAddonData = {
+  key?: string;
+  name?: string;
+  priceAed?: number;
+};
+
+export type DetailingBookingConfirmationData = {
+  id?: string;
+  referenceNumber?: string;
+  status?: string;
+  service?: string;
+  vehicle?: string;
+  vehicleId?: string;
+  package?: DetailingBookingPackageData;
+  addons?: DetailingBookingAddonData[];
+  location?: string;
+  scheduledDate?: string;
+  preferredDateLabel?: string;
+  timeWindow?: string;
+  totalEstimate?: number;
+  currency?: string;
+  totalLabel?: string;
+  message?: string;
+  createdAt?: string;
+};
+
+export type CreateDetailingBookingResponse =
+  ApiResponse<DetailingBookingConfirmationData>;
+
+// ── Member Maintenance Request ────────────────────────────────────────────────
+
+export type CreateMaintenanceRequestBody = {
+  memberId: string;
+  vehicleId: string;
+  serviceKeys: string[];
+  scheduledAt: string;
+  locationKey: string;
+  notes?: string;
+  documentUrls?: string[];
+};
+
+export type MaintenanceRequestServiceData = {
+  key?: string;
+  name?: string;
+};
+
+export type MaintenanceRequestLineItemData = {
+  key?: string;
+  label?: string;
+  amountAed?: number;
+  currency?: string;
+};
+
+export type MaintenanceRequestConfirmationData = {
+  id?: string;
+  referenceNumber?: string;
+  status?: string;
+  vehicle?: string;
+  vehicleId?: string;
+  services?: MaintenanceRequestServiceData[];
+  scheduledAt?: string;
+  location?: string;
+  locationKey?: string;
+  notes?: string;
+  totalAmount?: number;
+  currency?: string;
+  lineItems?: MaintenanceRequestLineItemData[];
+  canCancel?: boolean;
+  requiresApproval?: boolean;
+  isPaid?: boolean;
+  createdAt?: string;
+};
+
+export type CreateMaintenanceRequestResponse =
+  ApiResponse<MaintenanceRequestConfirmationData>;
+
 export type AttendingMemberPreview = {
   name: string;
   initial: string;
@@ -560,6 +670,16 @@ export type ClubhouseSpacesData = {
   occasions?: string[];
 };
 
+export type ClubhouseAreaSection = {
+  areaType: string;
+  label: string;
+  description: string;
+  iconKey: "lounge" | "suites" | "clubhouse";
+  categories: string[];
+  spaces: ClubhouseSpaceCardRaw[];
+  count: number;
+};
+
 export type ClubhouseOverviewData = {
   name: string;
   totalSpaces: number;
@@ -570,10 +690,22 @@ export type ClubhouseOverviewData = {
   };
   occasions?: string[];
   spaces: ClubhouseSpaceRaw[];
+  sections?: ClubhouseAreaSection[];
 };
 
 export type ClubhouseSpacesResponse = ApiResponse<ClubhouseSpacesData>;
 export type ClubhouseOverviewResponse = ApiResponse<ClubhouseOverviewData>;
+
+export type ClubhouseSpaceCardRaw = ClubhouseSpaceRaw & { type?: string | null };
+
+export type ClubhouseSpacesByCategoryData = {
+  areaType: string;
+  category: string | null;
+  spaces: ClubhouseSpaceCardRaw[];
+  total: number;
+};
+
+export type ClubhouseSpacesByCategoryResponse = ApiResponse<ClubhouseSpacesByCategoryData>;
 
 export type ClubhouseSlotAvailability = {
   timeSlot: string;
@@ -631,7 +763,8 @@ export type CreateAdminClubhouseRestaurantBody = {
   numberOfTables: number;
   capacity: number;
   cuisineType: string;
-  imageUrls?: string[];
+  restaurantType: string;
+  images?: string[];
   status: string;
 };
 
@@ -641,7 +774,7 @@ export type CreateAdminClubhousePrivateLoungeBody = {
   isAvailable24x7: boolean;
   capacity: number;
   maintenanceIntervalHours: number;
-  imageUrls?: string[];
+  images?: string[];
   status: string;
 };
 
@@ -693,6 +826,173 @@ export type AdminClubhouseRestaurantListData = {
 
 export type AdminClubhouseRestaurantListResponse =
   ApiResponse<AdminClubhouseRestaurantListData>;
+
+export type AdminClubhouseOverviewOnPremises = {
+  members?: number;
+  today?: number;
+  changePercent?: number;
+  label?: string;
+};
+
+export type AdminClubhouseOverviewFnbRevenue = {
+  amount?: number;
+  currency?: string;
+  label?: string;
+};
+
+export type AdminClubhouseOverviewSuiteOccupancy = {
+  occupied?: number;
+  total?: number;
+  booked?: number;
+  capacity?: number;
+  label?: string;
+  capacityLabel?: string;
+};
+
+export type AdminClubhouseOverviewMetrics = {
+  onPremises?: AdminClubhouseOverviewOnPremises;
+  reservations?: number;
+  confirmed?: number;
+  walkIns?: number;
+  pending?: number;
+  prep?: number;
+  fnbRevenue?: AdminClubhouseOverviewFnbRevenue;
+  suiteOccupancy?: AdminClubhouseOverviewSuiteOccupancy;
+};
+
+export type AdminClubhouseOverviewAreaType = {
+  type?: string;
+  totalCapacity?: number;
+  totalOccupied?: number;
+  occupancyLabel?: string;
+};
+
+export type AdminClubhouseOverviewArea = {
+  totalCapacity?: number;
+  totalOccupied?: number;
+  occupancyLabel?: string;
+  types?: AdminClubhouseOverviewAreaType[];
+};
+
+export type AdminClubhouseOverviewAreas = {
+  restaurant?: AdminClubhouseOverviewArea;
+  private_lounge?: AdminClubhouseOverviewArea;
+  suite_lounge?: AdminClubhouseOverviewArea;
+};
+
+export type AdminClubhouseOverviewData = {
+  date?: string;
+  dateLabel?: string;
+  metrics?: AdminClubhouseOverviewMetrics;
+  areas?: AdminClubhouseOverviewAreas;
+  reservationsSummary?: string;
+};
+
+export type AdminClubhouseOverviewResponse =
+  ApiResponse<AdminClubhouseOverviewData>;
+
+export type AdminClubhouseAreaOverviewItemRaw = {
+  id: string;
+  areaType?: string;
+  title?: string;
+  type?: string;
+  capacity?: number;
+  occupied?: number;
+  occupancyLabel?: string;
+  status?: string;
+  images?: string[];
+  coverImage?: string;
+  createdAt?: string;
+  // restaurant-specific
+  cuisineType?: string;
+  openingTime?: string;
+  closingTime?: string;
+  serviceHours?: string;
+  tables?: number;
+  // private-lounge-specific
+  isAvailable24x7?: boolean;
+  available?: boolean;
+  availability?: string;
+  // suite-lounge / generic
+  location?: string;
+};
+
+export type AdminClubhouseAreaOverviewData = {
+  date?: string;
+  dateLabel?: string;
+  areaType?: string;
+  totalCapacity?: number;
+  totalOccupied?: number;
+  occupancyLabel?: string;
+  types?: AdminClubhouseOverviewAreaType[];
+  total?: number;
+  items?: AdminClubhouseAreaOverviewItemRaw[];
+};
+
+export type AdminClubhouseAreaOverviewResponse =
+  ApiResponse<AdminClubhouseAreaOverviewData>;
+
+export type AdminClubhouseReservationSummary = {
+  confirmed?: number;
+  walkIns?: number;
+  pending?: number;
+  prep?: number;
+  total?: number;
+  label?: string;
+};
+
+export type AdminClubhouseReservationFilter = {
+  key: string;
+  label: string;
+};
+
+export type AdminClubhouseReservationMemberTier = {
+  key?: string;
+  label?: string;
+  displayLabel?: string;
+};
+
+export type AdminClubhouseReservationMember = {
+  id?: string;
+  name?: string;
+  initial?: string;
+  memberNumber?: string;
+  memberNumberLabel?: string;
+  tier?: AdminClubhouseReservationMemberTier;
+};
+
+export type AdminClubhouseReservationRaw = {
+  id: string;
+  time?: string;
+  timeSlot?: string;
+  member?: AdminClubhouseReservationMember;
+  zone?: string;
+  areaType?: string;
+  areaTitle?: string;
+  pax?: number;
+  guests?: number;
+  party?: number;
+  status?: string;
+  statusLabel?: string;
+  statusTone?: string;
+  confirmedBy?: string;
+  confirmedAt?: string;
+  referenceNumber?: string;
+  date?: string;
+  notes?: string;
+};
+
+export type AdminClubhouseReservationsData = {
+  summary?: AdminClubhouseReservationSummary;
+  filters?: AdminClubhouseReservationFilter[];
+  zone?: string;
+  reservations?: AdminClubhouseReservationRaw[];
+  total?: number;
+  count?: number;
+};
+
+export type AdminClubhouseReservationsResponse =
+  ApiResponse<AdminClubhouseReservationsData>;
 
 // ── Staff Clubhouse ────────────────────────────────────────────────────────────
 
@@ -3683,3 +3983,67 @@ export type StaffParkingSessionDetailResponse =
   ApiResponse<StaffParkingSessionRaw>;
 export type StaffParkingSessionMutationResponse =
   ApiResponse<StaffParkingSessionRaw>;
+
+// ── Member Vehicle Sourcing ──────────────────────────────────────────────────
+
+export type CreateSourcingRequestBody = {
+  memberId: string;
+  make: string;
+  model: string;
+  yearMin?: number;
+  yearMax?: number;
+  colour?: string;
+  trim?: string;
+  specifications?: Record<string, unknown>;
+  budgetMin?: number;
+  budgetMax?: number;
+  currency?: string;
+  timelineNotes?: string;
+  notes?: string;
+};
+
+export type SourcingRequestConfirmationData = {
+  id?: string;
+  referenceNumber?: string;
+  status?: string;
+  memberId?: string;
+  make?: string;
+  model?: string;
+  yearMin?: number;
+  yearMax?: number;
+  colour?: string;
+  trim?: string;
+  specifications?: Record<string, unknown>;
+  budgetMin?: number;
+  budgetMax?: number;
+  currency?: string;
+  timelineNotes?: string;
+  notes?: string;
+  matches?: unknown[];
+  canCancel?: boolean;
+  createdAt?: string;
+  message?: string;
+};
+
+export type SourcingRequestStatusTimeline = {
+  key?: string;
+  label?: string;
+  status?: "completed" | "active" | "pending" | string;
+  completedAt?: string | null;
+  meta?: string;
+};
+
+export type SourcingRequestStatusData = {
+  id?: string;
+  referenceNumber?: string;
+  status?: string;
+  timeline?: SourcingRequestStatusTimeline[];
+  matches?: unknown[];
+  canCancel?: boolean;
+};
+
+export type CreateSourcingRequestResponse =
+  ApiResponse<SourcingRequestConfirmationData>;
+
+export type SourcingRequestStatusResponse =
+  ApiResponse<SourcingRequestStatusData>;

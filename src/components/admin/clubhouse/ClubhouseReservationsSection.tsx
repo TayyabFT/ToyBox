@@ -3,12 +3,14 @@ import type { ClubhouseReservationsDisplay } from "./types";
 
 type ClubhouseReservationsSectionProps = {
   reservations: ClubhouseReservationsDisplay;
+  loading?: boolean;
 };
 
 const columns = ["Time", "Member", "Zone", "Party", "Status", "Notes"] as const;
 
 export function ClubhouseReservationsSection({
   reservations,
+  loading = false,
 }: ClubhouseReservationsSectionProps) {
   return (
     <section className="space-y-4">
@@ -18,8 +20,8 @@ export function ClubhouseReservationsSection({
           <span className="text-accent">Reservations</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.12em] text-secondary uppercase">
-          {reservations.confirmedCount} Confirmed · {reservations.walkInCount}{" "}
-          Walk-ins
+          {reservations.summaryLabel ??
+            `${reservations.confirmedCount} Confirmed · ${reservations.walkInCount} Walk-ins`}
         </p>
       </div>
 
@@ -41,7 +43,26 @@ export function ClubhouseReservationsSection({
               </tr>
             </thead>
             <tbody>
-              {reservations.rows.map((row) => (
+              {loading ? (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="px-5 py-10 text-center font-roboto text-[12px] tracking-[0.04em] text-secondary"
+                  >
+                    Loading reservations...
+                  </td>
+                </tr>
+              ) : reservations.rows.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={columns.length}
+                    className="px-5 py-10 text-center font-roboto text-[12px] tracking-[0.04em] text-secondary"
+                  >
+                    No reservations for today.
+                  </td>
+                </tr>
+              ) : (
+                reservations.rows.map((row) => (
                 <tr
                   key={row.id}
                   className="border-b border-accent/8 last:border-b-0"
@@ -77,7 +98,10 @@ export function ClubhouseReservationsSection({
                     </span>
                   </td>
                   <td className="px-5 py-4">
-                    <ClubhouseReservationStatusBadge status={row.status} />
+                    <ClubhouseReservationStatusBadge
+                      status={row.status}
+                      label={row.statusLabel}
+                    />
                   </td>
                   <td className="px-5 py-4">
                     <span className="font-roboto text-[11px] tracking-[0.02em] text-muted">
@@ -85,7 +109,8 @@ export function ClubhouseReservationsSection({
                     </span>
                   </td>
                 </tr>
-              ))}
+              ))
+              )}
             </tbody>
           </table>
         </div>

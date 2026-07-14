@@ -1,4 +1,5 @@
 import { ConfirmationRequestRow } from "./ConfirmationRequestRow";
+import { ConfirmationScrollableList } from "./ConfirmationScrollableList";
 import type { ConfirmationRequestItem } from "./types";
 
 type PendingConfirmationsPanelProps = {
@@ -27,29 +28,22 @@ export function PendingConfirmationsPanel({
         </p>
       </div>
 
-      <div className="rounded-2xl border border-accent/10 bg-card">
-        <p className="font-roboto text-xs tracking-[0.14em] text-secondary uppercase p-5 border-b border-accent/6">
+      <div className="flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
+        <p className="shrink-0 border-b border-accent/6 p-5 font-roboto text-xs tracking-[0.14em] text-secondary uppercase">
           Bookings
         </p>
-        <div>
-          {loading ? (
-            <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-              Loading...
-            </p>
-          ) : requests.length > 0 ? (
-            requests.map((request) => (
-              <ConfirmationRequestRow
-                key={request.id}
-                request={request}
-                onOfferVehicle={onOfferVehicle}
-              />
-            ))
-          ) : (
-            <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-              No pending bookings
-            </p>
+        <ConfirmationScrollableList
+          items={requests}
+          loading={loading}
+          emptyText="No pending bookings"
+          renderItem={(request) => (
+            <ConfirmationRequestRow
+              request={request}
+              onOfferVehicle={onOfferVehicle}
+            />
           )}
-        </div>
+          getItemKey={(request) => request.id}
+        />
       </div>
     </section>
   );

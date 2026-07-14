@@ -102,6 +102,10 @@ export function MemberVehicleDetailPage({
           <MemberVehicleRequestsCard
             vehicleId={vehicleId}
             vehicleName={`${vehicle.make} ${vehicle.model}`.trim()}
+            vehicleMake={vehicle.make}
+            vehicleModel={vehicle.model}
+            vehicleYear={vehicle.specs.year}
+            vehicleColour={vehicle.ownership.colour}
             requests={vehicle.requests}
           />
         </div>

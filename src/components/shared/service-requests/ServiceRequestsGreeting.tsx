@@ -21,10 +21,10 @@ export function ServiceRequestsGreeting({
         </h1>
       </div>
 
-      <ServiceRequestsFilterTabs
+      {/* <ServiceRequestsFilterTabs
         active={activeFilter}
         onChange={onFilterChange}
-      />
+      /> */}
     </div>
   );
 }

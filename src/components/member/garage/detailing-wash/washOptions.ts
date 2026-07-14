@@ -44,10 +44,12 @@ export const WASH_PACKAGES: WashPackageOption[] = [
 ];
 
 export const WASH_ADD_ONS: WashAddOnOption[] = [
-  { key: "ceramic-coat", label: "Ceramic Coat", reviewLabel: "Ceramic coat", price: 1200 },
-  { key: "engine-bay-clean", label: "Engine Bay Clean", reviewLabel: "Engine bay clean", price: 180 },
-  { key: "leather-treatment", label: "Leather Treatment", reviewLabel: "Leather treatment", price: 220 },
+  { key: "ceramic-coat",      label: "Ceramic Coat",      reviewLabel: "Ceramic coat",      price: 1200 },
+  { key: "engine-bay-clean",  label: "Engine Bay Clean",  reviewLabel: "Engine bay clean",  price: 180  },
+  { key: "leather-treatment", label: "Leather Treatment", reviewLabel: "Leather treatment", price: 220  },
 ];
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
 
 export function getWashPackage(key: WashPackageKey): WashPackageOption {
   return WASH_PACKAGES.find((item) => item.key === key) ?? WASH_PACKAGES[0];
@@ -63,7 +65,6 @@ export function calculateWashTotal(form: WashDetailsFormState): number {
     (sum, addOnKey) => sum + getWashAddOn(addOnKey).price,
     0,
   );
-
   return packagePrice + addOnTotal;
 }
 
@@ -73,16 +74,12 @@ export function formatWashTotal(total: number): string {
 
 export function formatWashEstimateSummary(form: WashDetailsFormState): string {
   const packageLabel = getWashPackage(form.package).reviewLabel;
-  const addOnLabels = form.addOns.map((key) => getWashAddOn(key).reviewLabel);
-
-  if (addOnLabels.length === 0) {
-    return packageLabel;
-  }
-
+  const addOnLabels  = form.addOns.map((key) => getWashAddOn(key).reviewLabel);
+  if (addOnLabels.length === 0) return packageLabel;
   return `${packageLabel} + ${addOnLabels.join(" + ")}`;
 }
 
 export function formatWashNotes(notes: string): string {
-  const text = notes.trim() || "Wrap on rear bumper";
+  const text = notes.trim() || "No additional notes";
   return text.startsWith("*") ? text : `*${text}*`;
 }

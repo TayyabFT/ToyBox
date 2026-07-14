@@ -7,9 +7,47 @@ import { ReservationModal } from "@/components/member/the-club/ReservationModal"
 import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
 
 type MemberClubSectionProps = {
-  venues: MemberClubVenue[];
+  venues?: MemberClubVenue[];
   statusLine?: string;
 };
+
+// Hardcoded 3 cards — always shown regardless of API data
+const STATIC_CLUB_VENUES: MemberClubVenue[] = [
+  {
+    id: "clubhouse",
+    name: "Clubhouse Restaurant",
+    description: "Restaurant, bar & private dining. Your usual table held until 22:00.",
+    imageUrl: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=900&q=85",
+    tag: "OPEN",
+    tagTone: "gold",
+    iconKey: "clubhouse",
+    footerLeft: "14 IN · 21:30",
+    actionLabel: "RESERVE",
+  },
+  {
+    id: "lounge",
+    name: "Members' Lounge",
+    description: "Cigar room, library & private seating areas for members.",
+    imageUrl: "https://images.unsplash.com/photo-1513694203232-719a280e022f?w=900&q=85",
+    tag: "OPEN",
+    tagTone: "gold",
+    iconKey: "lounge",
+    footerLeft: "4 IN",
+    actionLabel: "ENTER",
+  },
+  {
+    id: "suites",
+    name: "Private Suites",
+    description: "Four meeting rooms, all with concierge service.",
+    imageUrl: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=85",
+    tag: "AVAILABLE",
+    tagTone: "gold",
+    iconKey: "suites",
+    footerLeft: "4 ROOMS",
+    actionLabel: "BOOK",
+  }
+  
+];
 
 function VenueIcon({ iconKey }: { iconKey?: MemberClubVenue["iconKey"] }) {
   if (iconKey === "lounge") {
@@ -63,7 +101,7 @@ export function VenueCard({
       onClick={onClick}
       className="group relative block min-w-0 flex-1 overflow-hidden rounded-[18px]"
     >
-      <div className="relative h-[320px] w-full bg-[#0d0c09]">
+      <div className="relative h-[320px] w-full bg-surface">
         {venue.imageUrl ? (
           <img
             src={venue.imageUrl}
@@ -158,7 +196,7 @@ export function VenueCard({
   );
 }
 
-export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps) {
+export function MemberClubSection({ statusLine }: MemberClubSectionProps) {
   const [selectedVenue, setSelectedVenue] = useState<MemberClubVenue | null>(null);
 
   return (
@@ -180,7 +218,7 @@ export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps
           href="/member/the-club"
           className="flex shrink-0 items-center gap-1.5 rounded-full border border-accent/30 bg-transparent px-3.5 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5"
         >
-          <span className="font-roboto text-[10px] font-semibold tracking-[0.14em] text-accent uppercase">
+          <span className="font-Roboto text-[10px] font-semibold tracking-[0.14em] text-accent uppercase">
             View All Spaces
           </span>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden>
@@ -196,9 +234,9 @@ export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps
         </Link>
       </div>
 
-      {/* 3 equal venue cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {venues.map((venue) => (
+      {/* 3 hardcoded venue cards */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.5fr_1fr_1fr]">
+        {STATIC_CLUB_VENUES.map((venue) => (
           <VenueCard
             key={venue.id}
             venue={venue}
@@ -213,7 +251,7 @@ export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps
       {selectedVenue && (
         <ReservationModal
           venue={selectedVenue}
-          allVenues={venues}
+          allVenues={STATIC_CLUB_VENUES}
           onClose={() => setSelectedVenue(null)}
         />
       )}

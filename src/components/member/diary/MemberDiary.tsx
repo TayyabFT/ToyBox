@@ -9,7 +9,7 @@ import type { MemberDiaryData } from "./types";
 
 export function MemberDiarySkeleton() {
   return (
-    <div className="mx-auto w-full  space-y-8 px-8 pb-8 pt-4 sm:space-y-10 sm:py-6">
+    <div className="space-y-8 p-8 animate-pulse">
       {/* Header Skeleton */}
       <div className="space-y-6 animate-pulse">
         {/* Page title skeleton */}
@@ -19,7 +19,7 @@ export function MemberDiarySkeleton() {
         </div>
 
         {/* Record hero card skeleton */}
-        <div className="relative overflow-hidden rounded-[24px] border border-accent/22 bg-surface p-5">
+        <div className="diary-record-card relative overflow-hidden rounded-[24px] border border-accent/22 p-5">
           <div className="sm:p-7 md:p-2 space-y-3">
             <Skeleton className="h-3 w-40" />
             <Skeleton className="h-6 w-3/4 sm:w-1/2" />
@@ -28,7 +28,7 @@ export function MemberDiarySkeleton() {
           </div>
 
           {/* Stats skeleton bottom bar */}
-          <div className="mt-6 bg-black/45 grid grid-cols-2 gap-y-6 sm:grid-cols-4 rounded-[23px] p-4 text-center">
+          <div className="diary-record-stats mt-6 grid grid-cols-2 gap-y-6 rounded-[23px] p-4 text-center sm:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="flex flex-col items-center justify-center space-y-2 py-2">
                 <Skeleton className="h-8 w-12 rounded" />
@@ -123,43 +123,26 @@ export function MemberDiary() {
 
   if (error || !data) {
     return (
-      <div className="mx-auto w-full max-w-5xl px-8 py-16 flex flex-col items-center justify-center text-center space-y-6">
-        <div className="rounded-full bg-destructive/10 p-4 border border-destructive/20 text-destructive animate-bounce">
-          <svg
-            className="size-8"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-        </div>
-        <div className="space-y-2">
-          <h2 className="font-copperplate text-xl font-light text-foreground tracking-[0.05em] uppercase">
-            Unable to Load Diary
-          </h2>
-          <p className="font-roboto max-w-md text-sm text-secondary/70 leading-relaxed">
-            {error || "We encountered an issue retrieving your diary details. Please check your network and try again."}
-          </p>
-        </div>
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center">
+        <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
+          Diary Unavailable
+        </h2>
+        <p className="font-roboto max-w-sm text-sm text-secondary/80">
+          {error || "We encountered an issue retrieving your diary details. Please check your network and try again."}
+        </p>
         <button
+          type="button"
           onClick={loadDiary}
-          className="font-roboto inline-flex items-center justify-center rounded-xl bg-primary px-6 py-2.5 text-xs font-semibold tracking-wider text-black transition-all hover:bg-primary/90 hover:scale-[1.02] active:scale-[0.98]"
+          className="font-roboto rounded-lg border border-accent/30 bg-accent/5 px-5 py-2.5 text-[11px] font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:border-accent/50 hover:bg-accent/10"
         >
-          TRY AGAIN
+          Retry
         </button>
       </div>
     );
   }
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-8 pb-8 pt-4 sm:space-y-10 sm:py-6">
+    <div className="space-y-8 p-8">
       <DiaryHeader
         eyebrow={data.eyebrow}
         title={data.title}

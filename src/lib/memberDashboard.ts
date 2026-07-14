@@ -322,7 +322,7 @@ function mapActivityItems(
 
 // ── Clubhouse venues ─────────────────────────────────────────────────────────
 
-const CLUB_AREA_ORDER = ["restaurant", "private_lounge", "suite_lounge"] as const;
+const CLUB_AREA_ORDER = ["private_lounge", "suite_lounge", "restaurant"] as const;
 
 const CLUB_VENUE_FALLBACK_IMAGES: Record<
   "clubhouse" | "lounge" | "suites",
@@ -388,14 +388,14 @@ export function buildClubStatusLine(clubhouse?: ClubhouseOverviewData | null): s
   const { counts, totalSpaces } = clubhouse;
   const segments: string[] = [];
 
-  if (counts.restaurant > 0) {
-    segments.push(`${counts.restaurant} Restaurant${counts.restaurant !== 1 ? "s" : ""}`);
-  }
   if (counts.privateLounge > 0) {
     segments.push(`${counts.privateLounge} Lounge${counts.privateLounge !== 1 ? "s" : ""}`);
   }
   if (counts.suiteLounge > 0) {
     segments.push(`${counts.suiteLounge} Suite${counts.suiteLounge !== 1 ? "s" : ""}`);
+  }
+  if (counts.restaurant > 0) {
+    segments.push(`${counts.restaurant} Restaurant${counts.restaurant !== 1 ? "s" : ""}`);
   }
 
   const summary =

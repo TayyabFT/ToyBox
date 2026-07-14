@@ -1,7 +1,7 @@
 "use client";
 
 import { Dropdown, Input } from "@/components/common";
-import { CLUBHOUSE_LOUNGE_TITLE_OPTIONS } from "./constants";
+import { CLUBHOUSE_LOUNGE_TITLE_OPTIONS, CLUBHOUSE_PRIVATE_LOUNGE_TYPE_OPTIONS } from "./constants";
 import { ClubhouseAddAreaFormActions } from "./ClubhouseAddAreaFormActions";
 import { ClubhouseAddAreaFormHeader } from "./ClubhouseAddAreaFormHeader";
 import { ClubhouseAmbienceImagesField } from "./ClubhouseAmbienceImagesField";
@@ -52,11 +52,12 @@ export function ClubhousePrivateLoungeForm({
             onChange={(loungeTitle) => onChange({ loungeTitle })}
           />
 
-          <Input
-            label="Type"
+          <Dropdown
+            label="Category"
+            options={CLUBHOUSE_PRIVATE_LOUNGE_TYPE_OPTIONS}
             value={value.type}
-            placeholder="Long bite"
-            onChange={(event) => onChange({ type: event.target.value })}
+            placeholder="Select category"
+            onChange={(type) => onChange({ type })}
           />
 
           <button

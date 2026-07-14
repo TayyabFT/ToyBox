@@ -2851,7 +2851,7 @@ export function EditPencil({ className, color = "#C9A84C" }: TopbarIconProps) {
 
 export function ActionGarage({ className, color = "#D4A847" }: TopbarIconProps) {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden className={className}>
       <path
         d="M2.25 6.75L9 2.25L15.75 6.75V15C15.75 15.3978 15.592 15.7794 15.3107 16.0607C15.0294 16.342 14.6478 16.5 14.25 16.5H3.75C3.35218 16.5 2.97064 16.342 2.68934 16.0607C2.40804 15.7794 2.25 15.3978 2.25 15V6.75Z"
         stroke={color}
@@ -2863,7 +2863,7 @@ export function ActionGarage({ className, color = "#D4A847" }: TopbarIconProps) 
 
 export function ActionConcierge({ className, color = "#D4A847" }: TopbarIconProps) {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden className={className}>
       <path
         d="M15.75 9C15.75 12.3 12.75 15 9 15C7.9694 15.0083 6.94815 14.804 6 14.4L2.25 15.75L3.6 12.6C2.76729 11.5806 2.29293 10.3156 2.25 9C2.25 5.7 5.25 3 9 3C12.75 3 15.75 5.7 15.75 9Z"
         stroke={color}
@@ -2875,7 +2875,7 @@ export function ActionConcierge({ className, color = "#D4A847" }: TopbarIconProp
 
 export function ActionBook({ className, color = "#D4A847" }: TopbarIconProps) {
   return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden className={className}>
+    <svg width="17" height="17" viewBox="0 0 17 17" fill="none" aria-hidden className={className}>
       <path
         d="M14.25 3H3.75C2.92157 3 2.25 3.67157 2.25 4.5V15C2.25 15.8284 2.92157 16.5 3.75 16.5H14.25C15.0784 16.5 15.75 15.8284 15.75 15V4.5C15.75 3.67157 15.0784 3 14.25 3Z"
         stroke={color}

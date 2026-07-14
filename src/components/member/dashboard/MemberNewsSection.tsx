@@ -14,27 +14,14 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
   return (
     <Link
       href="/member"
-      className="group relative block overflow-hidden rounded-2xl border border-accent/22 bg-[#11100e] shadow-[inset_0_1px_0_rgba(197,160,89,0.1)] transition-colors hover:border-accent/32"
+      className="group relative block overflow-hidden rounded-2xl border border-accent/15 card-view transition-colors hover:border-accent/28 news-card-shell"
     >
-      {/* Figma-style layered card surface */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background: `
-            radial-gradient(ellipse 90% 80% at -8% -10%, rgba(197, 160, 89, 0.34) 0%, rgba(197, 160, 89, 0.1) 34%, transparent 62%),
-            linear-gradient(128deg, rgba(62, 52, 36, 0.42) 0%, rgba(24, 21, 17, 0.94) 38%, rgba(11, 10, 9, 1) 100%)
-          `,
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-70"
-        style={{
-          background:
-            "linear-gradient(to top right, rgba(48, 40, 30, 0.28) 0%, transparent 48%)",
-        }}
-      />
+      {/* Layered gradient — visible in dark, subtle in light */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient" />
+
+      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient-secondary opacity-70" />
+ 
 
       <div className="relative flex gap-4 p-4">
         {/* Thumbnail */}
@@ -55,7 +42,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
           {/* Placeholder shown when no image or broken URL */}
           <div
             className="h-full w-full flex-col items-center justify-center gap-1.5 rounded-xl"
-            style={{ display: item.imageUrl ? "none" : "flex", background: "rgba(197,160,89,0.06)" }}
+            style={{ display: item.imageUrl ? "none" : "flex", background: "rgba(235, 160, 21, 0.06)" }}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden>
               <rect x="3" y="5" width="18" height="14" rx="3" stroke="rgba(197,160,89,0.45)" strokeWidth="1.2" />
@@ -72,7 +59,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
             <span className="text-secondary/50"> · {item.timeLabel}</span>
           </p>
 
-          <h3 className="font-roboto text-[12px] font-bold leading-snug tracking-[0.03em] text-white uppercase">
+          <h3 className="font-roboto text-[12px] font-bold leading-snug tracking-[0.03em] text-foreground uppercase">
             {titlePrefix}
             {titleHighlight && (
               <>
@@ -103,7 +90,7 @@ export function MemberNewsSection({ items }: MemberNewsSectionProps) {
   const unreadCount = items.filter((item) => item.isUnread).length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 ">
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div className="space-y-1">

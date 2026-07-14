@@ -1,4 +1,5 @@
 import { CompletedRequestRow } from "./CompletedRequestRow";
+import { ConfirmationScrollableList } from "./ConfirmationScrollableList";
 import type { ConfirmationRequestItem } from "./types";
 
 type CompletedTodayPanelProps = {
@@ -25,20 +26,14 @@ export function CompletedTodayPanel({
         </p>
       </div>
 
-      <div className="rounded-2xl border border-accent/10 bg-card">
-        {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            Loading...
-          </p>
-        ) : requests.length > 0 ? (
-          requests.map((request) => (
-            <CompletedRequestRow key={request.id} request={request} />
-          ))
-        ) : (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            No completed bookings
-          </p>
-        )}
+      <div className="flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
+        <ConfirmationScrollableList
+          items={requests}
+          loading={loading}
+          emptyText="No completed bookings"
+          renderItem={(request) => <CompletedRequestRow request={request} />}
+          getItemKey={(request) => request.id}
+        />
       </div>
     </section>
   );

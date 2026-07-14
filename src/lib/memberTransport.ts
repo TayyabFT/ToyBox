@@ -5,47 +5,22 @@ import type {
   MemberTransportRequestData,
 } from "@/types/api";
 
-const PREFERRED_DATE_YEAR = 2025;
-
 function resolveRequestType(
   form: TransportDetailsFormState,
 ): CreateMemberTransportRequestBody["requestType"] {
-  if (form.request === "pickup") {
-    return "pickup_from_storage";
-  }
-
-  if (form.request === "return") {
-    return "return_to_storage";
-  }
-
+  if (form.request === "pickup") return "pickup_from_storage";
+  if (form.request === "return") return "return_to_storage";
   if (form.serviceType === "delivery" || form.serviceType === "transport") {
     return "transport_delivery";
   }
-
   return "custom_transfer";
-}
-
-function resolvePreferredMonth(day: string): number {
-  if (day === "30") {
-    return 4;
-  }
-
-  return 5;
-}
-
-function formatPreferredDateIso(day: string): string {
-  const month = String(resolvePreferredMonth(day)).padStart(2, "0");
-  const dayPart = String(Number(day)).padStart(2, "0");
-
-  return `${PREFERRED_DATE_YEAR}-${month}-${dayPart}`;
 }
 
 function parseTimeWindow(timeWindow: string): {
   timeWindowStart: string;
   timeWindowEnd: string;
 } {
-  const [start, end] = timeWindow.split("-").map((part) => part.trim());
-
+  const [start, end] = timeWindow.split("-").map((p) => p.trim());
   return {
     timeWindowStart: start || "10:00",
     timeWindowEnd: end || "12:00",
@@ -57,20 +32,9 @@ function applyAddressField(
   request: TransportDetailsFormState["request"],
   address: string,
 ) {
-  if (!address) {
-    return;
-  }
-
-  if (request === "pickup") {
-    body.deliveryAddress = address;
-    return;
-  }
-
-  if (request === "return") {
-    body.pickupAddress = address;
-    return;
-  }
-
+  if (!address) return;
+  if (request === "pickup") { body.deliveryAddress = address; return; }
+  if (request === "return") { body.pickupAddress  = address; return; }
   body.deliveryAddress = address;
 }
 
@@ -80,7 +44,7 @@ export function buildMemberTransportRequestBody(
   form: TransportDetailsFormState,
 ): CreateMemberTransportRequestBody {
   const { timeWindowStart, timeWindowEnd } = parseTimeWindow(form.timeWindow);
-  const preferredDate = formatPreferredDateIso(form.date);
+  const preferredDate = form.date; // already ISO YYYY-MM-DD from shared date picker
   const address = form.address.trim();
   const notes = form.notes.trim();
 

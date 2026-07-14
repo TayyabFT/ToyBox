@@ -16,6 +16,7 @@ export type ClubhouseRestaurantFormState = {
   tableCount: string;
   capacity: string;
   cuisineType: string;
+  restaurantType: string;
   ambienceImages: (File | null)[];
 };
 

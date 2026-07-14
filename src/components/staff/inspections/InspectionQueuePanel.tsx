@@ -72,7 +72,7 @@ export function InspectionQueuePanel({
             onClick={() => setShowAll(true)}
             className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
           >
-            Load more
+            View  more
           </button>
         </div>
       ) : null}

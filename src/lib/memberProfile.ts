@@ -1,4 +1,8 @@
-import type { AuthProfileData, AuthProfileSectionsNested } from "@/types/api";
+import type {
+  AuthProfileData,
+  AuthProfileSectionsNested,
+  UpdateAuthProfileRequest,
+} from "@/types/api";
 import { memberProfileMock } from "@/components/member/profile/mockData";
 import type {
   MemberProfileData,
@@ -440,5 +444,81 @@ export function mapMemberProfileData(
     profileImageUrl: profileImageUrl || undefined,
     stats: mapHeaderStats(data),
     settingsSections: mapSettingsSections(data),
+  };
+}
+
+export type MemberProfileEditFormState = {
+  firstName: string;
+  lastName: string;
+  displayHandle: string;
+  email: string;
+  jobTitle: string;
+  mobile: string;
+  mobileCountryCode: string;
+  residence: string;
+  address: string;
+  coverImageUrl: string;
+};
+
+function resolveProfileNames(data: AuthProfileData): {
+  firstName: string;
+  lastName: string;
+} {
+  if (data.firstName?.trim() || data.lastName?.trim()) {
+    return {
+      firstName: data.firstName?.trim() || "",
+      lastName: data.lastName?.trim() || "",
+    };
+  }
+
+  const fullName =
+    data.fullName?.trim() || data.name?.trim() || data.displayName?.trim() || "";
+  const parts = fullName.split(/\s+/).filter(Boolean);
+
+  return {
+    firstName: parts[0] ?? "",
+    lastName: parts.slice(1).join(" "),
+  };
+}
+
+export function mapAuthProfileToEditForm(
+  data: AuthProfileData,
+): MemberProfileEditFormState {
+  const { firstName, lastName } = resolveProfileNames(data);
+  const sections = getNestedSections(data);
+  const personal = sections?.account?.personalInformation;
+
+  return {
+    firstName,
+    lastName,
+    displayHandle: (data.displayHandle?.trim() || "").replace(/^@/, ""),
+    email: data.email?.trim() || personal?.email?.trim() || "",
+    jobTitle: data.jobTitle?.trim() || "",
+    mobile: data.mobile?.trim() || "",
+    mobileCountryCode: data.mobileCountryCode?.trim() || "",
+    residence: data.residence?.trim() || "",
+    address:
+      data.address?.trim() ||
+      data.residence?.trim() ||
+      personal?.address?.trim() ||
+      "",
+    coverImageUrl: data.coverImageUrl?.trim() || "",
+  };
+}
+
+export function buildMemberProfileUpdatePayload(
+  form: MemberProfileEditFormState,
+): UpdateAuthProfileRequest {
+  return {
+    firstName: form.firstName.trim(),
+    lastName: form.lastName.trim(),
+    displayHandle: form.displayHandle.trim(),
+    email: form.email.trim(),
+    jobTitle: form.jobTitle.trim(),
+    mobile: form.mobile.trim(),
+    mobileCountryCode: form.mobileCountryCode.trim(),
+    residence: form.residence.trim(),
+    address: form.address.trim(),
+    coverImageUrl: form.coverImageUrl.trim(),
   };
 }

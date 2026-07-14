@@ -32,17 +32,15 @@ export type ClubhouseVenueCard = {
   statusLabel: string;
   statusTone: ClubhouseVenueStatusTone;
   subtitle: string;
-  progressLabel: string;
   occupied: number;
   capacity: number;
-  capacitySuffix?: string;
   details: ClubhouseVenueDetail[];
   href?: string;
 };
 
 export type ClubhouseVenuesDisplay = ClubhouseVenueCard[];
 
-export type ClubhouseReservationStatus = "confirmed" | "prep";
+export type ClubhouseReservationStatus = "confirmed" | "prep" | "pending";
 
 export type ClubhouseReservationRow = {
   id: string;
@@ -53,11 +51,13 @@ export type ClubhouseReservationRow = {
   zone: string;
   party: number;
   status: ClubhouseReservationStatus;
+  statusLabel?: string;
   notes: string;
 };
 
 export type ClubhouseReservationsDisplay = {
   confirmedCount: number;
   walkInCount: number;
+  summaryLabel?: string;
   rows: ClubhouseReservationRow[];
 };

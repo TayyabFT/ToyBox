@@ -1,3 +1,8 @@
+import {
+  PreferredDatePicker,
+  RequestFieldLabel,
+  RequestRadioDot,
+} from "../shared/requestFormUi";
 import type {
   TransportDetailsFormState,
   TransportRequestKey,
@@ -5,42 +10,20 @@ import type {
 } from "./types";
 
 const SERVICE_TYPES: { key: TransportServiceTypeKey; label: string }[] = [
-  { key: "roadside", label: "Roadside" },
-  { key: "delivery", label: "Delivery" },
+  { key: "roadside",  label: "Roadside"  },
+  { key: "delivery",  label: "Delivery"  },
   { key: "transport", label: "Transport" },
 ];
 
 export const REQUEST_OPTIONS: { key: TransportRequestKey; label: string }[] = [
   { key: "pickup", label: "Pickup from storage" },
-  { key: "return", label: "Return to storage" },
-  { key: "custom", label: "Custom transfer" },
+  { key: "return", label: "Return to storage"   },
+  { key: "custom", label: "Custom transfer"      },
 ];
-
-const DATE_OPTIONS = ["30", "1", "2", "3"];
 
 const TIME_WINDOWS = ["13:00 - 15:00", "15:00 - 17:00"];
 
 const NOTES_MAX_LENGTH = 250;
-
-function FieldLabel({ children }: { children: string }) {
-  return (
-    <p className="font-roboto text-[10px] font-medium tracking-[0.18em] text-section-label uppercase">
-      {children}
-    </p>
-  );
-}
-
-function RadioDot({ selected }: { selected: boolean }) {
-  return (
-    <span
-      className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-        selected ? "border-primary" : "border-secondary/40"
-      }`}
-    >
-      {selected ? <span className="size-2.5 rounded-full bg-primary" /> : null}
-    </span>
-  );
-}
 
 type TransportDeliveryDetailsFormProps = {
   value: TransportDetailsFormState;
@@ -53,8 +36,9 @@ export function TransportDeliveryDetailsForm({
 }: TransportDeliveryDetailsFormProps) {
   return (
     <div className="space-y-6">
+      {/* Service Type */}
       <div className="space-y-2.5">
-        <FieldLabel>Service Type</FieldLabel>
+        <RequestFieldLabel>Service Type</RequestFieldLabel>
         <div className="flex flex-wrap gap-2.5">
           {SERVICE_TYPES.map((type) => {
             const selected = value.serviceType === type.key;
@@ -77,8 +61,9 @@ export function TransportDeliveryDetailsForm({
         </div>
       </div>
 
+      {/* Request */}
       <div className="space-y-2.5">
-        <FieldLabel>Request</FieldLabel>
+        <RequestFieldLabel>Request</RequestFieldLabel>
         <div className="space-y-2.5">
           {REQUEST_OPTIONS.map((option) => {
             const selected = value.request === option.key;
@@ -94,7 +79,7 @@ export function TransportDeliveryDetailsForm({
                     : "border border-transparent bg-dark hover:border-accent/15"
                 }`}
               >
-                <RadioDot selected={selected} />
+                <RequestRadioDot selected={selected} />
                 <span
                   className={`font-roboto text-[13px] ${
                     selected ? "font-semibold text-foreground" : "text-secondary"
@@ -108,41 +93,26 @@ export function TransportDeliveryDetailsForm({
         </div>
       </div>
 
+      {/* Delivery Address */}
       <div className="space-y-2.5">
-        <FieldLabel>Delivery Address</FieldLabel>
+        <RequestFieldLabel>Delivery Address</RequestFieldLabel>
         <input
           value={value.address}
-          onChange={(event) => onChange({ address: event.target.value })}
+          onChange={(e) => onChange({ address: e.target.value })}
           className="font-roboto w-full rounded-xl border border-accent/10 bg-input-muted px-4 py-3 text-[13px] font-medium text-foreground outline-none transition-colors focus:border-primary/40"
         />
       </div>
 
-      <div className="space-y-2.5">
-        <FieldLabel>Preferred Date</FieldLabel>
-        <div className="grid grid-cols-4 gap-2.5">
-          {DATE_OPTIONS.map((day) => {
-            const selected = value.date === day;
+      {/* Preferred Date — shared compact picker */}
+      <PreferredDatePicker
+        value={value.date}
+        onChange={(key) => onChange({ date: key })}
+        variant="compact"
+      />
 
-            return (
-              <button
-                key={day}
-                type="button"
-                onClick={() => onChange({ date: day })}
-                className={`font-roboto flex h-11 items-center justify-center rounded-lg text-[12px] font-semibold transition-colors ${
-                  selected
-                    ? "bg-primary text-dark"
-                    : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
-                }`}
-              >
-                {day}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
+      {/* Time Window */}
       <div className="space-y-2.5">
-        <FieldLabel>Time Window</FieldLabel>
+        <RequestFieldLabel>Time Window</RequestFieldLabel>
         <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2">
           {TIME_WINDOWS.map((window) => {
             const selected = value.timeWindow === window;
@@ -165,6 +135,7 @@ export function TransportDeliveryDetailsForm({
         </div>
       </div>
 
+      {/* Notes */}
       <div className="space-y-2.5">
         <p className="font-roboto text-[10px] font-medium tracking-[0.18em] text-section-label/60 uppercase">
           Notes
@@ -172,8 +143,8 @@ export function TransportDeliveryDetailsForm({
         <div className="relative">
           <textarea
             value={value.notes}
-            onChange={(event) =>
-              onChange({ notes: event.target.value.slice(0, NOTES_MAX_LENGTH) })
+            onChange={(e) =>
+              onChange({ notes: e.target.value.slice(0, NOTES_MAX_LENGTH) })
             }
             maxLength={NOTES_MAX_LENGTH}
             rows={3}

@@ -3,21 +3,41 @@ import type { ConciergeChatMessage } from "./types";
 type ChatMessageProps = {
   message: ConciergeChatMessage;
   viewerRole?: "staff" | "member";
+  ownBubbleClassName?: string;
 };
+
+function ThinkingDots() {
+  return (
+    <span className="inline-flex items-center gap-1 py-0.5" aria-label="Thinking">
+      {[0, 1, 2].map((index) => (
+        <span
+          key={index}
+          className="ask-steve-thinking-dot size-1.5 rounded-full bg-current opacity-70"
+          style={{ animationDelay: `${index * 0.15}s` }}
+        />
+      ))}
+    </span>
+  );
+}
 
 export function ChatMessage({
   message,
   viewerRole = "staff",
+  ownBubbleClassName,
 }: ChatMessageProps) {
   const isOwnMessage =
     viewerRole === "member"
       ? message.sender === "member"
       : message.sender === "staff" || message.sender === "admin";
 
+  const ownBubbleClass =
+    ownBubbleClassName ??
+    "rounded-tr-sm bg-[#D4A847] text-dark";
+
   const incomingBubbleClass =
     message.sender === "admin"
-      ? "rounded-tl-sm border border-accent/14 bg-accent/7"
-      : "rounded-tl-sm border border-teal/14 bg-teal/7";
+      ? "rounded-tl-sm border border-accent/14 bg-accent/7 text-foreground"
+      : "rounded-tl-sm border border-teal/14 bg-teal/7 text-foreground";
 
   return (
     <div
@@ -27,15 +47,17 @@ export function ChatMessage({
         {message.senderName} {message.time}
       </span>
       <div
-        className={`max-w-[85%] rounded-xl px-4 py-3 text-foreground ${
-          isOwnMessage
-            ? "rounded-tr-sm border border-accent/10 bg-accent/7"
-            : incomingBubbleClass
+        className={`max-w-[85%] rounded-xl px-4 py-3 ${
+          isOwnMessage ? ownBubbleClass : incomingBubbleClass
         }`}
       >
-        <p className="font-roboto text-[12px] leading-relaxed tracking-[0.02em]">
-          {message.message}
-        </p>
+        {message.thinking ? (
+          <ThinkingDots />
+        ) : (
+          <p className="font-roboto text-[12px] leading-relaxed tracking-[0.02em]">
+            {message.message}
+          </p>
+        )}
       </div>
     </div>
   );

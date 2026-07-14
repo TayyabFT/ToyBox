@@ -8,6 +8,7 @@ import type {
   SetupPasswordResponse,
   SignInRequest,
   SignInResponse,
+  UpdateAuthProfileRequest,
 } from "@/types/api";
 
 /**
@@ -48,4 +49,10 @@ export const authApi = {
 
   getProfile: () =>
     apiClient<AuthProfileResponse>(API_ENDPOINTS.auth.profile),
+
+  updateProfile: (body: UpdateAuthProfileRequest) =>
+    apiClient<AuthProfileResponse>(API_ENDPOINTS.auth.profile, {
+      method: "PATCH",
+      body,
+    }),
 };

@@ -1,5 +1,5 @@
-import { MemberGarageConciergeChatIcon } from "@/components/common/Svgs";
-import { formatShortDate } from "../transport-delivery/dateFormat";
+import { formatShortDate } from "../shared/dateUtils";
+import { ConciergeCard } from "../shared/ConciergeCard";
 import type { WashDetailsFormState } from "./types";
 
 type TimelineStatus = "completed" | "active" | "pending";
@@ -108,34 +108,12 @@ export function DetailingWashBookingStatusStep({
     <div className="space-y-7">
       <BookingTimeline steps={steps} />
 
-      <div>
-        <p className="font-roboto mb-3 text-[10px] font-medium tracking-[0.18em] text-section-label uppercase">
-          Your Concierge
-        </p>
-
-        <div className="flex items-center gap-3 rounded-2xl border border-accent/12 bg-elevated px-4 py-3.5">
-          <span className="font-roboto flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/8 text-[13px] font-semibold text-primary">
-            SK
-          </span>
-
-          <div className="min-w-0 flex-1">
-            <p className="font-roboto text-[13px] font-semibold text-foreground">
-              Sarah Khalid
-            </p>
-            <p className="font-roboto mt-0.5 text-[11px] text-secondary">
-              Available · Responds in &lt;2 min
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary transition-colors hover:border-primary/60 hover:bg-primary/15"
-            aria-label="Message concierge"
-          >
-            <MemberGarageConciergeChatIcon />
-          </button>
-        </div>
-      </div>
+      <ConciergeCard
+        sectionLabel="Your Concierge"
+        name="Sarah Khalid"
+        initials="SK"
+        subtitle="Available · Responds in <2 min"
+      />
     </div>
   );
 }

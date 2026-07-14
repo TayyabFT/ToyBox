@@ -1,4 +1,8 @@
 import { DiaryEntryCard } from "./DiaryEntryCard";
+import {
+  dashboardSectionHeadingClass,
+  dashboardSectionSubtitleClass,
+} from "@/components/member/dashboard/dashboardStyles";
 import type { DiaryGroup, DiaryEntry } from "./types";
 
 type RenderItem =
@@ -47,11 +51,11 @@ export function DiaryTimeline({ groups }: { groups: DiaryGroup[] }) {
               </div> */}
 
               {/* Right column (header text) */}
-              <div className="space-y-1 mt-4">
-                <h2 className="font-copperplate text-[16px] font-normal tracking-[0.05em] text-primary uppercase sm:text-[18px]">
+              <div className="mt-4 space-y-1">
+                <h2 className={`${dashboardSectionHeadingClass} text-primary`}>
                   {item.label}
                 </h2>
-                <p className="font-roboto text-[9px] font-medium tracking-[0.14em] text-secondary/50 uppercase">
+                <p className={dashboardSectionSubtitleClass}>
                   {item.countLabel}
                 </p>
               </div>

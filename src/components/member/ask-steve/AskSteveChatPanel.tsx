@@ -62,6 +62,7 @@ export function AskSteveChatPanel({
               key={message.id}
               message={message}
               viewerRole="member"
+              ownBubbleClassName="rounded-tr-sm bg-[#D4A847] text-dark"
             />
           ))}
         </div>

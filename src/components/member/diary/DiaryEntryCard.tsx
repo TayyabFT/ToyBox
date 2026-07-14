@@ -39,14 +39,10 @@ export function DiaryEntryCard({ entry }: { entry: DiaryEntry }) {
               alt={`${entry.titlePrefix} ${entry.titleHighlight ?? ""}`.trim()}
               className="h-full w-full object-cover object-center"
             />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.28) 45%, rgba(0,0,0,0.05) 100%)",
-              }}
-            />
+        <div
+          aria-hidden
+          className="member-dash-media-overlay pointer-events-none absolute inset-0"
+        />
           </div>
         </div>
       )}

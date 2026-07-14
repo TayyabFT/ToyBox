@@ -24,11 +24,19 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
     <>
       <div className="overflow-hidden rounded-2xl border border-accent/10 bg-card">
         <div className="relative h-[240px] w-full">
-          <img
-            src={vehicle.imageUrl}
-            alt={`${vehicle.make} ${vehicle.model}`}
-            className="h-full w-full object-cover"
-          />
+          {vehicle.imageUrl ? (
+            <img
+              src={vehicle.imageUrl}
+              alt={`${vehicle.make} ${vehicle.model}`}
+              className="h-full w-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center bg-accent/6">
+              <span className="font-copperplate text-[13px] tracking-[0.12em] text-secondary/40 uppercase">
+                {vehicle.make} {vehicle.model}
+              </span>
+            </div>
+          )}
 
           {vehicle.statusLabel && (
             <span

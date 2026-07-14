@@ -14,6 +14,10 @@ const COLORS = {
   border: [212, 168, 71] as const,
 };
 
+const CARD_INNER_PAD = 6;
+const METRIC_ROW_HEIGHT = 14;
+const SECTION_GAP = 3;
+
 const STATUS_LABELS: Record<VehicleStatus, string> = {
   "in-service": "IN SERVICE",
   ready: "READY",
@@ -55,6 +59,79 @@ function formatGeneratedDate() {
   }).format(new Date());
 }
 
+function calcSystemBreakdownHeight(metricCount: number) {
+  const rows = Math.ceil(metricCount / 2);
+  const headerArea = 18;
+  return CARD_INNER_PAD + headerArea + rows * METRIC_ROW_HEIGHT + CARD_INNER_PAD;
+}
+
+function calcHistoryBlockHeight(detailLineCount: number, compact: boolean) {
+  if (compact) {
+    return 13 + detailLineCount * 3.5;
+  }
+
+  return 16 + detailLineCount * 4;
+}
+
+function simulateVerticalLayout(
+  startY: number,
+  blockHeights: number[],
+  gap: number,
+  pageHeight: number,
+  margin: number,
+) {
+  let y = startY;
+  let pageCount = 1;
+  const bottom = pageHeight - margin;
+
+  for (const height of blockHeights) {
+    if (y + height > bottom) {
+      pageCount += 1;
+      y = margin;
+    }
+
+    y += height + gap;
+  }
+
+  return {
+    endY: y,
+    pageCount,
+    lastPageUsed: y - margin,
+  };
+}
+
+function shouldUseCompactHistory(
+  startY: number,
+  detailLineCounts: number[],
+  pageHeight: number,
+  margin: number,
+) {
+  const normalHeights = detailLineCounts.map((lineCount) =>
+    calcHistoryBlockHeight(lineCount, false),
+  );
+  const normal = simulateVerticalLayout(startY, normalHeights, 2, pageHeight, margin);
+
+  if (normal.pageCount <= 1) {
+    return false;
+  }
+
+  const compactHeights = detailLineCounts.map((lineCount) =>
+    calcHistoryBlockHeight(lineCount, true),
+  );
+  const compact = simulateVerticalLayout(startY, compactHeights, 1.5, pageHeight, margin);
+  const usablePage = pageHeight - margin * 2;
+
+  if (compact.pageCount < normal.pageCount) {
+    return true;
+  }
+
+  if (normal.lastPageUsed < usablePage * 0.35) {
+    return true;
+  }
+
+  return compact.lastPageUsed > normal.lastPageUsed;
+}
+
 export async function downloadHealthReportPdf(report: HealthReport) {
   const { jsPDF } = await import("jspdf");
 
@@ -79,12 +156,12 @@ export async function downloadHealthReportPdf(report: HealthReport) {
   };
 
   const drawCard = (height: number) => {
-    ensureSpace(height + 4);
+    ensureSpace(height + SECTION_GAP);
     doc.setFillColor(...COLORS.card);
     doc.setDrawColor(40, 36, 30);
     doc.setLineWidth(0.2);
     doc.roundedRect(margin, y, contentWidth, height, 3, 3, "FD");
-    return y + 6;
+    return y + CARD_INNER_PAD;
   };
 
   const setText = (
@@ -95,20 +172,6 @@ export async function downloadHealthReportPdf(report: HealthReport) {
     doc.setFont("helvetica", style);
     doc.setFontSize(size);
     doc.setTextColor(...color);
-  };
-
-  const writeLines = (
-    text: string,
-    x: number,
-    startY: number,
-    maxWidth: number,
-    lineHeight: number,
-  ) => {
-    const lines = doc.splitTextToSize(text, maxWidth) as string[];
-    lines.forEach((line, index) => {
-      doc.text(line, x, startY + index * lineHeight);
-    });
-    return startY + lines.length * lineHeight;
   };
 
   const drawProgressBar = (
@@ -139,7 +202,46 @@ export async function downloadHealthReportPdf(report: HealthReport) {
       doc.roundedRect(x, barY, fillWidth, barHeight, 1, 1, "F");
     }
 
-    return barY + 8;
+    return startY + METRIC_ROW_HEIGHT;
+  };
+
+  const drawHistoryEntry = (
+    entry: HealthReport["serviceHistory"][number],
+    blockHeight: number,
+    compact: boolean,
+  ) => {
+    const detailLines = doc.splitTextToSize(entry.detail, contentWidth - 18) as string[];
+    const dateY = compact ? y + 5 : y + 6;
+    const titleY = compact ? y + 9 : y + 11;
+    const locationY = compact ? y + 12.5 : y + 15;
+    const detailY = compact ? y + 16 : y + 19;
+    const detailLineHeight = compact ? 3.5 : 4;
+    const dotY = compact ? y + 4.5 : y + 6;
+
+    ensureSpace(blockHeight + (compact ? 1.5 : 2));
+
+    doc.setFillColor(...COLORS.card);
+    doc.setDrawColor(40, 36, 30);
+    doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, "FD");
+
+    doc.setFillColor(...COLORS.primary);
+    doc.circle(margin + 6, dotY, 1.2, "F");
+
+    setText(7, COLORS.secondary);
+    doc.text(entry.date.toUpperCase(), margin + 12, dateY);
+
+    setText(compact ? 9 : 10, COLORS.foreground, "bold");
+    doc.text(entry.title, margin + 12, titleY);
+
+    setText(7, COLORS.secondary);
+    doc.text(entry.location.toUpperCase(), margin + 12, locationY);
+
+    setText(8, COLORS.primary);
+    detailLines.forEach((line, index) => {
+      doc.text(line, margin + 12, detailY + index * detailLineHeight);
+    });
+
+    y += blockHeight + (compact ? 1.5 : 2);
   };
 
   drawPageBackground();
@@ -155,7 +257,7 @@ export async function downloadHealthReportPdf(report: HealthReport) {
     setText(8, COLORS.secondary);
     doc.text(`Generated ${formatGeneratedDate()}`, margin + 6, innerY + 11);
 
-    y += headerHeight + 4;
+    y += headerHeight + SECTION_GAP;
   }
 
   // Overdue banner
@@ -165,7 +267,7 @@ export async function downloadHealthReportPdf(report: HealthReport) {
       contentWidth - 16,
     ) as string[];
     const bannerHeight = 14 + summaryLines.length * 4;
-    ensureSpace(bannerHeight + 4);
+    ensureSpace(bannerHeight + SECTION_GAP);
 
     doc.setFillColor(20, 12, 14);
     doc.setDrawColor(...COLORS.pink);
@@ -180,7 +282,7 @@ export async function downloadHealthReportPdf(report: HealthReport) {
       doc.text(line, margin + 6, y + 12 + index * 4);
     });
 
-    y += bannerHeight + 4;
+    y += bannerHeight + SECTION_GAP;
   }
 
   // Overview card
@@ -234,40 +336,40 @@ export async function downloadHealthReportPdf(report: HealthReport) {
     const conditionWidth = doc.getTextWidth(conditionText);
     doc.text(conditionText, margin + contentWidth - 6 - conditionWidth, innerY + 52);
 
-    y += overviewHeight + 4;
+    y += overviewHeight + SECTION_GAP;
   }
 
   // System breakdown card
   if (report.systemMetrics.length > 0) {
     const metrics = report.systemMetrics;
     const criticalCount = metrics.filter((metric) => metric.tone === "pink").length;
-    const rowHeight = 12;
-    const rows = Math.ceil(metrics.length / 2);
-    const sectionHeight = 16 + rows * rowHeight;
+    const sectionHeight = calcSystemBreakdownHeight(metrics.length);
     const innerY = drawCard(sectionHeight);
+    const headerBaseline = innerY + 6;
 
     setText(11, COLORS.foreground, "bold");
-    doc.text("SYSTEM BREAKDOWN", margin + 6, innerY + 5);
+    doc.text("SYSTEM BREAKDOWN", margin + 6, headerBaseline);
 
     if (criticalCount > 0) {
       const badgeText = `+ ${criticalCount} CRITICAL`;
+      setText(7, COLORS.pink, "bold");
       const badgeWidth = doc.getTextWidth(badgeText) + 8;
       const badgeX = margin + contentWidth - 6 - badgeWidth;
+      const badgeY = innerY + 2;
 
       doc.setFillColor(30, 16, 18);
       doc.setDrawColor(...COLORS.pink);
       doc.setLineWidth(0.2);
-      doc.roundedRect(badgeX, innerY + 1, badgeWidth, 6, 2, 2, "FD");
-
-      setText(7, COLORS.pink, "bold");
-      doc.text(badgeText, badgeX + 4, innerY + 5);
+      doc.roundedRect(badgeX, badgeY, badgeWidth, 7, 2, 2, "FD");
+      doc.text(badgeText, badgeX + 4, headerBaseline);
     }
 
     const columnWidth = (contentWidth - 18) / 2;
     const leftX = margin + 6;
     const rightX = margin + 6 + columnWidth + 6;
-    let leftY = innerY + 14;
-    let rightY = innerY + 14;
+    const metricsStartY = innerY + 18;
+    let leftY = metricsStartY;
+    let rightY = metricsStartY;
     const midpoint = Math.ceil(metrics.length / 2);
 
     metrics.forEach((metric, index) => {
@@ -278,44 +380,34 @@ export async function downloadHealthReportPdf(report: HealthReport) {
       }
     });
 
-    y += sectionHeight + 4;
+    y += sectionHeight + SECTION_GAP;
   }
 
-  // Service history card
+  // Service history
   if (report.serviceHistory.length > 0) {
-    ensureSpace(18);
+    const historyTitleHeight = 8;
+    ensureSpace(historyTitleHeight);
     setText(11, COLORS.foreground, "bold");
     doc.text("SERVICE HISTORY", margin + 2, y + 4);
-    y += 10;
+    y += historyTitleHeight;
 
-    for (const entry of report.serviceHistory) {
+    const detailLineCounts = report.serviceHistory.map((entry) => {
       const detailLines = doc.splitTextToSize(entry.detail, contentWidth - 18) as string[];
-      const blockHeight = 18 + detailLines.length * 4;
-      ensureSpace(blockHeight + 2);
+      return detailLines.length;
+    });
 
-      doc.setFillColor(...COLORS.card);
-      doc.setDrawColor(40, 36, 30);
-      doc.roundedRect(margin, y, contentWidth, blockHeight, 2, 2, "FD");
+    const useCompactHistory = shouldUseCompactHistory(
+      y,
+      detailLineCounts,
+      pageHeight,
+      margin,
+    );
 
-      doc.setFillColor(...COLORS.primary);
-      doc.circle(margin + 6, y + 6, 1.2, "F");
-
-      setText(7, COLORS.secondary);
-      doc.text(entry.date.toUpperCase(), margin + 12, y + 6);
-
-      setText(10, COLORS.foreground, "bold");
-      doc.text(entry.title, margin + 12, y + 11);
-
-      setText(7, COLORS.secondary);
-      doc.text(entry.location.toUpperCase(), margin + 12, y + 15);
-
-      setText(8, COLORS.primary);
-      detailLines.forEach((line, index) => {
-        doc.text(line, margin + 12, y + 19 + index * 4);
-      });
-
-      y += blockHeight + 3;
-    }
+    report.serviceHistory.forEach((entry, index) => {
+      const lineCount = detailLineCounts[index] ?? 1;
+      const blockHeight = calcHistoryBlockHeight(lineCount, useCompactHistory);
+      drawHistoryEntry(entry, blockHeight, useCompactHistory);
+    });
   }
 
   const filename = `health-report-${sanitizeFilename(report.reference)}-${sanitizeFilename(report.vehicle)}.pdf`;

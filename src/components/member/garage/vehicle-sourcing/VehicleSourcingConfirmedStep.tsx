@@ -1,7 +1,6 @@
-import {
-  MemberGarageConciergeChatIcon,
-  MemberGarageSuccessCheck,
-} from "@/components/common/Svgs";
+import { MemberGarageSuccessCheck } from "@/components/common/Svgs";
+import { ConfirmedRow } from "../shared/requestFormUi";
+import { ConciergeCard } from "../shared/ConciergeCard";
 import {
   formatSourcingBudgetConfirmed,
   formatSourcingMakeModel,
@@ -9,33 +8,16 @@ import {
 } from "./sourcingOptions";
 import type { VehicleSourcingDetailsFormState } from "./types";
 
-function ConfirmedRow({
-  label,
-  value,
-  valueClassName = "text-foreground",
-}: {
-  label: string;
-  value: string;
-  valueClassName?: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="font-roboto text-[12px] text-secondary">{label}</span>
-      <span
-        className={`font-roboto max-w-[62%] text-right text-[12px] font-medium ${valueClassName}`}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
 type VehicleSourcingConfirmedStepProps = {
   form: VehicleSourcingDetailsFormState;
+  referenceNumber: string;
+  submittedDate?: string;
 };
 
 export function VehicleSourcingConfirmedStep({
   form,
+  referenceNumber,
+  submittedDate,
 }: VehicleSourcingConfirmedStepProps) {
   return (
     <div className="flex flex-col items-center py-2 text-center">
@@ -64,6 +46,12 @@ export function VehicleSourcingConfirmedStep({
           label="Timeline"
           value={formatSourcingTimelineConfirmed(form.timeline)}
         />
+        {referenceNumber ? (
+          <ConfirmedRow label="Reference" value={referenceNumber} />
+        ) : null}
+        {submittedDate ? (
+          <ConfirmedRow label="Submitted" value={submittedDate} />
+        ) : null}
         <div className="flex items-center justify-between gap-4 py-2.5">
           <span className="font-roboto text-[12px] text-secondary">Status</span>
           <span className="font-roboto rounded-full border border-primary/25 bg-primary/12 px-3 py-1 text-[10px] font-semibold tracking-[0.04em] text-primary">
@@ -73,28 +61,11 @@ export function VehicleSourcingConfirmedStep({
       </div>
 
       <div className="mt-5 w-full">
-        <div className="flex items-center gap-3 rounded-xl border border-accent/12 bg-elevated px-4 py-3.5 text-left">
-          <span className="font-roboto flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/8 text-[13px] font-semibold text-primary">
-            JA
-          </span>
-
-          <div className="min-w-0 flex-1">
-            <p className="font-roboto text-[13px] font-semibold text-foreground">
-              James Alderton
-            </p>
-            <p className="font-roboto mt-0.5 text-[11px] text-secondary">
-              Acquisition Manager · Available now
-            </p>
-          </div>
-
-          <button
-            type="button"
-            className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary transition-colors hover:border-primary/60 hover:bg-primary/15"
-            aria-label="Message acquisition manager"
-          >
-            <MemberGarageConciergeChatIcon />
-          </button>
-        </div>
+        <ConciergeCard
+          name="James Alderton"
+          initials="JA"
+          subtitle="Acquisition Manager · Available now"
+        />
       </div>
     </div>
   );

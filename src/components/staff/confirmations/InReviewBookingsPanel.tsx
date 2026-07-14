@@ -1,3 +1,4 @@
+import { ConfirmationScrollableList } from "./ConfirmationScrollableList";
 import { InReviewRequestRow } from "./InReviewRequestRow";
 import type { ConfirmationRequestItem } from "./types";
 
@@ -13,8 +14,8 @@ export function InReviewBookingsPanel({
   loading = false,
 }: InReviewBookingsPanelProps) {
   return (
-    <section className="rounded-2xl border border-accent/12 bg-card p-5">
-      <div className="mb-5 flex items-center gap-3">
+    <section className="flex flex-col overflow-hidden rounded-2xl border border-accent/12 bg-card p-5">
+      <div className="mb-5 flex shrink-0 items-center gap-3">
         <h2 className="text-[13px] uppercase text-secondary">
           In Review Bookings
         </h2>
@@ -23,21 +24,14 @@ export function InReviewBookingsPanel({
         </span>
       </div>
 
-      <div className="rounded-2xl space-y-3">
-        {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            Loading...
-          </p>
-        ) : requests.length > 0 ? (
-          requests.map((request) => (
-            <InReviewRequestRow key={request.id} request={request} />
-          ))
-        ) : (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            No in-review bookings
-          </p>
-        )}
-      </div>
+      <ConfirmationScrollableList
+        items={requests}
+        loading={loading}
+        emptyText="No in-review bookings"
+        listClassName="space-y-3 pr-1"
+        renderItem={(request) => <InReviewRequestRow request={request} />}
+        getItemKey={(request) => request.id}
+      />
     </section>
   );
 }

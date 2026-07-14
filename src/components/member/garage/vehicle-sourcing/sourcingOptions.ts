@@ -146,14 +146,6 @@ export function formatSourcingTrackingTitle(make: string, model: string): string
   return `${make} ${model}`.trim().toUpperCase();
 }
 
-export function formatSourcingRequestRef(): string {
-  return "SRC · 2025 · 0429 · 007";
-}
-
-export function formatSourcingSubmittedDate(): string {
-  return "Submitted Apr 29";
-}
-
 export function formatSourcingTrackingBudget(key: SourcingBudgetKey): string {
   const labels: Record<SourcingBudgetKey, string> = {
     "under-1m": "AED <1M",

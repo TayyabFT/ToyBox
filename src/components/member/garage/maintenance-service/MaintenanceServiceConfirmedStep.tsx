@@ -1,4 +1,5 @@
 import { MemberGarageSuccessCheck } from "@/components/common/Svgs";
+import { ConfirmedRow } from "../shared/requestFormUi";
 import {
   formatMaintenanceShortDate,
   getMaintenanceServiceCentre,
@@ -7,36 +8,17 @@ import {
 } from "./maintenanceOptions";
 import type { MaintenanceDetailsFormState } from "./types";
 
-function ConfirmedRow({
-  label,
-  value,
-  valueClassName = "text-foreground",
-}: {
-  label: string;
-  value: string;
-  valueClassName?: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="font-roboto text-[12px] text-secondary">{label}</span>
-      <span
-        className={`font-roboto max-w-[62%] text-right text-[12px] font-medium ${valueClassName}`}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
 type MaintenanceServiceConfirmedStepProps = {
   form: MaintenanceDetailsFormState;
+  referenceNumber?: string;
 };
 
 export function MaintenanceServiceConfirmedStep({
   form,
+  referenceNumber,
 }: MaintenanceServiceConfirmedStepProps) {
-  const vehicle = getMaintenanceVehicle(form.vehicle);
-  const serviceType = getMaintenanceServiceType(form.serviceType);
+  const vehicle      = getMaintenanceVehicle(form.vehicle);
+  const serviceType  = getMaintenanceServiceType(form.serviceType);
   const serviceCentre = getMaintenanceServiceCentre(form.serviceCentre);
 
   return (
@@ -54,9 +36,16 @@ export function MaintenanceServiceConfirmedStep({
       </p>
 
       <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 bg-[#141310] px-4 py-1">
+        {referenceNumber ? (
+          <ConfirmedRow
+            label="Reference"
+            value={referenceNumber}
+            valueClassName="text-primary"
+          />
+        ) : null}
         <ConfirmedRow label="Vehicle" value={vehicle.reviewLabel} />
         <ConfirmedRow label="Service" value={serviceType.confirmedLabel} />
-        <ConfirmedRow label="Centre" value={serviceCentre.title} />
+        <ConfirmedRow label="Centre"  value={serviceCentre.title} />
         <ConfirmedRow
           label="Date"
           value={formatMaintenanceShortDate(form.preferredDate)}

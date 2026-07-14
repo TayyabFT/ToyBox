@@ -4,6 +4,7 @@ import { Dropdown, Input } from "@/components/common";
 import {
   CLUBHOUSE_CUISINE_TYPE_OPTIONS,
   CLUBHOUSE_RESTAURANT_NAME_OPTIONS,
+  CLUBHOUSE_RESTAURANT_TYPE_OPTIONS,
 } from "./constants";
 import { ClubhouseAddAreaFormActions } from "./ClubhouseAddAreaFormActions";
 import { ClubhouseAddAreaFormHeader } from "./ClubhouseAddAreaFormHeader";
@@ -78,11 +79,19 @@ export function ClubhouseRestaurantForm({
           />
 
           <Dropdown
-            label="Type"
+            label="Cuisine Type"
             options={CLUBHOUSE_CUISINE_TYPE_OPTIONS}
             value={value.cuisineType}
-            placeholder="Select type"
+            placeholder="Select cuisine type"
             onChange={(cuisineType) => onChange({ cuisineType })}
+          />
+
+          <Dropdown
+            label="Category"
+            options={CLUBHOUSE_RESTAURANT_TYPE_OPTIONS}
+            value={value.restaurantType}
+            placeholder="Select category"
+            onChange={(restaurantType) => onChange({ restaurantType })}
           />
 
           <ClubhouseAmbienceImagesField

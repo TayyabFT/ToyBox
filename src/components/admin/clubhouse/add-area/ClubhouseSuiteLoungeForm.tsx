@@ -1,7 +1,10 @@
 "use client";
 
 import { Dropdown, Input } from "@/components/common";
-import { CLUBHOUSE_SUITE_TITLE_OPTIONS } from "./constants";
+import {
+  CLUBHOUSE_SUITE_ROOM_TYPE_OPTIONS,
+  CLUBHOUSE_SUITE_TITLE_OPTIONS,
+} from "./constants";
 import { ClubhouseAddAreaFormActions } from "./ClubhouseAddAreaFormActions";
 import { ClubhouseAddAreaFormHeader } from "./ClubhouseAddAreaFormHeader";
 import { ClubhouseAmbienceImagesField } from "./ClubhouseAmbienceImagesField";
@@ -22,7 +25,7 @@ function createSuiteEntry(): ClubhouseSuiteEntry {
     id: crypto.randomUUID(),
     suiteTitle: "",
     location: "",
-    roomType: "suite",
+    roomType: "meeting-rooms",
     capacity: "",
   };
 }
@@ -101,13 +104,12 @@ export function ClubhouseSuiteLoungeForm({
                 </button>
               ) : null}
 
-              <Input
-                label="Type of Room"
+              <Dropdown
+                label="Category"
+                options={CLUBHOUSE_SUITE_ROOM_TYPE_OPTIONS}
                 value={suite.roomType}
-                placeholder="suite"
-                onChange={(event) =>
-                  handleSuiteChange(suite.id, { roomType: event.target.value })
-                }
+                placeholder="Select category"
+                onChange={(roomType) => handleSuiteChange(suite.id, { roomType })}
               />
 
               <Input

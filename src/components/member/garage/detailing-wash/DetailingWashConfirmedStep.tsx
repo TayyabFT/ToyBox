@@ -1,5 +1,6 @@
 import { MemberGarageSuccessCheck } from "@/components/common/Svgs";
-import { formatShortDate } from "../transport-delivery/dateFormat";
+import { ConfirmedRow } from "../shared/requestFormUi";
+import { formatShortDate } from "../shared/dateUtils";
 import {
   calculateWashTotal,
   formatWashTotal,
@@ -7,35 +8,16 @@ import {
 } from "./washOptions";
 import type { WashDetailsFormState } from "./types";
 
-function ConfirmedRow({
-  label,
-  value,
-  valueClassName = "text-foreground",
-}: {
-  label: string;
-  value: string;
-  valueClassName?: string;
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="font-roboto text-[12px] text-secondary">{label}</span>
-      <span
-        className={`font-roboto max-w-[62%] text-right text-[12px] font-medium ${valueClassName}`}
-      >
-        {value}
-      </span>
-    </div>
-  );
-}
-
 type DetailingWashConfirmedStepProps = {
   vehicleName: string;
   form: WashDetailsFormState;
+  referenceNumber?: string;
 };
 
 export function DetailingWashConfirmedStep({
   vehicleName,
   form,
+  referenceNumber,
 }: DetailingWashConfirmedStepProps) {
   const selectedPackage = getWashPackage(form.package);
   const total = calculateWashTotal(form);
@@ -54,6 +36,13 @@ export function DetailingWashConfirmedStep({
       </p>
 
       <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 bg-[#141310] px-4 py-1">
+        {referenceNumber ? (
+          <ConfirmedRow
+            label="Reference"
+            value={referenceNumber}
+            valueClassName="text-primary"
+          />
+        ) : null}
         <ConfirmedRow label="Vehicle" value={vehicleName} />
         <ConfirmedRow label="Package" value={selectedPackage.label} />
         <ConfirmedRow

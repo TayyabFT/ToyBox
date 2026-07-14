@@ -68,12 +68,20 @@ function RequestRowContent({ request }: { request: MemberVehicleRequestItem }) {
 type MemberVehicleRequestsCardProps = {
   vehicleId: string;
   vehicleName: string;
+  vehicleMake?: string;
+  vehicleModel?: string;
+  vehicleYear?: string;
+  vehicleColour?: string;
   requests: MemberVehicleRequestItem[];
 };
 
 export function MemberVehicleRequestsCard({
   vehicleId,
   vehicleName,
+  vehicleMake,
+  vehicleModel,
+  vehicleYear,
+  vehicleColour,
   requests,
 }: MemberVehicleRequestsCardProps) {
   const [isTransportOpen, setIsTransportOpen] = useState(false);
@@ -161,6 +169,10 @@ export function MemberVehicleRequestsCard({
       <VehicleSourcingModal
         open={isSourcingOpen}
         onClose={() => setIsSourcingOpen(false)}
+        vehicleMake={vehicleMake}
+        vehicleModel={vehicleModel}
+        vehicleYear={vehicleYear}
+        vehicleColour={vehicleColour}
       />
     </div>
   );

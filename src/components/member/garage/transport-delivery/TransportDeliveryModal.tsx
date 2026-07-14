@@ -22,11 +22,19 @@ import { TransportDeliveryReviewStep } from "./TransportDeliveryReviewStep";
 import { TransportDeliveryStepper } from "./TransportDeliveryStepper";
 import type { TransportDetailsFormState } from "./types";
 
+import { generateDateOptions } from "@/components/member/garage/shared/requestFormUi";
+
+// Compute today's ISO key once at module load time so the initial form state
+// always reflects the current day, not a hardcoded value.
+function getTodayIso(): string {
+  return generateDateOptions(1)[0]?.key ?? new Date().toISOString().slice(0, 10);
+}
+
 const INITIAL_FORM_STATE: TransportDetailsFormState = {
   serviceType: "roadside",
   request: "pickup",
   address: "Dubai Marina, Tower 3",
-  date: "1",
+  date: getTodayIso(),
   timeWindow: "13:00 - 15:00",
   notes: "",
 };

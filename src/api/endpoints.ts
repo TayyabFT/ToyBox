@@ -24,16 +24,36 @@ export const API_ENDPOINTS = {
   memberTransport: {
     requests: "/api/v1/transport/requests",
   },
+  memberDetailing: {
+    bookings: "/api/v1/detailing/bookings",
+    catalog: "/api/v1/detailing/catalog",
+  },
+  memberMaintenance: {
+    requests: "/api/v1/maintenance/requests",
+  },
+  memberSourcing: {
+    requests: "/api/v1/sourcing/requests",
+    request: (id: string | number) => `/api/v1/sourcing/requests/${id}`,
+    status: (id: string | number) => `/api/v1/sourcing/requests/${id}/status`,
+    cancel: (id: string | number) => `/api/v1/sourcing/requests/${id}/cancel`,
+  },
   clubhouse: {
     spaces: "/api/v1/clubhouse/spaces",
+    spacesByCategory: "/api/v1/clubhouse/spaces/by-category",
     overview: "/api/v1/clubhouse/overview",
     availability: (id: string | number) => `/api/v1/clubhouse/spaces/${id}/availability`,
     reservations: "/api/v1/clubhouse/reservations",
+    slotAvailability: "/api/v1/clubhouse/availability",
   },
   adminClubhouse: {
+    overview: "/api/v1/admin/clubhouse/overview",
+    reservations: "/api/v1/admin/clubhouse/reservations",
     restaurant: "/api/v1/admin/clubhouse/restaurant",
+    restaurantOverview: "/api/v1/admin/clubhouse/restaurant/overview",
     privateLounge: "/api/v1/admin/clubhouse/private-lounge",
+    privateLoungeOverview: "/api/v1/admin/clubhouse/private-lounge/overview",
     suiteLounge: "/api/v1/admin/clubhouse/suite-lounge",
+    suiteLoungeOverview: "/api/v1/admin/clubhouse/suite-lounge/overview",
   },
   vehicles: {
     inventory: "/api/v1/admin/vehicles/inventory",

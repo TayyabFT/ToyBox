@@ -1,31 +1,10 @@
-import type {
-  WashAddOnKey,
-  WashDetailsFormState,
-  WashPackageKey,
-} from "./types";
+import {
+  PreferredDatePicker,
+  RequestFieldLabel,
+  RequestRadioDot,
+} from "../shared/requestFormUi";
 import { WASH_ADD_ONS, WASH_PACKAGES } from "./washOptions";
-
-const DATE_OPTIONS = ["30", "1", "2", "3"];
-
-function FieldLabel({ children }: { children: string }) {
-  return (
-    <p className="font-roboto text-[10px] font-medium tracking-[0.18em] text-section-label uppercase">
-      {children}
-    </p>
-  );
-}
-
-function RadioDot({ selected }: { selected: boolean }) {
-  return (
-    <span
-      className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
-        selected ? "border-primary" : "border-secondary/40"
-      }`}
-    >
-      {selected ? <span className="size-2.5 rounded-full bg-primary" /> : null}
-    </span>
-  );
-}
+import type { WashAddOnKey, WashDetailsFormState } from "./types";
 
 type DetailingWashDetailsFormProps = {
   value: WashDetailsFormState;
@@ -40,15 +19,16 @@ export function DetailingWashDetailsForm({
     const isSelected = value.addOns.includes(key);
     onChange({
       addOns: isSelected
-        ? value.addOns.filter((addOn) => addOn !== key)
+        ? value.addOns.filter((a) => a !== key)
         : [...value.addOns, key],
     });
   }
 
   return (
     <div className="space-y-6">
+      {/* Request / package */}
       <div className="space-y-2.5">
-        <FieldLabel>Request</FieldLabel>
+        <RequestFieldLabel>Request</RequestFieldLabel>
         <div className="space-y-2.5">
           {WASH_PACKAGES.map((option) => {
             const selected = value.package === option.key;
@@ -64,7 +44,7 @@ export function DetailingWashDetailsForm({
                     : "border border-transparent hover:border-accent/15"
                 }`}
               >
-                <RadioDot selected={selected} />
+                <RequestRadioDot selected={selected} />
                 <span
                   className={`font-roboto min-w-0 flex-1 text-[13px] ${
                     selected ? "font-semibold text-foreground" : "text-secondary"
@@ -85,8 +65,9 @@ export function DetailingWashDetailsForm({
         </div>
       </div>
 
+      {/* Add-ons */}
       <div className="space-y-2.5">
-        <FieldLabel>Add-ons</FieldLabel>
+        <RequestFieldLabel>Add-ons</RequestFieldLabel>
         <div className="flex flex-wrap gap-2.5">
           {WASH_ADD_ONS.map((addOn) => {
             const selected = value.addOns.includes(addOn.key);
@@ -109,37 +90,21 @@ export function DetailingWashDetailsForm({
         </div>
       </div>
 
-      <div className="space-y-2.5">
-        <FieldLabel>Preferred Date</FieldLabel>
-        <div className="grid grid-cols-4 gap-2.5">
-          {DATE_OPTIONS.map((day) => {
-            const selected = value.date === day;
+      {/* Preferred Date — shared compact picker */}
+      <PreferredDatePicker
+        value={value.date}
+        onChange={(key) => onChange({ date: key })}
+        variant="compact"
+      />
 
-            return (
-              <button
-                key={day}
-                type="button"
-                onClick={() => onChange({ date: day })}
-                className={`font-roboto flex h-11 items-center justify-center rounded-lg text-[12px] font-semibold transition-colors ${
-                  selected
-                    ? "bg-primary text-dark"
-                    : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
-                }`}
-              >
-                {day}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
+      {/* Notes */}
       <div className="space-y-2.5">
         <p className="font-roboto text-[10px] font-medium tracking-[0.18em] text-section-label/60 uppercase">
           Notes
         </p>
         <textarea
           value={value.notes}
-          onChange={(event) => onChange({ notes: event.target.value })}
+          onChange={(e) => onChange({ notes: e.target.value })}
           rows={3}
           placeholder="Take care around the wrap on rear bumper."
           className="font-roboto w-full resize-none rounded-xl border border-accent/10 bg-input-muted px-4 py-3 text-[13px] text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/40"

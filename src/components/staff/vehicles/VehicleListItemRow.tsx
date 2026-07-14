@@ -88,7 +88,7 @@ export function VehicleListItemRow({
 
       <span className="min-w-0 flex-1">
         <span
-          className={`font-copperplate truncate text-[12px] tracking-[0.04em] ${
+          className={`font-copperplate truncate text-[12px] tracking-[0.04em] line-clamp-1 ${
             selected ? "text-primary" : ""
           }`}
         >

@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
+import { authApi } from "@/api/auth.api";
+import { memberMaintenanceApi } from "@/api/memberMaintenance.api";
+import {
+  buildMaintenanceRequestBody,
+  resolveMaintenanceReferenceNumber,
+} from "@/lib/memberMaintenance";
 import { RightArrow } from "@/components/common";
 import { MemberRequestModalFrame } from "../shared/MemberRequestModalFrame";
 import {
+  memberRequestModalPrimaryButtonClass,
   memberRequestModalPrimaryButtonFullClass,
   memberRequestModalSecondaryButtonClass,
 } from "../shared/memberRequestModal";
-import { TransportDeliveryStepper } from "../transport-delivery/TransportDeliveryStepper";
+import { RequestStepper } from "../shared/RequestStepper";
+import { generateDateOptions } from "../shared/requestFormUi";
 import { MaintenanceServiceConfirmedStep } from "./MaintenanceServiceConfirmedStep";
 import { MaintenanceServiceDetailsForm } from "./MaintenanceServiceDetailsForm";
 import { MaintenanceServiceReviewStep } from "./MaintenanceServiceReviewStep";
@@ -22,13 +30,16 @@ type MaintenanceServiceModalProps = {
 };
 
 function createInitialFormState(vehicleId: string): MaintenanceDetailsFormState {
+  // Use the first option from the dynamic generator (= today) as the default
+  const dateOptions = generateDateOptions(4);
+  const defaultDate = dateOptions[0]?.key ?? new Date().toISOString().slice(0, 10);
+
   return {
     vehicle: resolveDefaultMaintenanceVehicle(vehicleId),
     serviceType: "scheduled-annual",
     serviceCentre: "official-porsche",
-    issueDescription:
-      "Annual service due. Slight vibration at high speed noticed.",
-    preferredDate: "may-1",
+    issueDescription: "",
+    preferredDate: defaultDate,
     preferredTime: "afternoon",
   };
 }
@@ -42,6 +53,9 @@ export function MaintenanceServiceModal({
   const [form, setForm] = useState<MaintenanceDetailsFormState>(() =>
     createInitialFormState(vehicleId),
   );
+  const [referenceNumber, setReferenceNumber] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const isTracking = step === 4;
 
@@ -52,19 +66,48 @@ export function MaintenanceServiceModal({
   function handleClose() {
     setStep(1);
     setForm(createInitialFormState(vehicleId));
+    setReferenceNumber("");
+    setSubmitError(null);
+    setIsSubmitting(false);
     onClose();
   }
 
   function handleEditRequest() {
+    setSubmitError(null);
     setStep(1);
   }
 
   function handleContinueToReview() {
+    setSubmitError(null);
     setStep(2);
   }
 
-  function handleConfirmSubmit() {
-    setStep(3);
+  async function handleConfirmSubmit() {
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      const profile = await authApi.getProfile();
+      const memberId = profile.data.id;
+
+      if (!memberId) {
+        throw new Error("Unable to resolve member profile");
+      }
+
+      const response = await memberMaintenanceApi.createRequest(
+        buildMaintenanceRequestBody(memberId, vehicleId, form),
+      );
+
+      setReferenceNumber(resolveMaintenanceReferenceNumber(response.data));
+      setStep(3);
+    } catch (error) {
+      setSubmitError(
+        (error as { message?: string }).message ??
+          "Failed to submit maintenance request. Please try again.",
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   function handleTrackRequest() {
@@ -87,21 +130,31 @@ export function MaintenanceServiceModal({
   } else if (step === 2) {
     footer = (
       <div className="flex flex-col gap-3">
-        <button
-          type="button"
-          onClick={handleConfirmSubmit}
-          className={`${memberRequestModalPrimaryButtonFullClass} gap-2 uppercase`}
-        >
-          Confirm &amp; Submit
-          <RightArrow className="shrink-0" />
-        </button>
-        <button
-          type="button"
-          onClick={handleEditRequest}
-          className={`${memberRequestModalSecondaryButtonClass} w-full flex-none text-primary`}
-        >
-          Edit Request
-        </button>
+        {submitError ? (
+          <p className="font-roboto text-center text-[12px] text-pink">
+            {submitError}
+          </p>
+        ) : null}
+
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={handleEditRequest}
+            disabled={isSubmitting}
+            className={memberRequestModalSecondaryButtonClass}
+          >
+            Edit Request
+          </button>
+          <button
+            type="button"
+            onClick={handleConfirmSubmit}
+            disabled={isSubmitting}
+            className={`${memberRequestModalPrimaryButtonClass} gap-2 uppercase`}
+          >
+            {isSubmitting ? "Submitting..." : "Confirm & Submit"}
+            {!isSubmitting && <RightArrow className="shrink-0" />}
+          </button>
+        </div>
       </div>
     );
   } else if (step === 3) {
@@ -116,10 +169,10 @@ export function MaintenanceServiceModal({
         </button>
         <button
           type="button"
-          onClick={handleEditRequest}
+          onClick={handleClose}
           className={`${memberRequestModalSecondaryButtonClass} w-full flex-none text-primary`}
         >
-          Edit Request
+          Back to Requests
         </button>
       </div>
     );
@@ -145,7 +198,7 @@ export function MaintenanceServiceModal({
       }
       titleBefore={isTracking ? "Track " : "Maintenance & "}
       titleAfter={isTracking ? "Request" : "Service"}
-      stepper={isTracking ? undefined : <TransportDeliveryStepper currentStep={step} />}
+      stepper={isTracking ? undefined : <RequestStepper currentStep={step} />}
       footer={footer}
     >
       {step === 1 && (
@@ -154,7 +207,12 @@ export function MaintenanceServiceModal({
 
       {step === 2 && <MaintenanceServiceReviewStep form={form} />}
 
-      {step === 3 && <MaintenanceServiceConfirmedStep form={form} />}
+      {step === 3 && (
+        <MaintenanceServiceConfirmedStep
+          form={form}
+          referenceNumber={referenceNumber}
+        />
+      )}
 
       {step === 4 && <MaintenanceServiceTrackRequestStep form={form} />}
     </MemberRequestModalFrame>

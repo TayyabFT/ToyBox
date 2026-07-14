@@ -1,3 +1,4 @@
+import { SHORT_MONTHS } from "../shared/dateUtils";
 import type {
   MaintenanceDateKey,
   MaintenanceServiceCentreKey,
@@ -12,8 +13,8 @@ export const MAINTENANCE_VEHICLES: {
   reviewLabel: string;
 }[] = [
   { key: "huracan-sto", label: "Huracán STO", reviewLabel: "Lamborghini Huracán STO" },
-  { key: "911-gt3", label: "911 GT3", reviewLabel: "Porsche 911 GT3" },
-  { key: "sf90", label: "SF90", reviewLabel: "Ferrari SF90" },
+  { key: "911-gt3",     label: "911 GT3",     reviewLabel: "Porsche 911 GT3" },
+  { key: "sf90",        label: "SF90",        reviewLabel: "Ferrari SF90" },
 ];
 
 export const MAINTENANCE_SERVICE_TYPES: {
@@ -79,99 +80,64 @@ export const MAINTENANCE_SERVICE_CENTRES: {
   },
 ];
 
-export const MAINTENANCE_DATE_OPTIONS: {
-  key: MaintenanceDateKey;
-  weekday: string;
-  day: string;
-  month: string;
-}[] = [
-  { key: "apr-30", weekday: "Wed", day: "30", month: "Apr" },
-  { key: "may-1", weekday: "Thu", day: "1", month: "May" },
-  { key: "may-2", weekday: "Fri", day: "2", month: "May" },
-  { key: "may-3", weekday: "Sat", day: "3", month: "May" },
-];
-
 export const MAINTENANCE_TIME_OPTIONS: {
   key: MaintenanceTimeWindowKey;
   label: string;
   reviewLabel: string;
 }[] = [
-  { key: "morning", label: "Morning · 8–12", reviewLabel: "Morning · 8:00–12:00" },
-  {
-    key: "afternoon",
-    label: "Afternoon · 12–5",
-    reviewLabel: "Afternoon · 12:00–17:00",
-  },
-  { key: "evening", label: "Evening · 5–8", reviewLabel: "Evening · 17:00–20:00" },
-  { key: "flexible", label: "Flexible", reviewLabel: "Flexible" },
+  { key: "morning",   label: "Morning · 8–12",   reviewLabel: "Morning · 8:00–12:00" },
+  { key: "afternoon", label: "Afternoon · 12–5", reviewLabel: "Afternoon · 12:00–17:00" },
+  { key: "evening",   label: "Evening · 5–8",    reviewLabel: "Evening · 17:00–20:00" },
+  { key: "flexible",  label: "Flexible",          reviewLabel: "Flexible" },
 ];
 
-const MAINTENANCE_YEAR = 2025;
+// ── Lookup helpers ────────────────────────────────────────────────────────────
 
 export function getMaintenanceVehicle(key: MaintenanceVehicleKey) {
-  return (
-    MAINTENANCE_VEHICLES.find((vehicle) => vehicle.key === key) ??
-    MAINTENANCE_VEHICLES[1]
-  );
+  return MAINTENANCE_VEHICLES.find((v) => v.key === key) ?? MAINTENANCE_VEHICLES[1];
 }
 
 export function getMaintenanceServiceType(key: MaintenanceServiceTypeKey) {
-  return (
-    MAINTENANCE_SERVICE_TYPES.find((type) => type.key === key) ??
-    MAINTENANCE_SERVICE_TYPES[0]
-  );
+  return MAINTENANCE_SERVICE_TYPES.find((t) => t.key === key) ?? MAINTENANCE_SERVICE_TYPES[0];
 }
 
 export function getMaintenanceServiceCentre(key: MaintenanceServiceCentreKey) {
-  return (
-    MAINTENANCE_SERVICE_CENTRES.find((centre) => centre.key === key) ??
-    MAINTENANCE_SERVICE_CENTRES[0]
-  );
-}
-
-export function getMaintenanceDateOption(key: MaintenanceDateKey) {
-  return (
-    MAINTENANCE_DATE_OPTIONS.find((option) => option.key === key) ??
-    MAINTENANCE_DATE_OPTIONS[1]
-  );
+  return MAINTENANCE_SERVICE_CENTRES.find((c) => c.key === key) ?? MAINTENANCE_SERVICE_CENTRES[0];
 }
 
 export function getMaintenanceTimeOption(key: MaintenanceTimeWindowKey) {
-  return (
-    MAINTENANCE_TIME_OPTIONS.find((option) => option.key === key) ??
-    MAINTENANCE_TIME_OPTIONS[1]
-  );
+  return MAINTENANCE_TIME_OPTIONS.find((o) => o.key === key) ?? MAINTENANCE_TIME_OPTIONS[1];
 }
 
+// ── Date helpers ──────────────────────────────────────────────────────────────
+
+function parseDateKey(key: MaintenanceDateKey): Date {
+  const parsed = new Date(key);
+  return Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+}
+
+/** "Thursday, 1 May 2026" */
 export function formatMaintenanceFullDate(key: MaintenanceDateKey): string {
-  const option = getMaintenanceDateOption(key);
-  const monthIndex = option.month === "Apr" ? 3 : 4;
-  const monthLabel = option.month === "Apr" ? "April" : "May";
-  const date = new Date(MAINTENANCE_YEAR, monthIndex, Number(option.day));
-  const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
-
-  return `${weekday}, ${option.day} ${monthLabel} ${MAINTENANCE_YEAR}`;
+  const d = parseDateKey(key);
+  return d.toLocaleDateString("en-GB", {
+    weekday: "long",
+    day:     "numeric",
+    month:   "long",
+    year:    "numeric",
+  });
 }
 
+/** "1 May 2026" */
 export function formatMaintenanceShortDate(key: MaintenanceDateKey): string {
-  const option = getMaintenanceDateOption(key);
-  return `${option.day} ${option.month} ${MAINTENANCE_YEAR}`;
+  const d = parseDateKey(key);
+  return `${d.getDate()} ${SHORT_MONTHS[d.getMonth()]} ${d.getFullYear()}`;
 }
+
+// ── Misc formatters ───────────────────────────────────────────────────────────
 
 export function formatMaintenanceIssueNote(description: string): string {
   const normalized = description.trim();
-
-  if (!normalized) {
-    return "No issue noted";
-  }
-
-  if (
-    normalized.toLowerCase().includes("annual") &&
-    normalized.toLowerCase().includes("vibration")
-  ) {
-    return "Annual + vibration at speed";
-  }
-
+  if (!normalized) return "No issue noted";
   return normalized.length > 42 ? `${normalized.slice(0, 39)}...` : normalized;
 }
 
@@ -179,34 +145,19 @@ export function formatMaintenanceTrackingTitle(
   vehicleKey: MaintenanceVehicleKey,
   serviceTypeKey: MaintenanceServiceTypeKey,
 ): string {
-  const vehicle = getMaintenanceVehicle(vehicleKey);
+  const vehicle     = getMaintenanceVehicle(vehicleKey);
   const serviceType = getMaintenanceServiceType(serviceTypeKey);
-
   return `${vehicle.label} — ${serviceType.trackingLabel}`;
 }
 
-export function formatMaintenanceTrackingTime(
-  timeKey: MaintenanceTimeWindowKey,
-): string {
+export function formatMaintenanceTrackingTime(timeKey: MaintenanceTimeWindowKey): string {
   const option = getMaintenanceTimeOption(timeKey);
-  const match = option.reviewLabel.match(/·\s*(.+)$/);
+  const match  = option.reviewLabel.match(/·\s*(.+)$/);
   return match?.[1] ?? option.reviewLabel;
 }
 
-export function formatMaintenanceRequestRef(dateKey: MaintenanceDateKey): string {
-  const option = getMaintenanceDateOption(dateKey);
-  const monthNumber = option.month === "Apr" ? "04" : "05";
-  const day = option.day.padStart(2, "0");
-
-  return `SVC-2025-${monthNumber}${day}-014`;
-}
-
 export function resolveDefaultMaintenanceVehicle(
-  vehicleId: string,
+  _vehicleId: string,
 ): MaintenanceVehicleKey {
-  if (vehicleId === "3") {
-    return "911-gt3";
-  }
-
   return "911-gt3";
 }

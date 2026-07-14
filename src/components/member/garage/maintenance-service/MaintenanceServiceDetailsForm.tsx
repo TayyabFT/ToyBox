@@ -3,11 +3,11 @@ import {
   MemberServiceCentreWorkshopIcon,
 } from "@/components/common/Svgs";
 import {
+  PreferredDatePicker,
   RequestFieldLabel,
   RequestRadioDot,
 } from "../shared/requestFormUi";
 import {
-  MAINTENANCE_DATE_OPTIONS,
   MAINTENANCE_SERVICE_CENTRES,
   MAINTENANCE_SERVICE_TYPES,
   MAINTENANCE_TIME_OPTIONS,
@@ -21,19 +21,19 @@ type MaintenanceServiceDetailsFormProps = {
 };
 
 function ServiceCentreIcon({ type }: { type: "star" | "workshop" }) {
-  const shellClass =
+  const base =
     "flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/35 bg-primary/8";
 
   if (type === "star") {
     return (
-      <span className={shellClass}>
+      <span className={base}>
         <MemberServiceCentreStarIcon className="size-[18px]" />
       </span>
     );
   }
 
   return (
-    <span className={`${shellClass} border-accent/20 bg-accent/5`}>
+    <span className={`${base} border-accent/20 bg-accent/5`}>
       <MemberServiceCentreWorkshopIcon className="size-[18px]" />
     </span>
   );
@@ -45,6 +45,7 @@ export function MaintenanceServiceDetailsForm({
 }: MaintenanceServiceDetailsFormProps) {
   return (
     <div className="space-y-6">
+      {/* Vehicle */}
       <div className="space-y-2.5">
         <RequestFieldLabel>Vehicle</RequestFieldLabel>
         <div className="flex flex-wrap gap-2.5">
@@ -69,6 +70,7 @@ export function MaintenanceServiceDetailsForm({
         </div>
       </div>
 
+      {/* Service Type */}
       <div className="space-y-2.5">
         <RequestFieldLabel>Service Type</RequestFieldLabel>
         <div className="space-y-2.5">
@@ -90,7 +92,9 @@ export function MaintenanceServiceDetailsForm({
                 <span className="min-w-0 flex-1">
                   <span
                     className={`font-roboto block text-[13px] ${
-                      selected ? "font-semibold text-foreground" : "font-medium text-foreground"
+                      selected
+                        ? "font-semibold text-foreground"
+                        : "font-medium text-foreground"
                     }`}
                   >
                     {option.title}
@@ -105,6 +109,7 @@ export function MaintenanceServiceDetailsForm({
         </div>
       </div>
 
+      {/* Service Centre */}
       <div className="space-y-2.5">
         <RequestFieldLabel>Preferred Service Centre</RequestFieldLabel>
         <div className="space-y-2.5">
@@ -126,7 +131,9 @@ export function MaintenanceServiceDetailsForm({
                 <span className="min-w-0 flex-1">
                   <span
                     className={`font-roboto block text-[13px] ${
-                      selected ? "font-semibold text-foreground" : "font-medium text-foreground"
+                      selected
+                        ? "font-semibold text-foreground"
+                        : "font-medium text-foreground"
                     }`}
                   >
                     {centre.title}
@@ -142,55 +149,26 @@ export function MaintenanceServiceDetailsForm({
         </div>
       </div>
 
+      {/* Issue description */}
       <div className="space-y-2.5">
         <RequestFieldLabel>Describe the Issue</RequestFieldLabel>
         <textarea
           value={value.issueDescription}
-          onChange={(event) =>
-            onChange({ issueDescription: event.target.value })
-          }
+          onChange={(e) => onChange({ issueDescription: e.target.value })}
           rows={3}
-          className="font-roboto min-h-[86px] w-full resize-none rounded-lg border border-accent/15 bg-dark px-4 py-4 text-[14px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
           placeholder="Tell us what needs attention."
+          className="font-roboto min-h-[86px] w-full resize-none rounded-lg border border-accent/15 bg-dark px-4 py-4 text-[14px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
         />
       </div>
 
-      <div className="space-y-2.5">
-        <RequestFieldLabel>Preferred Date</RequestFieldLabel>
-        <div className="grid grid-cols-4 gap-2.5">
-          {MAINTENANCE_DATE_OPTIONS.map((option) => {
-            const selected = value.preferredDate === option.key;
+      {/* Preferred Date — shared tall picker */}
+      <PreferredDatePicker
+        value={value.preferredDate}
+        onChange={(key) => onChange({ preferredDate: key })}
+        variant="tall"
+      />
 
-            return (
-              <button
-                key={option.key}
-                type="button"
-                onClick={() => onChange({ preferredDate: option.key })}
-                className={`font-roboto flex h-[77px] flex-col items-center justify-center rounded-lg border text-center transition-colors ${
-                  selected
-                    ? "border-primary bg-primary/6 text-primary"
-                    : "border-accent/15 bg-dark text-secondary hover:border-accent/30"
-                }`}
-              >
-                <span className="text-[9px] font-bold tracking-[0.18em] uppercase">
-                  {option.weekday}
-                </span>
-                <span
-                  className={`mt-1 font-copperplate text-[24px] leading-none ${
-                    selected ? "text-primary" : "text-foreground"
-                  }`}
-                >
-                  {option.day}
-                </span>
-                <span className="mt-0.5 text-[11px] font-medium">
-                  {option.month}
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
+      {/* Preferred Time */}
       <div className="space-y-2.5">
         <RequestFieldLabel>Preferred Time</RequestFieldLabel>
         <div className="grid grid-cols-2 gap-2.5">

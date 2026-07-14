@@ -1,5 +1,5 @@
-import { ClubhouseRestaurantListPage } from "@/components/admin/clubhouse/restaurant";
+import { ClubhouseAreaServicesPage } from "@/components/admin/clubhouse/area-services";
 
 export default function AdminClubhouseRestaurantPage() {
-  return <ClubhouseRestaurantListPage />;
+  return <ClubhouseAreaServicesPage areaId="restaurant" />;
 }

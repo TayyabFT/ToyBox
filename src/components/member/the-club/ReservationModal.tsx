@@ -6,21 +6,97 @@ import { authApi } from "@/api/auth.api";
 import { clubhouseApi } from "@/api/clubhouse.api";
 import type { MemberClubVenue } from "@/components/member/dashboard/types";
 import { IconSelectArea, IconCalendar } from "@/components/common/Svgs";
-import type { ClubhouseSlotAvailability, ClubhouseReservationResponseData } from "@/types/api";
+import type { ClubhouseSlotAvailability, ClubhouseReservationResponseData, ClubhouseSpaceCardRaw } from "@/types/api";
 
 type ReservationModalProps = {
   venue: MemberClubVenue;
   onClose: () => void;
   allVenues?: MemberClubVenue[];
+  initialSpaceId?: string;
 };
 
-export function ReservationModal({ venue, onClose, allVenues = [] }: ReservationModalProps) {
+// ── Category → areaType mapping ───────────────────────────────────────────────
+const CATEGORY_TO_AREA_TYPE: Record<string, string> = {
+  "Members' Lounge":       "private_lounge",
+  "Private Suites":        "suite_lounge",
+  "Clubhouse Restaurant":  "restaurant",
+};
+
+// ── Grouped sub-categories per venue ─────────────────────────────────────────
+const VENUE_CATEGORIES: Record<string, { group: string; items: string[] }[]> = {
+  "Members' Lounge": [
+    {
+      group: "Members' Lounge",
+      items: [
+        "Workspace / co-working desks",
+        "Cigar rooms",
+        "Faraday Room",
+        "General lounge areas",
+        "Private meeting pods",
+      ],
+    },
+  ],
+  "Private Suites": [
+    {
+      group: "Private Suites",
+      items: [
+        "Meeting rooms",
+        "Conference rooms",
+        "Private offices",
+        "Executive suites",
+      ],
+    },
+  ],
+  "Clubhouse Restaurant": [
+    {
+      group: "Clubhouse Restaurant",
+      items: [
+        "Restaurant reservations",
+        "Private dining",
+        "Dining events",
+      ],
+    },
+  ],
+};
+
+// Determine the label for the dropdown based on the selected venue's top-level name
+function resolveDropdownLabel(venueName: string): string {
+  if (venueName === "Members' Lounge") return "Select Lounge category";
+  if (venueName === "Private Suites") return "Select Suites category";
+  if (venueName === "Clubhouse Restaurant") return "Select Restaurant category";
+  return "Select category";
+}
+
+// Resolve which top-level venue a sub-category belongs to
+function resolveParentVenue(subCategory: string): string {
+  for (const [venueName, groups] of Object.entries(VENUE_CATEGORIES)) {
+    for (const group of groups) {
+      if (group.items.includes(subCategory)) return venueName;
+    }
+  }
+  return subCategory;
+}
+
+export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceId }: ReservationModalProps) {
   const [step, setStep] = useState<number>(1);
 
+  // Determine initial top-level venue and default sub-category
+  const initialVenueName = venue.name;
+  const initialSubCategory =
+    VENUE_CATEGORIES[initialVenueName]?.[0]?.items[0] ?? initialVenueName;
+
   // Step 1 states
-  const [selectedArea, setSelectedArea] = useState<string>(venue.name);
+  const [selectedArea, setSelectedArea] = useState<string>(initialSubCategory);
+  const [selectedTopVenue, setSelectedTopVenue] = useState<string>(initialVenueName);
   const [isAreaDropdownOpen, setIsAreaDropdownOpen] = useState<boolean>(false);
   const [areaSearch, setAreaSearch] = useState<string>("");
+
+  // Fetched spaces — pre-select the clicked space if initialSpaceId provided
+  const [fetchedSpaces, setFetchedSpaces] = useState<ClubhouseSpaceCardRaw[]>([]);
+  const [loadingSpaces, setLoadingSpaces] = useState<boolean>(false);
+  const [selectedSpaceId, setSelectedSpaceId] = useState<string>(initialSpaceId ?? "");
+  const [isSpaceDropdownOpen, setIsSpaceDropdownOpen] = useState<boolean>(false);
+  const spaceDropdownRef = useRef<HTMLDivElement>(null);
 
   // Calendar state
   const today = new Date();
@@ -55,12 +131,7 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
     return cells;
   })();
 
-  const times = [
-    "11:30 AM", "12:00 PM", "12:30 PM", "1:00 PM",
-    "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM",
-    "7:00 PM", "7:30 PM", "8:00 PM", "8:30 PM"
-  ];
-  const [selectedTime, setSelectedTime] = useState<string>("1:30 PM");
+  const [selectedTime, setSelectedTime] = useState<string>("");
 
   const [slotsAvailability, setSlotsAvailability] = useState<ClubhouseSlotAvailability[]>([]);
   const [loadingAvailability, setLoadingAvailability] = useState<boolean>(false);
@@ -127,11 +198,35 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
     }
   }, [isDateDropdownOpen]);
 
-  // Click outside listener for dropdowns
+  // Fetch spaces when top-level venue OR selected sub-category changes
+  useEffect(() => {
+    const areaType = CATEGORY_TO_AREA_TYPE[selectedTopVenue];
+    if (!areaType) return;
+    setLoadingSpaces(true);
+    setFetchedSpaces([]);
+    clubhouseApi.getSpacesByCategory(areaType, selectedArea)
+      .then((res) => {
+        if (res.success && res.data?.spaces?.length) {
+          const spaces = res.data.spaces;
+          setFetchedSpaces(spaces);
+          // Only auto-select first if we don't already have a pre-selected space
+          setSelectedSpaceId(prev => {
+            if (prev && spaces.some(s => s.id === prev)) return prev;
+            return spaces[0].id;
+          });
+        }
+      })
+      .catch(() => {/* silent */})
+      .finally(() => setLoadingSpaces(false));
+  }, [selectedTopVenue, selectedArea]);
+
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (areaRef.current && !areaRef.current.contains(event.target as Node)) {
         setIsAreaDropdownOpen(false);
+      }
+      if (spaceDropdownRef.current && !spaceDropdownRef.current.contains(event.target as Node)) {
+        setIsSpaceDropdownOpen(false);
       }
       // Close date calendar if click is outside both trigger and portal
       if (
@@ -156,28 +251,37 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
     if (step > 1) setStep(step - 1);
   };
 
-  // Map selected name to areaId
-  const currentVenue = allVenues.find(v => v.name === selectedArea) || venue;
-  const areaId = currentVenue?.id;
+  // Map selected sub-category back to the parent venue for API calls
+  const currentVenue = allVenues.find(v => v.name === selectedTopVenue) || venue;
+  // Use the specifically selected space ID if available, otherwise fall back to parent venue id
+  const areaId = selectedSpaceId || currentVenue?.id;
+
+  // Capacity of the selected space — drives the guest cap
+  const selectedSpace = fetchedSpaces.find(s => s.id === selectedSpaceId) ?? null;
+  const spaceCapacity: number = selectedSpace?.capacity ?? 12;
+
+  // Clamp guests whenever the selected space changes (capacity may differ)
+  useEffect(() => {
+    if (spaceCapacity > 0 && guests > spaceCapacity) {
+      setGuests(spaceCapacity);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedSpaceId]);
 
   // Fetch slot availability from API
   useEffect(() => {
     if (!areaId) return;
     setLoadingAvailability(true);
+    setSlotsAvailability([]);
+    setSelectedTime("");
     const dateStr = selectedDateObj.toISOString().slice(0, 10);
     clubhouseApi.getAvailability(areaId, dateStr, guests)
       .then((res) => {
         if (res.success && res.data?.slots) {
           setSlotsAvailability(res.data.slots);
-
-          // Auto-select first available time slot if the current is not available
-          const currentSlot = res.data.slots.find(s => s.timeSlot === selectedTime);
-          if (!currentSlot || !currentSlot.available) {
-            const firstAvail = res.data.slots.find(s => s.available);
-            if (firstAvail) {
-              setSelectedTime(firstAvail.timeSlot);
-            }
-          }
+          // Auto-select first available slot
+          const firstAvail = res.data.slots.find(s => s.available);
+          if (firstAvail) setSelectedTime(firstAvail.timeSlot);
         }
       })
       .catch((err) => {
@@ -216,10 +320,14 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
     const dateStr = selectedDateObj.toISOString().slice(0, 10);
     const billedToMapped = paymentMethod === "card" ? "saved_card" : "member_account";
 
+    // selectedTime is "12:00 PM - 12:30 PM" — split into fromTime / toTime
+    const [fromTime, toTime] = selectedTime.split(" - ").map(t => t.trim());
+
     clubhouseApi.createReservation({
       areaId,
       date: dateStr,
-      timeSlot: selectedTime,
+      fromTime,
+      toTime: toTime || undefined,
       guests,
       occasion: selectedOccasion || null,
       specialRequests: specialRequests || null,
@@ -245,21 +353,19 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
   };
 
   // Pricing calculations
-  const isRestaurant = selectedArea.toLowerCase().includes("restaurant") || selectedArea.toLowerCase().includes("clubhouse");
-  const isSuite = selectedArea.toLowerCase().includes("suite");
+  const isRestaurant = selectedTopVenue === "Clubhouse Restaurant";
+  const isSuite = selectedTopVenue === "Private Suites";
 
   const tableHoldCost = isSuite ? 400 : 0;
   const fbMinimum = isSuite ? 200 : isRestaurant ? (guests * 200) : 300;
   const totalCost = tableHoldCost + fbMinimum;
 
-  // Venues to display in dropdown
-  const venueOptions = allVenues.length > 0
-    ? allVenues.map(v => v.name)
-    : ["The Clubhouse Restaurant", "Members' Lounge", "Private Suites"];
-
-  const filteredVenues = venueOptions.filter(name =>
-    name.toLowerCase().includes(areaSearch.toLowerCase())
-  );
+  // Sub-categories for the currently selected top-level venue
+  const activeCategories = VENUE_CATEGORIES[selectedTopVenue] ?? [];
+  const allSubItems = activeCategories.flatMap(g => g.items);
+  const filteredSubItems = areaSearch
+    ? allSubItems.filter(item => item.toLowerCase().includes(areaSearch.toLowerCase()))
+    : allSubItems;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
@@ -313,10 +419,10 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
           {/* STEP 1: DETAILS */}
           {step === 1 && (
             <>
-              {/* Select Area */}
+              {/* Select Category */}
               <div className="space-y-1.5" ref={areaRef}>
                 <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
-                  Select Area <span className="text-red-400">*</span>
+                  {resolveDropdownLabel(selectedTopVenue)} <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <button
@@ -348,32 +454,140 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
                         </svg>
                         <input
                           type="text"
-                          placeholder="Search area..."
+                          placeholder="Search..."
                           value={areaSearch}
                           onChange={(e) => setAreaSearch(e.target.value)}
                           className="w-full bg-transparent text-[11px] text-foreground outline-none placeholder:text-secondary/40"
                         />
                       </div>
-                      <div className="Custom__Scrollbar max-h-[140px] overflow-y-auto space-y-1">
-                        {filteredVenues.map((option) => (
+                      <div className="Custom__Scrollbar max-h-[180px] overflow-y-auto space-y-1">
+                        {filteredSubItems.map((item) => (
                           <button
-                            key={option}
+                            key={item}
                             onClick={() => {
-                              setSelectedArea(option);
+                              setSelectedArea(item);
+                              setSelectedTopVenue(resolveParentVenue(item));
                               setIsAreaDropdownOpen(false);
                               setAreaSearch("");
                             }}
-                            className={`w-full text-left px-3 py-2 rounded-lg text-[12px] transition-colors ${selectedArea === option
+                            className={`w-full text-left px-3 py-2 rounded-lg text-[12px] transition-colors ${selectedArea === item
                               ? "bg-accent/10 text-accent font-medium"
                               : "text-foreground-soft hover:bg-white/5"
                               }`}
                           >
-                            {option}
+                            {item}
                           </button>
                         ))}
                       </div>
                     </div>
                   )}
+                </div>
+              </div>
+
+              {/* Select Space — populated from API after category selection */}
+              <div className="space-y-1.5" ref={spaceDropdownRef}>
+                <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase flex items-center gap-2">
+                  Select Space <span className="text-red-400">*</span>
+                  {loadingSpaces && (
+                    <span className="font-Roboto text-[9px] text-accent/70 normal-case tracking-[0.1em] animate-pulse">
+                      Loading...
+                    </span>
+                  )}
+                </label>
+                <div className="relative">
+                  <button
+                    disabled={loadingSpaces || fetchedSpaces.length === 0}
+                    onClick={() => setIsSpaceDropdownOpen(!isSpaceDropdownOpen)}
+                    className={`w-full font-Roboto bg-[#11100C] border px-4 py-3 rounded-xl flex items-center justify-between text-[13px] outline-none text-left transition-colors ${
+                      loadingSpaces || fetchedSpaces.length === 0
+                        ? "border-accent/8 text-secondary/40 cursor-not-allowed"
+                        : "border-accent/15 text-foreground hover:border-accent/30"
+                    }`}
+                  >
+                    <span className="flex items-center gap-2.5">
+                      <IconSelectArea />
+                      {loadingSpaces
+                        ? "Fetching spaces..."
+                        : fetchedSpaces.length === 0
+                          ? "No spaces available"
+                          : (fetchedSpaces.find(s => s.id === selectedSpaceId)?.title ?? "Select a space")}
+                    </span>
+                    {!loadingSpaces && fetchedSpaces.length > 0 && (
+                      <svg
+                        width="8" height="5" viewBox="0 0 10 6" fill="none"
+                        stroke="currentColor" strokeWidth="1.5"
+                        className={`transition-transform duration-200 ${isSpaceDropdownOpen ? "rotate-180" : ""}`}
+                      >
+                        <path d="M1 1l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    )}
+                  </button>
+
+                  {isSpaceDropdownOpen && fetchedSpaces.length > 0 && (
+                    <div className="absolute top-full left-0 right-0 mt-1 z-30 bg-[#11100C] border border-accent/20 rounded-xl shadow-xl overflow-hidden p-2">
+                      <div className="Custom__Scrollbar max-h-[200px] overflow-y-auto space-y-1">
+                        {fetchedSpaces.map((space) => (
+                          <button
+                            key={space.id}
+                            onClick={() => {
+                              setSelectedSpaceId(space.id);
+                              setIsSpaceDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2.5 rounded-lg transition-colors ${
+                              selectedSpaceId === space.id
+                                ? "bg-accent/10 text-accent font-medium"
+                                : "text-foreground-soft hover:bg-white/5"
+                            }`}
+                          >
+                            <div className="font-Roboto text-[12px] leading-tight">{space.title}</div>
+                            {space.description && (
+                              <div className="font-Roboto text-[10px] text-secondary/55 mt-0.5 truncate">
+                                {space.description}
+                              </div>
+                            )}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+               {/* Guests Selector */}
+              <div className="space-y-1.5">
+                <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
+                  Guests <span className="text-secondary/50">(Pax)</span> <span className="text-red-400">*</span>
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center bg-[#11100C] border border-accent/15 rounded-xl overflow-hidden p-1">
+                    <button
+                      onClick={() => setGuests(prev => Math.max(1, prev - 1))}
+                      disabled={guests <= 1}
+                      className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[18px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      -
+                    </button>
+                    <span className="font-Roboto font-bold text-[14px] text-white w-10 text-center">
+                      {guests}
+                    </span>
+                    <button
+                      onClick={() => setGuests(prev => Math.min(spaceCapacity, prev + 1))}
+                      disabled={guests >= spaceCapacity}
+                      className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[16px] font-medium transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    >
+                      +
+                    </button>
+                  </div>
+                  <div className="flex flex-col gap-0.5">
+                    <span className="font-Roboto text-[11px] text-secondary/60">
+                      Max {spaceCapacity} guests
+                    </span>
+                    {guests >= spaceCapacity && (
+                      <span className="font-Roboto text-[10px] text-accent/80 tracking-[0.08em]">
+                        At capacity
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -556,60 +770,67 @@ export function ReservationModal({ venue, onClose, allVenues = [] }: Reservation
                     </span>
                   )}
                 </div>
-                <div className="grid grid-cols-4 gap-2">
-                  {times.map((t) => {
-                    const match = slotsAvailability.find(s => s.timeSlot === t);
-                    const isAvailable = match ? match.available : true; // default true if not fetched
-                    const isDisabled = !isAvailable && !loadingAvailability;
 
-                    return (
-                      <button
-                        key={t}
-                        disabled={isDisabled}
-                        onClick={() => setSelectedTime(t)}
-                        className={`py-2 px-1 text-[11px] font-Roboto font-medium rounded-lg text-center transition-all ${
-                          selectedTime === t
-                            ? "bg-accent text-dark font-bold shadow-[0_0_8px_rgba(212,168,71,0.25)]"
-                            : isDisabled
-                              ? "bg-[#11100C]/40 border border-transparent text-secondary/20 cursor-not-allowed"
-                              : "bg-[#11100C] border border-accent/10 text-foreground-soft hover:border-accent/25"
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Guests Selector */}
-              <div className="space-y-1.5">
-                <label className="font-Roboto tracking-[0.12em] text-[11px] font-semibold text-f1ead7cc uppercase">
-                  Guests <span className="text-secondary/50">(Pax)</span> <span className="text-red-400">*</span>
-                </label>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center bg-[#11100C] border border-accent/15 rounded-xl overflow-hidden p-1">
-                    <button
-                      onClick={() => setGuests(prev => Math.max(1, prev - 1))}
-                      className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[18px] font-medium transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="font-Roboto font-bold text-[14px] text-white w-10 text-center">
-                      {guests}
-                    </span>
-                    <button
-                      onClick={() => setGuests(prev => Math.min(12, prev + 1))}
-                      className="size-9 rounded-lg hover:bg-white/5 text-accent flex items-center justify-center text-[16px] font-medium transition-colors"
-                    >
-                      +
-                    </button>
+                {/* Loading skeleton */}
+                {loadingAvailability && (
+                  <div className="grid grid-cols-4 gap-2">
+                    {Array.from({ length: 8 }).map((_, i) => (
+                      <div
+                        key={i}
+                        className="py-2 px-1 h-9 rounded-lg bg-[#11100C] border border-accent/5 animate-pulse"
+                      />
+                    ))}
                   </div>
-                  <span className="font-Roboto text-[11px] text-secondary/60">
-                    Max 12 guests
-                  </span>
-                </div>
+                )}
+
+                {/* No space selected yet */}
+                {!loadingAvailability && !areaId && (
+                  <p className="font-Roboto text-[11px] text-secondary/40 py-2">
+                    Select a space above to see available times.
+                  </p>
+                )}
+
+                {/* No slots returned */}
+                {!loadingAvailability && areaId && slotsAvailability.length === 0 && (
+                  <p className="font-Roboto text-[11px] text-secondary/40 py-2">
+                    No time slots available for this date.
+                  </p>
+                )}
+
+                {/* Real slots from API */}
+                {!loadingAvailability && slotsAvailability.length > 0 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {slotsAvailability.map((slot) => {
+                      const isDisabled = !slot.available;
+                      const isSelected = selectedTime === slot.timeSlot;
+
+                      return (
+                        <button
+                          key={slot.timeSlot}
+                          disabled={isDisabled}
+                          onClick={() => setSelectedTime(slot.timeSlot)}
+                          className={`py-2 px-2 text-[10px] font-Roboto font-medium rounded-lg text-center transition-all ${
+                            isSelected
+                              ? "bg-accent text-dark font-bold shadow-[0_0_8px_rgba(212,168,71,0.25)]"
+                              : isDisabled
+                                ? "bg-[#11100C]/40 border border-transparent text-secondary/20 cursor-not-allowed line-through"
+                                : "bg-[#11100C] border border-accent/10 text-foreground-soft hover:border-accent/25"
+                          }`}
+                        >
+                          <span className="block leading-tight">{slot.timeSlot}</span>
+                          {slot.seatsRemaining !== null && !isDisabled && (
+                            <span className={`block text-[9px] mt-0.5 ${isSelected ? "text-dark/60" : "text-secondary/40"}`}>
+                              {slot.seatsRemaining} left
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
+
+             
 
               {/* Occasion Dropdown */}
               <div className="space-y-1.5" ref={occasionRef}>

@@ -1,6 +1,6 @@
-import type { ReactNode } from "react";
 import { MemberGarageReviewTargetIcon } from "@/components/common/Svgs";
-import { formatFullDate } from "../transport-delivery/dateFormat";
+import { ReviewRow } from "../shared/requestFormUi";
+import { formatFullDate } from "../shared/dateUtils";
 import {
   calculateWashTotal,
   formatWashEstimateSummary,
@@ -16,30 +16,6 @@ function ReviewTargetIcon() {
     <span className="flex size-10 shrink-0 items-center justify-center rounded-xl border border-primary/35 bg-primary/10">
       <MemberGarageReviewTargetIcon className="size-[22px]" />
     </span>
-  );
-}
-
-function ReviewRow({
-  label,
-  children,
-  align = "end",
-}: {
-  label: string;
-  children: ReactNode;
-  align?: "end" | "center";
-}) {
-  return (
-    <div className="flex items-center justify-between gap-4 border-b border-accent/8 py-3 last:border-b-0">
-      <span className="font-roboto shrink-0 text-[11px] text-secondary">{label}</span>
-      <div
-        className={`min-w-0 flex-1 ${align === "center"
-            ? "text-center"
-            : "text-right"
-          }`}
-      >
-        {children}
-      </div>
-    </div>
   );
 }
 

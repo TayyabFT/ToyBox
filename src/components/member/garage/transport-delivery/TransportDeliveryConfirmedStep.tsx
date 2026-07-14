@@ -1,17 +1,7 @@
 import { MemberGarageTransportSuccessCheck } from "@/components/common/Svgs";
-import { formatShortDate } from "./dateFormat";
+import { ConfirmedRow } from "../shared/requestFormUi";
+import { formatShortDate } from "../shared/dateUtils";
 import type { TransportDetailsFormState } from "./types";
-
-function ConfirmedRow({ label, value }: { label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between gap-4 py-2.5">
-      <span className="font-roboto text-[12px] text-secondary">{label}</span>
-      <span className="font-roboto max-w-[62%] text-right text-[12px] font-medium text-foreground">
-        {value}
-      </span>
-    </div>
-  );
-}
 
 type TransportDeliveryConfirmedStepProps = {
   requestNumber: string;

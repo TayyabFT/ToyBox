@@ -1,7 +1,12 @@
 import Link from "next/link";
 import type { MemberActivityItem } from "./types";
 import { MemberSectionEmpty } from "./MemberSectionEmpty";
-import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
+import {
+  dashboardSectionHeadingClass,
+  dashboardSectionHeadingPrefixClass,
+  dashboardSectionHeadingAccentClass,
+  dashboardSectionSubtitleClass,
+} from "./dashboardStyles";
 
 type MemberActivitySectionProps = {
   items: MemberActivityItem[];
@@ -12,7 +17,7 @@ function splitActivityTitle(title: string): { prefix: string; highlight: string 
   if (dashIdx !== -1) {
     return {
       prefix: title.slice(0, dashIdx).trim(),
-      highlight: title.slice(dashIdx).trim(),
+      highlight: title.slice(dashIdx + 1).trim(),
     };
   }
 
@@ -39,33 +44,45 @@ function ActivityRow({
   const titleHighlight = item.titleHighlight ?? split.highlight;
 
   return (
-    <div className="relative flex gap-4 pb-7 last:pb-0">
-      {/* Timeline node + connector */}
-      <div className="relative flex w-3.5 shrink-0 justify-center">
-        {!isLast && (
-          <span
-            aria-hidden
-            className="absolute top-[14px] h-[calc(100%+0.75rem)] w-px bg-accent/18"
-          />
+    <div className="relative flex gap-5">
+      {/* Timeline column — node + connector */}
+      <div className="relative flex w-4 shrink-0 flex-col items-center">
+        {/* Connector line — above node (hidden for first) */}
+        <div className="w-px flex-1 bg-accent/30" style={{ minHeight: 8 }} />
+
+        {/* Outer ring + inner filled dot */}
+        <span className="relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full border border-accent/60">
+          <span className="size-2.5 rounded-full bg-accent shadow-[0_0_5px_rgba(201,168,76,0.5)]" />
+        </span>
+
+        {/* Connector line — below node (hidden for last) */}
+        {!isLast ? (
+          <div className="w-px flex-1 bg-accent/30" style={{ minHeight: 24 }} />
+        ) : (
+          <div className="flex-1" />
         )}
-        <span className="relative z-10 mt-[3px] size-3.5 rounded-full border border-accent/70 bg-background" />
       </div>
 
       {/* Content */}
-      <div className="min-w-0 flex-1 space-y-1.5 pt-0">
-        <p className="font-roboto text-[9px] tracking-[0.12em] text-accent uppercase">
+      <div className="min-w-0 flex-1 pb-8 last:pb-0">
+        {/* Time label */}
+        <p className="font-roboto  text-[9px] font-semibold tracking-[0.16em] text-accent uppercase">
           {item.timeLabel}
         </p>
-        <h3 className="font-roboto text-[12px] font-bold leading-snug tracking-[0.03em] uppercase">
-          <span className="text-foreground">{titlePrefix}</span>
+
+        {/* Title — Copperplate, prefix white + em-dash + highlight gold */}
+        <h3 className="font-Copperplate text-[16px] font-bold leading-snug tracking-[0.03em] uppercase mb-1">
+          {titlePrefix}
           {titleHighlight && (
             <>
               {" "}
-              <span className="text-accent">{titleHighlight}</span>
+              <span className="text-accent">— {titleHighlight}</span>
             </>
           )}
         </h3>
-        <p className="font-roboto text-[11px] leading-relaxed text-secondary/70">
+
+        {/* Detail */}
+        <p className="font-Roboto text-[12px] leading-relaxed text-secondary/65 mb-2">
           {item.detail}
         </p>
       </div>
@@ -83,9 +100,7 @@ export function MemberActivitySection({ items }: MemberActivitySectionProps) {
             <span className={dashboardSectionHeadingPrefixClass}>Recent </span>
             <span className={dashboardSectionHeadingAccentClass}>Activity</span>
           </h2>
-          <p className={dashboardSectionSubtitleClass}>
-            Your last week
-          </p>
+          <p className={dashboardSectionSubtitleClass}>Your last week</p>
         </div>
         <Link
           href="/member/events"
@@ -108,20 +123,22 @@ export function MemberActivitySection({ items }: MemberActivitySectionProps) {
       </div>
 
       {/* Timeline */}
-      <div className="pl-0.5">
+      <div className="pl-1">
         {items.length === 0 ? (
           <MemberSectionEmpty
             title="No Recent Activity"
             description="Your recent bookings and events will appear here."
           />
         ) : (
-          items.map((item, index) => (
-            <ActivityRow
-              key={item.id}
-              item={item}
-              isLast={index === items.length - 1}
-            />
-          ))
+          <div className="flex flex-col">
+            {items.map((item, index) => (
+              <ActivityRow
+                key={item.id}
+                item={item}
+                isLast={index === items.length - 1}
+              />
+            ))}
+          </div>
         )}
       </div>
     </div>

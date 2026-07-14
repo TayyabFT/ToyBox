@@ -79,6 +79,7 @@ export function mapAskSteveToConciergeMessage(
     senderName: message.senderName,
     time: message.time,
     message: message.message,
+    thinking: message.pending && message.sender === "steve",
   };
 }
 

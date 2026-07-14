@@ -51,7 +51,7 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
   const { brand, model } = splitVehicleName(vehicle.name);
 
   return (
-    <div className="group flex overflow-hidden rounded-2xl border border-accent/10 bg-card transition-all duration-200 hover:border-accent/20">
+    <div className="group flex overflow-hidden rounded-2xl border border-accent/10 card-view transition-all duration-200 hover:border-accent/20">
 
       {/* Left — Image block, fixed size, relative for badge overlay */}
       <div className="relative h-[130px] w-[175px] shrink-0 overflow-hidden bg-elevated">
@@ -107,7 +107,7 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
               {brand}{" "}
               <span className="text-accent">{model}</span>
             </h3>
-            <p className="font-roboto mt-0.5 text-[9px] tracking-[0.1em] text-secondary/70 uppercase">
+            <p className="font-Roboto mt-0.5 text-[9px] tracking-[0.1em] text-secondary/70 uppercase">
               {[vehicle.year, vehicle.engine, vehicle.bay].filter(Boolean).join(" · ")}
             </p>
           </div>

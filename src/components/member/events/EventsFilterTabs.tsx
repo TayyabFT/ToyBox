@@ -28,8 +28,8 @@ export function EventsFilterTabs({ active, onChange }: EventsFilterTabsProps) {
             onClick={() => onChange(tab.id)}
             className={`font-roboto cursor-pointer rounded-full px-5 py-[8px] text-[11px] font-medium tracking-[0.02em] transition-colors duration-250 ${
               isActive
-                ? "bg-accent text-dark border-transparent"
-                : "border border-accent/25 text-primary hover:border-accent/40"
+                ? "border-transparent bg-accent text-dark"
+                : "border border-accent/25 bg-card text-secondary hover:border-accent/40 hover:text-accent"
             }`}
           >
             {tab.label}

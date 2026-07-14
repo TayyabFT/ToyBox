@@ -10,6 +10,9 @@ import {
   hasClubhouseImages,
 } from "@/lib/adminClubhouse";
 import type {
+  AdminClubhouseAreaOverviewResponse,
+  AdminClubhouseOverviewResponse,
+  AdminClubhouseReservationsResponse,
   AdminClubhouseRestaurantListResponse,
   CreateAdminClubhouseAreaResponse,
 } from "@/types/api";
@@ -18,13 +21,47 @@ import type {
   ClubhouseRestaurantFormState,
   ClubhouseSuiteLoungeFormState,
 } from "@/components/admin/clubhouse/add-area/types";
+import type { ClubhouseAreaId } from "@/components/admin/clubhouse/area-services/types";
 
 type AdminClubhouseRestaurantsQuery = {
   limit?: number;
   offset?: number;
 };
 
+type AdminClubhouseReservationsQuery = {
+  zone?: string;
+};
+
+const AREA_OVERVIEW_ENDPOINTS: Record<ClubhouseAreaId, string> = {
+  restaurant: API_ENDPOINTS.adminClubhouse.restaurantOverview,
+  private_lounge: API_ENDPOINTS.adminClubhouse.privateLoungeOverview,
+  suite_lounge: API_ENDPOINTS.adminClubhouse.suiteLoungeOverview,
+};
+
 export const adminClubhouseApi = {
+  getOverview: () =>
+    apiClient<AdminClubhouseOverviewResponse>(
+      API_ENDPOINTS.adminClubhouse.overview,
+    ),
+
+  getAreaOverview: (areaId: ClubhouseAreaId) =>
+    apiClient<AdminClubhouseAreaOverviewResponse>(
+      AREA_OVERVIEW_ENDPOINTS[areaId],
+    ),
+
+  getReservations: (query: AdminClubhouseReservationsQuery = {}) => {
+    const params = new URLSearchParams();
+
+    if (query.zone) params.set("zone", query.zone);
+
+    const qs = params.toString();
+    const endpoint = qs
+      ? `${API_ENDPOINTS.adminClubhouse.reservations}?${qs}`
+      : API_ENDPOINTS.adminClubhouse.reservations;
+
+    return apiClient<AdminClubhouseReservationsResponse>(endpoint);
+  },
+
   getRestaurants: (query: AdminClubhouseRestaurantsQuery = {}) => {
     const params = new URLSearchParams();
 

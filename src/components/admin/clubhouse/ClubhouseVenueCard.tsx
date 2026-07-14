@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { ElementType, ReactNode } from "react";
+import type { ElementType } from "react";
 import { ClubhouseVenueStatusBadge } from "./ClubhouseVenueStatusBadge";
 import type { ClubhouseVenueCard } from "./types";
 
@@ -7,26 +7,8 @@ type ClubhouseVenueCardProps = {
   venue: ClubhouseVenueCard;
 };
 
-function formatCapacity(
-  occupied: number,
-  capacity: number,
-  suffix?: string,
-): ReactNode {
-  const suffixText = suffix ? ` ${suffix}` : "";
-
-  return (
-    <>
-      <span className="font-medium text-primary">{occupied}</span>
-      <span className="text-secondary">
-        {" "}
-        / {capacity}
-        {suffixText}
-      </span>
-    </>
-  );
-}
-
 export function ClubhouseVenueCardItem({ venue }: ClubhouseVenueCardProps) {
+  const available = Math.max(0, venue.capacity - venue.occupied);
   const progressPercent =
     venue.capacity > 0
       ? Math.min(100, Math.round((venue.occupied / venue.capacity) * 100))
@@ -75,15 +57,13 @@ export function ClubhouseVenueCardItem({ venue }: ClubhouseVenueCardProps) {
         </div>
 
         <div className="flex items-center justify-between gap-3">
-          <span className="font-roboto text-[9px] tracking-[0.12em] text-secondary uppercase">
-            {venue.progressLabel}
+          <span className="font-roboto text-[9px] tracking-[0.12em] uppercase">
+            <span className="text-secondary">Available </span>
+            <span className="font-medium text-teal">{available}</span>
           </span>
-          <span className="font-roboto text-[9px] tracking-[0.1em] uppercase">
-            {formatCapacity(
-              venue.occupied,
-              venue.capacity,
-              venue.capacitySuffix,
-            )}
+          <span className="font-roboto text-[9px] tracking-[0.12em] uppercase">
+            <span className="text-secondary">Occupied </span>
+            <span className="font-medium text-primary">{venue.occupied}</span>
           </span>
         </div>
       </div>

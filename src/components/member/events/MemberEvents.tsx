@@ -9,6 +9,15 @@ import {
   setFilter,
 } from "@/store/slices/memberEventsSlice";
 import { showError, showSuccess } from "@/lib/toast";
+import {
+  dashboardSectionHeadingClass,
+  dashboardSectionSubtitleClass,
+} from "@/components/member/dashboard/dashboardStyles";
+import {
+  memberPageEyebrowClass,
+  memberPageTitleAccentClass,
+  memberPageTitleClass,
+} from "@/components/member/memberPageStyles";
 import { EventsFilterTabs } from "./EventsFilterTabs";
 import { EventsFeaturedCard, EventsGridCard } from "./EventCards";
 import type { EventFilter } from "./types";
@@ -147,14 +156,11 @@ export function MemberEvents() {
   // ── Return ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="mx-auto w-full max-w-5xl space-y-8 px-8 pb-12 pt-5 sm:space-y-10">
-      {/* ── Page header ─────────────────────────────────────────────────── */}
-      <div className="space-y-1.5">
-        <p className="font-roboto text-[10px] font-medium tracking-[0.24em] text-secondary uppercase">
-          UPCOMING
-        </p>
-        <h1 className="font-copperplate text-[38px] font-light leading-none tracking-[-0.75px] uppercase sm:text-[46px]">
-          <span className="text-foreground">Events</span>
+    <div className="space-y-8 p-8">
+      <div className="space-y-2">
+        <p className={memberPageEyebrowClass}>Upcoming</p>
+        <h1 className={memberPageTitleClass}>
+          <span className={memberPageTitleAccentClass}>Events</span>
         </h1>
       </div>
 
@@ -163,7 +169,7 @@ export function MemberEvents() {
 
       {/* ── Error banner (when data was loaded before but refresh fails) ── */}
       {error && loaded && (
-        <div className="font-roboto flex items-center justify-between rounded-xl border border-red-500/20 bg-red-500/8 px-4 py-3 text-[12px] text-red-300">
+        <div className="font-roboto flex items-center justify-between rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-[12px] text-red-500">
           <span>{error}</span>
           <button
             type="button"
@@ -198,7 +204,7 @@ export function MemberEvents() {
                 <div className="h-7 w-40 animate-pulse rounded bg-elevated" />
                 <div className="h-2.5 w-16 animate-pulse rounded bg-elevated" />
               </div>
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {[0, 1, 2].map((i) => (
                   <EventsSkeletonCard key={i} />
                 ))}
@@ -208,17 +214,17 @@ export function MemberEvents() {
         </>
       ) : groups.length > 0 ? (
         groups.map((group) => (
-          <section key={group.id} className="space-y-5">
-            <div className="space-y-1.5">
-              <h2 className="font-copperplate text-[24px] font-normal tracking-[0.04em] text-primary uppercase">
+            <section key={group.id} className="space-y-5">
+            <div>
+              <h2 className={`${dashboardSectionHeadingClass} text-primary`}>
                 {group.label}
               </h2>
-              <p className="font-roboto text-[9px] font-medium tracking-[0.18em] text-secondary/50 uppercase">
+              <p className={dashboardSectionSubtitleClass}>
                 {group.events.length}{" "}
-                {group.events.length === 1 ? "EVENT" : "EVENTS"}
+                {group.events.length === 1 ? "event" : "events"}
               </p>
             </div>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {group.events.map((event) => (
                 <EventsGridCard
                   key={event.id}
@@ -250,7 +256,7 @@ export function MemberEvents() {
 
       {/* ── First-load full-page error (no cached data at all) ──────────── */}
       {error && !loaded && (
-        <div className="flex min-h-[40vh] flex-col items-center justify-center gap-4 text-center">
+        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
           <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
             Events Unavailable
           </h2>
