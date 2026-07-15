@@ -61,6 +61,11 @@ export const API_ENDPOINTS = {
     detail: (id: string | number) => `/api/v1/admin/vehicles/${id}`,
     details: (id: string | number) => `/api/v1/admin/vehicles/${id}/details`,
   },
+  staffVehicles: {
+    summary: "/api/v1/staff/vehicles/summary",
+    assigned: "/api/v1/staff/vehicles/assigned",
+    assignedDetail: (id: string) => `/api/v1/staff/vehicles/assigned/${id}`,
+  },
   sourcing: {
     staffRequests: "/api/v1/staff/sourcing/requests",
     adminRequests: "/api/v1/admin/sourcing/requests",

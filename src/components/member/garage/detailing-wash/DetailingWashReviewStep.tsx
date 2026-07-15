@@ -35,7 +35,7 @@ export function DetailingWashReviewStep({
 
   return (
     <div className="space-y-4">
-      <div className="overflow-hidden rounded-2xl border border-accent/12 bg-[#141310 ]">
+      <div className="overflow-hidden rounded-2xl border border-accent/12 garage-review-card">
         <div className="flex items-center gap-3 border-b border-accent/8 px-4 py-3.5">
           <ReviewTargetIcon />
           <div className="min-w-0">
@@ -91,7 +91,7 @@ export function DetailingWashReviewStep({
         </div>
       </div>
 
-      <div className="flex items-center justify-between gap-4 rounded-2xl border border-accent/12 bg-[#141310] px-4 py-3.5">
+      <div className="flex items-center justify-between gap-4 rounded-2xl border border-accent/12 garage-review-card px-4 py-3.5">
         <div className="min-w-0">
           <p className="font-roboto text-[12px] font-semibold text-foreground">
             Total Estimate

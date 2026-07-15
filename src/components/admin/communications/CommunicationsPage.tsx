@@ -85,7 +85,7 @@ export function CommunicationsPage() {
 
       <CommunicationsStatsRow stats={stats} />
 
-      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.25fr_1fr]">
+      <div className="grid grid-cols-1 items-start gap-6 lg:grid-cols-[1.25fr_1fr]">
         <ComposeBulletin
           audienceSegments={audienceSegments}
           loadingAudience={loadingAudience}

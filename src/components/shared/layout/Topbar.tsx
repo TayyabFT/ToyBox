@@ -7,7 +7,7 @@ import { Bell, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
 import { NotificationPopup } from "@/components/staff/NotificationPopup";
 import { ProfilePopup } from "@/components/shared/layout/ProfilePopup";
 import { AuthProfileContent } from "@/components/shared/layout/AuthProfileContent";
-import { getAdminActiveHref, getAdminPageTitle, ADMIN_PROFILE_PATH } from "@/lib/adminNav";
+import { getAdminActiveHref, getAdminPageTitle } from "@/lib/adminNav";
 import { getStaffPageTitle } from "@/lib/staffNav";
 import { getMemberPageTitle } from "@/lib/memberNav";
 import { useAdminPageSubtitleValue } from "@/lib/adminPageMeta";
@@ -176,7 +176,7 @@ export function Topbar({ role }: { role: UserRole }) {
             onClick={toggleTheme}
             className="flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40"
           >
-            {isDarkMode ? <ThemeSun /> : <ThemeMoon />}
+            {isDarkMode ? <ThemeSun /> : <ThemeMoon color="var(--muted)" />}
           </button>
 
           <button
@@ -191,17 +191,19 @@ export function Topbar({ role }: { role: UserRole }) {
             )}
           </button>
 
-          <button
-            type="button"
-            aria-label="Profile"
-            onClick={() => {
-              setNotificationsOpen(false);
-              setProfileOpen(true);
-            }}
-            className={spec.profileTriggerClassName}
-          >
-            {spec.profileTrigger}
-          </button>
+          {role !== "admin" && (
+            <button
+              type="button"
+              aria-label="Profile"
+              onClick={() => {
+                setNotificationsOpen(false);
+                setProfileOpen(true);
+              }}
+              className={spec.profileTriggerClassName}
+            >
+              {spec.profileTrigger}
+            </button>
+          )}
         </div>
       </header>
 
@@ -215,23 +217,14 @@ export function Topbar({ role }: { role: UserRole }) {
         onMarkAllAsRead={handleMarkAllAsRead}
       />
 
-      <ProfilePopup
-        open={profileOpen}
-        onClose={() => setProfileOpen(false)}
-        action={
-          role === "admin" ? (
-            <Link
-              href={ADMIN_PROFILE_PATH}
-              onClick={() => setProfileOpen(false)}
-              className="font-roboto flex w-full cursor-pointer items-center justify-center rounded-xl border border-primary/40 bg-primary/8 py-3.5 text-[11px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/60 hover:bg-primary/12"
-            >
-              Show Complete Profile
-            </Link>
-          ) : undefined
-        }
-      >
-        <AuthProfileContent open={profileOpen} />
-      </ProfilePopup>
+      {role !== "admin" && (
+        <ProfilePopup
+          open={profileOpen}
+          onClose={() => setProfileOpen(false)}
+        >
+          <AuthProfileContent open={profileOpen} />
+        </ProfilePopup>
+      )}
     </>
   );
 }

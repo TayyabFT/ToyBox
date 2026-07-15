@@ -123,6 +123,10 @@ function validateChassisNo(value: string): string | undefined {
 }
 
 function validateVehicleImages(files: File[]): string | undefined {
+  if (files.length === 0) {
+    return "At least one vehicle image is required";
+  }
+
   if (files.length > MAX_VEHICLE_IMAGES) {
     return `You can upload up to ${MAX_VEHICLE_IMAGES} images`;
   }

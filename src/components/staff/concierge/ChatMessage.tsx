@@ -32,7 +32,7 @@ export function ChatMessage({
 
   const ownBubbleClass =
     ownBubbleClassName ??
-    "rounded-tr-sm bg-[#D4A847] text-dark";
+    "concierge-own-bubble rounded-tr-sm bg-[#D4A847] text-dark";
 
   const incomingBubbleClass =
     message.sender === "admin"

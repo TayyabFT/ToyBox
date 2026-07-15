@@ -1,58 +1,65 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   VehicleFleetCar,
   VehicleFleetInService,
   VehicleFleetOverdue,
   VehicleFleetReady,
 } from "@/components/common/Svgs";
-import { vehiclesApi } from "@/api/vehicles.api";
+import { staffVehiclesApi } from "@/api/staffVehicles.api";
 import { showError } from "@/lib/toast";
+import { createEmptyVehicleStats } from "@/lib/vehicles";
 import {
-  createEmptyVehicleStats,
-  indexInventoryVehicles,
-  mapInventoryResponse,
-  mapInventorySummary,
-  mapVehicleDetail,
-} from "@/lib/vehicles";
+  mapStaffAssignedVehicleDetail,
+  mapStaffAssignedVehicles,
+  mapStaffVehicleSummary,
+} from "@/lib/staffVehicles";
 import { StatCard } from "@/components/staff/overview/StatCard";
-import type { InventoryVehicleRaw } from "@/types/api";
 import { VehiclesGreeting } from "./VehiclesGreeting";
 import { VehicleListPanel } from "./VehicleListPanel";
 import { VehicleDetailPanel } from "./VehicleDetailPanel";
 import { AddVehicleModal } from "./add-vehicle";
-import type { VehicleListItem, VehicleStatsDisplay } from "./types";
+import type { VehicleDetail, VehicleListItem, VehicleStatsDisplay } from "./types";
 
 export function VehiclesPage() {
   const [vehicles, setVehicles] = useState<VehicleListItem[]>([]);
-  const [inventoryById, setInventoryById] = useState<
-    Record<string, InventoryVehicleRaw>
-  >({});
   const [selectedId, setSelectedId] = useState("");
   const [loading, setLoading] = useState(true);
   const [addVehicleOpen, setAddVehicleOpen] = useState(false);
-  const [stats, setStats] = useState<VehicleStatsDisplay>(createEmptyVehicleStats());
+  const [stats, setStats] = useState<VehicleStatsDisplay>(
+    createEmptyVehicleStats(),
+  );
+  const [detail, setDetail] = useState<VehicleDetail | null>(null);
+  const [detailLoading, setDetailLoading] = useState(false);
 
-  const loadInventory = useCallback(async () => {
+  const loadData = useCallback(async () => {
     setLoading(true);
 
     try {
-      const response = await vehiclesApi.getInventory();
-      const items = mapInventoryResponse(response.data);
+      const [summaryResponse, assignedResponse] = await Promise.all([
+        staffVehiclesApi.getSummary(),
+        staffVehiclesApi.getAssigned(),
+      ]);
 
+      const items = mapStaffAssignedVehicles(assignedResponse.data);
+
+      setStats(mapStaffVehicleSummary(summaryResponse.data));
       setVehicles(items);
-      setInventoryById(indexInventoryVehicles(response.data));
-      setStats(mapInventorySummary(response.data) ?? createEmptyVehicleStats());
-      setSelectedId((current) => current || items[0]?.id || "");
+      setSelectedId((current) => {
+        if (current && items.some((item) => item.id === current)) {
+          return current;
+        }
+
+        return items[0]?.id ?? "";
+      });
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
-        "Failed to load vehicle inventory";
+        "Failed to load assigned vehicles";
 
       showError(message);
       setVehicles([]);
-      setInventoryById({});
       setStats(createEmptyVehicleStats());
       setSelectedId("");
     } finally {
@@ -61,24 +68,45 @@ export function VehiclesPage() {
   }, []);
 
   useEffect(() => {
-    loadInventory();
-  }, [loadInventory]);
+    loadData();
+  }, [loadData]);
 
-  const selectedVehicle = useMemo(
-    () => vehicles.find((vehicle) => vehicle.id === selectedId),
-    [vehicles, selectedId],
-  );
-
-  const detail = useMemo(() => {
-    if (loading || !selectedId || !selectedVehicle) {
-      return null;
+  useEffect(() => {
+    if (!selectedId) {
+      setDetail(null);
+      return;
     }
 
-    return mapVehicleDetail(
-      inventoryById[selectedId],
-      selectedVehicle,
-    );
-  }, [inventoryById, loading, selectedId, selectedVehicle]);
+    let active = true;
+    setDetailLoading(true);
+
+    staffVehiclesApi
+      .getAssignedDetail(selectedId)
+      .then((response) => {
+        if (!active) return;
+
+        setDetail(mapStaffAssignedVehicleDetail(response.data));
+      })
+      .catch((error: unknown) => {
+        if (!active) return;
+
+        const message =
+          (error as { message?: string }).message ??
+          "Failed to load vehicle details";
+
+        showError(message);
+        setDetail(null);
+      })
+      .finally(() => {
+        if (active) {
+          setDetailLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [selectedId]);
 
   return (
     <div className="space-y-8 p-8">
@@ -127,17 +155,21 @@ export function VehiclesPage() {
             selectedId={selectedId}
             loading={loading}
             onSelect={setSelectedId}
+            emptyMessage="No assigned vehicles"
           />
         </div>
         <div className="xl:col-span-3">
-          <VehicleDetailPanel detail={detail} loading={loading} />
+          <VehicleDetailPanel
+            detail={detail}
+            loading={loading || detailLoading}
+          />
         </div>
       </div>
 
       <AddVehicleModal
         open={addVehicleOpen}
         onClose={() => setAddVehicleOpen(false)}
-        onSuccess={loadInventory}
+        onSuccess={loadData}
       />
     </div>
   );

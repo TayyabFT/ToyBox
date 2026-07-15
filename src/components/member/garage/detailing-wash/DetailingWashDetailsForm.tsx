@@ -38,7 +38,7 @@ export function DetailingWashDetailsForm({
                 key={option.key}
                 type="button"
                 onClick={() => onChange({ package: option.key })}
-                className={`flex w-full items-center gap-3 rounded-xl bg-dark px-4 py-3 text-left transition-colors ${
+                className={`flex w-full items-center gap-3 rounded-xl garage-form-row px-4 py-3 text-left transition-colors ${
                   selected
                     ? "border border-primary/60"
                     : "border border-transparent hover:border-accent/15"
@@ -80,7 +80,7 @@ export function DetailingWashDetailsForm({
                 className={`font-roboto rounded-full px-4 py-2 text-[12px] font-medium transition-colors ${
                   selected
                     ? "bg-primary text-dark"
-                    : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
+                    : "garage-form-chip border border-accent/10 text-foreground-soft hover:border-accent/25"
                 }`}
               >
                 {addOn.label}

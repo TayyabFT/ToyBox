@@ -9,7 +9,9 @@ import { mapMembersDirectory } from "@/lib/members";
 import {
   buildOperationalUpdatePayload,
   extractCreatedOperationalUpdateId,
+  extractOperationalUpdateId,
   extractSummaryShell,
+  isPinnableOperationalUpdateId,
   getProfileDisplayName,
   getProfileInitial,
   mapOpUpdateFilterToQuery,
@@ -318,12 +320,20 @@ export function useStaffOperationalUpdates() {
 
   const togglePin = useCallback(
     async (id: string, isPinned: boolean) => {
+      if (!isPinnableOperationalUpdateId(id)) {
+        showError("This item can't be pinned.");
+        return;
+      }
+
       setPinningId(id);
 
       try {
-        const response = await staffOperationalUpdatesApi.setPinned(id, {
-          isPinned: !isPinned,
-        });
+        const response = await staffOperationalUpdatesApi.setPinned(
+          extractOperationalUpdateId(id),
+          {
+            isPinned: !isPinned,
+          },
+        );
 
         showToast.success({
           title: !isPinned ? "Update Pinned" : "Update Unpinned",

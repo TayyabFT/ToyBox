@@ -14,13 +14,11 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
   return (
     <Link
       href="/member"
-      className="group relative block overflow-hidden rounded-2xl border border-accent/15 card-view transition-colors hover:border-accent/28 news-card-shell"
+      className="group relative block overflow-hidden rounded-2xl transition-colors news-card-shell"
     >
-      {/* Layered gradient — visible in dark, subtle in light */}
+      {/* Layered gradient — primary from top-left, secondary from bottom-right */}
       <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient" />
-      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient" />
-
-      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient-secondary opacity-70" />
+      <div aria-hidden className="pointer-events-none absolute inset-0 news-card-gradient-secondary opacity-60" />
  
 
       <div className="relative flex gap-4 p-4">
@@ -79,7 +77,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
       {item.isUnread && (
         <span
           aria-label="Unread"
-          className="absolute right-3.5 top-3.5 size-2 rounded-full bg-accent shadow-[0_0_6px_rgba(212,168,71,0.55)]"
+          className="absolute right-3.5 top-3.5 size-2 rounded-full bg-accent news-unread-dot"
         />
       )}
     </Link>
@@ -104,7 +102,7 @@ export function MemberNewsSection({ items }: MemberNewsSectionProps) {
         </div>
         <Link
           href="/member"
-          className="flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-transparent px-3 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5"
+          className="flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-transparent px-3 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5 news-all-btn"
         >
           <span className="font-roboto text-[10px] font-semibold tracking-[0.16em] text-accent uppercase">
             All

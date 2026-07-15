@@ -14,24 +14,27 @@ export function InReviewBookingsPanel({
   loading = false,
 }: InReviewBookingsPanelProps) {
   return (
-    <section className="flex flex-col overflow-hidden rounded-2xl border border-accent/12 bg-card p-5">
-      <div className="mb-5 flex shrink-0 items-center gap-3">
-        <h2 className="text-[13px] uppercase text-secondary">
-          In Review Bookings
+    <section className="space-y-4">
+      <div className="space-y-2">
+        <h2 className="font-copperplate text-[18px]">
+          <span className="text-foreground">In Review</span>{" "}
+          <span className="text-primary">Bookings</span>
         </h2>
-        <span className="font-roboto rounded-full border border-badge-warm/28 bg-badge-warm/10 px-2.5 py-1 text-[10px] font-medium tracking-[0.08em] text-badge-warm uppercase">
-          {pendingCount} Pending
-        </span>
+        <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
+          {pendingCount} Booking{pendingCount === 1 ? "" : "s"} Pending Review
+        </p>
       </div>
 
-      <ConfirmationScrollableList
-        items={requests}
-        loading={loading}
-        emptyText="No in-review bookings"
-        listClassName="space-y-3 pr-1"
-        renderItem={(request) => <InReviewRequestRow request={request} />}
-        getItemKey={(request) => request.id}
-      />
+      <div className="flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card p-5">
+        <ConfirmationScrollableList
+          items={requests}
+          loading={loading}
+          emptyText="No in-review bookings"
+          listClassName="space-y-3 pr-1"
+          renderItem={(request) => <InReviewRequestRow request={request} />}
+          getItemKey={(request) => request.id}
+        />
+      </div>
     </section>
   );
 }

@@ -112,7 +112,7 @@ export function PreferredDatePicker({
                 className={`font-roboto flex h-[77px] flex-col items-center justify-center rounded-lg border text-center transition-colors ${
                   selected
                     ? "border-primary bg-primary/6 text-primary"
-                    : "border-accent/15 bg-dark text-secondary hover:border-accent/30"
+                    : "garage-form-chip border-accent/15 text-secondary hover:border-accent/30"
                 }`}
               >
                 <span className="text-[9px] font-bold tracking-[0.18em] uppercase">
@@ -141,7 +141,7 @@ export function PreferredDatePicker({
               className={`font-roboto flex h-11 flex-col items-center justify-center rounded-lg text-center transition-colors ${
                 selected
                   ? "bg-primary text-dark"
-                  : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
+                  : "garage-form-chip border border-accent/10 text-foreground-soft hover:border-accent/25"
               }`}
             >
               <span className="text-[13px] font-semibold leading-none">
@@ -242,7 +242,7 @@ export function TimelineNode({ status }: { status: DotTimelineStep["status"] }) 
 
   return (
     <span className="relative z-10 flex size-9 shrink-0 items-center justify-center">
-      <span className="size-2.5 rounded-full border border-accent/25 bg-dark" />
+      <span className="garage-timeline-dot-pending size-2.5 rounded-full border border-accent/25" />
     </span>
   );
 }

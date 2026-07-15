@@ -89,7 +89,7 @@ export function DiaryHeader({
               >
                 <p className="diary-record-stat-value font-copperplate text-[24px] leading-none tracking-[0.01em]">
                   {stat.value}
-                </p>
+                </p>  
                 <p className="diary-record-stat-label font-roboto text-[8.5px] tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]">
                   {stat.label}
                 </p>

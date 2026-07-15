@@ -57,5 +57,6 @@ export function mapCommunicationsBulletins(
     time: formatBulletinListTime(resolveBulletinTimestamp(bulletin)),
     openRate: parseRatePercent(bulletin.openRatePercent),
     clickRate: parseRatePercent(bulletin.clickRatePercent),
+    isDraft: bulletin.status?.trim().toLowerCase() === "draft",
   }));
 }

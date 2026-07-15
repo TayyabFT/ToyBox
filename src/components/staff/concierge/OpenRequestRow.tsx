@@ -26,7 +26,7 @@ export function OpenRequestRow({
           : "border-l-2 border-l-transparent"
       }`}
     >
-      <span className="flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#F0C566] to-[#8B6F2A] font-copperplate text-[15px] tracking-[0.04em] text-[#0A0806]">
+      <span className="concierge-avatar flex size-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-r from-[#F0C566] to-[#8B6F2A] font-copperplate text-[15px] tracking-[0.04em] text-[#0A0806]">
         {getUserInitial(request.member)}
       </span>
 

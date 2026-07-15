@@ -48,7 +48,7 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
           )}
 
           {vehicle.bayLabel && (
-            <span className="font-roboto absolute right-3 top-3 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-white/85 uppercase backdrop-blur-sm">
+            <span className="font-roboto absolute right-3 top-3 rounded-full border border-foreground/20 bg-background/60 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-foreground/85 uppercase backdrop-blur-sm">
               {vehicle.bayLabel}
             </span>
           )}

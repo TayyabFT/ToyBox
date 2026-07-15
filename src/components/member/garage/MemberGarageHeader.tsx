@@ -17,7 +17,7 @@ export function MemberGarageHeader({ onAddClick }: MemberGarageHeaderProps) {
       {/* <button
         type="button"
         onClick={onAddClick}
-        className="font-roboto shrink-0 cursor-pointer rounded-full border border-primary/35 bg-primary/8 px-5 py-2.5 text-[12px] font-medium text-primary transition-colors hover:border-primary/50 hover:bg-primary/14"
+        className="font-roboto shrink-0 cursor-pointer rounded-full border border-accent/25 bg-elevated px-5 py-2.5 text-[11px] font-medium tracking-[0.08em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
       >
         + Add a motor car
       </button> */}

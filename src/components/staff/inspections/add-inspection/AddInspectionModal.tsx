@@ -476,7 +476,7 @@ export function AddInspectionModal({
             type="button"
             onClick={() => void handleSubmit()}
             disabled={submitting || loadingOptions}
-            className="font-roboto flex w-full cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-sm font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
+            className="staff-add-cta font-roboto flex w-full cursor-pointer items-center justify-center rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-sm font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Adding..." : "Add Inspection"}
           </button>

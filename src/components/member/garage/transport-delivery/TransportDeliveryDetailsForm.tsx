@@ -51,7 +51,7 @@ export function TransportDeliveryDetailsForm({
                 className={`font-roboto rounded-lg px-4 py-2 text-[12px] font-medium transition-colors ${
                   selected
                     ? "bg-primary text-dark"
-                    : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
+                    : "garage-form-chip border border-accent/10 text-foreground-soft hover:border-accent/25"
                 }`}
               >
                 {type.label}
@@ -75,8 +75,8 @@ export function TransportDeliveryDetailsForm({
                 onClick={() => onChange({ request: option.key })}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition-colors ${
                   selected
-                    ? "border border-primary/50 bg-dark"
-                    : "border border-transparent bg-dark hover:border-accent/15"
+                    ? "garage-form-row border border-primary/50"
+                    : "garage-form-row border border-transparent hover:border-accent/15"
                 }`}
               >
                 <RequestRadioDot selected={selected} />
@@ -125,7 +125,7 @@ export function TransportDeliveryDetailsForm({
                 className={`font-roboto rounded-lg px-4 py-3 text-[12px] font-semibold transition-colors ${
                   selected
                     ? "bg-primary text-dark"
-                    : "border border-accent/10 bg-dark text-foreground-soft hover:border-accent/25"
+                    : "garage-form-chip border border-accent/10 text-foreground-soft hover:border-accent/25"
                 }`}
               >
                 {window}

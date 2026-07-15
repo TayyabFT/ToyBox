@@ -31,4 +31,5 @@ export type RecentBulletin = {
   time: string;
   openRate: number | null;
   clickRate: number | null;
+  isDraft: boolean;
 };

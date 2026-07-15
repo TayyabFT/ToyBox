@@ -159,7 +159,7 @@ export function PostUpdateCard({
             type="button"
             onClick={onPost}
             disabled={!value.trim() || posting}
-            className="font-roboto flex cursor-pointer items-center justify-center gap-2 self-start rounded-full bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase transition-opacity disabled:cursor-not-allowed disabled:opacity-45 sm:self-center"
+            className="staff-add-cta font-roboto flex cursor-pointer items-center justify-center gap-2 self-start rounded-full bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase transition-opacity disabled:cursor-not-allowed disabled:opacity-45 sm:self-center"
           >
             <RocketIcon className="size-3.5" />
             {posting ? "Posting..." : "Post Update"}

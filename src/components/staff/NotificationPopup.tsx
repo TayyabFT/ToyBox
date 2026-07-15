@@ -32,10 +32,10 @@ export function NotificationPopup({
       onClick={onClose}
     >
       <div
-        className="relative z-10 mr-4 w-full max-w-sm overflow-hidden rounded-2xl border border-accent/25 bg-card"
+        className="staff-notif-panel relative z-10 mr-4 w-full max-w-sm overflow-hidden rounded-2xl border border-accent/25 bg-card"
         onClick={(event) => event.stopPropagation()}
       >
-        <div className="flex items-start justify-between border-b border-accent/12 px-5 py-3">
+        <div className="staff-notif-header flex items-start justify-between border-b border-accent/12 px-5 py-3">
           <div className="space-y-1">
             <h2 className="font-copperplate text-foreground">
               Notifications
@@ -55,7 +55,7 @@ export function NotificationPopup({
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer text-secondary transition-colors hover:text-white"
+            className="staff-notif-close cursor-pointer text-secondary transition-colors hover:text-white"
           >
             ✕
           </button>

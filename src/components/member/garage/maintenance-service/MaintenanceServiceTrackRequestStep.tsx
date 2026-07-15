@@ -83,7 +83,7 @@ export function MaintenanceServiceTrackRequestStep({
 
   return (
     <div className="space-y-6">
-      <div className="overflow-hidden rounded-2xl border border-accent/12 bg-[#141310]">
+      <div className="overflow-hidden rounded-2xl border border-accent/12 garage-review-card">
         <div className="flex items-start justify-between gap-4 px-4 py-4">
           <div className="min-w-0">
             <p className="font-roboto text-[12px] font-bold tracking-[0.05em] text-foreground uppercase">

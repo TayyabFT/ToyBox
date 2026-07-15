@@ -79,8 +79,8 @@ export function DiaryTimeline({ groups }: { groups: DiaryGroup[] }) {
                 ].join(" ")}
               />
               {/* Dot node */}
-              <span className="relative z-10 mt-1.5 flex size-3 items-center justify-center rounded-full border border-accent/50 bg-background shadow-[0_0_0_4px_var(--background)]">
-                <span className="size-1 rounded-full bg-accent" />
+              <span className="relative z-10 mt-1.5 flex size-5 items-center justify-center rounded-full border border-accent/50 bg-background shadow-[0_0_0_4px_var(--background)]">
+                <span className="size-2 rounded-full bg-accent" />
               </span>
             </div>
 

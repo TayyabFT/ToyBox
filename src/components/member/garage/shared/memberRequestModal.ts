@@ -26,4 +26,4 @@ export const memberRequestModalPrimaryButtonFullClass =
   `${memberRequestModalPrimaryButtonClass} w-full flex-none`;
 
 export const memberRequestModalSecondaryButtonClass =
-  "font-roboto flex flex-1 cursor-pointer items-center justify-center rounded-2xl border border-accent/25 bg-dark py-3.5 text-sm font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary";
+  "font-roboto flex flex-1 cursor-pointer items-center justify-center rounded-2xl border border-accent/25 bg-surface py-3.5 text-sm font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary";

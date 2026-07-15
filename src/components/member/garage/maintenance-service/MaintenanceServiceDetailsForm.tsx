@@ -60,7 +60,7 @@ export function MaintenanceServiceDetailsForm({
                 className={`font-roboto rounded-full px-4 py-2 text-[12px] font-medium transition-colors ${
                   selected
                     ? "bg-primary text-dark"
-                    : "border border-accent/15 bg-dark text-secondary hover:border-accent/30"
+                    : "garage-form-chip border border-accent/15 text-secondary hover:border-accent/30"
                 }`}
               >
                 {vehicle.label}
@@ -84,8 +84,8 @@ export function MaintenanceServiceDetailsForm({
                 onClick={() => onChange({ serviceType: option.key })}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-colors ${
                   selected
-                    ? "border border-primary/50 bg-dark"
-                    : "border border-accent/12 bg-dark hover:border-accent/20"
+                    ? "garage-form-row border border-primary/50"
+                    : "garage-form-row border border-accent/12 hover:border-accent/20"
                 }`}
               >
                 <RequestRadioDot selected={selected} />
@@ -123,8 +123,8 @@ export function MaintenanceServiceDetailsForm({
                 onClick={() => onChange({ serviceCentre: centre.key })}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-colors ${
                   selected
-                    ? "border border-primary/50 bg-dark"
-                    : "border border-accent/12 bg-dark hover:border-accent/20"
+                    ? "garage-form-row border border-primary/50"
+                    : "garage-form-row border border-accent/12 hover:border-accent/20"
                 }`}
               >
                 <ServiceCentreIcon type={centre.icon} />
@@ -157,7 +157,7 @@ export function MaintenanceServiceDetailsForm({
           onChange={(e) => onChange({ issueDescription: e.target.value })}
           rows={3}
           placeholder="Tell us what needs attention."
-          className="font-roboto min-h-[86px] w-full resize-none rounded-lg border border-accent/15 bg-dark px-4 py-4 text-[14px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
+          className="font-roboto min-h-[86px] w-full resize-none rounded-lg border border-accent/15 garage-form-input px-4 py-4 text-[14px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
         />
       </div>
 
@@ -183,7 +183,7 @@ export function MaintenanceServiceDetailsForm({
                 className={`font-roboto rounded-lg border px-4 py-3.5 text-[13px] font-semibold transition-colors ${
                   selected
                     ? "border-primary bg-primary/6 text-primary"
-                    : "border-accent/15 bg-dark text-secondary hover:border-accent/30"
+                    : "garage-form-chip border-accent/15 text-secondary hover:border-accent/30"
                 }`}
               >
                 {option.label}

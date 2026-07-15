@@ -53,7 +53,7 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
         )}
 
         {vehicle.bayLabel && (
-          <span className="font-roboto absolute right-3 top-3 rounded-full border border-white/15 bg-black/40 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-white/85 uppercase backdrop-blur-sm">
+          <span className="font-roboto absolute right-3 top-3 rounded-full border border-foreground/20 bg-background/60 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-foreground/85 uppercase backdrop-blur-sm">
             {vehicle.bayLabel}
           </span>
         )}
@@ -70,7 +70,7 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
           </p>
         </div>
 
-        <div className="grid min-w-0 grid-cols-3 gap-2">
+        <div className="grid min-w-0 grid-cols-3 gap-2 rounded-xl bg-elevated p-3">
           {vehicle.stats.map((stat) => (
             <div key={stat.label} className="min-w-0 overflow-hidden">
               <p
@@ -98,7 +98,7 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
 
           <Link
             href={`/member/garage/${vehicle.id}`}
-            className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
+            className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/20 bg-elevated px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-foreground/70 uppercase transition-colors hover:border-primary/40 hover:bg-accent/8 hover:text-primary"
           >
             Details
             <MemberGarageChevronRight className="size-[10px]" color="currentColor" />

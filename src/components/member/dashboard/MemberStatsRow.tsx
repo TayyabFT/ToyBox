@@ -34,7 +34,7 @@ export function MemberStatsRow({ kpis }: MemberStatsRowProps) {
             value={kpi.value}
             footnote={kpi.subtext}
             icon={ICON_MAP[iconKey]}
-            featured={isFeatured}
+            // featured={isFeatured}
           />
         );
       })}

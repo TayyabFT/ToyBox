@@ -238,6 +238,33 @@ export function buildOperationalUpdatePayload(options: {
   return payload;
 }
 
+const GUID_PATTERN =
+  /[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}/;
+
+const GUID_ONLY_PATTERN =
+  /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+
+/**
+ * Feed items can arrive with prefixed identifiers (e.g. `bulletin-<guid>`),
+ * but the operational-updates pin/detail endpoints only accept a bare GUID.
+ * Pull the GUID out when present, otherwise fall back to the raw value.
+ */
+export function extractOperationalUpdateId(id: string | number): string {
+  const text = String(id).trim();
+  const match = text.match(GUID_PATTERN);
+
+  return match ? match[0] : text;
+}
+
+/**
+ * Only bare-GUID records are real operational updates that the pin endpoint
+ * can act on. Prefixed identifiers (e.g. `bulletin-<guid>` broadcasts) belong
+ * to other systems and must not offer a pin/unpin action here.
+ */
+export function isPinnableOperationalUpdateId(id: string | number): boolean {
+  return GUID_ONLY_PATTERN.test(String(id).trim());
+}
+
 export function extractCreatedOperationalUpdateId(data: unknown): string {
   const record = asRecord(data);
 
@@ -536,7 +563,7 @@ export function mapShiftFeedItem(raw: StaffOperationalUpdateRaw): ShiftFeedItem 
     isAnnouncement: Boolean(raw.isAnnouncement),
     isOwnPost: Boolean(raw.isOwnPost || raw.isMine),
     isPinned: Boolean(raw.isPinned),
-    canPin: raw.canPin !== false,
+    canPin: raw.canPin !== false && isPinnableOperationalUpdateId(id),
   };
 }
 

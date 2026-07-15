@@ -90,7 +90,7 @@ export function MemberVehicleRequestsCard({
   const [isSourcingOpen, setIsSourcingOpen] = useState(false);
 
   const rowClassName =
-    "group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-dark px-4 py-3.5 text-left transition-colors hover:border-primary/40 hover:bg-primary/6";
+    "group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-surface px-4 py-3.5 text-left transition-colors hover:border-primary/40 hover:bg-primary/6";
 
   function handleRequestClick(requestId: MemberVehicleRequestItem["id"]) {
     if (requestId === "transport") {

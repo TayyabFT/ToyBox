@@ -29,9 +29,6 @@ export function PendingConfirmationsPanel({
       </div>
 
       <div className="flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
-        <p className="shrink-0 border-b border-accent/6 p-5 font-roboto text-xs tracking-[0.14em] text-secondary uppercase">
-          Bookings
-        </p>
         <ConfirmationScrollableList
           items={requests}
           loading={loading}

@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import {
   FeedCheckIcon,
   FeedFlagIcon,
@@ -18,7 +17,7 @@ type ShiftUpdateFeedProps = {
   onTogglePin?: (id: string, isPinned: boolean) => void;
 };
 
-const INITIAL_VISIBLE_COUNT = 5;
+const SCROLL_THRESHOLD = 7;
 
 export function ShiftUpdateFeed({
   items,
@@ -26,19 +25,7 @@ export function ShiftUpdateFeed({
   pinningId = "",
   onTogglePin,
 }: ShiftUpdateFeedProps) {
-  const [showAll, setShowAll] = useState(false);
-
-  useEffect(() => {
-    setShowAll(false);
-  }, [items]);
-
-  const visibleItems = useMemo(
-    () => (showAll ? items : items.slice(0, INITIAL_VISIBLE_COUNT)),
-    [items, showAll],
-  );
-
-  const hasMore = items.length > INITIAL_VISIBLE_COUNT;
-  const hiddenCount = Math.max(items.length - INITIAL_VISIBLE_COUNT, 0);
+  const isScrollable = items.length > SCROLL_THRESHOLD;
 
   return (
     <section className="rounded-2xl border border-accent/10 bg-card p-5">
@@ -64,9 +51,15 @@ export function ShiftUpdateFeed({
         </p>
       ) : null}
 
-      {visibleItems.length > 0 ? (
-        <div className="space-y-3">
-          {visibleItems.map((item) => (
+      {items.length > 0 ? (
+        <div
+          className={
+            isScrollable
+              ? "Custom__Scrollbar max-h-[720px] space-y-3 overflow-y-auto pr-1"
+              : "space-y-3"
+          }
+        >
+          {items.map((item) => (
             <FeedItemCard
               key={item.id}
               item={item}
@@ -74,20 +67,6 @@ export function ShiftUpdateFeed({
               onTogglePin={onTogglePin}
             />
           ))}
-        </div>
-      ) : null}
-
-      {hasMore ? (
-        <div className="mt-4 flex justify-end border-t border-accent/8 pt-4">
-          <button
-            type="button"
-            onClick={() => setShowAll((current) => !current)}
-            className="font-roboto cursor-pointer rounded-lg border border-accent/20 bg-surface px-4 py-2 text-[10px] font-semibold tracking-[0.1em] text-primary uppercase transition-colors hover:border-primary/35 hover:bg-accent/8"
-          >
-            {showAll
-              ? "Show Less"
-              : `View All (${hiddenCount} more)`}
-          </button>
         </div>
       ) : null}
     </section>

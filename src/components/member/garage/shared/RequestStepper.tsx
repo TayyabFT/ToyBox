@@ -55,7 +55,7 @@ export function RequestStepper({
                 className={`font-roboto flex size-9 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold ${
                   isReached
                     ? "bg-primary text-dark shadow-[0_0_16px_rgba(201,168,76,0.4)]"
-                    : "border border-accent/15 bg-dark text-foreground-soft/50"
+                    : "garage-form-chip border border-accent/15 text-foreground-soft/50"
                 }`}
               >
                 {step.id}

@@ -190,7 +190,7 @@ export function ConciergeChatPanel({
                 aria-label="Send message"
                 disabled={sending || !draft.trim()}
                 onClick={() => void handleSend()}
-                className="flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-gold-bright to-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+                className="staff-add-cta flex h-full w-12 shrink-0 cursor-pointer items-center justify-center rounded-lg bg-gradient-to-r from-gold-bright to-primary transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <VehicleSend color="var(--dark)" />
               </button>

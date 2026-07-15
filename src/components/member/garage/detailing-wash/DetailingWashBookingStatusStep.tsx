@@ -35,7 +35,7 @@ function TimelineCircle({
   }
 
   return (
-    <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/20 bg-dark text-[13px] font-semibold text-secondary/60">
+    <span className="relative z-10 flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/20 garage-form-chip text-[13px] font-semibold text-secondary/60">
       {step}
     </span>
   );

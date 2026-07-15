@@ -21,10 +21,10 @@ export function MemberGarageFilters({
             key={filter.key}
             type="button"
             onClick={() => onFilterChange(filter.key)}
-            className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
+            className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-[color,border-color] ${
               isActive
-                ? "bg-primary text-dark"
-                : "border border-accent/25 text-primary hover:border-primary/40"
+                ? "garage-filter-active"
+                : "garage-filter-inactive"
             }`}
           >
             {filter.count != null ? `${filter.label} · ${filter.count}` : filter.label}

@@ -1115,11 +1115,19 @@ export type ApiError = {
 
 export type InviteRole = "member" | "staff";
 
+export type MemberDesignation =
+  | "access"
+  | "private"
+  | "principal"
+  | "black_card";
+
 export type InviteRequest = {
   role: InviteRole;
+  fullName: string;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  validityMonths: number;
+  designation?: MemberDesignation;
+  jobTitle?: string;
 };
 
 export type InviteData = {
@@ -1293,6 +1301,95 @@ export type VehicleInventoryData =
   };
 
 export type VehicleInventoryResponse = ApiResponse<VehicleInventoryData>;
+
+export type StaffVehicleSummaryStatRaw = {
+  key?: string;
+  label?: string;
+  value?: number | string;
+  subLabel?: string;
+  percentOfFleet?: number;
+};
+
+export type StaffVehicleSummaryData = {
+  staffProfileId?: string;
+  total?: StaffVehicleSummaryStatRaw;
+  ready?: StaffVehicleSummaryStatRaw;
+  inService?: StaffVehicleSummaryStatRaw;
+  overdue?: StaffVehicleSummaryStatRaw;
+};
+
+export type StaffVehicleSummaryResponse = ApiResponse<StaffVehicleSummaryData>;
+
+export type StaffAssignedVehicleRaw = {
+  id?: string;
+  taskQueueId?: string;
+  displayName?: string;
+  make?: string;
+  model?: string;
+  year?: number;
+  imageUrl?: string;
+  bay?: string;
+  wing?: string;
+  mileage?: string;
+  ownerName?: string;
+  memberId?: string;
+  statusKey?: string;
+  statusLabel?: string;
+  referenceType?: string;
+  referenceId?: string;
+  queuedSince?: string;
+  isOverdue?: boolean;
+};
+
+export type StaffAssignedVehiclesData = {
+  staffProfileId?: string;
+  count?: number;
+  items?: StaffAssignedVehicleRaw[];
+};
+
+export type StaffAssignedVehiclesResponse = ApiResponse<StaffAssignedVehiclesData>;
+
+export type StaffVehicleHealthEntryRaw = {
+  key?: string;
+  label?: string;
+  percentage?: number;
+};
+
+export type StaffVehicleDetailMemberRaw = {
+  id?: string;
+  name?: string;
+  tier?: string;
+  profileImageUrl?: string;
+};
+
+export type StaffVehicleDocumentRaw = {
+  url?: string;
+  uploadedAt?: string;
+};
+
+export type StaffAssignedVehicleDetailRaw = StaffAssignedVehicleRaw & {
+  plate?: string;
+  colour?: string;
+  chassisNo?: string;
+  lastServicedAt?: string;
+  fuelLevel?: string;
+  member?: StaffVehicleDetailMemberRaw;
+  health?: {
+    systemHealth?: StaffVehicleHealthEntryRaw[];
+    condition?: StaffVehicleHealthEntryRaw[];
+  };
+  documents?: Record<string, StaffVehicleDocumentRaw>;
+  task?: {
+    id?: string;
+    status?: string;
+    referenceType?: string;
+    referenceId?: string;
+    createdAt?: string;
+  };
+};
+
+export type StaffAssignedVehicleDetailResponse =
+  ApiResponse<StaffAssignedVehicleDetailRaw>;
 
 export type AddVehicleHealthItem = {
   category: string;

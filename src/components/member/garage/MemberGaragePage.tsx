@@ -7,6 +7,7 @@ import { mapGarageFilters, mapGarageVehicle } from "@/lib/garage";
 import { MemberGarageCard } from "./MemberGarageCard";
 import { MemberGarageFilters } from "./MemberGarageFilters";
 import { MemberGarageHeader } from "./MemberGarageHeader";
+import { MemberGarageSkeleton, MemberGarageCardsSkeleton } from "./MemberGarageSkeleton";
 import type { GarageFilter, GarageFilterKey, GarageVehicle } from "./types";
 
 export function MemberGaragePage() {
@@ -86,6 +87,11 @@ export function MemberGaragePage() {
     };
   }, [memberId, activeFilter]);
 
+  // Initial load — show full-page skeleton until the first response resolves.
+  if (loading && vehicles.length === 0 && !error) {
+    return <MemberGarageSkeleton />;
+  }
+
   return (
     <div className="space-y-6 p-8">
       <MemberGarageHeader />
@@ -102,9 +108,9 @@ export function MemberGaragePage() {
         onFilterChange={setActiveFilter}
       />
 
-      {loading && vehicles.length === 0 ? (
-        <p className="font-roboto text-[12px] text-secondary">Loading vehicles...</p>
-      ) : !loading && vehicles.length === 0 && !error ? (
+      {loading ? (
+        <MemberGarageCardsSkeleton />
+      ) : vehicles.length === 0 && !error ? (
         <p className="font-roboto text-[12px] text-secondary">No vehicles found.</p>
       ) : (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">

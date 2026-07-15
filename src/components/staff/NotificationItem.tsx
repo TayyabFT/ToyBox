@@ -15,10 +15,10 @@ export function NotificationItem({
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-start gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors ${
+      className={`staff-notif-item flex w-full cursor-pointer items-start gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors ${
         read
           ? "border-accent/8 bg-transparent hover:bg-foreground/2"
-          : "border-accent/12 bg-accent/4 hover:bg-accent/8"
+          : "staff-notif-item--unread border-accent/12 bg-accent/4 hover:bg-accent/8"
       }`}
     >
       <div className="min-w-0 flex-1 space-y-1">

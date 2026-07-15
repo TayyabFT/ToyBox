@@ -81,7 +81,7 @@ function DocumentRow({ document, isSelected, onSelect }: DocumentRowProps) {
       className={`group flex w-full cursor-pointer items-center gap-3 rounded-xl border px-4 py-3.5 text-left transition-colors ${
         isSelected
           ? "border-primary/40 bg-primary/8"
-          : "border-accent/10 bg-dark hover:border-primary/30 hover:bg-primary/5"
+          : "border-accent/10 bg-surface hover:border-primary/30 hover:bg-primary/5"
       }`}
     >
       <span
@@ -124,7 +124,7 @@ function DocumentPreview({ document }: { document: MemberVehicleDocument }) {
   const isImage = isImageUrl(document.url);
 
   return (
-    <div className="overflow-hidden rounded-xl border border-accent/10 bg-black/30">
+    <div className="overflow-hidden rounded-xl border border-accent/10 bg-surface">
       {isImage ? (
         <img
           src={document.url}
@@ -135,7 +135,7 @@ function DocumentPreview({ document }: { document: MemberVehicleDocument }) {
         <iframe
           src={document.url}
           title={document.title}
-          className="h-[min(42vh,360px)] w-full bg-dark"
+          className="h-[min(42vh,360px)] w-full bg-surface"
         />
       )}
     </div>

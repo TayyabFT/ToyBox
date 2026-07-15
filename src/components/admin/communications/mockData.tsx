@@ -59,6 +59,7 @@ export const recentBulletins: RecentBulletin[] = [
     time: "2h ago",
     openRate: 89,
     clickRate: 54,
+    isDraft: false,
   },
   {
     id: "dawn-drive",
@@ -66,6 +67,7 @@ export const recentBulletins: RecentBulletin[] = [
     time: "Yesterday",
     openRate: 92,
     clickRate: 61,
+    isDraft: false,
   },
   {
     id: "may-calendar",
@@ -73,6 +75,7 @@ export const recentBulletins: RecentBulletin[] = [
     time: "4d ago",
     openRate: 87,
     clickRate: 38,
+    isDraft: false,
   },
   {
     id: "workshop-maintenance",
@@ -80,5 +83,6 @@ export const recentBulletins: RecentBulletin[] = [
     time: "1w ago",
     openRate: 78,
     clickRate: 22,
+    isDraft: false,
   },
 ];

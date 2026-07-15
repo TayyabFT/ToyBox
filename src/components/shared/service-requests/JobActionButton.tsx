@@ -11,7 +11,7 @@ type JobActionButtonProps = {
 const variantClass: Record<JobButtonVariant, string> = {
   outline:
     "border border-[#D4A8471A] bg-card text-primary hover:border-primary/35",
-  gold: "border border-transparent bg-gradient-to-r from-[#F0C566] to-[#C9A84C] text-dark hover:opacity-90",
+  gold: "staff-add-cta border border-transparent bg-gradient-to-r from-[#F0C566] to-[#C9A84C] text-dark hover:opacity-90",
   gray: "border border-secondary/25 bg-secondary/8 text-secondary",
   "danger-outline":
     "border border-pink/35 bg-pink/8 text-pink hover:border-pink/50",

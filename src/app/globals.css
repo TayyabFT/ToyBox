@@ -984,33 +984,44 @@ input[type="number"] {
 }
 
 .diary-record-surface {
+  background: 
+  linear-gradient(107.48deg, #1A1612 0%, #11100C 100%), 
+  radial-gradient(70.71% 70.71% at 50% 50%, rgba(212, 168, 71, 0.105) 0%, rgba(212, 168, 71, 0) 65%)
+
+
+/* 
   background:
+  linear-gradient(107.48deg, #1A1612 0%, #11100C 100%),
     radial-gradient(ellipse 70% 90% at 100% -10%,
       color-mix(in srgb, var(--accent) 28%, transparent) 0%,
       color-mix(in srgb, var(--accent) 8%, transparent) 38%,
       transparent 66%),
     linear-gradient(120deg,
       color-mix(in srgb, var(--dark) 60%, transparent) 0%,
-      var(--dark) 55%);
+      var(--dark) 55%); */
 }
 
 [data-theme="light"] .diary-record-surface {
-  background:
+  background: linear-gradient(180.02deg, rgba(138, 125, 106, 0.4) 0.02%, rgba(138, 125, 106, 0.3) 59.49%, rgba(138, 125, 106, 0.2) 115.12%);
+
+  /* background:
     radial-gradient(ellipse 70% 90% at 100% -10%,
       color-mix(in srgb, var(--accent) 20%, transparent) 0%,
       color-mix(in srgb, var(--accent) 6%, transparent) 38%,
       transparent 66%),
     linear-gradient(120deg,
       color-mix(in srgb, var(--accent) 10%, var(--card)) 0%,
-      var(--card) 55%);
+      var(--card) 55%); */
 }
 
 .diary-record-stats {
-  background: rgba(0, 0, 0, 0.45);
+background: rgba(17, 16, 12, 1);
+
 }
 
 [data-theme="light"] .diary-record-stats {
-  background: var(--input-muted);
+  background: linear-gradient(180deg, rgba(138, 125, 106, 0.4) 0%, rgba(138, 125, 106, 0.3) 46.33%, rgba(138, 125, 106, 0.2) 100%);
+
 }
 
 .diary-record-eyebrow {
@@ -1037,7 +1048,108 @@ input[type="number"] {
   color: color-mix(in srgb, var(--foreground-soft) 50%, transparent);
 }
 
-/* Ask Steve — theme-aware surfaces */
+/* Member garage — filter pills (theme-split active/inactive) */
+
+/* Dark mode active: gold fill */
+html .garage-filter-active {
+  background-color: var(--primary);
+  background-image: none;
+  border: 1.5px solid transparent;
+  color: var(--dark);
+}
+
+/* Light mode active: warm beige fill + radial-gradient border shell */
+html[data-theme="light"] .garage-filter-active {
+  background-color: transparent;
+  background-image:
+    linear-gradient(var(--elevated), var(--elevated)),
+    radial-gradient(
+      121.25% 121.25% at 110% 121.25%,
+      #F0EDE6 34.71%,
+      rgba(255, 255, 255, 0) 54.43%,
+      rgba(255, 255, 255, 0) 71.13%,
+      #F0EDE6 90.77%
+    );
+  background-origin: padding-box, border-box;
+  background-clip: padding-box, border-box;
+  border: 1.5px solid transparent;
+  color: var(--foreground);
+}
+
+html .garage-filter-inactive {
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  color: var(--primary);
+  background-color: transparent;
+  background-image: none;
+}
+
+html[data-theme="light"] .garage-filter-inactive {
+  border: 1px solid color-mix(in srgb, var(--foreground) 14%, transparent);
+  color: var(--secondary);
+  background-color: transparent;
+  background-image: none;
+}
+
+html .garage-filter-inactive:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+}
+
+html[data-theme="light"] .garage-filter-inactive:hover {
+  border-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+  color: var(--foreground);
+}
+
+/* Member garage — card stats block */
+[data-theme="light"] .garage-stats-block {
+  background: var(--elevated);
+}
+
+/* ── Garage modals — form row / chip surfaces (theme-aware bg-dark swap) ─── */
+
+/* Row buttons with bg-dark that need a light-surface in light mode */
+.garage-form-row {
+  background: var(--dark);
+}
+
+[data-theme="light"] .garage-form-row {
+  background: var(--input-muted);
+}
+
+/* Textarea / input fields that use bg-dark */
+.garage-form-input {
+  background: var(--dark);
+}
+
+[data-theme="light"] .garage-form-input {
+  background: var(--input-muted);
+}
+
+/* Chip / pill buttons using bg-dark */
+.garage-form-chip {
+  background: var(--dark);
+}
+
+[data-theme="light"] .garage-form-chip {
+  background: var(--input-muted);
+}
+
+/* Review / confirmed inner cards using hardcoded #141310 */
+.garage-review-card {
+  background: #141310;
+}
+
+[data-theme="light"] .garage-review-card {
+  background: var(--card);
+}
+
+/* Pending timeline dot using bg-dark */
+.garage-timeline-dot-pending {
+  background: var(--dark);
+}
+
+[data-theme="light"] .garage-timeline-dot-pending {
+  background: var(--elevated);
+}
 .ask-steve-suggestion {
   background: var(--card);
   border: 1px solid color-mix(in srgb, var(--accent) 10%, transparent);
@@ -1090,19 +1202,66 @@ input[type="number"] {
   transition: background-image 0.2s ease;
 }
 
+/* Member dashboard — news unread dot */
+.news-unread-dot {
+  box-shadow: 0 0 6px rgba(212, 168, 71, 0.55);
+}
+
+[data-theme="light"] .news-unread-dot {
+  background: var(--secondary);
+  box-shadow: none;
+}
+
+/* Member dashboard — news All button */
+[data-theme="light"] .news-all-btn {
+  background: var(--elevated);
+  border-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+  color: var(--foreground);
+}
+
+[data-theme="light"] .news-all-btn span {
+  color: var(--foreground);
+}
+
+[data-theme="light"] .news-all-btn svg path {
+  stroke: var(--foreground);
+}
+
+[data-theme="light"] .news-all-btn:hover {
+  background: var(--surface);
+  border-color: color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
 /* Member dashboard — news card shell */
 .news-card-shell {
+  border: 1px solid color-mix(in srgb, var(--accent) 15%, transparent);
   box-shadow: inset 0 1px 0 rgba(197, 160, 89, 0.07);
 }
 
+[data-theme="light"] .news-card-shell {
+  background: var(--elevated);
+  border-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+  box-shadow: 0 1px 4px rgba(26, 24, 22, 0.06), 0 2px 12px rgba(26, 24, 22, 0.04);
+}
+
+[data-theme="light"] .news-card-shell:hover {
+  border-color: color-mix(in srgb, var(--foreground) 14%, transparent);
+  box-shadow: 0 2px 8px rgba(26, 24, 22, 0.08), 0 4px 16px rgba(26, 24, 22, 0.06);
+}
+
 [data-theme="dark"] .news-card-shell {
-  background: #11100e;
+  background: #11100C;
   border-color: color-mix(in srgb, var(--accent) 22%, transparent);
-  box-shadow: inset 0 1px 0 rgba(197, 160, 89, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(197, 160, 89, 0.18),
+    inset 0 0 40px rgba(212, 168, 71, 0.04);
 }
 
 [data-theme="dark"] .news-card-shell:hover {
-  border-color: color-mix(in srgb, var(--accent) 32%, transparent);
+  border-color: color-mix(in srgb, var(--accent) 38%, transparent);
+  box-shadow:
+    inset 0 1px 0 rgba(197, 160, 89, 0.24),
+    inset 0 0 50px rgba(212, 168, 71, 0.07);
 }
 
 .news-card-gradient {
@@ -1110,9 +1269,7 @@ input[type="number"] {
 }
 
 [data-theme="dark"] .news-card-gradient {
-  background:
-    radial-gradient(ellipse 90% 80% at -8% -10%, rgba(197, 160, 89, 0.34) 0%, rgba(197, 160, 89, 0.1) 34%, transparent 62%),
-    linear-gradient(128deg, rgba(62, 52, 36, 0.42) 0%, rgba(24, 21, 17, 0.94) 38%, rgba(11, 10, 9, 1) 100%);
+  background: linear-gradient(102.57deg, rgba(212, 168, 71, 0.13) 9.47%, transparent 65.04%);
 }
 
 .news-card-gradient-secondary {
@@ -1120,12 +1277,62 @@ input[type="number"] {
 }
 
 [data-theme="dark"] .news-card-gradient-secondary {
-  background: linear-gradient(to top right, rgba(48, 40, 30, 0.28) 0%, transparent 48%);
+  background: linear-gradient(282.57deg, rgba(212, 168, 71, 0.07) 9.47%, transparent 65.04%);
 }
 
 /* Member dashboard — venue card image container */
 [data-theme="light"] .venue-card-image-bg {
   background: var(--surface);
+}
+
+/* Notification popup — visible card boundary + dividers in light mode.
+   The accent-based borders read as gold-on-beige and disappear, so switch to
+   a foreground-tinted border that has enough contrast on the light surface. */
+[data-theme="light"] .staff-notif-panel {
+  border-color: color-mix(in srgb, var(--foreground) 18%, transparent);
+}
+
+[data-theme="light"] .staff-notif-header {
+  border-bottom-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+[data-theme="light"] .staff-notif-item {
+  border-color: color-mix(in srgb, var(--foreground) 12%, transparent);
+}
+
+[data-theme="light"] .staff-notif-item--unread {
+  border-color: color-mix(in srgb, var(--foreground) 20%, transparent);
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+/* Close (✕) turns white on hover which vanishes on the light surface — keep it
+   dark on hover in light mode only. Dark mode keeps its white hover. */
+[data-theme="light"] .staff-notif-close:hover {
+  color: var(--foreground);
+}
+
+/* Add-CTA (e.g. Add Inspection) uses a gold→primary gradient; in light mode
+   primary is near-black so the gradient + dark text becomes unreadable. Swap to
+   the shared light CTA fill on the light surface only — dark mode is untouched. */
+[data-theme="light"] .staff-add-cta {
+  background-image: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%) !important;
+  color: #1a1816 !important;
+}
+
+[data-theme="light"] .staff-add-cta:hover {
+  background-image: linear-gradient(90deg, #958770 0%, #d8d1c6 100%) !important;
+}
+
+[data-theme="light"] .concierge-own-bubble {
+  background-image: linear-gradient(90deg, #8a7d6a 0%, #cfc7bb 100%) !important;
+  background-color: #b3a898 !important;
+  color: #1a1816 !important;
+}
+
+[data-theme="light"] .concierge-avatar {
+  background-image: linear-gradient(135deg, #a8946a 0%, #cfc7bb 100%) !important;
+  background-color: #b3a898 !important;
+  color: #1a1816 !important;
 }
 
 @keyframes ask-steve-thinking-bounce {

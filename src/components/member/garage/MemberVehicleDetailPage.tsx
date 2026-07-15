@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { notFound } from "next/navigation";
 import { memberVehiclesApi } from "@/api/memberVehicles.api";
 import { mapMemberVehicleDetail } from "@/lib/garage";
+import { MemberVehicleDetailSkeleton } from "./MemberGarageSkeleton";
 import { MemberVehicleDetailHeader } from "./MemberVehicleDetailHeader";
 import { MemberVehicleHeroCard } from "./MemberVehicleHeroCard";
 import { MemberVehicleHealthCard } from "./MemberVehicleHealthCard";
@@ -71,12 +72,7 @@ export function MemberVehicleDetailPage({
   }
 
   if (loading) {
-    return (
-      <div className="space-y-6 p-8">
-        <MemberVehicleDetailHeader />
-        <p className="font-roboto text-sm text-secondary">Loading vehicle details...</p>
-      </div>
-    );
+    return <MemberVehicleDetailSkeleton />;
   }
 
   if (error) {

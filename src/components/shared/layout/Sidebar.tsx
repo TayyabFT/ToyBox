@@ -32,9 +32,14 @@ import { memberChatApi } from "@/api/memberChat.api";
 import { getUnreadConversationCount } from "@/lib/concierge";
 import { getMemberUnreadMessageCount } from "@/lib/memberConcierge";
 import { useTheme } from "@/components/common/ThemeProvider";
-import { adminManageNav, adminOperationsNav } from "@/lib/adminNav";
+import {
+  ADMIN_PROFILE_PATH,
+  adminManageNav,
+  adminOperationsNav,
+} from "@/lib/adminNav";
 import { staffManagementNav, staffOperationsNav } from "@/lib/staffNav";
 import { memberNav, memberServicesNav, memberAccountNav } from "@/lib/memberNav";
+import { SidebarProfileFooter } from "@/components/shared/layout/SidebarProfileFooter";
 import type { UserRole } from "@/lib/auth";
 
 type BadgeTone = "gold" | "pink" | "teal";
@@ -169,10 +174,12 @@ function NavSection({
   section,
   pathname,
   base,
+  isLightMode,
 }: {
   section: SidebarSection;
   pathname: string;
   base: string;
+  isLightMode: boolean;
 }) {
   return (
     <div className="space-y-2">
@@ -216,7 +223,11 @@ function NavSection({
 
                 {item.badge && (
                   <span
-                    className={`flex h-4 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none ${badgeToneClass[item.badge.tone]}`}
+                    className={`sidebar-count-badge flex h-4 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none ${
+                      isLightMode
+                        ? "bg-[#8A7D6A] text-white"
+                        : badgeToneClass[item.badge.tone]
+                    }`}
                   >
                     {item.badge.count}
                   </span>
@@ -366,10 +377,15 @@ export function Sidebar({ role }: { role: UserRole }) {
               section={section}
               pathname={pathname}
               base={spec.base}
+              isLightMode={isLightMode}
             />
           ))}
         </nav>
       </div>
+
+      {role === "admin" ? (
+        <SidebarProfileFooter profilePath={ADMIN_PROFILE_PATH} />
+      ) : null}
 
       {spec.showShiftCard ? <StaffShiftCard /> : null}
     </aside>

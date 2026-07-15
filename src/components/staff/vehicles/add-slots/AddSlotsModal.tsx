@@ -377,7 +377,7 @@ export function AddSlotsModal({
             type="button"
             onClick={() => void handleSubmit()}
             disabled={submitting}
-            className="font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
+            className="staff-add-cta font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting
               ? "Adding..."

@@ -1,3 +1,4 @@
+import { isPinnableOperationalUpdateId } from "@/lib/staffOperationalUpdates";
 import type { PinnedNotice } from "./types";
 
 type PinnedNoticesPanelProps = {
@@ -25,21 +26,31 @@ const toneStyles: Record<
 };
 
 function hasApiId(id: string) {
-  return Boolean(id) && !id.startsWith("notice-");
+  return isPinnableOperationalUpdateId(id);
 }
+
+const SCROLL_THRESHOLD = 5;
 
 export function PinnedNoticesPanel({
   notices,
   pinningId = "",
   onTogglePin,
 }: PinnedNoticesPanelProps) {
+  const isScrollable = notices.length > SCROLL_THRESHOLD;
+
   return (
     <section className="rounded-2xl border border-accent/10 bg-card p-5">
       <h2 className="font-roboto mb-4 text-[11px] tracking-[0.14em] text-secondary uppercase">
         Pinned Notices
       </h2>
 
-      <div className="space-y-4">
+      <div
+        className={
+          isScrollable
+            ? "Custom__Scrollbar max-h-[520px] space-y-4 overflow-y-auto pr-1"
+            : "space-y-4"
+        }
+      >
         {notices.length === 0 ? (
           <p className="font-roboto text-[12px] text-secondary">
             No pinned notices right now.

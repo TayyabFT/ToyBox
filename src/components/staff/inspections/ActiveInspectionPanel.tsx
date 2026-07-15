@@ -220,7 +220,7 @@ export function ActiveInspectionPanel({
               type="button"
               disabled={actionLoading}
               onClick={onStepNext}
-              className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="staff-add-cta font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               {`Next: ${inspection.steps.find((step) => step.id === nextStep)?.label ?? nextStep} >`}
             </button>
@@ -229,7 +229,7 @@ export function ActiveInspectionPanel({
               type="button"
               disabled={actionLoading}
               onClick={onSubmit}
-              className="font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+              className="staff-add-cta font-roboto cursor-pointer rounded-lg bg-gradient-to-r from-gold-bright to-primary px-5 py-2.5 text-[10px] font-semibold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
               Submit Report
             </button>

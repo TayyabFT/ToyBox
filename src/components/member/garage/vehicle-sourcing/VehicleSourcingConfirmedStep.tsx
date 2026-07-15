@@ -33,7 +33,7 @@ export function VehicleSourcingConfirmedStep({
         in touch within 24 hours.
       </p>
 
-      <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 bg-[#141310] px-4 py-1">
+      <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 garage-review-card px-4 py-1">
         <ConfirmedRow
           label="Vehicle"
           value={formatSourcingMakeModel(form.make, form.model)}

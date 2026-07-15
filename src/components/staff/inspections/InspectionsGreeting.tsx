@@ -19,7 +19,7 @@ export function InspectionsGreeting({ onAddInspection }: InspectionsGreetingProp
       <button
         type="button"
         onClick={onAddInspection}
-        className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase"
+        className="staff-add-cta font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] !font-bold tracking-[0.14em] text-dark uppercase"
       >
         <PlusSmall />
         Add Inspection

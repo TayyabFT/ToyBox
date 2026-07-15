@@ -35,7 +35,7 @@ export function DetailingWashConfirmedStep({
         Concierge will notify you when the vehicle enters service.
       </p>
 
-      <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 bg-[#141310] px-4 py-1">
+      <div className="mt-5 w-full divide-y divide-accent/8 rounded-xl border border-accent/10 garage-review-card px-4 py-1">
         {referenceNumber ? (
           <ConfirmedRow
             label="Reference"

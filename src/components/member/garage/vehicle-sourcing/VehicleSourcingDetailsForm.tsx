@@ -13,13 +13,13 @@ import {
 import type { SourcingSpecKey, VehicleSourcingDetailsFormState } from "./types";
 
 const inputClassName =
-  "font-roboto w-full rounded-lg border border-accent/15 bg-dark px-4 py-3.5 text-[13px] font-medium text-foreground outline-none transition-colors placeholder:text-secondary/70 focus:border-primary/45";
+  "font-roboto w-full rounded-lg border border-accent/15 garage-form-input px-4 py-3.5 text-[13px] font-medium text-foreground outline-none transition-colors placeholder:text-secondary/70 focus:border-primary/45";
 
 const chipClassName = (selected: boolean) =>
   `font-roboto rounded-lg border px-3 py-3 text-center text-[11px] font-semibold leading-snug transition-colors ${
     selected
-      ? "border-primary bg-dark text-primary"
-      : "border-accent/15 bg-dark text-secondary hover:border-accent/30"
+      ? "garage-form-chip border-primary text-primary"
+      : "garage-form-chip border-accent/15 text-secondary hover:border-accent/30"
   }`;
 
 type VehicleSourcingDetailsFormProps = {
@@ -171,8 +171,8 @@ export function VehicleSourcingDetailsForm({
                 onClick={() => onChange({ condition: option.key })}
                 className={`flex w-full items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-colors ${
                   selected
-                    ? "border border-primary/50 bg-dark"
-                    : "border border-accent/12 bg-dark hover:border-accent/20"
+                    ? "garage-form-row border border-primary/50"
+                    : "garage-form-row border border-accent/12 hover:border-accent/20"
                 }`}
               >
                 <RequestRadioDot selected={selected} />
@@ -222,14 +222,14 @@ export function VehicleSourcingDetailsForm({
           value={value.additionalNotes}
           onChange={(event) => onChange({ additionalNotes: event.target.value })}
           rows={4}
-          className="font-roboto min-h-[100px] w-full resize-none rounded-lg border border-accent/15 bg-dark px-4 py-4 text-[13px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
+          className="font-roboto min-h-[100px] w-full resize-none rounded-lg border border-accent/15 garage-form-input px-4 py-4 text-[13px] leading-relaxed text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-primary/45"
           placeholder="Add any sourcing preferences or requirements."
         />
       </div>
 
       <div className="space-y-2.5">
         <RequestFieldLabel>Assigned To</RequestFieldLabel>
-        <div className="flex items-center gap-3 rounded-xl border border-accent/12 bg-dark px-4 py-3.5">
+        <div className="flex items-center gap-3 rounded-xl border border-accent/12 garage-form-row px-4 py-3.5">
           <span className="font-roboto flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/8 text-[13px] font-semibold text-primary">
             JA
           </span>

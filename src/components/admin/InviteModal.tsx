@@ -3,10 +3,16 @@
 import { useEffect, useState } from "react";
 import { Dropdown, Input } from "@/components/common";
 import { useTheme } from "@/components/common/ThemeProvider";
+import {
+  DEFAULT_MEMBER_DESIGNATION,
+  DEFAULT_VALIDITY_MONTHS,
+  MEMBER_DESIGNATION_OPTIONS,
+  validityMonthDropdownOptions,
+} from "@/lib/invitations";
 import { showToast } from "@/lib/toast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { sendInvite } from "@/store/slices/adminSlice";
-import type { InviteRole } from "@/types/api";
+import type { InviteRole, MemberDesignation } from "@/types/api";
 
 const LIGHT_PANEL_STYLE = {
   backgroundColor: "#D0C8BC",
@@ -19,28 +25,26 @@ const LIGHT_CTA_STYLE = {
   boxShadow: "none",
 } as const;
 
-const roleOptions = [
-  { label: "Member", value: "member" },
-  { label: "Staff", value: "staff" },
-];
-
 type FieldErrors = {
-  role?: string;
+  fullName?: string;
   email?: string;
-  firstName?: string;
-  lastName?: string;
+  designation?: string;
+  jobTitle?: string;
+  validityMonths?: string;
 };
 
-const validateInvite = (
-  role: string,
+function validateInvite(
+  role: InviteRole,
+  fullName: string,
   email: string,
-  firstName: string,
-  lastName: string,
-): FieldErrors => {
+  designation: string,
+  jobTitle: string,
+  validityMonths: string,
+): FieldErrors {
   const errors: FieldErrors = {};
 
-  if (!role) {
-    errors.role = "Role is required";
+  if (!fullName.trim()) {
+    errors.fullName = "Full name is required";
   }
 
   if (!email.trim()) {
@@ -49,16 +53,20 @@ const validateInvite = (
     errors.email = "Enter a valid email address";
   }
 
-  if (!firstName.trim()) {
-    errors.firstName = "First name is required";
+  if (role === "member" && !designation) {
+    errors.designation = "Designation is required";
   }
 
-  if (!lastName.trim()) {
-    errors.lastName = "Last name is required";
+  if (role === "staff" && !jobTitle.trim()) {
+    errors.jobTitle = "Job title is required";
+  }
+
+  if (!validityMonths) {
+    errors.validityMonths = "Validity is required";
   }
 
   return errors;
-};
+}
 
 export function InviteModal({
   open,
@@ -74,33 +82,48 @@ export function InviteModal({
   const { theme } = useTheme();
   const isLight = theme === "light";
 
-  const [role, setRole] = useState(lockedRole ?? "");
+  const role = lockedRole ?? "member";
+  const isMember = role === "member";
+
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [designation, setDesignation] = useState<string>(
+    DEFAULT_MEMBER_DESIGNATION,
+  );
+  const [jobTitle, setJobTitle] = useState("");
+  const [validityMonths, setValidityMonths] = useState<string>(
+    String(DEFAULT_VALIDITY_MONTHS),
+  );
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
   useEffect(() => {
-    if (open && lockedRole) {
-      setRole(lockedRole);
-    }
-  }, [open, lockedRole]);
+    if (!open) return;
 
-  function resetForm() {
-    setRole(lockedRole ?? "");
+    setFullName("");
     setEmail("");
-    setFirstName("");
-    setLastName("");
+    setDesignation(DEFAULT_MEMBER_DESIGNATION);
+    setJobTitle("");
+    setValidityMonths(String(DEFAULT_VALIDITY_MONTHS));
     setFieldErrors({});
-  }
+  }, [open, role]);
 
   function handleClose() {
-    resetForm();
     onClose();
   }
 
+  function clearFieldError(field: keyof FieldErrors) {
+    setFieldErrors((prev) => ({ ...prev, [field]: undefined }));
+  }
+
   async function handleSendInvite() {
-    const errors = validateInvite(role, email, firstName, lastName);
+    const errors = validateInvite(
+      role,
+      fullName,
+      email,
+      designation,
+      jobTitle,
+      validityMonths,
+    );
 
     if (Object.keys(errors).length > 0) {
       setFieldErrors(errors);
@@ -109,23 +132,24 @@ export function InviteModal({
 
     setFieldErrors({});
 
-    const result = await dispatch(
-      sendInvite({
-        role: role as InviteRole,
-        email: email.trim(),
-        firstName: firstName.trim(),
-        lastName: lastName.trim(),
-      }),
-    );
+    const payload = {
+      role,
+      fullName: fullName.trim(),
+      email: email.trim(),
+      validityMonths: Number(validityMonths),
+      ...(isMember
+        ? { designation: designation as MemberDesignation }
+        : { jobTitle: jobTitle.trim() }),
+    };
+
+    const result = await dispatch(sendInvite(payload));
 
     if (sendInvite.fulfilled.match(result)) {
-      console.log("Invite Response:", result.payload);
       showToast.success({
         title: "Invitation Sent",
         message: result.payload.message || "Invite delivered successfully",
       });
-      resetForm();
-      onClose();
+      handleClose();
       return;
     }
 
@@ -139,91 +163,111 @@ export function InviteModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
+      <button
+        type="button"
+        aria-label="Close invite modal"
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+        onClick={handleClose}
+      />
 
       <div
-        className="admin-modal-panel relative z-10 w-full max-w-md rounded-2xl border border-accent/25 p-6 shadow-[var(--shadow-modal)]"
+        className="admin-modal-panel relative z-10 w-full max-w-md rounded-2xl border border-accent/25 p-8 shadow-[var(--shadow-modal)]"
         style={isLight ? LIGHT_PANEL_STYLE : undefined}
       >
-        <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg tracking-[0.06em] text-foreground uppercase">
-            Send Invite
-          </h2>
+        <p className="font-roboto text-[10px] tracking-[0.18em] text-section-label uppercase">
+          {isMember ? "Member Directory" : "Staff Directory"}
+        </p>
+
+        <h2 className="mt-2 font-copperplate text-[28px] leading-none tracking-[0.04em] text-accent uppercase">
+          {isMember ? "Invite Member" : "Invite Staff"}
+        </h2>
+
+        <div className="mt-6 border-t border-accent/25" />
+
+        <div className="mt-6 flex flex-col gap-4">
+          <Input
+            label="Full Name"
+            type="text"
+            name="fullName"
+            placeholder="e.g. Layla Hassan"
+            value={fullName}
+            error={fieldErrors.fullName}
+            onChange={(event) => {
+              setFullName(event.target.value);
+              clearFieldError("fullName");
+            }}
+          />
+
+          <Input
+            label="Email Address"
+            type="email"
+            name="email"
+            placeholder="name@example.com"
+            value={email}
+            error={fieldErrors.email}
+            onChange={(event) => {
+              setEmail(event.target.value);
+              clearFieldError("email");
+            }}
+          />
+
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {isMember ? (
+              <Dropdown
+                label="Designation"
+                options={MEMBER_DESIGNATION_OPTIONS}
+                value={designation}
+                placeholder="Select designation"
+                error={fieldErrors.designation}
+                onChange={(value) => {
+                  setDesignation(value);
+                  clearFieldError("designation");
+                }}
+              />
+            ) : (
+              <Input
+                label="Job Title"
+                type="text"
+                name="jobTitle"
+                placeholder="e.g. Concierge"
+                value={jobTitle}
+                error={fieldErrors.jobTitle}
+                onChange={(event) => {
+                  setJobTitle(event.target.value);
+                  clearFieldError("jobTitle");
+                }}
+              />
+            )}
+
+            <Dropdown
+              label="Validity"
+              options={validityMonthDropdownOptions}
+              value={validityMonths}
+              placeholder="Select validity"
+              error={fieldErrors.validityMonths}
+              onChange={(value) => {
+                setValidityMonths(value);
+                clearFieldError("validityMonths");
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap items-center justify-end gap-3">
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer text-secondary transition-colors hover:text-foreground"
+            disabled={inviteLoading}
+            className="font-roboto cursor-pointer rounded-full border border-accent/25 px-6 py-3 text-[10px] font-semibold tracking-[0.16em] text-foreground uppercase transition-colors hover:border-accent/40 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            ✕
+            Cancel
           </button>
-        </div>
-
-        <div className="flex flex-col gap-4">
-          <Dropdown
-            label="Role"
-            options={roleOptions}
-            value={role}
-            placeholder="Select role"
-            error={fieldErrors.role}
-            disabled={Boolean(lockedRole)}
-            onChange={(value) => {
-              setRole(value);
-              if (fieldErrors.role) {
-                setFieldErrors((prev) => ({ ...prev, role: undefined }));
-              }
-            }}
-          />
-
-          <Input
-            label="Email"
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={email}
-            error={fieldErrors.email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              if (fieldErrors.email) {
-                setFieldErrors((prev) => ({ ...prev, email: undefined }));
-              }
-            }}
-          />
-
-          <Input
-            label="First Name"
-            type="text"
-            name="firstName"
-            placeholder="Enter first name"
-            value={firstName}
-            error={fieldErrors.firstName}
-            onChange={(e) => {
-              setFirstName(e.target.value);
-              if (fieldErrors.firstName) {
-                setFieldErrors((prev) => ({ ...prev, firstName: undefined }));
-              }
-            }}
-          />
-
-          <Input
-            label="Last Name"
-            type="text"
-            name="lastName"
-            placeholder="Enter last name"
-            value={lastName}
-            error={fieldErrors.lastName}
-            onChange={(e) => {
-              setLastName(e.target.value);
-              if (fieldErrors.lastName) {
-                setFieldErrors((prev) => ({ ...prev, lastName: undefined }));
-              }
-            }}
-          />
 
           <button
             type="button"
             onClick={handleSendInvite}
             disabled={inviteLoading}
-            className="admin-gold-cta mt-2 w-full cursor-pointer rounded-lg py-3 text-sm font-roboto font-semibold tracking-[0.15em] uppercase disabled:opacity-60"
+            className="admin-gold-cta font-roboto cursor-pointer rounded-full px-6 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
             style={isLight ? LIGHT_CTA_STYLE : undefined}
           >
             {inviteLoading ? "Sending..." : "Send Invite"}

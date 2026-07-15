@@ -30,7 +30,7 @@ export function VehicleSourcingReviewStep({ form }: VehicleSourcingReviewStepPro
   const timeline = getSourcingTimeline(form.timeline);
 
   return (
-    <div className="overflow-hidden rounded-2xl border border-accent/12 bg-[#141310]">
+    <div className="overflow-hidden rounded-2xl border border-accent/12 garage-review-card">
       <div className="flex items-center gap-3 border-b border-accent/8 px-4 py-3.5">
         <ReviewSearchIcon />
         <div className="min-w-0">

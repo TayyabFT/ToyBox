@@ -130,7 +130,7 @@ export function ComposeBulletin({
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-nowrap items-center gap-2">
           {COMPOSE_MODES.map((item) => {
             const active = mode === item.id;
 

@@ -28,6 +28,76 @@ const VISIBLE_RECENT_BULLETINS = 4;
 /** Fits ~4 bulletin rows (card + gap). */
 const RECENT_BULLETINS_MAX_HEIGHT = "max-h-[308px]";
 
+function BulletinRow({ bulletin }: { bulletin: RecentBulletin }) {
+  return (
+    <li className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5">
+      <div className="flex items-center justify-between gap-3">
+        <p className="font-copperplate-body text-[12px] font-semibold tracking-[0.08em] text-foreground uppercase">
+          {bulletin.title}
+        </p>
+        <span className="font-copperplate-body shrink-0 text-[10px] tracking-[0.08em] text-secondary">
+          {bulletin.time}
+        </span>
+      </div>
+
+      {bulletin.isDraft ? (
+        <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.1em] text-accent uppercase">
+          Draft · Not sent
+        </p>
+      ) : (
+        <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.1em] text-secondary uppercase">
+          Open{" "}
+          <span className="font-semibold text-accent">
+            {formatRate(bulletin.openRate)}
+          </span>{" "}
+          · Click{" "}
+          <span className="font-semibold text-accent">
+            {formatRate(bulletin.clickRate)}
+          </span>
+        </p>
+      )}
+    </li>
+  );
+}
+
+function BulletinList({
+  bulletins,
+  loading,
+  emptyLabel,
+}: {
+  bulletins: RecentBulletin[];
+  loading: boolean;
+  emptyLabel: string;
+}) {
+  return (
+    <div
+      className={`Custom__Scrollbar mt-4 overflow-y-auto pr-1 ${
+        !loading && bulletins.length > VISIBLE_RECENT_BULLETINS
+          ? RECENT_BULLETINS_MAX_HEIGHT
+          : ""
+      }`}
+    >
+      <ul className="space-y-3">
+        {loading ? (
+          Array.from({ length: 3 }, (_, index) => (
+            <BulletinRowSkeleton key={index} />
+          ))
+        ) : bulletins.length === 0 ? (
+          <li className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5">
+            <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
+              {emptyLabel}
+            </p>
+          </li>
+        ) : (
+          bulletins.map((bulletin) => (
+            <BulletinRow key={bulletin.id} bulletin={bulletin} />
+          ))
+        )}
+      </ul>
+    </div>
+  );
+}
+
 function splitPreviewTitle(title: string): { lead: string; accent: string } {
   const trimmed = title.trim();
 
@@ -56,6 +126,10 @@ export function BulletinPreview({
   const { lead, accent } = splitPreviewTitle(draft.title);
   const previewTitle = draft.title.trim();
   const previewBody = draft.body.trim();
+
+  const sentBulletins = bulletins.filter((bulletin) => !bulletin.isDraft);
+  const draftBulletins = bulletins.filter((bulletin) => bulletin.isDraft);
+  const showDraftSection = loading || draftBulletins.length > 0;
 
   return (
     <section className="flex flex-col rounded-2xl border border-accent/20 bg-card p-6">
@@ -94,54 +168,25 @@ export function BulletinPreview({
         Recent Bulletins
       </p>
 
-      <div
-        className={`Custom__Scrollbar mt-4 overflow-y-auto pr-1 ${
-          !loading && bulletins.length > VISIBLE_RECENT_BULLETINS
-            ? RECENT_BULLETINS_MAX_HEIGHT
-            : ""
-        }`}
-      >
-        <ul className="space-y-3">
-          {loading ? (
-            Array.from({ length: 3 }, (_, index) => (
-              <BulletinRowSkeleton key={index} />
-            ))
-          ) : bulletins.length === 0 ? (
-            <li className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5">
-              <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
-                No bulletins yet
-              </p>
-            </li>
-          ) : (
-            bulletins.map((bulletin) => (
-              <li
-                key={bulletin.id}
-                className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5"
-              >
-                <div className="flex items-center justify-between gap-3">
-                  <p className="font-copperplate-body text-[12px] font-semibold tracking-[0.08em] text-foreground uppercase">
-                    {bulletin.title}
-                  </p>
-                  <span className="font-copperplate-body shrink-0 text-[10px] tracking-[0.08em] text-secondary">
-                    {bulletin.time}
-                  </span>
-                </div>
+      <BulletinList
+        bulletins={sentBulletins}
+        loading={loading}
+        emptyLabel="No bulletins yet"
+      />
 
-                <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.1em] text-secondary uppercase">
-                  Open{" "}
-                  <span className="font-semibold text-accent">
-                    {formatRate(bulletin.openRate)}
-                  </span>{" "}
-                  · Click{" "}
-                  <span className="font-semibold text-accent">
-                    {formatRate(bulletin.clickRate)}
-                  </span>
-                </p>
-              </li>
-            ))
-          )}
-        </ul>
-      </div>
+      {showDraftSection ? (
+        <>
+          <p className="mt-7 font-copperplate-body text-[10px] tracking-[0.16em] text-secondary uppercase">
+            Draft Bulletins
+          </p>
+
+          <BulletinList
+            bulletins={draftBulletins}
+            loading={loading}
+            emptyLabel="No drafts yet"
+          />
+        </>
+      ) : null}
     </section>
   );
 }

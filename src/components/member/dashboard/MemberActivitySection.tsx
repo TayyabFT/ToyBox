@@ -46,32 +46,29 @@ function ActivityRow({
   return (
     <div className="relative flex gap-5">
       {/* Timeline column — node + connector */}
-      <div className="relative flex w-4 shrink-0 flex-col items-center">
-        {/* Connector line — above node (hidden for first) */}
-        <div className="w-px flex-1 bg-accent/30" style={{ minHeight: 8 }} />
-
+      <div className="relative flex w-5 shrink-0 flex-col items-center">
         {/* Outer ring + inner filled dot */}
-        <span className="relative z-10 flex size-5 shrink-0 items-center justify-center rounded-full border border-accent/60">
-          <span className="size-2.5 rounded-full bg-accent shadow-[0_0_5px_rgba(201,168,76,0.5)]" />
+        <span className="relative z-10 mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border border-accent/60">
+          <span className="size-2.5 rounded-full bg-accent shadow-[0_0_6px_rgba(201,168,76,0.55)]" />
         </span>
 
         {/* Connector line — below node (hidden for last) */}
         {!isLast ? (
-          <div className="w-px flex-1 bg-accent/30" style={{ minHeight: 24 }} />
+          <div className="mt-1 w-px flex-1 bg-accent/25" style={{ minHeight: 48 }} />
         ) : (
           <div className="flex-1" />
         )}
       </div>
 
       {/* Content */}
-      <div className="min-w-0 flex-1 pb-8 last:pb-0">
+      <div className={`min-w-0 flex-1 ${isLast ? "pb-2" : "pb-10"}`}>
         {/* Time label */}
-        <p className="font-roboto  text-[9px] font-semibold tracking-[0.16em] text-accent uppercase">
+        <p className="font-roboto text-[9px] font-semibold tracking-[0.16em] text-accent uppercase">
           {item.timeLabel}
         </p>
 
-        {/* Title — Copperplate, prefix white + em-dash + highlight gold */}
-        <h3 className="font-Copperplate text-[16px] font-bold leading-snug tracking-[0.03em] uppercase mb-1">
+        {/* Title — Copperplate, prefix foreground + em-dash + highlight gold */}
+        <h3 className="font-copperplate mt-0.5 text-[14px] leading-snug tracking-[0.03em] text-foreground uppercase">
           {titlePrefix}
           {titleHighlight && (
             <>
@@ -82,7 +79,7 @@ function ActivityRow({
         </h3>
 
         {/* Detail */}
-        <p className="font-Roboto text-[12px] leading-relaxed text-secondary/65 mb-2">
+        <p className="font-roboto mt-1.5 text-[12px] leading-relaxed text-secondary/70">
           {item.detail}
         </p>
       </div>
@@ -123,7 +120,7 @@ export function MemberActivitySection({ items }: MemberActivitySectionProps) {
       </div>
 
       {/* Timeline */}
-      <div className="pl-1">
+      <div className="pl-0.5 pt-1">
         {items.length === 0 ? (
           <MemberSectionEmpty
             title="No Recent Activity"
