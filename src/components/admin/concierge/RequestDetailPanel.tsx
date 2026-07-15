@@ -25,17 +25,17 @@ export function RequestDetailPanel({
 }: RequestDetailPanelProps) {
   return (
     <section className={conciergePanelClass}>
-      <div className="mb-7 flex flex-col gap-5 border-b border-[#1E1A14] pb-7 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-7 flex flex-col gap-5 border-b border-accent/8 pb-7 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex items-center gap-4">
-          <span className="flex size-[52px] shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-roboto text-[20px] font-semibold text-[#0A0806] uppercase">
+          <span className="admin-gold-avatar flex size-[52px] shrink-0 items-center justify-center rounded-full font-roboto text-[20px] font-semibold uppercase">
             {detail.memberInitial}
           </span>
 
           <div className="space-y-1.5">
             <h2 className={conciergeDetailNameClass}>{detail.memberName}</h2>
             <p className={conciergeDetailStatusClass}>
-              <span className="text-[#7DBFA0]">{detail.memberStatus}</span>
-              <span className="text-[#6B665E]">
+              <span className="text-teal">{detail.memberStatus}</span>
+              <span className="text-secondary">
                 {" "}
                 · {detail.memberTier} · {detail.memberId}
               </span>
@@ -48,7 +48,7 @@ export function RequestDetailPanel({
             View Profile
           </button>
           <button type="button" className={conciergeHeaderTealButtonClass}>
-            <Phone color="#7DBFA0" className="size-3.5" />
+            <Phone color="currentColor" className="size-3.5" />
             Call Member
           </button>
         </div>
@@ -69,7 +69,7 @@ export function RequestDetailPanel({
           Add Note
         </button>
         <button type="button" className={conciergeMarkReadyButtonClass}>
-          <ActivityCheck color="#0A0806" className="size-4" />
+          <ActivityCheck color="currentColor" className="size-4" />
           Mark Ready
         </button>
       </div>

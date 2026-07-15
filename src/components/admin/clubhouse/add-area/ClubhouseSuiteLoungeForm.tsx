@@ -74,7 +74,7 @@ export function ClubhouseSuiteLoungeForm({
 
         <div className="space-y-5">
           {value.suites.map((suite, index) => (
-            <div key={suite.id} className={index > 0 ? "space-y-5 border-t border-[#D4A84720] pt-5" : "space-y-5"}>
+            <div key={suite.id} className={index > 0 ? "space-y-5 border-t border-accent/12 pt-5" : "space-y-5"}>
               <Dropdown
                 label="Suite Title"
                 options={CLUBHOUSE_SUITE_TITLE_OPTIONS}
@@ -98,7 +98,7 @@ export function ClubhouseSuiteLoungeForm({
                 <button
                   type="button"
                   onClick={handleAddSuite}
-                  className="font-roboto w-full cursor-pointer rounded-lg border border-dashed border-[#D4A84740] py-2.5 text-[12px] font-semibold tracking-[0.08em] text-[#C9A84C] uppercase transition-colors hover:border-[#C9A84C] hover:bg-[#C9A84C]/5"
+                  className="font-roboto w-full cursor-pointer rounded-lg border border-dashed border-accent/25 py-2.5 text-[12px] font-semibold tracking-[0.08em] text-accent uppercase transition-colors hover:border-accent hover:bg-accent/5"
                 >
                   + Add Suite
                 </button>
@@ -134,7 +134,7 @@ export function ClubhouseSuiteLoungeForm({
           <div className="flex w-full flex-col gap-2">
             <label
               htmlFor="suite-lounge-notes"
-              className="font-roboto text-[11px] font-medium tracking-[0.15em] text-[#6E6455] uppercase"
+              className="font-roboto text-[11px] font-medium tracking-[0.15em] text-section-label uppercase"
             >
               Notes
             </label>
@@ -144,7 +144,7 @@ export function ClubhouseSuiteLoungeForm({
               rows={4}
               placeholder="Internal notes for staff..."
               onChange={(event) => patch({ notes: event.target.value })}
-              className="font-roboto w-full resize-none rounded-lg border border-[#D4A84740] bg-[#11100C] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-[#7D7460] focus:border-[#C9A84C]"
+              className="font-roboto w-full resize-none rounded-lg border border-accent/25 bg-card px-3 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-secondary focus:border-accent"
             />
           </div>
         </div>

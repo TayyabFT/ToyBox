@@ -28,7 +28,7 @@ export function ConfirmedBookingsPanel({
             <BookingRow key={booking.id} booking={booking} />
           ))
         ) : (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
+          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-section-label uppercase">
             No confirmed bookings
           </p>
         )}

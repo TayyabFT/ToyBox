@@ -1,12 +1,12 @@
 import type { ConfirmationBadgeTone } from "./types";
 
 const badgeClass: Record<ConfirmationBadgeTone, string> = {
-  confirmed: "border-[#7DBFA0]/50 bg-transparent text-[#7DBFA0]",
-  pending: "border-[#C5A059]/50 bg-transparent text-[#C5A059]",
-  "in-review": "border-[#6B8FA8]/55 bg-[#1C2530] text-[#8BB4D4]",
-  awaiting: "border-[#C5A059]/50 bg-transparent text-[#C5A059]",
-  "sign-off": "border-[#C5A059]/50 bg-transparent text-[#C5A059]",
-  done: "border-[#7DBFA0]/55 bg-[#12110E] text-[#7DBFA0] shadow-[0_0_8px_rgba(125,191,160,0.15)]",
+  confirmed: "border-teal/50 bg-transparent text-teal",
+  pending: "border-accent/50 bg-transparent text-accent",
+  "in-review": "border-info/55 bg-info/10 text-info",
+  awaiting: "border-accent/50 bg-transparent text-accent",
+  "sign-off": "border-accent/50 bg-transparent text-accent",
+  done: "border-teal/55 bg-card text-teal shadow-[var(--shadow-glow-teal)]",
 };
 
 const labelMap: Record<ConfirmationBadgeTone, string> = {
@@ -35,8 +35,8 @@ export function ConfirmationStatusBadge({ tone, label }: ConfirmationStatusBadge
 
 export function DoneStatusBadge() {
   return (
-    <span className="font-roboto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-[#7DBFA0]/55 bg-[#12110E] px-3 py-1 text-[9px] font-bold tracking-[0.1em] text-[#7DBFA0] uppercase shadow-[0_0_8px_rgba(125,191,160,0.2)]">
-      <span className="size-1.5 rounded-full bg-[#7DBFA0] shadow-[0_0_6px_#7DBFA0]" />
+    <span className="font-roboto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-teal/55 bg-card px-3 py-1 text-[9px] font-bold tracking-[0.1em] text-teal uppercase shadow-[var(--shadow-glow-teal)]">
+      <span className="size-1.5 rounded-full bg-teal shadow-[var(--shadow-glow-teal-strong)]" />
       Done
     </span>
   );

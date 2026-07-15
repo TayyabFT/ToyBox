@@ -1,11 +1,11 @@
 import type { ConciergeRequestStatus } from "./types";
 
 const badgeClass: Record<ConciergeRequestStatus, string> = {
-  urgent: "border-[#F87171]/25 bg-[#2D1616] text-[#F87171]",
-  review: "border-[#C5A059]/25 bg-[#2A2418] text-[#C5A059]",
-  active: "border-[#7DBFA0]/25 bg-[#162D24] text-[#7DBFA0]",
-  pending: "border-[#6B665E]/25 bg-[#1A1917] text-[#8A8378]",
-  done: "border-[#7DBFA0]/25 bg-[#162D24] text-[#7DBFA0]",
+  urgent: "border-pink/25 bg-pink/10 text-pink",
+  review: "border-accent/25 bg-accent/10 text-accent",
+  active: "border-teal/25 bg-teal/10 text-teal",
+  pending: "border-secondary/25 bg-elevated text-section-label",
+  done: "border-teal/25 bg-teal/10 text-teal",
 };
 
 const labelMap: Record<ConciergeRequestStatus, string> = {
@@ -17,11 +17,11 @@ const labelMap: Record<ConciergeRequestStatus, string> = {
 };
 
 const timeClass: Record<ConciergeRequestStatus, string> = {
-  urgent: "text-[#F87171]",
-  review: "text-[#8A8378]",
-  active: "text-[#8A8378]",
-  pending: "text-[#8A8378]",
-  done: "text-[#8A8378]",
+  urgent: "text-pink",
+  review: "text-section-label",
+  active: "text-section-label",
+  pending: "text-section-label",
+  done: "text-section-label",
 };
 
 type ConciergeStatusBadgeProps = {
@@ -34,7 +34,7 @@ export function ConciergeStatusBadge({ status }: ConciergeStatusBadgeProps) {
       className={`font-roboto inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] uppercase ${badgeClass[status]}`}
     >
       {status === "active" && (
-        <span className="size-1.5 rounded-full bg-[#7DBFA0] shadow-[0_0_6px_#7DBFA0]" />
+        <span className="size-1.5 rounded-full bg-teal shadow-[var(--shadow-glow-teal-strong)]" />
       )}
       {labelMap[status]}
     </span>

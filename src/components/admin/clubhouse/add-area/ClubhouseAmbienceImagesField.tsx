@@ -72,7 +72,7 @@ export function ClubhouseAmbienceImagesField({
 
   return (
     <div className="space-y-2.5">
-      <p className="font-roboto text-[11px] font-medium tracking-[0.15em] text-[#6E6455] uppercase">
+      <p className="font-roboto text-[11px] font-medium tracking-[0.15em] text-section-label uppercase">
         {label}
       </p>
 
@@ -85,7 +85,7 @@ export function ClubhouseAmbienceImagesField({
               key={index}
               type="button"
               onClick={() => (file ? updateSlot(index, null) : openPicker(index))}
-              className={`group relative flex ${slotAspectClass} cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-[#D4A84740] bg-[#0D0C09] transition-colors hover:border-[#C9A84C]/70`}
+              className={`group relative flex ${slotAspectClass} cursor-pointer items-center justify-center overflow-hidden rounded-xl border border-dashed border-accent/25 bg-surface transition-colors hover:border-accent/70`}
             >
               {preview ? (
                 <>
@@ -94,12 +94,12 @@ export function ClubhouseAmbienceImagesField({
                     alt={file?.name ?? `Ambience ${index + 1}`}
                     className="h-full w-full object-cover"
                   />
-                  <span className="absolute inset-0 flex items-center justify-center bg-black/50 text-[10px] font-medium tracking-[0.12em] text-white uppercase opacity-0 transition-opacity group-hover:opacity-100">
+                  <span className="absolute inset-0 flex items-center justify-center bg-dark/50 text-[10px] font-medium tracking-[0.12em] text-white uppercase opacity-0 transition-opacity group-hover:opacity-100">
                     Remove
                   </span>
                 </>
               ) : (
-                <span className="font-roboto text-[10px] tracking-[0.1em] text-[#7D7460] uppercase">
+                <span className="font-roboto text-[10px] tracking-[0.1em] text-secondary uppercase">
                   Upload
                 </span>
               )}

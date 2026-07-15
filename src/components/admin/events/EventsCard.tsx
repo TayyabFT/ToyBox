@@ -123,8 +123,8 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
   // Helper: button classes based on whether this filter is active
   const filterBtnClass = (filter: typeof activeFilter) =>
     filter === activeFilter
-      ? "font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors bg-primary text-dark"
-      : "font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors border border-[#D4A847]/20 text-primary hover:border-[#D4A847]/50";
+      ? "admin-gold-cta font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-opacity"
+      : "font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors border border-accent/20 text-accent hover:border-accent/50";
 
   if (isLoading) {
     return <EventCardSkeletonGrid />;
@@ -163,23 +163,23 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {visibleEvents.map((event) => (
-            <div key={event.id} className="bg-[#121314] rounded-xl overflow-hidden border border-zinc-900 flex flex-col justify-between">
+            <div key={event.id} className="overflow-hidden rounded-xl border border-accent/12 bg-card flex flex-col justify-between">
               
               {/* Top Banner Image Section */}
-              <div className="relative h-48 w-full bg-zinc-800">
+              <div className="relative h-48 w-full bg-elevated">
                 <img 
                   src={event.image} 
                   alt={event.title} 
                   className="w-full h-full object-cover opacity-80"
                 />
-                <span className={`absolute top-4 left-4 bg-black/70 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
+                <span className={`absolute top-4 left-4 bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
                   isPublishedEventStatus(event.status)
-                    ? "text-[#7DBFA0] border-[#7DBFA0]/30"
-                    : "text-[#D4A847] border-[#D4A847]/20"
+                    ? "text-teal border-teal/30"
+                    : "text-accent border-accent/20"
                 }`}>
                   {event.tag}
                 </span>
-                <span className="absolute bottom-4 right-4 bg-black/80 backdrop-blur-md text-[10px] font-bold tracking-wider text-white px-3 py-1 rounded-full border border-zinc-800">
+                <span className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-wider text-foreground px-3 py-1 rounded-full border border-accent/12">
                   {event.confirmedCount} / {event.totalCount} CONFIRMED
                 </span>
               </div>
@@ -187,27 +187,27 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
               {/* Bottom Content Area */}
               <div className="p-5 space-y-4">
                 <div className="space-y-1">
-                  <p className="text-[10px] font-bold tracking-widest text-primary uppercase">
+                  <p className="text-[10px] font-bold tracking-widest text-accent uppercase">
                     {event.date}
                   </p>
-                  <h3 className="text-lg font-normal tracking-normal text-zinc-100 font-copperplate">
+                  <h3 className="text-lg font-normal tracking-normal text-foreground font-copperplate">
                     {event.title}
                   </h3>
                 </div>
 
                 {/* Custom Status Progress Bar */}
-                <div className="w-full bg-zinc-900 h-1 rounded-full overflow-hidden">
+                <div className="w-full bg-elevated h-1 rounded-full overflow-hidden">
                   <div 
-                    className="bg-[#D4A847] h-full transition-all duration-500" 
+                    className="bg-accent h-full transition-all duration-500" 
                     style={{ width: `${event.progress}%` }}
                   />
                 </div>
 
                 {/* Stats Footer & Wired Action Target */}
-                <div className="flex items-center justify-between text-[11px] font-semibold tracking-wider text-zinc-400 pt-2">
+                <div className="flex items-center justify-between text-[11px] font-semibold tracking-wider text-secondary pt-2">
                   <div className="flex gap-4">
-                    <span>RSVP: <strong className="text-white">{event.rsvp}</strong></span>
-                    <span>WAIT: <strong className="text-white">{event.wait}</strong></span>
+                    <span>RSVP: <strong className="text-foreground">{event.rsvp}</strong></span>
+                    <span>WAIT: <strong className="text-foreground">{event.wait}</strong></span>
                   </div>
 
                   {event.status === "draft" ? (
@@ -216,11 +216,11 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
                       type="button"
                       disabled={updatingId === event.id}
                       onClick={() => handleConfirmDraft(event)}
-                      className="flex items-center gap-1.5 border border-zinc-700 text-zinc-400 cursor-pointer hover:border-[#D4A847]/50 hover:text-[#D4A847] px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="flex items-center gap-1.5 border border-accent/20 text-secondary cursor-pointer hover:border-accent/50 hover:text-accent px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {updatingId === event.id ? (
                         <>
-                          <span className="w-3 h-3 border border-zinc-400/30 border-t-zinc-400 rounded-full animate-spin" />
+                          <span className="w-3 h-3 border border-secondary/30 border-t-secondary rounded-full animate-spin" />
                           Confirming...
                         </>
                       ) : (
@@ -232,7 +232,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
                     <button
                       type="button"
                       onClick={() => onManageClick(event)}
-                      className="border border-[#D4A847]/20 text-[#D4A847] cursor-pointer hover:border-[#D4A847]/50 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all"
+                      className="border border-accent/20 text-accent cursor-pointer hover:border-accent/50 px-4 py-1.5 rounded-full text-[10px] font-bold tracking-widest uppercase transition-all"
                     >
                       Manage
                     </button>

@@ -21,7 +21,7 @@ export function WorkshopAlertBar({
   onReviewAll,
 }: WorkshopAlertBarProps) {
   return (
-    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-pink/20 bg-[#141210] px-5 py-3.5">
+    <div className="flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-pink/20 bg-[var(--critical-banner)] px-5 py-3.5">
       <div className="flex shrink-0 items-center gap-2.5">
         <span className="flex size-8 items-center justify-center rounded-lg border border-pink/30 bg-pink/8">
           <AlertTriangle color="var(--pink)" className="size-3.5" />
@@ -38,7 +38,7 @@ export function WorkshopAlertBar({
             className="font-roboto text-[11px] leading-snug tracking-[0.02em]"
           >
             <span className="font-medium text-pink">{item.highlight}</span>{" "}
-            <span className="text-[#8A8378]">{item.detail}</span>
+            <span className="text-section-label">{item.detail}</span>
           </p>
         ))}
       </div>

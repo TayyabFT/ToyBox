@@ -11,7 +11,6 @@ import {
 import { adminWorkshopApi } from "@/api/adminWorkshop.api";
 import {
   OverviewOutsideHeader,
-  overviewActionButtonClass,
   overviewPanelClass,
 } from "@/components/admin/overview";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
@@ -43,7 +42,7 @@ const statIcons = [
 
 function ActiveBayCardSkeleton() {
   return (
-    <div className="flex min-h-[220px] flex-col rounded-xl border border-white/5 bg-[#11100C] p-4">
+    <div className="flex min-h-[220px] flex-col rounded-xl border border-[var(--overview-border)] bg-card p-4">
       <div className="mb-3 flex items-center justify-between gap-3">
         <ShimmerBlock className="h-2.5 w-14" />
         <ShimmerBlock className="h-4 w-16 rounded-full" />
@@ -53,7 +52,7 @@ function ActiveBayCardSkeleton() {
         <ShimmerBlock className="h-2.5 w-40" />
       </div>
       <ShimmerBlock className="mb-4 h-8 w-full flex-1" />
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-white/5 pt-3.5">
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-[var(--overview-border)] pt-3.5">
         <ShimmerBlock className="h-2.5 w-24" />
         <ShimmerBlock className="h-2.5 w-14" />
       </div>
@@ -178,7 +177,7 @@ export function WorkshopPage() {
               <ActiveBayCard key={bay.id} bay={bay} />
             ))
           ) : (
-            <p className="font-roboto col-span-full py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
+            <p className="font-roboto col-span-full py-10 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
               No active bays
             </p>
           )}
@@ -194,7 +193,10 @@ export function WorkshopPage() {
               subtitle={queueSubtitle}
             />
           </div>
-          <button type="button" className={overviewActionButtonClass}>
+          <button
+            type="button"
+            className="admin-gold-cta font-roboto shrink-0 cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.12em] uppercase"
+          >
             Open Scheduler →
           </button>
         </div>

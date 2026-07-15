@@ -21,10 +21,10 @@ export function ClubhouseAreaFilterTabs({
           key={tab.id}
           type="button"
           onClick={() => onSelect(tab.id)}
-          className={`font-roboto rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.12em] uppercase transition-colors ${
+          className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
             activeId === tab.id
-              ? "bg-primary text-dark"
-              : "border border-accent/20 bg-transparent text-secondary hover:border-primary/35 hover:text-primary"
+              ? "admin-gold-cta"
+              : "border border-accent/25 text-accent hover:border-accent/40"
           }`}
         >
           {tab.label}

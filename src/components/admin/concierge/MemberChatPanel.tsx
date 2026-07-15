@@ -9,7 +9,10 @@ import { toResourceId } from "@/lib/resourceId";
 import { showError } from "@/lib/toast";
 import type { ChatConversation } from "@/types/api";
 import { ChatMessage } from "./ChatMessage";
-import { conciergePanelClass } from "./panelStyles";
+import {
+  conciergeOnlineBadgeClass,
+  conciergePanelClass,
+} from "./panelStyles";
 import type { ConciergeChatMessage } from "./types";
 
 function ChatBubbleSkeleton({ align }: { align: "start" | "end" }) {
@@ -190,14 +193,12 @@ export function MemberChatPanel({
     <section
       className={`${conciergePanelClass} flex h-full min-h-0 flex-col overflow-hidden`}
     >
-      <div className="mb-4 flex shrink-0 items-center justify-between gap-3 border-b border-[#1E1A14] px-1 pb-4">
-        <p className="font-roboto text-[13px] font-semibold tracking-[0.04em] text-[#F2EAD5] uppercase">
+      <div className="mb-4 flex shrink-0 items-center justify-between gap-3 border-b border-accent/8 px-1 pb-4">
+        <p className="font-roboto text-[13px] font-semibold tracking-[0.04em] text-foreground uppercase">
           {chatTitle}
         </p>
         {chatOnline && (
-          <span className="font-roboto rounded-full bg-[#1A2E1A] px-2.5 py-1 text-[10px] tracking-[0.08em] text-[#7EC87E] uppercase">
-            Online
-          </span>
+          <span className={conciergeOnlineBadgeClass}>Online</span>
         )}
       </div>
 
@@ -215,7 +216,7 @@ export function MemberChatPanel({
         ) : messages.length > 0 ? (
           <>
             {dateLabel ? (
-              <p className="font-roboto text-center text-[11px] tracking-[0.12em] text-[#6B665E] uppercase">
+              <p className="font-roboto text-center text-[11px] tracking-[0.12em] text-secondary uppercase">
                 {dateLabel}
               </p>
             ) : null}
@@ -225,13 +226,13 @@ export function MemberChatPanel({
             ))}
           </>
         ) : (
-          <p className="font-roboto py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
+          <p className="font-roboto py-10 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
             No messages yet
           </p>
         )}
       </div>
 
-      <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-[#2A2620] bg-[#0D0C0A] px-5 py-4">
+      <div className="flex shrink-0 items-center gap-3 rounded-2xl border border-accent/12 bg-surface px-5 py-4">
         <input
           type="text"
           value={draft}
@@ -239,16 +240,16 @@ export function MemberChatPanel({
           onKeyDown={handleKeyDown}
           disabled={memberId === null || sending}
           placeholder={`Reply to ${chatTitle}...`}
-          className="font-roboto min-w-0 flex-1 bg-transparent text-[13px] tracking-[0.02em] text-[#E7E5E4] outline-none placeholder:text-[#6B665E] disabled:opacity-50"
+          className="font-roboto min-w-0 flex-1 bg-transparent text-[13px] tracking-[0.02em] text-foreground-soft outline-none placeholder:text-secondary disabled:opacity-50"
         />
         <button
           type="button"
           aria-label="Send message"
           disabled={memberId === null || sending || !draft.trim()}
           onClick={() => void handleSend()}
-          className="flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-r from-[#F0C566] to-[#C9A84C] transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
+          className="admin-gold-cta flex size-11 shrink-0 cursor-pointer items-center justify-center rounded-full transition-opacity hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
         >
-          <VehicleSend color="#0A0806" className="size-4" />
+          <VehicleSend color="currentColor" className="size-4" />
         </button>
       </div>
     </section>

@@ -3,11 +3,10 @@ import { ConfirmationStatCard } from "./ConfirmationStatCard";
 import { confirmationStats as fallbackStats } from "./mockData";
 import type { ConfirmationStatItem } from "./types";
 
-const statIconClassName =
-  "size-4 [&_path]:!stroke-[#C5A059] group-hover:[&_path]:!stroke-[#0A0806]";
+const statIconClassName = "size-4 [&_path]:stroke-current";
 
 const statIcons = [
-  <VehicleClock key="clock" color="#C5A059" className={statIconClassName} />,
+  <VehicleClock key="clock" color="currentColor" className={statIconClassName} />,
   <Edit key="edit" active className={statIconClassName} />,
   <CircleCheck key="check" active className={statIconClassName} />,
   <ChartBars key="chart" className={statIconClassName} />,

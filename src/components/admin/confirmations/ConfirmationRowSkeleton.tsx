@@ -8,7 +8,7 @@ export function ConfirmationRowSkeleton({
   withIcon = true,
 }: ConfirmationRowSkeletonProps) {
   return (
-    <div className="flex items-center gap-4 border-b border-[#1E1A14] py-4 last:border-b-0">
+    <div className="flex items-center gap-4 border-b border-accent/8 py-4 last:border-b-0">
       {withIcon ? <ShimmerBlock className="size-9 shrink-0 rounded-lg" /> : null}
       <div className="min-w-0 flex-1 space-y-2">
         <ShimmerBlock className="h-3 w-32" />

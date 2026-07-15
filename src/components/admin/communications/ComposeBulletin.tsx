@@ -36,6 +36,12 @@ function toggleSelection<T extends string>(values: T[], value: T): T[] {
     : [...values, value];
 }
 
+function chipClass(active: boolean) {
+  return active
+    ? "admin-gold-cta"
+    : "border border-accent/25 text-accent hover:border-accent/40";
+}
+
 export function ComposeBulletin({
   audienceSegments,
   loadingAudience = false,
@@ -112,19 +118,19 @@ export function ComposeBulletin({
   }
 
   return (
-    <section className="flex flex-col rounded-2xl border border-accent/12 bg-card p-6">
+    <section className="flex flex-col rounded-2xl border border-accent/20 bg-card p-6">
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-copperplate text-[18px] tracking-[0.04em] uppercase">
             <span className="text-foreground">Compose </span>
-            <span className="text-primary">Bulletin</span>
+            <span className="text-accent">Bulletin</span>
           </h2>
           <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.14em] text-secondary uppercase">
             Reaches {loadingAudience ? "—" : reachCount} members
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           {COMPOSE_MODES.map((item) => {
             const active = mode === item.id;
 
@@ -133,11 +139,7 @@ export function ComposeBulletin({
                 key={item.id}
                 type="button"
                 onClick={() => setMode(item.id)}
-                className={`font-copperplate-body cursor-pointer rounded-full border px-4 py-1.5 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
-                  active
-                    ? "border-primary/60 bg-primary/8 text-primary"
-                    : "border-accent/15 text-secondary hover:border-accent/30"
-                }`}
+                className={`font-copperplate-body cursor-pointer rounded-full px-4 py-1.5 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${chipClass(active)}`}
               >
                 {item.label}
               </button>
@@ -155,7 +157,7 @@ export function ComposeBulletin({
           value={title}
           onChange={(event) => setTitle(event.target.value)}
           placeholder="Enter bulletin title"
-          className="font-copperplate-body w-full rounded-xl border border-accent/12 bg-[#1A1612] px-4 py-3 text-[13px] tracking-[0.02em] text-foreground transition-colors placeholder:text-muted/50 focus:border-primary/40 focus:outline-none"
+          className="font-copperplate-body w-full rounded-xl border border-accent/20 bg-input-muted px-4 py-3 text-[13px] tracking-[0.02em] text-foreground transition-colors placeholder:text-muted/50 focus:border-accent/40 focus:outline-none"
         />
       </div>
 
@@ -168,7 +170,7 @@ export function ComposeBulletin({
           onChange={(event) => setBody(event.target.value)}
           rows={6}
           placeholder="Write your bulletin message"
-          className="Custom__Scrollbar font-copperplate-body w-full resize-none rounded-xl border border-accent/12 bg-[#1A1612] px-4 py-3 text-[13px] leading-relaxed tracking-[0.02em] text-muted transition-colors placeholder:text-muted/50 focus:border-primary/40 focus:outline-none"
+          className="Custom__Scrollbar font-copperplate-body w-full resize-none rounded-xl border border-accent/20 bg-input-muted px-4 py-3 text-[13px] leading-relaxed tracking-[0.02em] text-foreground-soft transition-colors placeholder:text-muted/50 focus:border-accent/40 focus:outline-none"
         />
       </div>
 
@@ -189,16 +191,10 @@ export function ComposeBulletin({
                     toggleSelection(current, segment.id),
                   )
                 }
-                className={`font-copperplate-body inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2 text-[11px] font-semibold tracking-[0.1em] uppercase transition-colors ${
-                  active
-                    ? "border-primary/60 bg-primary/8 text-primary"
-                    : "border-accent/15 text-secondary hover:border-accent/30"
-                }`}
+                className={`font-copperplate-body inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-[11px] font-semibold tracking-[0.1em] uppercase transition-colors ${chipClass(active)}`}
               >
                 {segment.label}
-                <span
-                  className={active ? "text-primary/70" : "text-secondary/60"}
-                >
+                <span className={active ? "opacity-80" : "text-section-label"}>
                   {loadingAudience ? "—" : segment.count}
                 </span>
               </button>
@@ -207,8 +203,8 @@ export function ComposeBulletin({
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-between gap-4 border-t border-accent/8 pt-5">
-        <div className="flex items-center gap-2.5">
+      <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-accent/20 pt-5">
+        <div className="flex flex-wrap items-center gap-2.5">
           {CHANNELS.map((channel) => {
             const active = selectedChannels.includes(channel.id);
 
@@ -221,11 +217,7 @@ export function ComposeBulletin({
                     toggleSelection(current, channel.id),
                   )
                 }
-                className={`font-copperplate-body inline-flex cursor-pointer items-center gap-2 rounded-full border px-4 py-2.5 text-[10px] font-semibold tracking-[0.12em] uppercase transition-colors [&_svg]:size-3.5 ${
-                  active
-                    ? "border-primary/60 bg-primary/8 text-primary"
-                    : "border-accent/15 text-secondary hover:border-primary/40 hover:text-primary"
-                }`}
+                className={`font-copperplate-body inline-flex cursor-pointer items-center gap-2 rounded-full px-4 py-2.5 text-[10px] font-semibold tracking-[0.12em] uppercase transition-colors [&_svg]:size-3.5 ${chipClass(active)}`}
               >
                 {channel.icon}
                 {channel.label}
@@ -238,10 +230,10 @@ export function ComposeBulletin({
           type="button"
           onClick={() => void handleScheduleSend()}
           disabled={submitting}
-          className="font-copperplate-body inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-primary px-6 py-3 text-[10px] font-semibold tracking-[0.16em] text-dark uppercase shadow-[0_0_28px_rgba(201,168,76,0.35)] transition-colors hover:bg-[#D4B45C] disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:size-3.5 [&_svg_*]:stroke-dark"
+          className="admin-gold-cta font-copperplate-body inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-6 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase disabled:cursor-not-allowed disabled:opacity-60 [&_svg]:size-3.5"
         >
           {submitting ? "Sending..." : "Schedule Send"}
-          <ClockSmall color="var(--dark)" />
+          <ClockSmall color="currentColor" />
         </button>
       </div>
     </section>

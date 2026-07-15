@@ -9,7 +9,7 @@ import type { ConciergeInboxMessage, MessageInboxFilter } from "./types";
 
 function MessageInboxRowSkeleton() {
   return (
-    <div className="flex gap-3.5 border-b border-[#1E1A14] px-5 py-4 last:border-b-0">
+    <div className="flex gap-3.5 border-b border-accent/8 px-5 py-4 last:border-b-0">
       <ShimmerBlock className="size-10 shrink-0 rounded-full" />
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex items-center justify-between gap-3">
@@ -90,7 +90,7 @@ export function MessageInboxPanel({
             />
           ))
         ) : (
-          <p className="font-roboto px-5 py-10 text-center text-[11px] tracking-[0.06em] text-[#6B665E] uppercase">
+          <p className="font-roboto px-5 py-10 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
             No unread messages
           </p>
         )}

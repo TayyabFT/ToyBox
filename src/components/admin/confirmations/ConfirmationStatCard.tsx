@@ -28,7 +28,7 @@ export function ConfirmationStatCard({
     accent === "teal" ? confirmationStatSubtextTealClass : confirmationStatSubtextClass;
 
   return (
-    <div className="group flex min-h-[148px] cursor-pointer flex-col justify-between rounded-2xl border border-[#C5A059]/22 bg-card p-5 transition-all duration-200 hover:border-[#C5A059]/40 hover:bg-gradient-to-br hover:from-[#F0C566] hover:to-[#8B6F2A]">
+    <div className="stat-card-shell group flex min-h-[148px] cursor-pointer flex-col justify-between rounded-2xl p-5">
       <div className="flex items-start justify-between gap-3">
         <p className={confirmationStatLabelClass}>{label}</p>
         <span className={confirmationStatIconClass}>{icon}</span>

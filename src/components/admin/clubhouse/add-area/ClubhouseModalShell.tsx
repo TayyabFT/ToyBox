@@ -23,7 +23,7 @@ export function ClubhouseModalShell({
       />
 
       <div
-        className={`relative z-10 w-full ${maxWidthClass} rounded-2xl border border-[#D4A84740] bg-[#11100C] shadow-[0_24px_80px_rgba(0,0,0,0.55)]`}
+        className={`admin-modal-panel relative z-10 w-full ${maxWidthClass} rounded-2xl border border-accent/25 shadow-[var(--shadow-modal)]`}
       >
         {children}
       </div>

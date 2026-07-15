@@ -22,13 +22,13 @@ export function ClubhouseAreaTypeSelect({
     <ClubhouseModalShell open={open} onClose={onClose}>
       <div className="p-6">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-white uppercase">
+          <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
             Add Area
           </h2>
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer text-[#7D7460] transition-colors hover:text-white"
+            className="cursor-pointer text-secondary transition-colors hover:text-foreground"
             aria-label="Close"
           >
             ✕

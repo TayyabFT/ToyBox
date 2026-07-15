@@ -58,7 +58,7 @@ function ViewAllButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="font-roboto cursor-pointer text-[9px] font-semibold tracking-[0.16em] text-accent uppercase transition-colors hover:text-gold-bright"
+      className="admin-gold-cta font-roboto cursor-pointer text-[9px] font-semibold tracking-[0.16em] uppercase transition-opacity hover:opacity-90 rounded-full px-3 py-1.5"
     >
       View All
     </button>

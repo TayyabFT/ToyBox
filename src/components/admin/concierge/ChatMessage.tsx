@@ -16,7 +16,7 @@ function renderMessageText(message: ConciergeChatMessage) {
 
   return parts.map((part, index) =>
     highlights.includes(part) ? (
-      <span key={`${part}-${index}`} className="text-[#D4A74C]">
+      <span key={`${part}-${index}`} className="text-accent">
         {part}
       </span>
     ) : (
@@ -39,8 +39,8 @@ export function ChatMessage({ message }: ChatMessageProps) {
       <div
         className={`max-w-[78%] rounded-2xl px-5 py-4 ${
           isStaff
-            ? "bg-gradient-to-r from-[#F0C566] to-[#C9A84C] text-[#0A0806]"
-            : "bg-[#1E1B18] text-[#E7E5E4]"
+            ? "bg-gradient-to-r from-gold-bright to-accent text-dark"
+            : "bg-elevated text-foreground-soft"
         }`}
       >
         <p className="font-roboto text-[14px] leading-[1.65] tracking-[0.02em]">
@@ -48,7 +48,7 @@ export function ChatMessage({ message }: ChatMessageProps) {
         </p>
       </div>
 
-      <span className="font-roboto text-[11px] tracking-[0.04em] text-[#6B665E]">
+      <span className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
         {message.senderName} · {message.time}
         {isStaff && message.read ? " · Read" : ""}
       </span>

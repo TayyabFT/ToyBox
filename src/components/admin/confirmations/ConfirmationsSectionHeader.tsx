@@ -15,8 +15,8 @@ export function ConfirmationsOutsideHeader({
   return (
     <div className="mb-4 space-y-1.5">
       <h3 className={confirmationSectionTitleClass}>
-        <span className="text-[#E7E5E4]">{titleSplit.before} </span>
-        <span className="text-[#C5A059]">{titleSplit.after}</span>
+        <span className="text-foreground-soft">{titleSplit.before} </span>
+        <span className="text-accent">{titleSplit.after}</span>
       </h3>
       {subtitle && <p className={confirmationSectionSubtitleClass}>{subtitle}</p>}
     </div>

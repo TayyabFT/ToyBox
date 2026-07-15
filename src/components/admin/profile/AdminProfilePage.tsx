@@ -48,14 +48,14 @@ function statValue(
 
 function sessionDotClass(session: AdminSessionRaw): string {
   if (session.isCurrent && session.status === "active") return "bg-teal";
-  if (session.status === "recent") return "bg-primary";
+  if (session.status === "recent") return "bg-accent";
   return "bg-secondary";
 }
 
 function activityDotClass(tone?: string): string {
   if (tone === "success") return "bg-teal";
-  if (tone === "error") return "bg-[#E0685C]";
-  return "bg-primary";
+  if (tone === "error") return "bg-pink";
+  return "bg-accent";
 }
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -123,7 +123,7 @@ function EditMobileModal({
             value={value}
             onChange={(e) => setValue(e.target.value)}
             placeholder="+971 50 000 0000"
-            className="w-full rounded-xl border border-accent/20 bg-surface px-4 py-3 font-roboto text-[13px] tracking-[0.02em] text-foreground placeholder:text-muted focus:border-[#C9A84C]/50 focus:outline-none"
+            className="w-full rounded-xl border border-accent/20 bg-surface px-4 py-3 font-roboto text-[13px] tracking-[0.02em] text-foreground placeholder:text-muted focus:border-accent/50 focus:outline-none"
           />
         </div>
 
@@ -140,7 +140,7 @@ function EditMobileModal({
             type="button"
             onClick={() => onSave(value.trim())}
             disabled={saving}
-            className="font-roboto flex-1 cursor-pointer rounded-xl border border-[#C9A84C]/50 bg-[#C9A84C]/10 py-2.5 text-[10px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase transition-colors hover:bg-[#C9A84C]/18 disabled:cursor-not-allowed disabled:opacity-60"
+            className="admin-gold-cta font-roboto flex-1 cursor-pointer rounded-xl py-2.5 text-[10px] font-semibold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {saving ? "Saving…" : "Save"}
           </button>
@@ -236,26 +236,20 @@ function ProfilePageContent({
 
       <div className="space-y-5 p-8">
         {/* Hero header */}
-        <section
-          className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
-          style={{
-            background:
-              "radial-gradient(90% 130% at 38% -15%, rgba(212,168,71,0.22) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
-          }}
-        >
+        <section className="admin-entity-hero relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9">
           <div className="flex items-center gap-6">
-            <span className="flex size-24 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)]">
-              <span className="font-copperplate text-[34px] text-[#C9A84C]">
+            <span className="admin-entity-hero-avatar flex size-24 shrink-0 items-center justify-center rounded-full border-2">
+              <span className="admin-entity-hero-accent font-copperplate text-[34px]">
                 {getInitial(profile.name ?? "A")}
               </span>
             </span>
 
             <div className="min-w-0 space-y-2.5">
-              <h1 className="font-copperplate text-[34px] leading-none tracking-[0.05em] text-[#F2EAD5]">
+              <h1 className="admin-entity-hero-title font-copperplate text-[34px] leading-none tracking-[0.05em]">
                 {profile.name ?? "—"}
               </h1>
 
-              <p className="font-roboto text-[12px] font-semibold tracking-[0.16em] text-[#C9A84C] uppercase">
+              <p className="admin-entity-hero-accent font-roboto text-[12px] font-semibold tracking-[0.16em] uppercase">
                 {profile.jobTitle ?? "Administrator"}
               </p>
 
@@ -268,14 +262,14 @@ function ProfilePageContent({
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-1">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A84C]/40 bg-[#C9A84C]/8 px-3.5 py-1.5">
-                  <StarFilled className="size-3" />
-                  <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase">
+                <span className="admin-entity-hero-accent inline-flex items-center gap-1.5 rounded-full border border-accent/40 bg-accent/8 px-3.5 py-1.5">
+                  <StarFilled className="size-3" color="currentColor" />
+                  <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase">
                     Admin
                   </span>
                 </span>
 
-                <span className="inline-flex items-center rounded-full border border-[#C9A84C]/22 px-3.5 py-1.5">
+                <span className="inline-flex items-center rounded-full border border-accent/22 px-3.5 py-1.5">
                   <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] text-muted uppercase">
                     Operations
                   </span>
@@ -322,9 +316,9 @@ function ProfilePageContent({
                 <button
                   type="button"
                   onClick={() => setEditOpen(true)}
-                  className="font-roboto inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#C9A84C]/40 px-3.5 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase transition-colors hover:bg-[#C9A84C]/10"
+                  className="admin-gold-cta font-roboto inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[9px] font-semibold tracking-[0.12em] uppercase"
                 >
-                  <EditPencil className="size-3" />
+                  <EditPencil className="size-3" color="currentColor" />
                   Edit Details
                 </button>
               }
@@ -336,8 +330,8 @@ function ProfilePageContent({
                     className="flex items-center justify-between gap-4 py-3.5"
                   >
                     <div className="flex items-center gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-[#C9A84C]/10">
-                        <DetailGlyph icon={detail.icon} />
+                      <span className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-accent/10">
+                        <DetailGlyph icon={detail.icon} color="var(--accent)" />
                       </span>
                       <span className="font-roboto text-[13px] tracking-[0.02em] text-secondary">
                         {detail.label}
@@ -360,7 +354,7 @@ function ProfilePageContent({
                   No active sessions.
                 </p>
               ) : (
-                <ul className="divide-y divide-accent/8">
+                <ul className="Custom__Scrollbar max-h-[320px] divide-y divide-accent/8 overflow-y-auto pr-1">
                   {sessions.map((session) => (
                     <li key={session.id} className="flex gap-3 py-3.5">
                       <span
@@ -398,7 +392,7 @@ function ProfilePageContent({
                   No recent activity.
                 </p>
               ) : (
-                <ul className="divide-y divide-accent/8">
+                <ul className="Custom__Scrollbar max-h-[320px] divide-y divide-accent/8 overflow-y-auto pr-1">
                   {activity.map((entry, index) => (
                     <li
                       key={entry.id ?? index}

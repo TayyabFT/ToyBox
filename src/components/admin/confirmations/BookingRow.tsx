@@ -8,7 +8,7 @@ type BookingRowProps = {
 
 export function BookingRow({ booking }: BookingRowProps) {
   return (
-    <div className="flex items-center gap-4 border-b border-[#1E1A14] py-4 last:border-b-0">
+    <div className="flex items-center gap-4 border-b border-accent/8 py-4 last:border-b-0">
       <div className="min-w-0 flex-1 space-y-1">
         <p className={confirmationRowTitleClass}>{booking.vehicle}</p>
         <p className={confirmationRowMetaClass}>

@@ -4,7 +4,7 @@ import type { BulletinDraftPreview, RecentBulletin } from "./types";
 
 function BulletinRowSkeleton() {
   return (
-    <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
+    <li className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5">
       <div className="flex items-center justify-between gap-3">
         <ShimmerBlock className="h-3 w-32" />
         <ShimmerBlock className="h-2.5 w-10" />
@@ -58,12 +58,12 @@ export function BulletinPreview({
   const previewBody = draft.body.trim();
 
   return (
-    <section className="flex flex-col rounded-2xl border border-accent/12 bg-card p-6">
+    <section className="flex flex-col rounded-2xl border border-accent/20 bg-card p-6">
       <p className="font-copperplate-body text-[10px] tracking-[0.16em] text-secondary uppercase">
         Preview · In-App
       </p>
 
-      <div className="mt-4 rounded-2xl border border-accent/12 bg-surface/60 p-5">
+      <div className="mt-4 rounded-2xl border border-accent/20 bg-surface/60 p-5">
         <div className="flex items-center gap-2.5">
           <ToyBoxLogoMark className="size-[18px]" />
           <span className="font-copperplate-body text-[13px] font-medium tracking-[0.22em] text-foreground uppercase">
@@ -78,7 +78,7 @@ export function BulletinPreview({
           {previewTitle ? (
             <>
               <span className="text-foreground">{lead || previewTitle}</span>
-              {accent ? <span className="text-primary">{accent}</span> : null}
+              {accent ? <span className="text-accent">{accent}</span> : null}
             </>
           ) : (
             <span className="text-muted">Your bulletin title</span>
@@ -107,7 +107,7 @@ export function BulletinPreview({
               <BulletinRowSkeleton key={index} />
             ))
           ) : bulletins.length === 0 ? (
-            <li className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5">
+            <li className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5">
               <p className="font-copperplate-body text-[12px] tracking-[0.08em] text-secondary uppercase">
                 No bulletins yet
               </p>
@@ -116,24 +116,24 @@ export function BulletinPreview({
             bulletins.map((bulletin) => (
               <li
                 key={bulletin.id}
-                className="rounded-xl border border-accent/8 bg-[#1A1612] px-4 py-3.5"
+                className="rounded-xl border border-accent/20 bg-elevated px-4 py-3.5"
               >
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-copperplate-body text-[12px] font-semibold tracking-[0.08em] text-foreground uppercase">
                     {bulletin.title}
                   </p>
-                  <span className="font-copperplate-body shrink-0 text-[10px] tracking-[0.08em] text-secondary ">
+                  <span className="font-copperplate-body shrink-0 text-[10px] tracking-[0.08em] text-secondary">
                     {bulletin.time}
                   </span>
                 </div>
 
                 <p className="mt-1.5 font-copperplate-body text-[10px] tracking-[0.1em] text-secondary uppercase">
                   Open{" "}
-                  <span className="font-semibold text-primary">
+                  <span className="font-semibold text-accent">
                     {formatRate(bulletin.openRate)}
                   </span>{" "}
                   · Click{" "}
-                  <span className="font-semibold text-primary">
+                  <span className="font-semibold text-accent">
                     {formatRate(bulletin.clickRate)}
                   </span>
                 </p>

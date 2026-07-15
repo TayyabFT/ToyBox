@@ -75,7 +75,7 @@ interface EventFormProps {
 function FieldError({ message }: { message?: string }) {
   if (!message) return null;
   return (
-    <p className="text-[10px] text-red-400 tracking-wide mt-1 flex items-center gap-1">
+    <p className="text-[10px] text-pink tracking-wide mt-1 flex items-center gap-1">
       <svg className="w-3 h-3 shrink-0" fill="currentColor" viewBox="0 0 20 20">
         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
       </svg>
@@ -84,9 +84,9 @@ function FieldError({ message }: { message?: string }) {
   );
 }
 
-// Returns the border class — red when there's an error, default otherwise
+// Returns the border class — pink when there's an error, default otherwise
 function fieldClass(base: string, hasError: boolean) {
-  return `${base} ${hasError ? "border-red-500/60 focus:border-red-500/80" : "border-zinc-800 focus:border-[#D4A847]/40"}`;
+  return `${base} ${hasError ? "border-pink/60 focus:border-pink/80" : "border-[var(--overview-border)] focus:border-accent/40"}`;
 }
 
 // Splits a "YYYY-MM-DDTHH:mm" value into its date and time parts
@@ -129,7 +129,7 @@ function ScheduleDateField({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-secondary uppercase">
         {label}
       </label>
       <div className="relative">
@@ -143,7 +143,7 @@ function ScheduleDateField({
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
           className={fieldClass(
-            "w-full cursor-pointer rounded-lg bg-[#121314] px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
+            "w-full cursor-pointer rounded-lg bg-input-muted px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
             Boolean(error),
           )}
         />
@@ -188,7 +188,7 @@ function ScheduleTimeField({
 
   return (
     <div className="flex flex-col gap-1">
-      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">
+      <label htmlFor={id} className="text-[10px] font-bold tracking-widest text-secondary uppercase">
         {label}
       </label>
       <div className="relative">
@@ -201,7 +201,7 @@ function ScheduleTimeField({
           onChange={(e) => onChange(e.target.value)}
           disabled={disabled}
           className={fieldClass(
-            "w-full cursor-pointer rounded-lg bg-[#121314] px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
+            "w-full cursor-pointer rounded-lg bg-input-muted px-4 py-3 pr-10 text-sm outline-none transition-all border [color-scheme:dark] [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:inset-0 [&::-webkit-calendar-picker-indicator]:size-full [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0",
             Boolean(error),
           )}
         />
@@ -310,16 +310,16 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-dark/70 backdrop-blur-sm"
         onClick={isSubmitting ? undefined : onClose}
       />
 
-      <div className="relative z-10 flex w-full max-w-xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-[#D4A847]/10 bg-[#0c0d0e] text-white shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+      <div className="admin-modal-panel relative z-10 flex w-full max-w-xl max-h-[90vh] flex-col overflow-hidden rounded-2xl border border-accent/10 text-foreground shadow-[var(--shadow-modal)]">
 
         {/* Header */}
-        <div className="p-6 border-b border-zinc-900/50 flex justify-between items-center">
+        <div className="p-6 border-b border-accent/8 flex justify-between items-center">
           <div>
-            <p className="text-[10px] font-bold tracking-[0.2em] text-[#D4A847] uppercase">
+            <p className="text-[10px] font-bold tracking-[0.2em] text-accent uppercase">
               {isEditMode ? "— Edit" : "— Create New"}
             </p>
             <h2 className="text-2xl font-semibold font-copperplate uppercase mt-1">
@@ -329,7 +329,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
           <button
             disabled={isSubmitting}
             onClick={onClose}
-            className="p-2 rounded-full hover:bg-zinc-900 text-zinc-500 transition-colors disabled:opacity-30"
+            className="p-2 rounded-full hover:bg-elevated text-secondary transition-colors disabled:opacity-30"
           >
             <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -345,14 +345,14 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
 
             {/* Title */}
             <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Event Title *</label>
+              <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Event Title *</label>
               <input
                 name="title"
                 value={formData.title}
                 onChange={handleChange}
                 placeholder="e.g. Auction Day — Yas Marina"
                 disabled={isSubmitting}
-                className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none transition-all border", Boolean(errors.title))}
+                className={fieldClass("bg-input-muted rounded-lg px-4 py-3 text-sm outline-none transition-all border", Boolean(errors.title))}
               />
               <FieldError message={errors.title} />
             </div>
@@ -360,13 +360,13 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
             <div className="grid grid-cols-2 gap-4">
               {/* Category */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Category *</label>
+                <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Category *</label>
                 <select
                   name="category"
                   value={formData.category}
                   onChange={handleChange}
                   disabled={isSubmitting}
-                  className="bg-[#121314] border border-zinc-800 rounded-lg px-4 py-3 text-sm focus:border-[#D4A847]/40 outline-none transition-all appearance-none"
+                  className="bg-input-muted border border-[var(--overview-border)] rounded-lg px-4 py-3 text-sm focus:border-accent/40 outline-none transition-all appearance-none"
                 >
                   <option value="auctions">Auctions</option>
                   <option value="drives">Drives</option>
@@ -376,7 +376,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
 
               {/* Capacity */}
               <div className="flex flex-col gap-1">
-                <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Capacity *</label>
+                <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Capacity *</label>
                 <input
                   type="number"
                   name="capacity"
@@ -385,7 +385,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
                   disabled={isSubmitting}
                   min={1}
                   max={10000}
-                  className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none transition-all border", Boolean(errors.capacity))}
+                  className={fieldClass("bg-input-muted rounded-lg px-4 py-3 text-sm outline-none transition-all border", Boolean(errors.capacity))}
                 />
                 <FieldError message={errors.capacity} />
               </div>
@@ -394,11 +394,11 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
 
           {/* Schedule */}
           <div className="space-y-4">
-            <h3 className="text-[11px] font-bold tracking-[0.15em] text-[#D4A847] border-b border-zinc-900 pb-2">SCHEDULE</h3>
+            <h3 className="text-[11px] font-bold tracking-[0.15em] text-accent border-b border-accent/8 pb-2">SCHEDULE</h3>
 
             {/* Starts At */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Starts At *</p>
+              <p className="text-[10px] font-bold tracking-widest text-secondary uppercase">Starts At *</p>
               <div className="grid grid-cols-2 gap-3">
                 <ScheduleDateField
                   id="event-starts-date"
@@ -422,7 +422,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
 
             {/* Ends At */}
             <div className="space-y-1">
-              <p className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Ends At *</p>
+              <p className="text-[10px] font-bold tracking-widest text-secondary uppercase">Ends At *</p>
               <div className="grid grid-cols-2 gap-3">
                 <ScheduleDateField
                   id="event-ends-date"
@@ -448,46 +448,46 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
 
           {/* Details */}
           <div className="space-y-4">
-            <h3 className="text-[11px] font-bold tracking-[0.15em] text-[#D4A847] border-b border-zinc-900 pb-2">DETAILS</h3>
+            <h3 className="text-[11px] font-bold tracking-[0.15em] text-accent border-b border-accent/8 pb-2">DETAILS</h3>
 
             {/* Location */}
             <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Location *</label>
+              <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Location *</label>
               <input
                 name="location"
                 value={formData.location}
                 onChange={handleChange}
                 disabled={isSubmitting}
                 placeholder="Yas Marina Circuit, Abu Dhabi"
-                className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none border", Boolean(errors.location))}
+                className={fieldClass("bg-input-muted rounded-lg px-4 py-3 text-sm outline-none border", Boolean(errors.location))}
               />
               <FieldError message={errors.location} />
             </div>
 
             {/* Image URL — optional */}
             <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Image URL</label>
+              <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Image URL</label>
               <input
                 name="imageUrl"
                 value={formData.imageUrl}
                 onChange={handleChange}
                 disabled={isSubmitting}
                 placeholder="https://example.com/image.jpg"
-                className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none border", Boolean(errors.imageUrl))}
+                className={fieldClass("bg-input-muted rounded-lg px-4 py-3 text-sm outline-none border", Boolean(errors.imageUrl))}
               />
               <FieldError message={errors.imageUrl} />
             </div>
 
             {/* Description */}
             <div className="flex flex-col gap-1">
-              <label className="text-[10px] font-bold tracking-widest text-zinc-500 uppercase">Description *</label>
+              <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Description *</label>
               <textarea
                 name="description"
                 rows={3}
                 value={formData.description}
                 onChange={handleChange}
                 disabled={isSubmitting}
-                className={fieldClass("bg-[#121314] rounded-lg px-4 py-3 text-sm outline-none resize-none border", Boolean(errors.description))}
+                className={fieldClass("bg-input-muted rounded-lg px-4 py-3 text-sm outline-none resize-none border", Boolean(errors.description))}
               />
               <FieldError message={errors.description} />
             </div>
@@ -495,13 +495,13 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
         </form>
 
         {/* Footer */}
-        <div className="p-8 border-t border-zinc-950 bg-[#0c0d0e]">
+        <div className="p-8 border-t border-accent/8 bg-card">
           <div className="flex gap-3">
             <button
               type="button"
               disabled={isSubmitting}
               onClick={onClose}
-              className="flex-1 py-4 rounded-xl text-[10px] font-bold tracking-widest text-zinc-400 cursor-pointer border border-zinc-800 hover:bg-zinc-900 uppercase transition-all disabled:opacity-50"
+              className="flex-1 py-4 rounded-xl text-[10px] font-bold tracking-widest text-secondary cursor-pointer border border-accent/12 hover:bg-elevated uppercase transition-all disabled:opacity-50"
             >
               Cancel
             </button>
@@ -509,7 +509,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
               type="submit"
               form="event-form"
               disabled={isSubmitting}
-              className="flex-1 py-4 rounded-xl text-[10px] font-bold tracking-widest cursor-pointer  text-dark bg-primary hover:bg-[#D4B45C] uppercase shadow-[0_0_20px_rgba(201,168,76,0.15)] transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="admin-gold-cta flex-1 py-4 rounded-xl text-[10px] font-bold tracking-widest cursor-pointer uppercase transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <>

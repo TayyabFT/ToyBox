@@ -99,6 +99,8 @@
   --overview-heading-accent: #c5a059;
   --tag-gold: #c5a059;
   --tag-pink: #d89999;
+  --shimmer-base: color-mix(in srgb, var(--accent) 8%, transparent);
+  --shimmer-sweep: color-mix(in srgb, var(--accent) 14%, transparent);
   --tag-purple: #9e8ad4;
   --nav-active-bg: linear-gradient(to right,
       color-mix(in srgb, var(--accent) 13%, transparent),
@@ -119,6 +121,17 @@
   --admin-cta-bg: var(--primary);
   --admin-cta-fg: var(--dark);
   --admin-cta-hover-bg: var(--gold-light);
+
+  /* Member / vehicle profile hero (dark) — from / via / to */
+  --entity-hero-from: color-mix(in srgb, var(--dark) 0%, transparent);
+  --entity-hero-via: color-mix(in srgb, var(--dark) 40%, transparent);
+  --entity-hero-to: var(--dark);
+  --entity-hero-base: var(--dark);
+  --entity-hero-title: var(--f1ead7);
+  --entity-hero-accent: var(--accent);
+  --entity-hero-avatar-bg: var(--dark);
+  --entity-hero-avatar-border: var(--accent);
+  --entity-hero-avatar-fg: var(--accent);
 
   /* Profile initial avatar (no photo) — dark */
   --profile-avatar-fill: linear-gradient(
@@ -197,6 +210,8 @@
   --overview-border: rgba(26, 24, 22, 0.08);
   --overview-heading-accent: #1a1816;
   --tag-gold: #c9a84c;
+  --shimmer-base: color-mix(in srgb, var(--foreground) 10%, transparent);
+  --shimmer-sweep: color-mix(in srgb, var(--foreground) 22%, transparent);
   --tag-pink: #c45c5c;
   --tag-purple: #8b7cb8;
   --nav-active-bg: radial-gradient(140% 180% at 0% 50%,
@@ -218,6 +233,17 @@
   --admin-cta-bg: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%);
   --admin-cta-fg: #1a1816;
   --admin-cta-hover-bg: linear-gradient(90deg, #958770 0%, #d8d1c6 100%);
+
+  /* Member / vehicle profile hero (light) — from / via / to */
+  --entity-hero-from: color-mix(in srgb, var(--elevated) 0%, transparent);
+  --entity-hero-via: color-mix(in srgb, #8a7d6a 30%, transparent);
+  --entity-hero-to: var(--elevated);
+  --entity-hero-base: var(--elevated);
+  --entity-hero-title: var(--foreground);
+  --entity-hero-accent: var(--accent);
+  --entity-hero-avatar-bg: color-mix(in srgb, #8a7d6a 30%, var(--elevated));
+  --entity-hero-avatar-border: #f0ede6;
+  --entity-hero-avatar-fg: var(--foreground);
 
   /* Profile initial avatar (no photo) — light (Figma fill + shell border) */
   --profile-avatar-fill: linear-gradient(
@@ -617,28 +643,35 @@ h6 {
   background: color-mix(in srgb, var(--accent) 40%, transparent);
 }
 
-/* Admin member / vehicle profile hero — always dark surface, tokenized accents */
+/* Admin member / vehicle profile hero — theme from / via / to */
 .admin-entity-hero {
   background:
-    radial-gradient(90% 130% at 38% -15%,
-      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
-      color-mix(in srgb, var(--gold-deep) 10%, transparent) 38%,
-      transparent 68%),
-    var(--dark);
+    linear-gradient(
+      180deg,
+      var(--entity-hero-from) 0%,
+      var(--entity-hero-via) 60%,
+      var(--entity-hero-to) 100%
+    ),
+    var(--entity-hero-base);
 }
 
 .admin-entity-hero-title {
-  color: var(--f1ead7);
+  color: var(--entity-hero-title);
 }
 
 .admin-entity-hero-accent {
-  color: var(--accent);
+  color: var(--entity-hero-accent);
 }
 
 .admin-entity-hero-avatar {
-  border-color: var(--accent);
-  background: var(--dark);
+  border-color: var(--entity-hero-avatar-border);
+  background: var(--entity-hero-avatar-bg);
+  color: var(--entity-hero-avatar-fg);
   box-shadow: var(--shadow-glow-gold);
+}
+
+html[data-theme="light"] .admin-entity-hero-avatar {
+  box-shadow: none;
 }
 
 .admin-gold-avatar {
@@ -673,19 +706,35 @@ html[data-theme="light"] .admin-gold-avatar {
   background-image: none;
 }
 
-/* Light theme CTAs — force hex so Tailwind button resets cannot hide the fill */
+/* Light theme CTAs — Invite Member style (#8A7D6A → #D0C8BC) */
 html[data-theme="light"] .admin-gold-cta,
-html[data-theme="light"] a.admin-gold-cta {
+html[data-theme="light"] a.admin-gold-cta,
+html[data-theme="light"] button.admin-gold-cta {
   background-color: #d0c8bc !important;
   background-image: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%) !important;
   color: #1a1816 !important;
   box-shadow: none !important;
+  border-color: transparent !important;
 }
 
 html[data-theme="light"] .admin-gold-cta:hover,
-html[data-theme="light"] a.admin-gold-cta:hover {
+html[data-theme="light"] a.admin-gold-cta:hover,
+html[data-theme="light"] button.admin-gold-cta:hover {
   background-color: #d0c8bc !important;
   background-image: linear-gradient(90deg, #958770 0%, #d8d1c6 100%) !important;
+}
+
+html[data-theme="light"] .admin-gold-cta:disabled,
+html[data-theme="light"] button.admin-gold-cta:disabled {
+  opacity: 0.6;
+}
+
+/* Resolve stays pink in dark; light uses Invite CTA fill above */
+html[data-theme="dark"] .admin-resolve-btn.admin-gold-cta {
+  background-color: var(--pink) !important;
+  background-image: none !important;
+  color: var(--dark) !important;
+  box-shadow: none !important;
 }
 
 .admin-modal-panel {

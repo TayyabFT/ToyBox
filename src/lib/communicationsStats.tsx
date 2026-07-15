@@ -25,7 +25,7 @@ export function createPlaceholderCommunicationStats(): CommunicationStatItem[] {
       label: "Sent · 30d",
       value: "—",
       subtext: "Bulletins",
-      icon: <VehicleSend color="var(--primary)" className="size-4" />,
+      icon: <VehicleSend color="var(--accent)" className="size-4" />,
     },
     {
       label: "Open Rate",
@@ -43,7 +43,7 @@ export function createPlaceholderCommunicationStats(): CommunicationStatItem[] {
       label: "Drafts",
       value: "—",
       subtext: "Pending",
-      icon: <DraftIcon className="size-4" color="var(--primary)" />,
+      icon: <DraftIcon className="size-4" color="var(--accent)" />,
     },
   ];
 }
@@ -56,7 +56,7 @@ export function mapCommunicationsStats(
       label: "Sent · 30d",
       value: formatCount(stats.sentBulletins),
       subtext: "Bulletins",
-      icon: <VehicleSend color="var(--primary)" className="size-4" />,
+      icon: <VehicleSend color="var(--accent)" className="size-4" />,
     },
     {
       label: "Open Rate",
@@ -74,7 +74,7 @@ export function mapCommunicationsStats(
       label: "Drafts",
       value: formatCount(stats.draftCount),
       subtext: "Pending",
-      icon: <DraftIcon className="size-4" color="var(--primary)" />,
+      icon: <DraftIcon className="size-4" color="var(--accent)" />,
     },
   ];
 }

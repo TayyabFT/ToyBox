@@ -101,7 +101,7 @@ export function ClubhouseReservationsSection({
                   </td>
                   <td className="px-5 py-4">
                     <div className="flex items-center gap-3">
-                      <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-copperplate text-[13px] text-dark">
+                      <span className="admin-gold-avatar flex size-9 shrink-0 items-center justify-center rounded-full font-copperplate text-[13px]">
                         {row.memberInitial}
                       </span>
                       <div className="min-w-0">

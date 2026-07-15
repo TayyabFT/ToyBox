@@ -26,15 +26,15 @@ export function Input({
 
   const labelClass = isAuth
     ? "text-[9px] font-medium tracking-[0.2em] font-roboto text-[#6E6455] uppercase transition-colors group-focus-within:text-[#C9A84C]"
-    : "text-[11px] font-medium tracking-[0.15em] font-roboto text-[#6E6455] uppercase";
+    : "text-[11px] font-medium tracking-[0.15em] font-roboto text-section-label uppercase";
 
   const inputClass = isAuth
     ? `w-full border-0 font-roboto border-b border-[#C9962C33] bg-transparent px-0 py-2 text-sm text-[#EDE3CC] outline-none transition-colors placeholder:text-[#6E6455]/60 focus:border-[#C9A84C] focus:text-[#C9A84C] ${isPassword ? "pr-14" : ""}`
-    : `w-full rounded-lg border border-[#D4A84740] bg-[#11100C] px-3 py-2.5 text-sm font-roboto text-white outline-none transition-colors placeholder:text-[#7D7460] focus:border-[#C9A84C] disabled:cursor-not-allowed disabled:opacity-50 ${isPassword ? "pr-10" : ""}`;
+    : `w-full rounded-lg border border-accent/25 bg-card px-3 py-2.5 text-sm font-roboto text-foreground outline-none transition-colors placeholder:text-secondary focus:border-accent disabled:cursor-not-allowed disabled:opacity-50 ${isPassword ? "pr-10" : ""}`;
 
   const toggleClass = isAuth
     ? "absolute right-0 bottom-2 cursor-pointer text-[10px] font-medium tracking-[0.15em] font-roboto text-[#6E6455] uppercase transition-colors group-focus-within:text-[#C9A84C] hover:text-[#C9A84C]"
-    : "absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-[10px] font-medium tracking-[0.15em] font-roboto text-[#6E6455] uppercase hover:text-[#C9A84C]";
+    : "absolute top-1/2 right-3 -translate-y-1/2 cursor-pointer text-[10px] font-medium tracking-[0.15em] font-roboto text-section-label uppercase hover:text-accent";
 
   return (
     <div className={`flex w-full flex-col gap-1 ${isAuth ? "group" : ""}`}>

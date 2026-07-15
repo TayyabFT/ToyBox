@@ -214,10 +214,7 @@ export function MemberGrowthChart({ data, status }: MemberGrowthChartProps) {
 
       <div className="mt-6 h-[200px] w-full">
         {isLoading ? (
-          <ShimmerBlock
-            className="h-full w-full rounded-xl bg-accent/6"
-            sweepClassName="via-accent/12"
-          />
+          <ShimmerBlock className="h-full w-full rounded-xl" />
         ) : isError ? (
           <div className="flex h-full w-full items-center justify-center rounded-xl border border-dashed border-accent/15">
             <p className="font-roboto text-xs text-secondary">

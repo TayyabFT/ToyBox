@@ -215,7 +215,7 @@ export function AddVehicleModal({
                 type="button"
                 onClick={handleNext}
                 disabled={submitting}
-                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-sm font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
+                className="admin-gold-cta font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold tracking-[0.08em] disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Submitting..." : actionLabel}
                 {!submitting && step < 4 && (
@@ -228,7 +228,7 @@ export function AddVehicleModal({
               type="button"
               onClick={handleNext}
               disabled={submitting}
-              className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-gold-bright to-primary py-4 text-[13px] font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
+              className="admin-gold-cta font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-[13px] font-bold tracking-[0.08em] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {actionLabel}
               <RightArrow className="shrink-0" />

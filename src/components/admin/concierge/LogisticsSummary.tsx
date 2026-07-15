@@ -16,14 +16,14 @@ export function LogisticsSummary({ items }: LogisticsSummaryProps) {
       <div className="space-y-3.5">
         {items.map((item) => (
           <div key={item.label} className={conciergeLogisticsCardClass}>
-            <p className="font-roboto mb-2 text-[10px] tracking-[0.14em] text-[#7A6C56] uppercase">
+            <p className="font-roboto mb-2 text-[10px] tracking-[0.14em] text-section-label uppercase">
               {item.label}
             </p>
             <p
               className={`font-roboto tracking-[0.02em] ${
                 item.highlight
-                  ? "text-[30px] font-semibold leading-none text-[#E5989B]"
-                  : "text-[14px] font-semibold leading-snug text-[#E7E5E4]"
+                  ? "text-[30px] font-semibold leading-none text-pink"
+                  : "text-[14px] font-semibold leading-snug text-foreground-soft"
               }`}
             >
               {item.value}

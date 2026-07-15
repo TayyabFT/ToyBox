@@ -1,10 +1,10 @@
 import type { MessagePriorityTag } from "./types";
 
 const tagClass: Record<MessagePriorityTag, string> = {
-  urgent: "border-[#D98880]/25 bg-[#3D2424] text-[#D98880]",
-  private: "border-[#C5A059]/25 bg-[#2A2418] text-[#C5A059]",
-  high: "border-[#C5A059]/25 bg-[#2A2418] text-[#C5A059]",
-  normal: "border-[#7DBFA0]/25 bg-[#162D24] text-[#7DBFA0]",
+  urgent: "border-pink/25 bg-pink/10 text-pink",
+  private: "border-accent/25 bg-accent/10 text-accent",
+  high: "border-accent/25 bg-accent/10 text-accent",
+  normal: "border-teal/25 bg-teal/10 text-teal",
 };
 
 const labelMap: Record<MessagePriorityTag, string> = {

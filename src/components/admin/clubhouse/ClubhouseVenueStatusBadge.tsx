@@ -9,12 +9,12 @@ const statusToneClass: Record<
     dot: "bg-teal",
   },
   quiet: {
-    pill: "border-[#6B5B9E]/30 bg-[#6B5B9E]/10 text-[#9B8BC8]",
-    dot: "bg-[#9B8BC8]",
+    pill: "border-[var(--tag-purple)]/30 bg-[var(--tag-purple)]/10 text-[var(--tag-purple)]",
+    dot: "bg-[var(--tag-purple)]",
   },
   prep: {
-    pill: "border-primary/25 bg-primary/8 text-primary",
-    dot: "bg-primary",
+    pill: "border-accent/25 bg-accent/8 text-accent",
+    dot: "bg-accent",
   },
 };
 

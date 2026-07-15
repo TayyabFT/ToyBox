@@ -4,8 +4,8 @@ type EventsEmptyStateProps = {
 
 export function EventsEmptyState({ message }: EventsEmptyStateProps) {
   return (
-    <div className="rounded-2xl border border-[#2A2620] bg-[#12110E] px-5">
-      <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
+    <div className="rounded-2xl border border-accent/12 bg-card px-5">
+      <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-section-label uppercase">
         {message}
       </p>
     </div>

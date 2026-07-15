@@ -75,12 +75,12 @@ export function CommunicationsPage() {
   return (
     <div className="space-y-7 p-8">
       <div>
-        <p className="font-copperplate-body text-[11px] tracking-[0.18em] text-primary uppercase">
+        <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           — Member Communications
         </p>
-        <h2 className="mt-2 font-copperplate text-4xl font-semibold uppercase">
+        <h1 className="mt-2 font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground uppercase">
           Communications
-        </h2>
+        </h1>
       </div>
 
       <CommunicationsStatsRow stats={stats} />

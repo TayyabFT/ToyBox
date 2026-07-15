@@ -160,7 +160,7 @@ export function StaffDirectory({
                 onClick={() => onFilterChange(filter.key)}
                 className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                   isActive
-                    ? "bg-accent text-dark"
+                    ? "admin-gold-cta"
                     : "border border-accent/25 text-accent hover:border-accent/40"
                 }`}
               >
@@ -203,7 +203,7 @@ export function StaffDirectory({
             type="button"
             disabled={loadingMore}
             onClick={onLoadMore}
-            className="font-roboto cursor-pointer rounded-full border border-accent/25 px-5 py-2.5 text-[10px] font-semibold tracking-[0.12em] text-accent uppercase transition-colors hover:border-accent/40 disabled:cursor-not-allowed disabled:opacity-60"
+            className="admin-gold-cta font-roboto cursor-pointer rounded-full px-5 py-2.5 text-[10px] font-semibold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loadingMore ? "Loading..." : "Load more"}
           </button>

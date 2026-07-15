@@ -138,7 +138,7 @@ export function ClubhouseAreaServicesPage({
 
         <Link
           href="/admin/clubhouse"
-          className="font-roboto shrink-0 rounded-full border border-accent/25 px-4 py-2 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase transition-colors hover:border-primary/40"
+          className="admin-gold-cta font-roboto shrink-0 rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.12em] uppercase"
         >
           Back to Clubhouse
         </Link>

@@ -16,27 +16,27 @@ export function MessageInboxRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex w-full cursor-pointer gap-3.5 border-b border-[#1E1A14] px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-[#16140F]/50 ${
+      className={`flex w-full cursor-pointer gap-3.5 border-b border-accent/8 px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-elevated/50 ${
         selected
-          ? "border-l-2 border-l-[#C5A059] bg-[#16140F]/70 pl-[18px]"
+          ? "border-l-2 border-l-accent bg-elevated/70 pl-[18px]"
           : "border-l-2 border-l-transparent"
       }`}
     >
-      <span className="flex size-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-roboto text-[14px] font-semibold text-[#0A0806] uppercase">
+      <span className="admin-gold-avatar flex size-10 shrink-0 items-center justify-center rounded-full font-roboto text-[14px] font-semibold uppercase">
         {message.memberInitial}
       </span>
 
       <div className="min-w-0 flex-1 space-y-2">
         <div className="flex items-start justify-between gap-3">
-          <p className="font-roboto truncate text-[13px] font-semibold tracking-[0.04em] text-[#F2EAD5] uppercase">
+          <p className="font-roboto truncate text-[13px] font-semibold tracking-[0.04em] text-foreground uppercase">
             {message.memberName}
           </p>
-          <span className="shrink-0 font-roboto text-[11px] tracking-[0.04em] text-[#D98880]">
+          <span className="shrink-0 font-roboto text-[11px] tracking-[0.04em] text-pink">
             {message.timeLabel}
           </span>
         </div>
 
-        <p className="font-roboto text-[12px] leading-relaxed tracking-[0.02em] text-[#8A8378]">
+        <p className="font-roboto text-[12px] leading-relaxed tracking-[0.02em] text-section-label">
           &ldquo;{message.preview}&rdquo;
         </p>
 

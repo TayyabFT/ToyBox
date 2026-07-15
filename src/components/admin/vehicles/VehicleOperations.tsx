@@ -49,7 +49,7 @@ function ActionButton({
     return (
       <button
         type="button"
-        className="font-roboto cursor-pointer rounded-full bg-pink px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-dark uppercase transition-opacity hover:opacity-90"
+        className="admin-gold-cta admin-resolve-btn font-roboto cursor-pointer rounded-full px-4 py-1.5 text-[9px] font-semibold tracking-[0.12em] uppercase"
       >
         Resolve
       </button>
@@ -122,8 +122,8 @@ export function VehicleOperations({
                 onClick={() => onFilterChange(filter.key)}
                 className={`font-roboto cursor-pointer rounded-full px-4 py-2 text-[9px] font-semibold tracking-[0.14em] uppercase transition-colors ${
                   isActive
-                    ? "border border-accent/25 bg-accent/10 text-accent"
-                    : "text-secondary hover:text-accent"
+                    ? "admin-gold-cta"
+                    : "border border-accent/25 text-secondary hover:text-accent"
                 }`}
               >
                 {filter.label}

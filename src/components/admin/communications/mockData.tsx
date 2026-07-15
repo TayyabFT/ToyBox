@@ -15,7 +15,7 @@ export const communicationStats: CommunicationStatItem[] = [
     label: "Sent · 30d",
     value: "24",
     subtext: "Bulletins",
-    icon: <VehicleSend color="var(--primary)" className="size-4" />,
+    icon: <VehicleSend color="var(--accent)" className="size-4" />,
   },
   {
     label: "Open Rate",
@@ -34,7 +34,7 @@ export const communicationStats: CommunicationStatItem[] = [
     label: "Drafts",
     value: "2",
     subtext: "Pending",
-    icon: <DraftIcon className="size-4" color="var(--primary)" />,
+    icon: <DraftIcon className="size-4" color="var(--accent)" />,
   },
 ];
 

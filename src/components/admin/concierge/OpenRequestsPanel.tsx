@@ -21,7 +21,7 @@ export function OpenRequestsPanel({
 }: OpenRequestsPanelProps) {
   return (
     <section className={conciergeListPanelClass}>
-      <div className="flex items-center justify-between border-b border-[#1E1A14] px-5 py-4">
+      <div className="flex items-center justify-between border-b border-accent/8 px-5 py-4">
         <h2 className={conciergeSectionLabelClass}>Open Requests</h2>
         <span className={conciergeActiveBadgeClass}>{activeCount} Active</span>
       </div>
@@ -37,7 +37,7 @@ export function OpenRequestsPanel({
             />
           ))
         ) : (
-          <p className="font-roboto px-5 py-10 text-center text-[10px] tracking-[0.06em] text-[#6B665E] uppercase">
+          <p className="font-roboto px-5 py-10 text-center text-[10px] tracking-[0.06em] text-secondary uppercase">
             No requests found
           </p>
         )}

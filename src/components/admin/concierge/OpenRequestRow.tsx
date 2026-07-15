@@ -16,24 +16,24 @@ const iconBoxClass: Record<
   { box: string; color: string }
 > = {
   urgent: {
-    box: "border-[#F87171]/20 bg-[#2D1616]",
-    color: "#F87171",
+    box: "border-pink/20 bg-pink/10 text-pink",
+    color: "currentColor",
   },
   review: {
-    box: "border-[#C5A059]/20 bg-[#2A2418]",
-    color: "#C5A059",
+    box: "border-accent/20 bg-accent/10 text-accent",
+    color: "currentColor",
   },
   active: {
-    box: "border-[#7DBFA0]/20 bg-[#162D24]",
-    color: "#7DBFA0",
+    box: "border-teal/20 bg-teal/10 text-teal",
+    color: "currentColor",
   },
   pending: {
-    box: "border-[#6B8FA8]/20 bg-[#1A1F24]",
-    color: "#8BB4D4",
+    box: "border-info/20 bg-info/10 text-info",
+    color: "currentColor",
   },
   done: {
-    box: "border-[#7DBFA0]/20 bg-[#162D24]",
-    color: "#7DBFA0",
+    box: "border-teal/20 bg-teal/10 text-teal",
+    color: "currentColor",
   },
 };
 
@@ -57,7 +57,7 @@ function RequestIcon({
     case "camera":
       return (
         <span className={boxClass}>
-          <ActionCamera className="size-4 [&_*]:stroke-[#C5A059]" />
+          <ActionCamera className="size-4 [&_*]:stroke-current" />
         </span>
       );
     case "gear":
@@ -90,9 +90,9 @@ export function OpenRequestRow({
     <button
       type="button"
       onClick={onSelect}
-      className={`flex w-full cursor-pointer items-center gap-3.5 border-b border-[#1E1A14] px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-[#16140F]/50 ${
+      className={`flex w-full cursor-pointer items-center gap-3.5 border-b border-accent/8 px-5 py-4 text-left transition-colors last:border-b-0 hover:bg-elevated/50 ${
         selected
-          ? "border-l-2 border-l-[#C5A059] bg-[#16140F]/70 pl-[18px]"
+          ? "border-l-2 border-l-accent bg-elevated/70 pl-[18px]"
           : "border-l-2 border-l-transparent"
       }`}
     >

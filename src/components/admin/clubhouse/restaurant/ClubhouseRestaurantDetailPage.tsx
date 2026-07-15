@@ -51,19 +51,13 @@ function DetailContent({
 
   return (
     <div className="space-y-5 p-8">
-      <section
-        className="relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9"
-        style={{
-          background:
-            "radial-gradient(90% 130% at 42% -15%, rgba(212,168,71,0.20) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
-        }}
-      >
+      <section className="admin-entity-hero relative overflow-hidden rounded-2xl border border-accent/15 px-9 py-9">
         <div className="flex items-start justify-between gap-4">
           <div className="space-y-2.5">
             <p className="font-roboto text-[12px] font-medium tracking-[0.22em] text-secondary uppercase">
               {restaurant.cuisineType}
             </p>
-            <h1 className="font-copperplate text-[30px] leading-none tracking-[0.05em] text-[#F2EAD5]">
+            <h1 className="admin-entity-hero-title font-copperplate text-[30px] leading-none tracking-[0.05em]">
               {restaurant.restaurantName}
             </h1>
             <p className="font-roboto text-[11px] tracking-[0.12em] text-secondary uppercase">
@@ -172,7 +166,7 @@ export function ClubhouseRestaurantDetailPage({
         </p>
         <Link
           href="/admin/clubhouse/restaurant"
-          className="font-roboto rounded-full border border-accent/25 px-4 py-2 text-[10px] font-semibold tracking-[0.12em] text-primary uppercase transition-colors hover:border-primary/40"
+          className="admin-gold-cta font-roboto rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.12em] uppercase"
         >
           Back to Restaurants
         </Link>

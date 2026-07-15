@@ -28,7 +28,7 @@ export function CompletedTodayPanel({
         ) : items.length > 0 ? (
           items.map((item) => <CompletedTodayRow key={item.id} item={item} />)
         ) : (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-[#8A8378] uppercase">
+          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-section-label uppercase">
             No completed bookings today
           </p>
         )}

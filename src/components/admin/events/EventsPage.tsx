@@ -299,7 +299,7 @@ export function EventsPage() {
       {/* Header Bar */}
       <div className="flex items-center justify-between">
         <div>
-          <p className="font-roboto text-[11px] tracking-[0.18em] text-primary uppercase">
+          <p className="font-roboto text-[11px] tracking-[0.18em] text-accent uppercase">
             — Events management
           </p>
           <h2 className="mt-2 text-4xl font-semibold font-copperplate uppercase">
@@ -313,7 +313,7 @@ export function EventsPage() {
             setEditInitialData(undefined);
             setIsFormOpen(true);
           }}
-          className="font-roboto shrink-0 cursor-pointer rounded-full bg-primary px-6 py-3 text-[10px] font-semibold tracking-[0.16em] text-dark uppercase shadow-[0_0_28px_rgba(201,168,76,0.35)] transition-colors hover:bg-[#D4B45C]"
+          className="admin-gold-cta font-roboto shrink-0 cursor-pointer rounded-full px-6 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase"
         >
           + add event
         </button>

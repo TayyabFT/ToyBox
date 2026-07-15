@@ -63,10 +63,10 @@ export function ClubhousePrivateLoungeForm({
           <button
             type="button"
             onClick={() => onChange({ isAvailable24x7: !value.isAvailable24x7 })}
-            className="flex w-full items-center justify-between rounded-lg border border-[#D4A84740] bg-[#11100C] px-4 py-3.5 text-left transition-colors hover:border-[#C9A84C]/60"
+            className="flex w-full items-center justify-between rounded-lg border border-accent/25 bg-card px-4 py-3.5 text-left transition-colors hover:border-accent/60"
           >
-            <span className="font-roboto text-sm text-white">Availability</span>
-            <span className="font-roboto text-sm font-semibold tracking-[0.04em] text-[#C9A84C]">
+            <span className="font-roboto text-sm text-foreground">Availability</span>
+            <span className="font-roboto text-sm font-semibold tracking-[0.04em] text-accent">
               {value.isAvailable24x7 ? "24 / 7" : "Scheduled"}
             </span>
           </button>

@@ -17,7 +17,7 @@ export function ArrivalPrepChecklist({
     <div className="space-y-5">
       <h3 className={conciergeSectionLabelClass}>Arrival Prep Checklist</h3>
 
-      <div className="divide-y divide-[#1E1A14] border-y border-[#1E1A14]">
+      <div className="divide-y divide-accent/8 border-y border-accent/8">
         {items.map((item) => (
           <button
             key={item.id}
@@ -28,19 +28,19 @@ export function ArrivalPrepChecklist({
             <span
               className={`flex size-[18px] shrink-0 items-center justify-center rounded-[4px] border ${
                 item.completed
-                  ? "border-[#7DBFA0]/60 bg-[#162D24]"
-                  : "border-[#C5A059]/40 bg-transparent"
+                  ? "border-teal/60 bg-teal/10 text-teal"
+                  : "border-accent/40 bg-transparent"
               }`}
             >
               {item.completed && (
-                <ActivityCheck color="#7DBFA0" className="size-3" />
+                <ActivityCheck color="currentColor" className="size-3" />
               )}
             </span>
             <span
               className={`font-roboto text-[13px] leading-snug tracking-[0.02em] ${
                 item.completed
-                  ? "text-[#6B665E]/80 line-through"
-                  : "text-[#E7E5E4]"
+                  ? "text-secondary/80 line-through"
+                  : "text-foreground-soft"
               }`}
             >
               {item.label}
