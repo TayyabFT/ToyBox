@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { staffOverviewApi } from "@/api/staffOverview.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   createEmptyStaffOverviewDisplay,
   mapStaffOverview,
@@ -25,6 +26,64 @@ function EmptySectionMessage({ message }: { message: string }) {
     <p className="font-roboto rounded-xl border border-accent/10 bg-elevated/40 px-4 py-6 text-center text-sm text-secondary">
       {message}
     </p>
+  );
+}
+
+function PriorityTaskRowSkeleton() {
+  return (
+    <div className="overview-elevated-card-shell flex items-center gap-3.5 rounded-xl px-4 py-3.5">
+      <ShimmerBlock className="h-3 w-4 shrink-0" />
+      <ShimmerBlock className="size-10 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <ShimmerBlock className="h-3 w-40" />
+        <ShimmerBlock className="h-2.5 w-24" />
+      </div>
+      <ShimmerBlock className="h-2.5 w-10 shrink-0" />
+    </div>
+  );
+}
+
+function ScheduleRowSkeleton() {
+  return (
+    <div className="overview-elevated-card-shell flex gap-4 rounded-lg p-4">
+      <ShimmerBlock className="h-3 w-8 shrink-0" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <ShimmerBlock className="h-3 w-32" />
+        <ShimmerBlock className="h-2.5 w-20" />
+      </div>
+    </div>
+  );
+}
+
+function SystemAlertRowSkeleton() {
+  return (
+    <div className="overview-elevated-card-shell flex items-center gap-3 rounded-xl px-3.5 py-4">
+      <ShimmerBlock className="size-7 shrink-0 rounded-md" />
+      <ShimmerBlock className="h-3 min-w-0 flex-1" />
+      <ShimmerBlock className="h-2.5 w-10 shrink-0" />
+    </div>
+  );
+}
+
+function StaffDutyRowSkeleton() {
+  return (
+    <div className="overview-elevated-card-shell flex items-center gap-3 rounded-xl p-3.5">
+      <ShimmerBlock className="size-9 shrink-0 rounded-full" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <ShimmerBlock className="h-3 w-28" />
+        <ShimmerBlock className="h-2.5 w-20" />
+      </div>
+      <ShimmerBlock className="size-2 shrink-0 rounded-full" />
+    </div>
+  );
+}
+
+function ShiftStatRowSkeleton() {
+  return (
+    <div className="flex items-center justify-between gap-3 border-b border-accent/4 py-3 last:border-b-0">
+      <ShimmerBlock className="h-3 w-24" />
+      <ShimmerBlock className="h-2.5 w-10" />
+    </div>
   );
 }
 
@@ -54,6 +113,8 @@ type OverviewExpandableListProps<T extends { id: string }> = {
   scrollClassName: string;
   onViewMore: () => void;
   renderItem: (item: T) => React.ReactNode;
+  renderSkeletonRow: () => React.ReactNode;
+  skeletonCount?: number;
 };
 
 function OverviewExpandableList<T extends { id: string }>({
@@ -66,6 +127,8 @@ function OverviewExpandableList<T extends { id: string }>({
   scrollClassName,
   onViewMore,
   renderItem,
+  renderSkeletonRow,
+  skeletonCount = 4,
 }: OverviewExpandableListProps<T>) {
   const shouldScroll = expanded && items.length > SCROLL_THRESHOLD;
 
@@ -77,8 +140,13 @@ function OverviewExpandableList<T extends { id: string }>({
             ? `Custom__Scrollbar overflow-y-auto pr-1 ${scrollClassName}`
             : ""
         }`}
+        aria-busy={loading}
       >
-        {!loading && items.length === 0 ? (
+        {loading ? (
+          Array.from({ length: skeletonCount }, (_, index) => (
+            <div key={index}>{renderSkeletonRow()}</div>
+          ))
+        ) : items.length === 0 ? (
           <EmptySectionMessage message={emptyMessage} />
         ) : (
           visibleItems.map((item) => (
@@ -216,8 +284,12 @@ export function OverviewPage() {
             badge={priorityBadge}
           />
 
-          <div className="space-y-2">
-            {!loading && overview.priorityTasks.items.length === 0 ? (
+          <div className="space-y-2" aria-busy={loading}>
+            {loading ? (
+              Array.from({ length: 4 }, (_, index) => (
+                <PriorityTaskRowSkeleton key={index} />
+              ))
+            ) : overview.priorityTasks.items.length === 0 ? (
               <EmptySectionMessage message="No priority tasks for today" />
             ) : (
               overview.priorityTasks.items.map((task) => (
@@ -246,8 +318,12 @@ export function OverviewPage() {
             }
           />
 
-          <div className="space-y-3">
-            {!loading && overview.schedule.items.length === 0 ? (
+          <div className="space-y-3" aria-busy={loading}>
+            {loading ? (
+              Array.from({ length: 3 }, (_, index) => (
+                <ScheduleRowSkeleton key={index} />
+              ))
+            ) : overview.schedule.items.length === 0 ? (
               <EmptySectionMessage message="No events scheduled today" />
             ) : (
               overview.schedule.items.map((item) => (
@@ -283,6 +359,7 @@ export function OverviewPage() {
                 icon={resolveOverviewIcon(alert.iconKey)}
               />
             )}
+            renderSkeletonRow={() => <SystemAlertRowSkeleton />}
           />
         </section>
 
@@ -308,6 +385,7 @@ export function OverviewPage() {
                 highlight={staff.highlight}
               />
             )}
+            renderSkeletonRow={() => <StaffDutyRowSkeleton />}
           />
         </section>
 
@@ -318,8 +396,12 @@ export function OverviewPage() {
               trailing={overview.shiftStats.shiftLabel}
             />
 
-            <div>
-              {!loading && overview.shiftStats.items.length === 0 ? (
+            <div aria-busy={loading}>
+              {loading ? (
+                Array.from({ length: 4 }, (_, index) => (
+                  <ShiftStatRowSkeleton key={index} />
+                ))
+              ) : overview.shiftStats.items.length === 0 ? (
                 <EmptySectionMessage message="No shift stats available" />
               ) : (
                 overview.shiftStats.items.map((stat) => (

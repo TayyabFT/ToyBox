@@ -22,7 +22,7 @@ import type {
   VehiclesStatsDisplay,
 } from "./types";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 10;
 
 const EMPTY_BAY_MAP: BayMapDisplay = {
   level: "01",
@@ -38,6 +38,8 @@ export function VehiclesPage() {
   const [activeSummaryKey, setActiveSummaryKey] = useState<string | undefined>();
   const [activeFilter, setActiveFilter] = useState<"all" | OperationStatus>("all");
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const loadVehicles = useCallback(async () => {
     setLoading(true);
@@ -51,7 +53,7 @@ export function VehiclesPage() {
         summaryKey: summaryKey as AdminVehiclesSummaryKey | undefined,
         includeBayMap: true,
         limit: PAGE_SIZE,
-        offset: 0,
+        offset: (page - 1) * PAGE_SIZE,
       });
 
       const result = mapAdminVehiclesPage(response.data);
@@ -59,6 +61,7 @@ export function VehiclesPage() {
       setStats(result.stats);
       setBayMap(result.bayMap);
       setOperations(result.operations);
+      setTotal(result.total);
     } catch (error) {
       const message =
         (error as { message?: string }).message ?? "Failed to load vehicles";
@@ -67,10 +70,11 @@ export function VehiclesPage() {
       setStats(createEmptyVehicleStats());
       setBayMap(EMPTY_BAY_MAP);
       setOperations([]);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
-  }, [activeFilter, activeSummaryKey]);
+  }, [activeFilter, activeSummaryKey, page]);
 
   useEffect(() => {
     loadVehicles();
@@ -83,11 +87,13 @@ export function VehiclesPage() {
     setActiveSummaryKey((current) =>
       current === summaryKey ? undefined : summaryKey,
     );
+    setPage(1);
   }
 
   function handleFilterChange(filter: "all" | OperationStatus) {
     setActiveFilter(filter);
     setActiveSummaryKey(OPERATION_FILTER_TO_SUMMARY_KEY[filter]);
+    setPage(1);
   }
 
   return (
@@ -105,6 +111,10 @@ export function VehiclesPage() {
         activeFilter={activeFilter}
         onFilterChange={handleFilterChange}
         loading={loading}
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={total}
+        onPageChange={setPage}
       />
       <AddVehicleModal
         open={addVehicleOpen}

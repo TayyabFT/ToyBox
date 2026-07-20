@@ -5,4 +5,5 @@ export type { DropdownOption } from "./Dropdown";
 export { Skeleton } from "./Skeleton";
 export { ShimmerBlock } from "./ShimmerBlock";
 export { PageLoadingShimmer } from "./PageLoadingShimmer";
+export { Pagination } from "./Pagination";
 export * from "./Svgs";

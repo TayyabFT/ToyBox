@@ -42,19 +42,19 @@ export function CriticalAlertItem({
       </span>
 
       <div className="min-w-0 flex-1 space-y-1">
-        <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+        <div className="flex items-center gap-x-1.5">
           <span
-            className={`font-roboto text-[11px] font-medium tracking-[0.04em] uppercase ${toneTypeClass[tone]}`}
+            className={`font-roboto shrink-0 text-[11px] font-medium tracking-[0.04em] uppercase ${toneTypeClass[tone]}`}
           >
             {typeLabel}
           </span>
-          <span className="font-roboto text-[10px] text-secondary">·</span>
-          <span className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
+          <span className="font-roboto shrink-0 text-[10px] text-secondary">·</span>
+          <span className="font-roboto truncate text-[10px] tracking-[0.04em] text-secondary">
             {status}
           </span>
         </div>
         <p className={overviewRowTitleClass}>{title}</p>
-        <p className="font-roboto text-[10px] leading-relaxed tracking-[0.04em] text-secondary">
+        <p className="font-roboto line-clamp-2 text-[10px] leading-relaxed tracking-[0.04em] text-secondary">
           {description}
         </p>
       </div>

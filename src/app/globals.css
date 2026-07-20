@@ -397,6 +397,14 @@ body {
     var(--stat-card-border-hover, var(--stat-card-border));
 }
 
+.stat-card-shell--featured:hover {
+  background-image:
+    linear-gradient(to bottom right,
+      var(--stat-card-active-from),
+      var(--stat-card-active-to)),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
 .overview-elevated-card-shell {
   border: 1px solid transparent;
   background-image:

@@ -59,7 +59,7 @@ export function MemberGaragePage() {
       try {
         const response = await memberVehiclesApi.getGarage({
           memberId: currentMemberId,
-          filter: activeFilter,
+          garageStatus: activeFilter,
         });
 
         if (!cancelled) {

@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { staffClubhouseApi } from "@/api/staffClubhouse.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   createEmptyClubhouseSummary,
   mapClubhouseReservation,
@@ -24,6 +25,34 @@ import type {
 } from "./types";
 
 const columns = ["Time", "Member", "Zone", "Pax", "Status"] as const;
+
+function ReservationRowSkeleton() {
+  return (
+    <tr className="border-b border-accent/8 last:border-b-0">
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-10" />
+      </td>
+      <td className="px-5 py-4">
+        <div className="flex items-center gap-3">
+          <ShimmerBlock className="size-9 shrink-0 rounded-full" />
+          <div className="min-w-0 space-y-1.5">
+            <ShimmerBlock className="h-3 w-24" />
+            <ShimmerBlock className="h-2.5 w-16" />
+          </div>
+        </div>
+      </td>
+      <td className="px-5 py-4">
+        <ShimmerBlock className="h-3 w-14" />
+      </td>
+      <td className="px-5 py-4 text-center">
+        <ShimmerBlock className="mx-auto h-3 w-6" />
+      </td>
+      <td className="px-5 py-4 text-end">
+        <ShimmerBlock className="ml-auto h-5 w-16 rounded-full" />
+      </td>
+    </tr>
+  );
+}
 
 export function ClubhousePage() {
   const [summary, setSummary] = useState<ClubhouseSummaryDisplay>(
@@ -235,18 +264,10 @@ export function ClubhousePage() {
               </tr>
             </thead>
             <tbody>
-              {listLoading && (
-                <tr>
-                  <td
-                    colSpan={columns.length}
-                    className="px-5 py-8 text-center"
-                  >
-                    <p className="font-roboto text-sm text-secondary">
-                      Loading reservations...
-                    </p>
-                  </td>
-                </tr>
-              )}
+              {listLoading &&
+                Array.from({ length: 4 }, (_, index) => (
+                  <ReservationRowSkeleton key={index} />
+                ))}
 
               {!listLoading && reservations.length === 0 && (
                 <tr>

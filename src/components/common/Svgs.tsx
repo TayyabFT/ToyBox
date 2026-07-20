@@ -900,6 +900,26 @@ export function Bell({ className, color = "var(--muted)" }: TopbarIconProps) {
   );
 }
 
+export function Menu({ className, color = "var(--muted)" }: TopbarIconProps) {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 14 14"
+      fill="none"
+      aria-hidden
+      className={className}
+    >
+      <path
+        d="M1.75 3.5H12.25M1.75 7H12.25M1.75 10.5H12.25"
+        stroke={color}
+        strokeWidth="1.16667"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function ThemeSun({
   className,
   color = "#B8AE96",

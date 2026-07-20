@@ -7,8 +7,6 @@ type PriorityScheduleItemProps = {
   title: string;
   titleParts?: { before: string; after: string };
   detail: string;
-  action: string;
-  actionTone?: "gold" | "pink";
 };
 
 const tagToneClass: Record<PriorityTagTone, string> = {
@@ -18,11 +16,6 @@ const tagToneClass: Record<PriorityTagTone, string> = {
   purple: "priority-tag priority-tag--purple",
 };
 
-const actionToneClass = {
-  gold: "priority-action priority-action--gold",
-  pink: "priority-action priority-action--pink",
-};
-
 export function PriorityScheduleItem({
   time,
   countdown,
@@ -30,8 +23,6 @@ export function PriorityScheduleItem({
   title,
   titleParts,
   detail,
-  action,
-  actionTone = "gold",
 }: PriorityScheduleItemProps) {
   return (
     <div className="flex items-center gap-5 border-b border-[var(--overview-border)] py-5 last:border-b-0">
@@ -66,13 +57,6 @@ export function PriorityScheduleItem({
           {detail}
         </p>
       </div>
-
-      <button
-        type="button"
-        className={`font-roboto shrink-0 cursor-pointer rounded-full px-4 py-2 text-[9px] font-semibold tracking-[0.12em] uppercase ${actionToneClass[actionTone]}`}
-      >
-        {action}
-      </button>
     </div>
   );
 }

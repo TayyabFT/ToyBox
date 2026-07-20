@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import { staffJobsApi } from "@/api/staffJobs.api";
+import { ServiceJobListSkeleton } from "@/components/shared/service-requests/ServiceJobListSkeleton";
 import { ServiceSectionHeader } from "@/components/shared/service-requests/ServiceSectionHeader";
 import {
   mapStaffJobListItems,
@@ -102,11 +103,7 @@ export function StaffJobQueueSection({
         }}
       />
 
-      {loading && jobs.length === 0 ? (
-        <p className="font-roboto py-6 text-center text-sm text-secondary">
-          Loading queued jobs...
-        </p>
-      ) : null}
+      {loading && jobs.length === 0 ? <ServiceJobListSkeleton count={3} /> : null}
 
       {!loading && jobs.length === 0 ? (
         <p className="font-roboto py-6 text-center text-sm text-secondary">

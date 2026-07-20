@@ -2,12 +2,17 @@ import {
   overviewRowMetaClass,
   overviewRowTitleClass,
 } from "@/components/admin/overview/panelStyles";
+import { Pagination } from "@/components/common/Pagination";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { ServiceQueueItem } from "./types";
 
 type ServiceQueueTableProps = {
   rows: ServiceQueueItem[];
   loading?: boolean;
+  page: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
 };
 
 function ServiceQueueRowSkeleton() {
@@ -44,10 +49,15 @@ function ServiceQueueRowSkeleton() {
 export function ServiceQueueTable({
   rows,
   loading = false,
+  page,
+  pageSize,
+  total,
+  onPageChange,
 }: ServiceQueueTableProps) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full min-w-[720px] border-collapse">
+    <div>
+      <div className="overflow-x-auto">
+        <table className="w-full min-w-[720px] border-collapse">
         <thead>
           <tr className="border-b border-[var(--overview-border)]">
             {["Date", "Member", "Vehicle", "Service", "Engineer", "Est."].map(
@@ -122,7 +132,19 @@ export function ServiceQueueTable({
             </tr>
           )}
         </tbody>
-      </table>
+        </table>
+      </div>
+
+      <div className="mt-4 border-t border-[var(--overview-border)] pt-4">
+        <Pagination
+          currentPage={page}
+          totalItems={total}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          disabled={loading}
+          itemLabel="jobs"
+        />
+      </div>
     </div>
   );
 }

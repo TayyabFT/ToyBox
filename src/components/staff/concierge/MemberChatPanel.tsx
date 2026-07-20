@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { chatApi } from "@/api/chat.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { VehicleSend } from "@/components/common/Svgs";
 import { SectionHeader } from "@/components/staff/overview/SectionHeader";
 import { toResourceId } from "@/lib/resourceId";
@@ -19,6 +20,15 @@ type MemberChatPanelProps = {
 
 function isChatNotInitiated(message: string): boolean {
   return message.toLowerCase().includes("initiate");
+}
+
+function ChatBubbleSkeleton({ align }: { align: "start" | "end" }) {
+  return (
+    <div className={`flex flex-col gap-1 ${align === "end" ? "items-end" : "items-start"}`}>
+      <ShimmerBlock className="h-2.5 w-20" />
+      <ShimmerBlock className="h-10 w-48 rounded-xl" />
+    </div>
+  );
 }
 
 export function MemberChatPanel({
@@ -160,9 +170,11 @@ export function MemberChatPanel({
           >
             <div className="space-y-4 pr-1">
               {loading && messages.length === 0 && (
-                <p className="font-roboto py-8 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-                  Loading chat...
-                </p>
+                <div className="space-y-4" aria-busy="true" aria-live="polite">
+                  <ChatBubbleSkeleton align="start" />
+                  <ChatBubbleSkeleton align="end" />
+                  <ChatBubbleSkeleton align="start" />
+                </div>
               )}
 
               {!loading && messages.length === 0 && (

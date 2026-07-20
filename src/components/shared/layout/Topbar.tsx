@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { Bell, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
+import { Bell, Menu, ThemeMoon, ThemeSun, User } from "@/components/common/Svgs";
 import { NotificationPopup } from "@/components/staff/NotificationPopup";
 import { ProfilePopup } from "@/components/shared/layout/ProfilePopup";
 import { AuthProfileContent } from "@/components/shared/layout/AuthProfileContent";
@@ -72,7 +72,13 @@ const TOPBAR_SPECS: Record<UserRole, TopbarSpec> = {
   member: MEMBER_TOPBAR,
 };
 
-export function Topbar({ role }: { role: UserRole }) {
+export function Topbar({
+  role,
+  onMenuClick,
+}: {
+  role: UserRole;
+  onMenuClick?: () => void;
+}) {
   const spec = TOPBAR_SPECS[role];
   const pathname = usePathname();
   const subtitle = useAdminPageSubtitleValue();
@@ -144,37 +150,37 @@ export function Topbar({ role }: { role: UserRole }) {
 
   return (
     <>
-      <header className="flex h-[72px] shrink-0 items-center justify-between border-b border-accent/8 bg-[var(--shell-bg)] px-8">
+      <header className="flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-accent/8 bg-[var(--shell-bg)] px-4 sm:px-6 lg:px-8">
         <nav
           aria-label="Breadcrumb"
-          className="flex items-center gap-2 text-[13px] tracking-[0.14em] uppercase"
+          className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] tracking-[0.14em] uppercase"
         >
-          <span className="font-roboto text-secondary">{spec.brand}</span>
-          <span className="font-roboto text-secondary">/</span>
+          <span className="font-roboto shrink-0 text-secondary">{spec.brand}</span>
+          <span className="font-roboto shrink-0 text-secondary">/</span>
           {showDetailBreadcrumb ? (
             <>
               <Link
                 href={sectionHref!}
-                className="font-roboto text-secondary transition-colors hover:text-primary"
+                className="font-roboto shrink-0 text-secondary transition-colors hover:text-primary"
               >
                 {page}
               </Link>
-              <span className="font-roboto text-secondary">/</span>
-              <span className="font-roboto text-primary">
+              <span className="font-roboto shrink-0 text-secondary">/</span>
+              <span className="font-roboto truncate text-primary">
                 {subtitle!.toUpperCase()}
               </span>
             </>
           ) : (
-            <span className="font-roboto text-primary">{page}</span>
+            <span className="font-roboto truncate text-primary">{page}</span>
           )}
         </nav>
 
-        <div className="flex items-center gap-3">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-3">
           <button
             type="button"
             aria-label={isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
             onClick={toggleTheme}
-            className="flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40"
+            className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40 sm:size-10"
           >
             {isDarkMode ? <ThemeSun /> : <ThemeMoon color="var(--muted)" />}
           </button>
@@ -183,11 +189,11 @@ export function Topbar({ role }: { role: UserRole }) {
             type="button"
             aria-label="Notifications"
             onClick={handleOpenNotifications}
-            className="relative flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40"
+            className="relative flex size-9 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40 sm:size-10"
           >
             <Bell />
             {hasUnread && (
-              <span className="absolute top-2.5 right-3 h-1.5 w-1.5 rounded-full bg-primary" />
+              <span className="absolute top-2 right-2.5 h-1.5 w-1.5 rounded-full bg-primary sm:top-2.5 sm:right-3" />
             )}
           </button>
 
@@ -199,11 +205,20 @@ export function Topbar({ role }: { role: UserRole }) {
                 setNotificationsOpen(false);
                 setProfileOpen(true);
               }}
-              className={spec.profileTriggerClassName}
+              className={`!size-9 sm:!size-10 ${spec.profileTriggerClassName}`}
             >
               {spec.profileTrigger}
             </button>
           )}
+
+          <button
+            type="button"
+            aria-label="Open menu"
+            onClick={onMenuClick}
+            className="flex size-9 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40 sm:size-10 lg:hidden"
+          >
+            <Menu />
+          </button>
         </div>
       </header>
 

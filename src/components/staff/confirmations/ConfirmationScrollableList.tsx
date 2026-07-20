@@ -1,15 +1,29 @@
 "use client";
 
 import { Fragment, useEffect, useState, type ReactNode } from "react";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 
 const DEFAULT_PREVIEW_COUNT = 6;
 const DEFAULT_MAX_HEIGHT = "max-h-[380px]";
+const LOADING_ROW_COUNT = 3;
+
+function ConfirmationRowSkeleton() {
+  return (
+    <div className="flex items-center gap-4 border-b border-accent/6 px-4 py-4 last:border-b-0">
+      <ShimmerBlock className="size-9 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <ShimmerBlock className="h-3 w-32" />
+        <ShimmerBlock className="h-2.5 w-48" />
+      </div>
+      <ShimmerBlock className="h-6 w-20 shrink-0 rounded-full" />
+    </div>
+  );
+}
 
 type ConfirmationScrollableListProps<T> = {
   items: T[];
   loading?: boolean;
   emptyText: string;
-  loadingText?: string;
   previewCount?: number;
   maxHeightClassName?: string;
   listClassName?: string;
@@ -21,7 +35,6 @@ export function ConfirmationScrollableList<T>({
   items,
   loading = false,
   emptyText,
-  loadingText = "Loading...",
   previewCount = DEFAULT_PREVIEW_COUNT,
   maxHeightClassName = DEFAULT_MAX_HEIGHT,
   listClassName = "",
@@ -44,9 +57,11 @@ export function ConfirmationScrollableList<T>({
         className={`Custom__Scrollbar overflow-y-auto ${maxHeightClassName} ${listClassName}`.trim()}
       >
         {loading ? (
-          <p className="font-roboto py-6 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-            {loadingText}
-          </p>
+          <div aria-busy="true" aria-live="polite">
+            {Array.from({ length: LOADING_ROW_COUNT }, (_, index) => (
+              <ConfirmationRowSkeleton key={index} />
+            ))}
+          </div>
         ) : items.length > 0 ? (
           visibleItems.map((item) => (
             <Fragment key={getItemKey(item)}>{renderItem(item)}</Fragment>

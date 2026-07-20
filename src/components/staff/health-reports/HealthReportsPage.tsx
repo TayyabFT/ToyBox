@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { staffHealthReportsApi } from "@/api/staffHealthReports.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { StatusPill } from "@/components/staff/overview/StatusPill";
 import { VehicleListPanel } from "@/components/staff/vehicles/VehicleListPanel";
 import { showError } from "@/lib/toast";
@@ -21,6 +22,49 @@ import type {
   HealthReport,
   HealthReportTab,
 } from "./types";
+
+function HealthReportDetailSkeleton() {
+  const cardClass = "overflow-hidden rounded-2xl border border-accent/10 bg-card";
+
+  return (
+    <div className="space-y-4" aria-busy="true" aria-live="polite">
+      <section className={cardClass}>
+        <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <ShimmerBlock className="h-4 w-48" />
+          <ShimmerBlock className="h-7 w-32 rounded-lg" />
+        </div>
+      </section>
+
+      <section className={cardClass}>
+        <div className="grid grid-cols-2 gap-4 px-5 py-5 md:grid-cols-4">
+          {Array.from({ length: 4 }, (_, index) => (
+            <div key={index} className="space-y-1.5">
+              <ShimmerBlock className="h-2.5 w-16" />
+              <ShimmerBlock className="h-3.5 w-20" />
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className={cardClass}>
+        <div className="space-y-4 px-5 py-5">
+          <ShimmerBlock className="h-3 w-32" />
+          {Array.from({ length: 3 }, (_, index) => (
+            <ShimmerBlock key={index} className="h-2 w-full rounded-full" />
+          ))}
+        </div>
+      </section>
+
+      <section className={cardClass}>
+        <div className="space-y-3 px-5 py-5">
+          {Array.from({ length: 3 }, (_, index) => (
+            <ShimmerBlock key={index} className="h-10 w-full rounded-lg" />
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
 
 function matchesFilter(
   healthStatus: string,
@@ -171,11 +215,7 @@ export function HealthReportsPage() {
 
         <div className="xl:col-span-3">
           {loadingDetail ? (
-            <div className="rounded-2xl border border-accent/10 bg-card px-5 py-8 text-center">
-              <p className="font-roboto text-sm text-secondary">
-                Loading health report...
-              </p>
-            </div>
+            <HealthReportDetailSkeleton />
           ) : selectedReport ? (
             <HealthReportDetailPanel report={selectedReport} />
           ) : (

@@ -2,7 +2,21 @@
 
 import { CaptureCameraIcon, FilterIcon, FlagIcon, SyncIcon } from "./icons";
 import { CheckIcon } from "./icons";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { RecentUpload, UploadState } from "./types";
+
+function UploadRowSkeleton() {
+  return (
+    <div className="flex items-center gap-3 rounded-xl border border-accent/15 bg-input-muted px-3 py-2.5">
+      <ShimmerBlock className="size-9 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <ShimmerBlock className="h-3 w-32" />
+        <ShimmerBlock className="h-2.5 w-20" />
+      </div>
+      <ShimmerBlock className="h-5 w-16 shrink-0 rounded-full" />
+    </div>
+  );
+}
 
 type RecentUploadsProps = {
   uploads: RecentUpload[];
@@ -59,9 +73,11 @@ export function RecentUploads({
       </div>
 
       {loading && uploads.length === 0 ? (
-        <p className="font-roboto py-8 text-center text-sm text-secondary">
-          Loading recent uploads...
-        </p>
+        <div className="space-y-2" aria-busy="true" aria-live="polite">
+          {Array.from({ length: 4 }, (_, index) => (
+            <UploadRowSkeleton key={index} />
+          ))}
+        </div>
       ) : null}
 
       {!loading && uploads.length === 0 ? (

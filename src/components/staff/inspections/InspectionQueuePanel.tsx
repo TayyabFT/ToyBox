@@ -1,12 +1,29 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { StatusPill } from "@/components/staff/overview/StatusPill";
 import { VehicleListItemRow } from "@/components/staff/vehicles/VehicleListItemRow";
 import { mapInspectionQueueItem } from "./mapInspectionQueueItem";
 import type { InspectionQueueItem } from "./types";
 
 const PREVIEW_COUNT = 8;
+
+function InspectionRowSkeleton() {
+  return (
+    <div className="flex items-center gap-3 border-b border-accent/6 px-5 py-4 last:border-b-0">
+      <ShimmerBlock className="size-10 shrink-0 rounded-lg" />
+      <div className="min-w-0 flex-1 space-y-2">
+        <ShimmerBlock className="h-3 w-28" />
+        <ShimmerBlock className="h-2.5 w-36" />
+      </div>
+      <div className="flex shrink-0 flex-col items-end gap-2">
+        <ShimmerBlock className="h-2.5 w-10" />
+        <ShimmerBlock className="h-5 w-16 rounded-full" />
+      </div>
+    </div>
+  );
+}
 
 type InspectionQueuePanelProps = {
   items: InspectionQueueItem[];
@@ -43,9 +60,11 @@ export function InspectionQueuePanel({
 
       <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto">
         {loading && items.length === 0 ? (
-          <p className="font-roboto px-5 py-8 text-center text-sm text-secondary">
-            Loading inspection queue...
-          </p>
+          <div aria-busy="true" aria-live="polite">
+            {Array.from({ length: 5 }, (_, index) => (
+              <InspectionRowSkeleton key={index} />
+            ))}
+          </div>
         ) : null}
 
         {!loading && items.length === 0 ? (

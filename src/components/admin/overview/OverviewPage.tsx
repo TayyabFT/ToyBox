@@ -68,6 +68,16 @@ function mapAlertTone(severity: string): "critical" | "payment" | "warning" | "p
   return "warning";
 }
 
+function formatDaysPending(days: number, taskStatus: string): string {
+  const statusLabel = taskStatus
+    ? taskStatus.charAt(0).toUpperCase() + taskStatus.slice(1)
+    : "";
+  const daysLabel =
+    days <= 0 ? "Today" : days === 1 ? "1 day" : `${days} days`;
+
+  return statusLabel ? `${statusLabel} · ${daysLabel}` : daysLabel;
+}
+
 function mapStaffStatus(status: string): "online" | "active" | "meeting" {
   if (status === "meeting") return "meeting";
   if (status === "active") return "active";
@@ -122,6 +132,8 @@ function parseGreeting(text: string, firstName: string): { greeting: string; nam
     name: `${firstName}.`,
   };
 }
+
+const TICKER_VISIBLE_COUNT = 3;
 
 /** Compact empty state — minimal height, single line message */
 function EmptyState({ message }: { message: string }) {
@@ -193,7 +205,7 @@ export function AdminOverviewPage() {
   const staffOnShift = overview?.staffOnShift;
   const todaySchedule = overview?.todaySchedule;
 
-  const tickerItems = (ticker?.alerts ?? []).map((a) => {
+  const tickerItems = (ticker?.alerts ?? []).slice(0, TICKER_VISIBLE_COUNT).map((a) => {
     const dashIdx = a.message.indexOf(" — ");
     return {
       highlight: dashIdx > -1 ? a.message.slice(0, dashIdx) : a.message,
@@ -315,8 +327,6 @@ export function AdminOverviewPage() {
                         title={item.title}
                         titleParts={titleParts}
                         detail={item.detail}
-                        action="View"
-                        actionTone={item.priority === "high" ? "pink" : "gold"}
                       />
                     );
                   })}
@@ -414,7 +424,7 @@ export function AdminOverviewPage() {
                       key={item.id}
                       tone={tone}
                       typeLabel={item.severity.charAt(0).toUpperCase() + item.severity.slice(1)}
-                      status={item.detail}
+                      status={formatDaysPending(item.daysPending, item.taskStatus)}
                       title={item.title}
                       description={item.detail}
                       icon={<AlertToneIcon tone={tone} />}

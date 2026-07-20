@@ -16,7 +16,7 @@ import { StaffStatsRow } from "./StaffStatsRow";
 import { staffStats } from "./mockData";
 import type { StaffProfile, StaffStatsDisplay } from "./types";
 
-const PAGE_SIZE = 50;
+const PAGE_SIZE = 10;
 
 export function StaffPage() {
   const [inviteOpen, setInviteOpen] = useState(false);
@@ -26,23 +26,18 @@ export function StaffPage() {
   const [activeStatus, setActiveStatus] = useState("all");
   const [staff, setStaff] = useState<StaffProfile[]>([]);
   const [total, setTotal] = useState(0);
-  const [offset, setOffset] = useState(0);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
 
   const loadStaff = useCallback(
-    async (status: string, nextOffset = 0, append = false) => {
-      if (append) {
-        setLoadingMore(true);
-      } else {
-        setLoading(true);
-      }
+    async (status: string, pageNumber: number) => {
+      setLoading(true);
 
       try {
         const response = await staffApi.getStaff({
           status,
           limit: PAGE_SIZE,
-          offset: nextOffset,
+          offset: (pageNumber - 1) * PAGE_SIZE,
         });
 
         const result = mapStaffDirectory(response.data);
@@ -50,50 +45,47 @@ export function StaffPage() {
         setStats(result.summary);
         setFilters(result.filters);
         setActiveStatus(result.status);
-        setStaff((current) =>
-          append ? [...current, ...result.staff] : result.staff,
-        );
+        setStaff(result.staff);
         setTotal(result.total);
-        setOffset(nextOffset + result.staff.length);
       } catch (error) {
         const message =
           (error as { message?: string }).message ?? "Failed to load staff";
 
         showError(message);
 
-        if (!append) {
-          setStats(createEmptyStaffStats());
-          setStaff([]);
-          setTotal(0);
-          setOffset(0);
-        }
+        setStats(createEmptyStaffStats());
+        setStaff([]);
+        setTotal(0);
       } finally {
         setLoading(false);
-        setLoadingMore(false);
       }
     },
     [],
   );
 
   useEffect(() => {
-    loadStaff(activeStatus);
-  }, [activeStatus, loadStaff]);
+    loadStaff(activeStatus, page);
+  }, [activeStatus, page, loadStaff]);
 
-  const hasMore = staff.length < total;
+  function handleFilterChange(key: string) {
+    setActiveStatus(key);
+    setPage(1);
+  }
 
   return (
     <div className="space-y-7 p-8">
       <StaffPageHeader onInviteClick={() => setInviteOpen(true)} />
-      <StaffStatsRow stats={stats} loading={loading && !loadingMore} />
+      <StaffStatsRow stats={stats} loading={loading} />
       <StaffDirectory
         filters={filters}
         activeFilter={activeStatus}
-        onFilterChange={setActiveStatus}
+        onFilterChange={handleFilterChange}
         staff={staff}
-        loading={loading && !loadingMore}
-        loadingMore={loadingMore}
-        hasMore={hasMore}
-        onLoadMore={() => loadStaff(activeStatus, offset, true)}
+        loading={loading}
+        page={page}
+        pageSize={PAGE_SIZE}
+        total={total}
+        onPageChange={setPage}
       />
       <InviteModal
         open={inviteOpen}

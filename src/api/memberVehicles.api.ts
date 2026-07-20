@@ -8,7 +8,9 @@ import type {
 export type MemberGarageListParams = {
   memberId: string;
   /** Garage tab key, e.g. "all" | "ready" | "in_service" | "away" | "modern" | "classic" | "stored" | "in_review" */
-  filter?: string;
+  garageStatus?: string;
+  /** Ownership scope the backend accepts: "all" | "priority" | "mine" */
+  filter?: "all" | "priority" | "mine";
   search?: string;
 };
 
@@ -17,11 +19,16 @@ export const memberVehiclesApi = {
    * GET /api/v1/vehicles?memberId=...&filter=...&garageStatus=...&search=...
    * Returns the member's full garage list plus tab counts for the filter pills.
    */
-  getGarage: ({ memberId, filter = "all", search }: MemberGarageListParams) => {
+  getGarage: ({
+    memberId,
+    garageStatus = "all",
+    filter = "all",
+    search,
+  }: MemberGarageListParams) => {
     const qs = new URLSearchParams({
       memberId,
       filter,
-      garageStatus: filter,
+      garageStatus,
     });
 
     if (search) {

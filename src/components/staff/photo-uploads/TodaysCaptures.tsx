@@ -9,7 +9,12 @@ import {
   UploadFileArrowIcon,
 } from "./icons";
 import { PlusSmall } from "@/components/common/Svgs";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { PendingSummary, TodayCapture } from "./types";
+
+function CaptureTileSkeleton() {
+  return <ShimmerBlock className="aspect-square w-full rounded-xl" />;
+}
 
 type TodaysCapturesProps = {
   captures: TodayCapture[];
@@ -62,9 +67,15 @@ export function TodaysCaptures({
       </div>
 
       {loading ? (
-        <p className="font-roboto py-10 text-center text-sm text-secondary">
-          Loading today&apos;s captures...
-        </p>
+        <div
+          className="grid grid-cols-2 gap-3 sm:grid-cols-4"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          {Array.from({ length: 8 }, (_, index) => (
+            <CaptureTileSkeleton key={index} />
+          ))}
+        </div>
       ) : (
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {captures.map((capture) => (

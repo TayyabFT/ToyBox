@@ -68,7 +68,7 @@ export function MaintenanceJobCard({ job, staffMode = false }: MaintenanceJobCar
         </div>
       )}
 
-      {!staffMode ? (
+      {/* {!staffMode ? (
         <div className="flex flex-wrap items-center gap-2 pt-1">
           {isInProgress ? (
             <JobActionButton label="View Job Card" />
@@ -80,7 +80,7 @@ export function MaintenanceJobCard({ job, staffMode = false }: MaintenanceJobCar
             </>
           )}
         </div>
-      ) : null}
+      ) : null} */}
     </article>
   );
 }

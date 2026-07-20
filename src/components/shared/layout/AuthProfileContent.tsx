@@ -2,7 +2,53 @@
 
 import { useEffect, useState } from "react";
 import { authApi } from "@/api/auth.api";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { mapAuthProfile, type AuthProfileView } from "@/lib/authProfile";
+
+function AuthProfileSkeleton() {
+  return (
+    <div className="space-y-5" aria-busy="true" aria-live="polite">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-3">
+          <ShimmerBlock className="size-12 shrink-0 rounded-full" />
+          <div className="space-y-1.5">
+            <ShimmerBlock className="h-3 w-28" />
+            <ShimmerBlock className="h-2.5 w-20" />
+          </div>
+        </div>
+        <ShimmerBlock className="size-2 shrink-0 rounded-full" />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        {Array.from({ length: 2 }, (_, index) => (
+          <div
+            key={index}
+            className="space-y-1.5 rounded-xl border border-accent/12 bg-accent/5 px-3 py-2.5"
+          >
+            <ShimmerBlock className="h-2.5 w-14" />
+            <ShimmerBlock className="h-4 w-10" />
+          </div>
+        ))}
+      </div>
+
+      <div className="space-y-4">
+        {Array.from({ length: 2 }, (_, sectionIndex) => (
+          <div key={sectionIndex} className="space-y-2">
+            <ShimmerBlock className="h-2.5 w-24" />
+            <div className="space-y-2.5 rounded-xl border border-accent/12 bg-accent/5 p-3">
+              {Array.from({ length: 3 }, (_, fieldIndex) => (
+                <div key={fieldIndex} className="flex items-center justify-between gap-3">
+                  <ShimmerBlock className="h-2.5 w-16" />
+                  <ShimmerBlock className="h-2.5 w-20" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 type AuthProfileContentProps = {
   open: boolean;
@@ -138,11 +184,7 @@ export function AuthProfileContent({ open }: AuthProfileContentProps) {
   }, [open]);
 
   if (loading) {
-    return (
-      <p className="font-roboto py-6 text-center text-sm text-secondary">
-        Loading profile...
-      </p>
-    );
+    return <AuthProfileSkeleton />;
   }
 
   if (error) {

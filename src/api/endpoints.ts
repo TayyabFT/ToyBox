@@ -104,6 +104,12 @@ export const API_ENDPOINTS = {
     main: "/api/v1/admin/overview",
     jobs: "/api/v1/admin/overview/jobs",
   },
+  adminServiceRequestJobs: {
+    active: "/api/v1/admin/service-requests/jobs/active",
+    detail: (taskQueueId: string) =>
+      `/api/v1/admin/service-requests/jobs/${taskQueueId}`,
+    all: "/api/v1/admin/service-requests/jobs",
+  },
   staffOverview: {
     overview: "/api/v1/staff/overview",
     jobs: "/api/v1/staff/overview/jobs",

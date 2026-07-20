@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo } from "react";
+import { Pagination } from "@/components/common/Pagination";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { OperationStatus, VehicleOperationRow } from "./types";
 
@@ -83,6 +84,10 @@ type VehicleOperationsProps = {
   activeFilter: "all" | OperationStatus;
   onFilterChange: (filter: "all" | OperationStatus) => void;
   loading?: boolean;
+  page: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
 };
 
 export function VehicleOperations({
@@ -90,6 +95,10 @@ export function VehicleOperations({
   activeFilter,
   onFilterChange,
   loading = false,
+  page,
+  pageSize,
+  total,
+  onPageChange,
 }: VehicleOperationsProps) {
   const rows = useMemo(() => {
     if (activeFilter === "all") return operations;
@@ -231,6 +240,17 @@ export function VehicleOperations({
             ))}
           </div>
         </div>
+      </div>
+
+      <div className="mt-4 border-t border-accent/8 pt-4">
+        <Pagination
+          currentPage={page}
+          totalItems={total}
+          pageSize={pageSize}
+          onPageChange={onPageChange}
+          disabled={loading}
+          itemLabel="vehicles"
+        />
       </div>
     </section>
   );

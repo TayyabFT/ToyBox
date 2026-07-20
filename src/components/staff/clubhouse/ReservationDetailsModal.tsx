@@ -1,5 +1,6 @@
 "use client";
 
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { ClubhouseReservation } from "./types";
 import { isActionableReservation, isPendingReservation } from "./types";
 
@@ -118,9 +119,28 @@ export function ReservationDetailsModal({
 
         <div className="Custom__Scrollbar max-h-[70vh] space-y-5 overflow-y-auto px-6 py-5">
           {loading || !reservation ? (
-            <p className="font-roboto py-8 text-center text-sm text-secondary">
-              Loading reservation details...
-            </p>
+            <div aria-busy="true" aria-live="polite">
+              <div className="flex items-center gap-4 rounded-xl border border-accent/15 bg-input-muted px-4 py-4">
+                <ShimmerBlock className="size-12 shrink-0 rounded-full" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <ShimmerBlock className="h-3 w-32" />
+                  <ShimmerBlock className="h-2.5 w-24" />
+                </div>
+              </div>
+
+              <div className="mt-5 grid grid-cols-2 gap-3">
+                {Array.from({ length: 4 }, (_, index) => (
+                  <ShimmerBlock key={index} className="h-14 w-full rounded-xl" />
+                ))}
+              </div>
+
+              <div className="mt-5 space-y-2">
+                <ShimmerBlock className="h-2.5 w-28" />
+                <ShimmerBlock className="h-16 w-full rounded-xl" />
+              </div>
+
+              <ShimmerBlock className="mt-5 h-11 w-full rounded-xl" />
+            </div>
           ) : (
             <>
               <div className="flex items-center gap-4 rounded-xl border border-accent/15 bg-input-muted px-4 py-4">

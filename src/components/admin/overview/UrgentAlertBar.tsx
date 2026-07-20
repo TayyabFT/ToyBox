@@ -34,7 +34,7 @@ export function UrgentAlertBar({
       <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1">
         {items.map((item, index) => (
           <div
-            key={`${item.highlight}-${item.detail}`}
+            key={`${item.highlight}-${index}`}
             className="flex items-center gap-3"
           >
             {index > 0 && (
@@ -42,9 +42,8 @@ export function UrgentAlertBar({
                 |
               </span>
             )}
-            <p className="font-roboto text-[12px] tracking-[0.03em] whitespace-nowrap">
-              <span className="text-pink">{item.highlight}</span>{" "}
-              <span className="text-foreground">{item.detail}</span>
+            <p className="font-roboto truncate text-[12px] tracking-[0.03em] text-pink">
+              {item.highlight}
             </p>
           </div>
         ))}

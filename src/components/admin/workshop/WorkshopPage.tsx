@@ -32,6 +32,9 @@ import { WorkshopAlertBar } from "./WorkshopAlertBar";
 import { WorkshopPageHeader } from "./WorkshopPageHeader";
 import { WorkshopStatCard } from "./WorkshopStatCard";
 
+const QUEUE_PAGE_SIZE = 10;
+const ALERT_BAR_VISIBLE_COUNT = 3;
+
 const statIcons = [
   <Workshop key="jobs" />,
   <VehicleFlag key="overdue" color="currentColor" className="size-4" />,
@@ -68,26 +71,23 @@ export function WorkshopPage() {
   const [activeBays, setActiveBays] = useState<ActiveBayItem[]>([]);
   const [serviceQueue, setServiceQueue] = useState<ServiceQueueItem[]>([]);
   const [queueTotal, setQueueTotal] = useState(0);
+  const [queuePage, setQueuePage] = useState(1);
   const [statsLoading, setStatsLoading] = useState(true);
   const [baysLoading, setBaysLoading] = useState(true);
   const [queueLoading, setQueueLoading] = useState(true);
 
-  const loadWorkshopData = useCallback(async () => {
+  const loadDashboard = useCallback(async () => {
     setStatsLoading(true);
     setBaysLoading(true);
-    setQueueLoading(true);
 
     try {
-      const [statsResponse, baysResponse, queueResponse] = await Promise.all([
+      const [statsResponse, baysResponse] = await Promise.all([
         adminWorkshopApi.getDashboardStats(),
         adminWorkshopApi.getDashboardBays(),
-        adminWorkshopApi.getDashboardQueue({ page: 1, limit: 20 }),
       ]);
 
       setStats(mapWorkshopDashboardStats(statsResponse.data));
       setActiveBays(mapWorkshopBays(baysResponse.data.bays));
-      setServiceQueue(mapWorkshopQueueItems(queueResponse.data.items));
-      setQueueTotal(queueResponse.data.total);
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
@@ -96,18 +96,43 @@ export function WorkshopPage() {
       showError(message);
       setStats(createEmptyWorkshopStats());
       setActiveBays([]);
-      setServiceQueue([]);
-      setQueueTotal(0);
     } finally {
       setStatsLoading(false);
       setBaysLoading(false);
+    }
+  }, []);
+
+  const loadQueue = useCallback(async (page: number) => {
+    setQueueLoading(true);
+
+    try {
+      const queueResponse = await adminWorkshopApi.getDashboardQueue({
+        page,
+        limit: QUEUE_PAGE_SIZE,
+      });
+
+      setServiceQueue(mapWorkshopQueueItems(queueResponse.data.items));
+      setQueueTotal(queueResponse.data.total);
+    } catch (error) {
+      const message =
+        (error as { message?: string }).message ??
+        "Failed to load service queue";
+
+      showError(message);
+      setServiceQueue([]);
+      setQueueTotal(0);
+    } finally {
       setQueueLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void loadWorkshopData();
-  }, [loadWorkshopData]);
+    void loadDashboard();
+  }, [loadDashboard]);
+
+  useEffect(() => {
+    void loadQueue(queuePage);
+  }, [loadQueue, queuePage]);
 
   function scrollToActiveBays() {
     activeBaysRef.current?.scrollIntoView({
@@ -120,6 +145,12 @@ export function WorkshopPage() {
     ? "Loading..."
     : `${activeBays.length} item${activeBays.length === 1 ? "" : "s"} · sorted by time`;
 
+  const overdueBays = activeBays.filter((bay) => bay.status === "overdue");
+  const overdueAlertItems = overdueBays.slice(0, ALERT_BAR_VISIBLE_COUNT).map((bay) => ({
+    highlight: `${bay.vehicleMake} ${bay.vehicleModel}`.trim(),
+    detail: bay.statusLabel,
+  }));
+
   const queueSubtitle = queueLoading
     ? "Loading..."
     : `Scheduled · ${queueTotal} item${queueTotal === 1 ? "" : "s"}`;
@@ -128,19 +159,14 @@ export function WorkshopPage() {
     <div className="space-y-6 p-8">
       <WorkshopPageHeader />
 
-      <WorkshopAlertBar
-        count={3}
-        items={[
-          { highlight: "Ferrari 296", detail: "overdue 12 days" },
-          {
-            highlight: "Mr. Al Mansoori",
-            detail: "arriving 14:30 · suite pending",
-          },
-          { highlight: "Auction Day", detail: "headcount by 12:00" },
-        ]}
-        actionLabel="Review all"
-        onReviewAll={scrollToActiveBays}
-      />
+      {overdueBays.length > 0 && (
+        <WorkshopAlertBar
+          count={overdueBays.length}
+          items={overdueAlertItems}
+          actionLabel="Review all"
+          onReviewAll={scrollToActiveBays}
+        />
+      )}
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5">
         {stats.map((stat, index) => (
@@ -193,16 +219,23 @@ export function WorkshopPage() {
               subtitle={queueSubtitle}
             />
           </div>
-          <button
+          {/* <button
             type="button"
             className="admin-gold-cta font-roboto shrink-0 cursor-pointer rounded-full px-4 py-2 text-[10px] font-semibold tracking-[0.12em] uppercase"
           >
             Open Scheduler →
-          </button>
+          </button> */}
         </div>
 
         <section className={overviewPanelClass}>
-          <ServiceQueueTable rows={serviceQueue} loading={queueLoading} />
+          <ServiceQueueTable
+            rows={serviceQueue}
+            loading={queueLoading}
+            page={queuePage}
+            pageSize={QUEUE_PAGE_SIZE}
+            total={queueTotal}
+            onPageChange={setQueuePage}
+          />
         </section>
       </div>
     </div>

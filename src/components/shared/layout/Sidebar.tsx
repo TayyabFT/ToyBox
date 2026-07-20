@@ -276,12 +276,25 @@ function StaffShiftCard() {
   );
 }
 
-export function Sidebar({ role }: { role: UserRole }) {
+export function Sidebar({
+  role,
+  mobileOpen = false,
+  onMobileClose,
+}: {
+  role: UserRole;
+  mobileOpen?: boolean;
+  onMobileClose?: () => void;
+}) {
   const spec = SIDEBAR_SPECS[role];
   const pathname = usePathname();
   const { theme } = useTheme();
   const isLightMode = theme === "light";
   const [conciergeUnreadCount, setConciergeUnreadCount] = useState(0);
+
+  useEffect(() => {
+    onMobileClose?.();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   useEffect(() => {
     if (role !== "staff" && role !== "member") return;
@@ -351,43 +364,67 @@ export function Sidebar({ role }: { role: UserRole }) {
   );
 
   return (
-    <aside className="sidebar fixed flex h-screen w-[330px] shrink-0 flex-col overflow-hidden border-r border-accent/8 bg-[var(--sidebar-bg)]">
-      <div className="shrink-0 px-5 py-5">
-        <div className="flex items-center justify-between gap-2">
-          <Image
-            src={isLightMode ? "/images/lightlogo.png" : "/images/logo.png"}
-            alt="Toy Box"
-            width={120}
-            height={56}
-            className="h-14 w-auto"
-          />
-          <div
-            className={`font-roboto flex items-center justify-center rounded-md border px-3 py-1 text-[9px] leading-none tracking-[0.15em] ${spec.badge.className}`}
-          >
-            {spec.badge.label}
+    <>
+      {mobileOpen && (
+        <div
+          aria-hidden
+          onClick={onMobileClose}
+          className="fixed inset-0 z-40 bg-black/50 lg:hidden"
+        />
+      )}
+
+      <aside
+        className={`sidebar fixed z-50 flex h-screen w-[280px] shrink-0 flex-col overflow-hidden border-r border-accent/8 bg-[var(--sidebar-bg)] transition-transform duration-300 ease-in-out sm:w-[330px] lg:translate-x-0 ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className="shrink-0 px-5 py-5">
+          <div className="flex items-center justify-between gap-2">
+            <Image
+              src={isLightMode ? "/images/lightlogo.png" : "/images/logo.png"}
+              alt="Toy Box"
+              width={120}
+              height={56}
+              className="h-14 w-auto"
+            />
+            <div className="flex items-center gap-2">
+              <div
+                className={`font-roboto flex items-center justify-center rounded-md border px-3 py-1 text-[9px] leading-none tracking-[0.15em] ${spec.badge.className}`}
+              >
+                {spec.badge.label}
+              </div>
+              <button
+                type="button"
+                aria-label="Close menu"
+                onClick={onMobileClose}
+                className="flex size-8 shrink-0 cursor-pointer items-center justify-center rounded-full border border-accent/10 text-secondary transition-colors hover:text-foreground lg:hidden"
+              >
+                ✕
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto border-y border-accent/8 px-4 py-5">
-        <nav className="space-y-7">
-          {sections.map((section) => (
-            <NavSection
-              key={section.title}
-              section={section}
-              pathname={pathname}
-              base={spec.base}
-              isLightMode={isLightMode}
-            />
-          ))}
-        </nav>
-      </div>
+        <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto border-y border-accent/8 px-4 py-5">
+          <nav className="space-y-7">
+            {sections.map((section) => (
+              <NavSection
+                key={section.title}
+                section={section}
+                pathname={pathname}
+                base={spec.base}
+                isLightMode={isLightMode}
+              />
+            ))}
+          </nav>
+        </div>
 
-      {role === "admin" ? (
-        <SidebarProfileFooter profilePath={ADMIN_PROFILE_PATH} />
-      ) : null}
+        {role === "admin" ? (
+          <SidebarProfileFooter profilePath={ADMIN_PROFILE_PATH} />
+        ) : null}
 
-      {spec.showShiftCard ? <StaffShiftCard /> : null}
-    </aside>
+        {spec.showShiftCard ? <StaffShiftCard /> : null}
+      </aside>
+    </>
   );
 }

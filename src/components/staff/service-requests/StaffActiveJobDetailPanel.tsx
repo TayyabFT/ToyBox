@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { ActivityCheck } from "@/components/common/Svgs";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { AssigneeBadge, JobActionButton } from "@/components/shared/service-requests/JobActionButton";
 import { JobProgressBar } from "@/components/shared/service-requests/JobProgressBar";
 import { JobStatusBadge } from "@/components/shared/service-requests/JobStatusBadge";
@@ -85,9 +86,43 @@ export function StaffActiveJobDetailPanel({
   if (loading) {
     return (
       <PanelShell>
-        <p className="font-roboto py-12 text-center text-sm text-secondary">
-          Loading active job...
-        </p>
+        <div
+          className="-mx-5 mb-4 space-y-2 border-b border-[#D4A8470F] px-5 pb-4"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          <ShimmerBlock className="h-3 w-32" />
+          <ShimmerBlock className="h-2.5 w-24" />
+        </div>
+
+        <div className="flex flex-1 flex-col space-y-5">
+          <div className="flex items-center justify-between gap-3">
+            <ShimmerBlock className="h-2.5 w-28" />
+            <ShimmerBlock className="h-5 w-20 rounded-full" />
+          </div>
+
+          <div className="space-y-2">
+            <ShimmerBlock className="h-5 w-40" />
+            <ShimmerBlock className="h-2.5 w-32" />
+            <ShimmerBlock className="h-5 w-24 rounded-full" />
+          </div>
+
+          <ShimmerBlock className="h-2 w-full rounded-full" />
+
+          <div className="space-y-3 rounded-xl border border-[#D4A8471A] bg-card p-4">
+            <ShimmerBlock className="h-2.5 w-20" />
+            <ShimmerBlock className="h-3 w-40" />
+          </div>
+
+          <div className="space-y-2.5">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <ShimmerBlock className="size-4 shrink-0 rounded" />
+                <ShimmerBlock className="h-3 flex-1" />
+              </div>
+            ))}
+          </div>
+        </div>
       </PanelShell>
     );
   }

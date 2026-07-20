@@ -21,11 +21,15 @@ import {
   mapAdminOverviewJobsStats,
 } from "@/lib/adminServiceRequestStats";
 import { ServiceRequestsDashboard } from "@/components/shared/service-requests/ServiceRequestsDashboard";
+import { AdminActiveJobsPanel } from "./AdminActiveJobsPanel";
+import { AdminAllJobsPanel } from "./AdminAllJobsPanel";
 
 export function ServiceRequestsPage() {
   return (
     <ServiceRequestsDashboard
       basePath="/admin"
+      leftPanel={<AdminAllJobsPanel />}
+      rightPanel={<AdminActiveJobsPanel />}
       transport={{
         load: async () => {
           const response = await adminTransportApi.getRequests();

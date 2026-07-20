@@ -2323,6 +2323,14 @@ export type StaffJobTimelineItemRaw = {
   completedAt?: string;
 };
 
+export type StaffJobAssignedStaffRaw = {
+  staffProfileId?: string;
+  id?: string;
+  name?: string;
+  currentStatus?: string;
+  isOnline?: boolean;
+};
+
 export type StaffActiveJobDetailRaw = {
   vehicle?: string;
   member?: string;
@@ -2355,6 +2363,7 @@ export type StaffActiveJobRaw = {
   memberName?: string;
   assignee?: string;
   assigneeName?: string;
+  assignedStaff?: StaffJobAssignedStaffRaw;
   subtitle?: string;
   specialInstructions?: string;
   notesText?: string;
@@ -2461,6 +2470,23 @@ export type StaffJobStartRequest = {
 export type StaffJobActiveNoteRequest = {
   note: string;
 };
+
+export type AdminServiceRequestJobsListData = {
+  count?: number;
+  limit?: number;
+  offset?: number;
+  jobs?: StaffActiveJobRaw[];
+};
+
+export type AdminServiceRequestJobsListResponse =
+  ApiResponse<AdminServiceRequestJobsListData>;
+
+export type AdminServiceRequestJobDetailData = {
+  job?: StaffActiveJobRaw | null;
+};
+
+export type AdminServiceRequestJobDetailResponse =
+  ApiResponse<AdminServiceRequestJobDetailData>;
 
 export type StaffInspectionStatRaw = {
   value?: string | number;
@@ -3423,8 +3449,16 @@ export type AdminOverviewCriticalAlertItem = {
   type: string;
   title: string;
   detail: string;
+  description: string;
   vehicleId: string;
+  vehicleLabel: string;
+  memberId: string;
+  memberName: string;
   bay: string;
+  sourceType: string;
+  sourceId: string;
+  taskStatus: string;
+  daysPending: number;
 };
 
 export type AdminOverviewCriticalAlerts = {

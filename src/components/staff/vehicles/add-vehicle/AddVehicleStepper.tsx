@@ -22,7 +22,7 @@ export function AddVehicleStepper({ currentStep }: AddVehicleStepperProps) {
                 <span
                   className={`flex size-10 items-center justify-center rounded-full text-xs font-semibold ${
                     isReached
-                      ? "bg-primary text-white"
+                      ? "staff-add-cta bg-primary text-white"
                       : "border border-primary/70 bg-transparent text-primary"
                   }`}
                 >

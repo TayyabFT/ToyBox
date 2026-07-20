@@ -1,7 +1,19 @@
 "use client";
 
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { NotificationItem } from "./NotificationItem";
 import type { NotificationItem as NotificationData } from "@/types/api";
+
+function NotificationRowSkeleton() {
+  return (
+    <div className="flex items-start gap-3 rounded-xl border border-accent/8 px-4 py-3.5">
+      <div className="min-w-0 flex-1 space-y-1.5">
+        <ShimmerBlock className="h-3 w-40" />
+        <ShimmerBlock className="h-2.5 w-24" />
+      </div>
+    </div>
+  );
+}
 
 type NotificationPopupProps = {
   open: boolean;
@@ -62,31 +74,31 @@ export function NotificationPopup({
         </div>
 
         <div className="Custom__Scrollbar max-h-[420px] space-y-2 overflow-y-auto p-4">
-          {loading && notifications.length === 0 && (
-            <p className="font-roboto py-8 text-center text-sm text-secondary">
-              Loading notifications...
-            </p>
-          )}
-
-          {!loading && notifications.length === 0 && (
+          {loading ? (
+            <div className="space-y-2" aria-busy="true" aria-live="polite">
+              {Array.from({ length: 3 }, (_, index) => (
+                <NotificationRowSkeleton key={index} />
+              ))}
+            </div>
+          ) : notifications.length === 0 ? (
             <p className="font-roboto py-8 text-center text-sm text-secondary">
               No notifications yet
             </p>
+          ) : (
+            notifications.map((item) => (
+              <NotificationItem
+                key={item.id}
+                title={item.title}
+                subheading={item.subheading}
+                read={item.read}
+                onClick={() => {
+                  if (!item.read) {
+                    onMarkAsRead(item.id);
+                  }
+                }}
+              />
+            ))
           )}
-
-          {notifications.map((item) => (
-            <NotificationItem
-              key={item.id}
-              title={item.title}
-              subheading={item.subheading}
-              read={item.read}
-              onClick={() => {
-                if (!item.read) {
-                  onMarkAsRead(item.id);
-                }
-              }}
-            />
-          ))}
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   FeedCheckIcon,
   FeedFlagIcon,
@@ -9,6 +10,24 @@ import {
   MegaphoneIcon,
 } from "./icons";
 import type { FeedStatus, FeedTag, ShiftFeedItem } from "./types";
+
+function FeedItemCardSkeleton() {
+  return (
+    <div className="rounded-xl border border-accent/10 bg-surface p-4">
+      <div className="flex items-start gap-3">
+        <ShimmerBlock className="size-10 shrink-0 rounded-full" />
+        <div className="min-w-0 flex-1 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <ShimmerBlock className="h-3 w-28" />
+            <ShimmerBlock className="h-2.5 w-12" />
+          </div>
+          <ShimmerBlock className="h-2.5 w-full" />
+          <ShimmerBlock className="h-5 w-16 rounded-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
 
 type ShiftUpdateFeedProps = {
   items: ShiftFeedItem[];
@@ -40,9 +59,11 @@ export function ShiftUpdateFeed({
       </div>
 
       {loading && items.length === 0 ? (
-        <p className="font-roboto py-10 text-center text-sm text-secondary">
-          Loading shift updates...
-        </p>
+        <div className="space-y-3" aria-busy="true" aria-live="polite">
+          {Array.from({ length: 3 }, (_, index) => (
+            <FeedItemCardSkeleton key={index} />
+          ))}
+        </div>
       ) : null}
 
       {!loading && items.length === 0 ? (

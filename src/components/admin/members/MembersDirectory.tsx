@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { Pagination } from "@/components/common/Pagination";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import {
   MemberProfileArrow,
@@ -141,9 +142,10 @@ type MembersDirectoryProps = {
   onTierChange: (tier: MemberTierFilter) => void;
   members: MemberProfile[];
   loading: boolean;
-  loadingMore: boolean;
-  hasMore: boolean;
-  onLoadMore: () => void;
+  page: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (page: number) => void;
 };
 
 export function MembersDirectory({
@@ -152,9 +154,10 @@ export function MembersDirectory({
   onTierChange,
   members,
   loading,
-  loadingMore,
-  hasMore,
-  onLoadMore,
+  page,
+  pageSize,
+  total,
+  onPageChange,
 }: MembersDirectoryProps) {
   return (
     <section className="space-y-5">
@@ -209,18 +212,14 @@ export function MembersDirectory({
         </div>
       )}
 
-      {!loading && hasMore && (
-        <div className="flex justify-center pt-2">
-          <button
-            type="button"
-            disabled={loadingMore}
-            onClick={onLoadMore}
-            className="admin-gold-cta font-roboto cursor-pointer rounded-full px-5 py-2.5 text-[10px] font-semibold tracking-[0.12em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {loadingMore ? "Loading..." : "Load more"}
-          </button>
-        </div>
-      )}
+      <Pagination
+        currentPage={page}
+        totalItems={total}
+        pageSize={pageSize}
+        onPageChange={onPageChange}
+        disabled={loading}
+        itemLabel="members"
+      />
     </section>
   );
 }

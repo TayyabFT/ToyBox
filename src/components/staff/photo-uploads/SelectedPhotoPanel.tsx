@@ -1,6 +1,7 @@
 "use client";
 
 import { CaptureCameraIcon, EditIcon, FlagIcon, ImportIcon } from "./icons";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { SelectedPhoto, SelectedPhotoDraft } from "./types";
 
 type SelectedPhotoPanelProps = {
@@ -30,10 +31,29 @@ export function SelectedPhotoPanel({
 }: SelectedPhotoPanelProps) {
   if (loading && !photo) {
     return (
-      <section className="rounded-2xl border border-accent/10 bg-card p-5">
-        <p className="font-roboto py-16 text-center text-sm text-secondary">
-          Loading selected photo...
-        </p>
+      <section
+        className="rounded-2xl border border-accent/10 bg-card p-5"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <ShimmerBlock className="h-3 w-28" />
+          <ShimmerBlock className="h-7 w-20 rounded-lg" />
+        </div>
+
+        <ShimmerBlock className="mb-4 aspect-[16/10] w-full rounded-xl" />
+
+        <div className="mb-3 grid grid-cols-2 gap-3">
+          <ShimmerBlock className="h-9 w-full rounded-lg" />
+          <ShimmerBlock className="h-9 w-full rounded-lg" />
+        </div>
+
+        <div className="mb-4 grid grid-cols-2 gap-3">
+          <ShimmerBlock className="h-9 w-full rounded-lg" />
+          <ShimmerBlock className="h-9 w-full rounded-lg" />
+        </div>
+
+        <ShimmerBlock className="h-16 w-full rounded-xl" />
       </section>
     );
   }

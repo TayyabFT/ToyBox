@@ -7,13 +7,11 @@ import {
   filterTransportJobs,
 } from "@/lib/serviceRequests";
 import { showError } from "@/lib/toast";
-import { ActiveJobDetailPanel } from "./ActiveJobDetailPanel";
-import { DetailingSection } from "./DetailingSection";
-import { activeJobDetail } from "./mockData";
-import { MaintenanceSection } from "./MaintenanceSection";
+// import { DetailingSection } from "./DetailingSection";
+// import { MaintenanceSection } from "./MaintenanceSection";
 import { ServiceRequestsGreeting } from "./ServiceRequestsGreeting";
 import { ServiceRequestsStatsRow } from "./ServiceRequestsStatsRow";
-import { TransportSection } from "./TransportSection";
+// import { TransportSection } from "./TransportSection";
 import type {
   DetailingJob,
   MaintenanceJob,
@@ -34,7 +32,8 @@ type ServiceRequestsDashboardProps = {
   maintenance: SectionConfig<MaintenanceJob>;
   detailing: SectionConfig<DetailingJob>;
   loadStats: () => Promise<ServiceRequestStat[]>;
-  activeJobPanel?: React.ReactNode;
+  leftPanel?: React.ReactNode;
+  rightPanel?: React.ReactNode;
   staffMode?: boolean;
   staffContent?: React.ReactNode;
 };
@@ -47,7 +46,8 @@ export function ServiceRequestsDashboard({
   maintenance,
   detailing,
   loadStats,
-  activeJobPanel,
+  leftPanel,
+  rightPanel,
   staffMode = false,
   staffContent,
 }: ServiceRequestsDashboardProps) {
@@ -167,11 +167,6 @@ export function ServiceRequestsDashboard({
   const maintenanceMeta = maintenance.buildMeta(maintenanceJobs, maintenanceCount);
   const detailingMeta = detailing.buildMeta(detailingJobs, detailingCount);
 
-  const showActiveJob =
-    activeFilter === "all" ||
-    activeFilter === "transport" ||
-    activeFilter === "urgent";
-
   const showTransportSection =
     activeFilter === "all" || activeFilter === "transport";
 
@@ -194,37 +189,38 @@ export function ServiceRequestsDashboard({
         staffContent
       ) : (
         <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
-          {showTransportSection ? (
-            <TransportSection
-              meta={transportMeta}
-              jobs={previewTransport}
-              seeAllHref={`${basePath}/service-requests/transport`}
-              loading={transportLoading}
-              staffMode={staffMode}
-            />
-          ) : null}
-          {showMaintenanceSection ? (
-            <MaintenanceSection
-              meta={maintenanceMeta}
-              jobs={previewMaintenance}
-              seeAllHref={`${basePath}/service-requests/maintenance`}
-              loading={maintenanceLoading}
-              staffMode={staffMode}
-            />
-          ) : null}
-          {showDetailingSection ? (
-            <DetailingSection
-              meta={detailingMeta}
-              jobs={previewDetailing}
-              seeAllHref={`${basePath}/service-requests/detailing`}
-              loading={detailingLoading}
-              staffMode={staffMode}
-            />
-          ) : null}
-          {showActiveJob &&
-            (activeJobPanel ?? (
-              <ActiveJobDetailPanel detail={activeJobDetail} />
-            ))}
+          <div className="space-y-4">
+            {/* {showTransportSection ? (
+              <TransportSection
+                meta={transportMeta}
+                jobs={previewTransport}
+                seeAllHref={`${basePath}/service-requests/transport`}
+                loading={transportLoading}
+                staffMode={staffMode}
+              />
+            ) : null}
+            {showMaintenanceSection ? (
+              <MaintenanceSection
+                meta={maintenanceMeta}
+                jobs={previewMaintenance}
+                seeAllHref={`${basePath}/service-requests/maintenance`}
+                loading={maintenanceLoading}
+                staffMode={staffMode}
+              />
+            ) : null}
+            {showDetailingSection ? (
+              <DetailingSection
+                meta={detailingMeta}
+                jobs={previewDetailing}
+                seeAllHref={`${basePath}/service-requests/detailing`}
+                loading={detailingLoading}
+                staffMode={staffMode}
+              />
+            ) : null} */}
+            {leftPanel}
+          </div>
+
+          <div className="space-y-4">{rightPanel}</div>
         </div>
       )}
     </div>

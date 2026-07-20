@@ -71,7 +71,7 @@ export function DetailingJobCard({ job, staffMode = false }: DetailingJobCardPro
         </div>
       )}
 
-      {!staffMode ? (
+      {/* {!staffMode ? (
         <div className="flex flex-wrap items-center gap-2 pt-1">
           {isInProgress ? (
             <JobActionButton label="Update Status" />
@@ -83,7 +83,7 @@ export function DetailingJobCard({ job, staffMode = false }: DetailingJobCardPro
             </>
           )}
         </div>
-      ) : null}
+      ) : null} */}
     </article>
   );
 }

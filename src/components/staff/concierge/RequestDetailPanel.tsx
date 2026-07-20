@@ -1,6 +1,7 @@
 "use client";
 
 import { ActivityCheck, Phone } from "@/components/common/Svgs";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { ArrivalPrepChecklist } from "./ArrivalPrepChecklist";
 import { LogisticsSummary } from "./LogisticsSummary";
 import type { ConciergeRequestDetail } from "./types";
@@ -18,10 +19,29 @@ export function RequestDetailPanel({
 }: RequestDetailPanelProps) {
   if (loading) {
     return (
-      <section className="rounded-2xl border border-accent/10 bg-surface p-5">
-        <p className="font-roboto py-16 text-center text-[11px] tracking-[0.06em] text-secondary uppercase">
-          Loading member details...
-        </p>
+      <section
+        className="rounded-2xl border border-accent/10 bg-surface p-5"
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="mb-5 flex items-center gap-4 border-b border-accent/6 pb-5">
+          <ShimmerBlock className="size-12 shrink-0 rounded-full" />
+          <div className="space-y-2">
+            <ShimmerBlock className="h-3.5 w-32" />
+            <ShimmerBlock className="h-2.5 w-40" />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+          {Array.from({ length: 2 }, (_, groupIndex) => (
+            <div key={groupIndex} className="space-y-3">
+              <ShimmerBlock className="h-3 w-28" />
+              {Array.from({ length: 3 }, (_, rowIndex) => (
+                <ShimmerBlock key={rowIndex} className="h-8 w-full rounded-lg" />
+              ))}
+            </div>
+          ))}
+        </div>
       </section>
     );
   }

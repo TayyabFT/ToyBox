@@ -577,7 +577,11 @@ export function mapStaffActiveJob(job: StaffActiveJobRaw | null): StaffActiveJob
       job.referenceType?.trim() ||
       "Service request",
     subtitle: buildSubtitle(job),
-    assignee: job.assigneeName?.trim() || job.assignee?.trim() || "Assigned to you",
+    assignee:
+      job.assigneeName?.trim() ||
+      job.assignee?.trim() ||
+      job.assignedStaff?.name?.trim() ||
+      "Assigned to you",
     pickup: resolveLocation(job.pickup, "Pickup", job.from, job.detail, "pickup"),
     dropoff: resolveLocation(job.dropoff, "Dropoff", job.to, job.detail, "dropoff"),
     timeline: mapTimeline(job.timeline),

@@ -1,7 +1,6 @@
 "use client";
 
 import { TrendUp } from "@/components/common/Svgs";
-import { useTheme } from "@/components/common/ThemeProvider";
 
 type StatCardProps = {
   label: string;
@@ -10,7 +9,7 @@ type StatCardProps = {
   footnoteTone?: "default" | "pink";
   trend?: string;
   icon: React.ReactNode;
-  /** Light-mode Figma: first card uses the active gradient surface */
+  /** First card uses a distinct gradient on hover instead of the shared gold hover */
   featured?: boolean;
 };
 
@@ -32,34 +31,25 @@ export function StatCard({
   icon,
   featured = false,
 }: StatCardProps) {
-  const { theme } = useTheme();
-  const isFeaturedLight = featured && theme === "light";
-
   const footnoteClass =
     footnoteTone === "pink"
-      ? isFeaturedLight
-        ? "text-pink"
-        : `text-pink ${statCardHoverLabelClass}`
-      : isFeaturedLight
-        ? "text-[var(--stat-card-hover-fg-muted)]"
-        : `text-secondary ${statCardHoverLabelClass}`;
+      ? `text-pink ${statCardHoverLabelClass}`
+      : `text-secondary ${statCardHoverLabelClass}`;
 
   return (
     <div
       className={[
         "group flex min-h-[160px] cursor-pointer flex-col rounded-2xl p-6 transition-all duration-200",
-        isFeaturedLight
-          ? "border-transparent bg-gradient-to-br from-[var(--stat-card-active-from)] to-[var(--stat-card-active-to)]"
-          : "stat-card-shell",
+        "stat-card-shell",
+        featured ? "stat-card-shell--featured" : "",
       ].join(" ")}
     >
       <div className="flex items-start justify-between gap-3">
         <p
           className={[
             "font-roboto text-[12px] tracking-[0.14em] uppercase",
-            isFeaturedLight
-              ? "text-[var(--stat-card-hover-fg-muted)]"
-              : ["text-secondary", statCardHoverLabelClass].join(" "),
+            "text-secondary",
+            statCardHoverLabelClass,
           ].join(" ")}
         >
           {label}
@@ -67,12 +57,8 @@ export function StatCard({
         <span
           className={[
             "flex size-10 shrink-0 items-center justify-center rounded-lg border [&_svg]:size-4",
-            isFeaturedLight
-              ? "border-[color-mix(in_srgb,var(--stat-card-hover-fg)_15%,transparent)] bg-[color-mix(in_srgb,var(--stat-card-hover-fg)_10%,transparent)] text-[var(--stat-card-hover-fg)]"
-              : [
-                  "border-accent/18 bg-accent/8 text-accent",
-                  statCardHoverIconClass,
-                ].join(" "),
+            "border-accent/18 bg-accent/8 text-accent",
+            statCardHoverIconClass,
           ].join(" ")}
         >
           {icon}
@@ -83,9 +69,8 @@ export function StatCard({
         <p
           className={[
             "font-copperplate text-[34px] leading-none tracking-[0.02em]",
-            isFeaturedLight
-              ? "text-[var(--stat-card-hover-fg)]"
-              : ["text-foreground", statCardHoverValueClass].join(" "),
+            "text-foreground",
+            statCardHoverValueClass,
           ].join(" ")}
         >
           {value}
@@ -104,19 +89,10 @@ export function StatCard({
         )}
         {trend && (
           <span
-            className={[
-              "font-roboto flex items-center gap-0.5 text-[12px] font-medium tracking-[0.04em]",
-              isFeaturedLight
-                ? "text-teal"
-                : "text-teal group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]",
-            ].join(" ")}
+            className="font-roboto flex items-center gap-0.5 text-[12px] font-medium tracking-[0.04em] text-teal group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]"
           >
             <TrendUp
-              className={
-                isFeaturedLight
-                  ? undefined
-                  : "group-hover:[&_path]:stroke-[var(--stat-card-hover-fg)]"
-              }
+              className="group-hover:[&_path]:stroke-[var(--stat-card-hover-fg)]"
               color="currentColor"
             />
             {trend}

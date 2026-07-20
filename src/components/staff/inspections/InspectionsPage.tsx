@@ -7,12 +7,49 @@ import {
   VehicleFlag,
   VehicleFleetReady,
 } from "@/components/common/Svgs";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { StatCard } from "@/components/staff/overview/StatCard";
 import { ActiveInspectionPanel } from "./ActiveInspectionPanel";
 import { InspectionQueuePanel } from "./InspectionQueuePanel";
 import { AddInspectionModal } from "./add-inspection";
 import { InspectionsGreeting } from "./InspectionsGreeting";
 import { useStaffInspections } from "./useStaffInspections";
+
+function InspectionDetailSkeleton() {
+  return (
+    <section
+      className="w-full self-start rounded-2xl border border-accent/10 bg-card p-5"
+      aria-busy="true"
+      aria-live="polite"
+    >
+      <div className="mb-5 flex items-center justify-between gap-4 border-b border-accent/6 pb-5">
+        <ShimmerBlock className="h-4 w-56" />
+        <ShimmerBlock className="h-7 w-24 rounded-lg" />
+      </div>
+
+      <div className="mb-6 grid grid-cols-2 gap-4 border-b border-accent/6 pb-6 lg:grid-cols-4">
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index} className="space-y-1.5">
+            <ShimmerBlock className="h-2.5 w-16" />
+            <ShimmerBlock className="h-3.5 w-20" />
+          </div>
+        ))}
+      </div>
+
+      <div className="mb-6 flex items-center gap-3">
+        {Array.from({ length: 4 }, (_, index) => (
+          <ShimmerBlock key={index} className="h-8 flex-1 rounded-lg" />
+        ))}
+      </div>
+
+      <div className="space-y-3">
+        {Array.from({ length: 4 }, (_, index) => (
+          <ShimmerBlock key={index} className="h-10 w-full rounded-lg" />
+        ))}
+      </div>
+    </section>
+  );
+}
 
 export function InspectionsPage() {
   const [addInspectionOpen, setAddInspectionOpen] = useState(false);
@@ -99,11 +136,7 @@ export function InspectionsPage() {
         />
 
         {detailLoading && !inspection ? (
-          <section className="w-full self-start rounded-2xl border border-accent/10 bg-card p-5">
-            <p className="font-roboto py-8 text-center text-sm text-secondary">
-              Loading inspection detail...
-            </p>
-          </section>
+          <InspectionDetailSkeleton />
         ) : inspection ? (
           <ActiveInspectionPanel
             inspection={inspection}
@@ -120,12 +153,12 @@ export function InspectionsPage() {
             onFuelLevelChange={updateFuelLevel}
             onNotesChange={updateNotes}
           />
+        ) : loading ? (
+          <InspectionDetailSkeleton />
         ) : (
           <section className="w-full self-start rounded-2xl border border-accent/10 bg-card p-5">
             <p className="font-roboto py-8 text-center text-sm text-secondary">
-              {loading
-                ? "Loading inspections..."
-                : "Select an inspection from the queue."}
+              Select an inspection from the queue.
             </p>
           </section>
         )}
