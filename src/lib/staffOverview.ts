@@ -224,18 +224,24 @@ function mapQuickAction(
   item: StaffOverviewQuickActionRaw,
   fallback: StaffOverviewDisplay["quickActions"][number],
 ): StaffOverviewDisplay["quickActions"][number] {
-  const id = item.id?.trim() || fallback.id;
+  const id = item.key?.trim() || item.id?.trim() || fallback.id;
+  const pendingCount =
+    typeof item.pendingCount === "number"
+      ? item.pendingCount
+      : typeof item.count === "number"
+        ? item.count
+        : undefined;
   const subtitle =
     item.subtitle?.trim() ||
     item.subtext?.trim() ||
-    (typeof item.count === "number" ? `${item.count} pending` : fallback.subtitle);
+    (typeof pendingCount === "number" ? `${pendingCount} pending` : fallback.subtitle);
 
   return {
     id,
     title: item.title?.trim() || item.label?.trim() || fallback.title,
     subtitle,
     iconKey: item.icon?.trim() || fallback.iconKey,
-    href: resolveQuickActionHref(id, item.href),
+    href: resolveQuickActionHref(id, item.path?.trim() || item.href?.trim()),
   };
 }
 

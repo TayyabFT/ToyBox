@@ -230,6 +230,18 @@ export function useStaffActiveJob() {
       setJob(null);
     }
 
+    // The next assignment settles on the backend around the same time the
+    // job queue updates, so the job embedded in this complete response can
+    // be stale. Hit the queue (mirrors the Job Queue section's refresh),
+    // then re-fetch the active job for real so this panel matches it.
+    try {
+      await staffJobsApi.getQueue();
+    } catch {
+      // Ignore — this call is just a sequencing signal, not user-facing.
+    }
+
+    await loadActiveJob();
+
     showToast.success({
       title: "Job Completed",
       message: nextJob
@@ -242,7 +254,7 @@ export function useStaffActiveJob() {
       nextJobId: nextJob?.id?.trim() ?? null,
       completedJob,
     };
-  }, [applyActivePayload, job?.queueJobId, loadNotes]);
+  }, [applyActivePayload, job?.queueJobId, loadActiveJob, loadNotes]);
 
   const addNote = useCallback(
     async (note: string) => {

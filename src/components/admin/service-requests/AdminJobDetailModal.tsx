@@ -83,7 +83,7 @@ export function AdminJobDetailModal({
               <p className="font-roboto text-[10px] tracking-[0.04em] text-secondary">
                 {job.subtitle}
               </p>
-              <AssigneeBadge label={job.assignee} />
+              {job.hasAssignee ? <AssigneeBadge label={job.assignee} /> : null}
             </div>
 
             {job.queueStatus === "in_progress" ? (

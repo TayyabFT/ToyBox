@@ -265,7 +265,7 @@ export function OverviewPage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 2xl:grid-cols-4">
         {overview.quickActions.map((action) => (
           <ActionCard
             key={action.id}
@@ -273,6 +273,7 @@ export function OverviewPage() {
             subtitle={action.subtitle}
             icon={resolveOverviewIcon(action.iconKey)}
             href={action.href}
+            loading={loading}
           />
         ))}
       </div>

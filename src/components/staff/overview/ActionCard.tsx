@@ -1,14 +1,22 @@
 import Link from "next/link";
 import { ChevronRight } from "@/components/common/Svgs";
+import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 
 type ActionCardProps = {
   title: string;
   subtitle: string;
   icon: React.ReactNode;
   href: string;
+  loading?: boolean;
 };
 
-export function ActionCard({ title, subtitle, icon, href }: ActionCardProps) {
+export function ActionCard({
+  title,
+  subtitle,
+  icon,
+  href,
+  loading = false,
+}: ActionCardProps) {
   return (
     <Link
       href={href}
@@ -18,16 +26,24 @@ export function ActionCard({ title, subtitle, icon, href }: ActionCardProps) {
         {icon}
       </span>
 
-      <span className="min-w-0 flex-1 space-y-1.5">
-        <span className="font-copperplate block text-[13px] text-foreground">
-          {title}
-        </span>
-        <span className="font-roboto block text-xs tracking-[0.06em] text-secondary uppercase">
-          {subtitle}
-        </span>
+      <span className="min-w-0 flex-1 space-y-1.5" aria-busy={loading}>
+        {loading ? (
+          <ShimmerBlock className="h-[15px] w-24" />
+        ) : (
+          <span className="font-copperplate line-clamp-1 block text-[13px] text-foreground">
+            {title}
+          </span>
+        )}
+        {loading ? (
+          <ShimmerBlock className="h-[11px] w-32" />
+        ) : (
+          <span className="font-roboto line-clamp-1 block text-xs tracking-[0.06em] text-secondary uppercase">
+            {subtitle}
+          </span>
+        )}
       </span>
 
-      <ChevronRight />
+      <ChevronRight className="shrink-0" />
     </Link>
   );
 }

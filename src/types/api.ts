@@ -2313,12 +2313,15 @@ export type StaffOverviewKpiRaw = {
 
 export type StaffOverviewQuickActionRaw = {
   id?: string;
+  key?: string;
   title?: string;
   label?: string;
   subtitle?: string;
   subtext?: string;
   count?: number;
+  pendingCount?: number;
   href?: string;
+  path?: string;
   icon?: string;
 };
 

@@ -33,6 +33,7 @@ export type StaffActiveJobView = {
   vehicle: string;
   subtitle: string;
   assignee: string;
+  hasAssignee: boolean;
   pickup: { label: string; detail: string } | null;
   dropoff: { label: string; detail: string } | null;
   timeline: Array<{
@@ -582,6 +583,11 @@ export function mapStaffActiveJob(job: StaffActiveJobRaw | null): StaffActiveJob
       job.assignee?.trim() ||
       job.assignedStaff?.name?.trim() ||
       "Assigned to you",
+    hasAssignee: Boolean(
+      job.assigneeName?.trim() ||
+        job.assignee?.trim() ||
+        job.assignedStaff?.name?.trim(),
+    ),
     pickup: resolveLocation(job.pickup, "Pickup", job.from, job.detail, "pickup"),
     dropoff: resolveLocation(job.dropoff, "Dropoff", job.to, job.detail, "dropoff"),
     timeline: mapTimeline(job.timeline),
