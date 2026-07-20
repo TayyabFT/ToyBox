@@ -2,7 +2,7 @@ export const memberRequestModalOverlayClass =
   "fixed inset-0 z-50 flex items-center justify-center p-4";
 
 export const memberRequestModalBackdropClass =
-  "absolute inset-0 bg-black/60 backdrop-blur-sm";
+  "absolute inset-0 bg-black/60 ";
 
 export const memberRequestModalPanelClass =
   "relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 bg-background shadow-[var(--shadow-modal)]";

@@ -452,11 +452,9 @@ export type MemberProfileEditFormState = {
   lastName: string;
   displayHandle: string;
   email: string;
-  jobTitle: string;
   mobile: string;
   mobileCountryCode: string;
   residence: string;
-  address: string;
   coverImageUrl: string;
 };
 
@@ -493,13 +491,11 @@ export function mapAuthProfileToEditForm(
     lastName,
     displayHandle: (data.displayHandle?.trim() || "").replace(/^@/, ""),
     email: data.email?.trim() || personal?.email?.trim() || "",
-    jobTitle: data.jobTitle?.trim() || "",
     mobile: data.mobile?.trim() || "",
     mobileCountryCode: data.mobileCountryCode?.trim() || "",
-    residence: data.residence?.trim() || "",
-    address:
-      data.address?.trim() ||
+    residence:
       data.residence?.trim() ||
+      data.address?.trim() ||
       personal?.address?.trim() ||
       "",
     coverImageUrl: data.coverImageUrl?.trim() || "",
@@ -514,11 +510,10 @@ export function buildMemberProfileUpdatePayload(
     lastName: form.lastName.trim(),
     displayHandle: form.displayHandle.trim(),
     email: form.email.trim(),
-    jobTitle: form.jobTitle.trim(),
     mobile: form.mobile.trim(),
     mobileCountryCode: form.mobileCountryCode.trim(),
     residence: form.residence.trim(),
-    address: form.address.trim(),
+    address: form.residence.trim(), // Use residence as address
     coverImageUrl: form.coverImageUrl.trim(),
   };
 }

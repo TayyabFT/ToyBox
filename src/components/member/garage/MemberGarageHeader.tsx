@@ -1,8 +1,12 @@
+"use client";
+
+import { MemberVehicleSourcingIcon } from "@/components/common/Svgs";
+
 type MemberGarageHeaderProps = {
-  onAddClick?: () => void;
+  onSourcingClick?: () => void;
 };
 
-export function MemberGarageHeader({ onAddClick }: MemberGarageHeaderProps) {
+export function MemberGarageHeader({ onSourcingClick }: MemberGarageHeaderProps) {
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
       <div className="space-y-2">
@@ -14,13 +18,14 @@ export function MemberGarageHeader({ onAddClick }: MemberGarageHeaderProps) {
         </h1>
       </div>
 
-      {/* <button
+      <button
         type="button"
-        onClick={onAddClick}
-        className="font-roboto shrink-0 cursor-pointer rounded-full border border-accent/25 bg-elevated px-5 py-2.5 text-[11px] font-medium tracking-[0.08em] text-foreground/70 transition-colors hover:border-primary/40 hover:text-primary"
+        onClick={onSourcingClick}
+        className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[12px] font-semibold text-dark transition-colors hover:bg-[#D4B45C]"
       >
-        + Add a motor car
-      </button> */}
+        <MemberVehicleSourcingIcon className="size-[14px]" />
+        Source a Vehicle
+      </button>
     </div>
   );
 }

@@ -23,7 +23,7 @@ export function AskStevePage() {
 
   if (hasConversation) {
     return (
-      <div className="mx-auto flex min-h-[calc(100vh-72px)] w-full max-w-4xl flex-col px-8 py-6">
+      <div className="mx-auto flex h-[calc(100vh-72px)] w-full max-w-4xl flex-col px-8 py-6">
         <AskSteveChatPanel
           messages={messages}
           messagesContainerRef={messagesContainerRef}
@@ -39,12 +39,14 @@ export function AskStevePage() {
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-72px)] flex-col">
-      <div className="mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center overflow-hidden px-8 py-6">
+    <div className="relative flex flex-col px-8 pb-32 pt-10">
+      <div className="mx-auto w-full max-w-4xl">
         {loading ? (
-          <p className="font-roboto text-[13px] tracking-[0.06em] text-secondary uppercase">
-            Loading conversation...
-          </p>
+          <div className="flex items-center justify-center py-20">
+            <p className="font-roboto text-[13px] tracking-[0.06em] text-secondary uppercase">
+              Loading conversation...
+            </p>
+          </div>
         ) : (
           <div className="flex w-full flex-col items-center gap-10">
             <AskSteveHero greeting={greeting} />
@@ -56,14 +58,16 @@ export function AskStevePage() {
         )}
       </div>
 
-      <div className="mx-auto w-full max-w-4xl shrink-0 px-8 pb-8">
-        <AskSteveInputBar
-          value={draft}
-          onChange={setDraft}
-          onSend={() => void sendQuery()}
-          disabled={loading || sending || resetting}
-          sending={sending}
-        />
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-background lg:pl-[340px]">
+        <div className="mx-auto w-full max-w-4xl px-8 pb-8 pt-4">
+          <AskSteveInputBar
+            value={draft}
+            onChange={setDraft}
+            onSend={() => void sendQuery()}
+            disabled={loading || sending || resetting}
+            sending={sending}
+          />
+        </div>
       </div>
     </div>
   );

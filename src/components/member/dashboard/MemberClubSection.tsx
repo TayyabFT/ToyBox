@@ -11,7 +11,7 @@ type MemberClubSectionProps = {
   statusLine?: string;
 };
 
-// Hardcoded 3 cards — always shown regardless of API data
+// Static layout — images, names, descriptions, icons never change
 const STATIC_CLUB_VENUES: MemberClubVenue[] = [
   {
     id: "clubhouse",
@@ -21,7 +21,7 @@ const STATIC_CLUB_VENUES: MemberClubVenue[] = [
     tag: "OPEN",
     tagTone: "gold",
     iconKey: "clubhouse",
-    footerLeft: "14 IN · 21:30",
+    footerLeft: undefined,
     actionLabel: "RESERVE",
   },
   {
@@ -32,7 +32,7 @@ const STATIC_CLUB_VENUES: MemberClubVenue[] = [
     tag: "OPEN",
     tagTone: "gold",
     iconKey: "lounge",
-    footerLeft: "4 IN",
+    footerLeft: undefined,
     actionLabel: "ENTER",
   },
   {
@@ -43,11 +43,38 @@ const STATIC_CLUB_VENUES: MemberClubVenue[] = [
     tag: "AVAILABLE",
     tagTone: "gold",
     iconKey: "suites",
-    footerLeft: "4 ROOMS",
+    footerLeft: undefined,
     actionLabel: "BOOK",
-  }
-  
+  },
 ];
+
+/**
+ * Merge each static card with live values from the API.
+ * Only tag, footerLeft, and actionLabel are overridden — layout/images stay fixed.
+ */
+function mergeWithApiData(
+  staticVenues: MemberClubVenue[],
+  apiVenues?: MemberClubVenue[],
+): MemberClubVenue[] {
+  if (!apiVenues || apiVenues.length === 0) return staticVenues;
+
+  return staticVenues.map((staticVenue) => {
+    // Match by iconKey (clubhouse → restaurant, lounge → private_lounge, suites → suite_lounge)
+    const match = apiVenues.find((v) => v.iconKey === staticVenue.iconKey);
+    if (!match) return staticVenue;
+
+    return {
+      ...staticVenue,
+      // Dynamic values from the API
+      tag: match.tag ?? staticVenue.tag,
+      footerLeft: match.footerLeft ?? staticVenue.footerLeft,
+      actionLabel: match.actionLabel ?? staticVenue.actionLabel,
+      // Use real space ID and href for correct reservation routing
+      id: match.id ?? staticVenue.id,
+      href: match.href ?? staticVenue.href,
+    };
+  });
+}
 
 function VenueIcon({ iconKey }: { iconKey?: MemberClubVenue["iconKey"] }) {
   if (iconKey === "lounge") {
@@ -101,7 +128,7 @@ export function VenueCard({
       onClick={onClick}
       className="group relative block min-w-0 flex-1 overflow-hidden rounded-[18px]"
     >
-      <div className="relative h-[320px] w-full bg-surface">
+      <div className="relative h-[240px] w-full bg-surface sm:h-[280px] md:h-[320px]">
         {venue.imageUrl ? (
           <img
             src={venue.imageUrl}
@@ -196,8 +223,12 @@ export function VenueCard({
   );
 }
 
-export function MemberClubSection({ statusLine }: MemberClubSectionProps) {
+export function MemberClubSection({ venues, statusLine }: MemberClubSectionProps) {
   const [selectedVenue, setSelectedVenue] = useState<MemberClubVenue | null>(null);
+
+  // Merge static layout (images, names, descriptions) with live API values
+  // (status badge, footer info, routing IDs)
+  const displayVenues = mergeWithApiData(STATIC_CLUB_VENUES, venues);
 
   return (
     <div className="space-y-4">
@@ -234,9 +265,9 @@ export function MemberClubSection({ statusLine }: MemberClubSectionProps) {
         </Link>
       </div>
 
-      {/* 3 hardcoded venue cards */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-[1.5fr_1fr_1fr]">
-        {STATIC_CLUB_VENUES.map((venue) => (
+      {/* 3 cards — static layout, dynamic values from API */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-[1.5fr_1fr_1fr]">
+        {displayVenues.map((venue) => (
           <VenueCard
             key={venue.id}
             venue={venue}
@@ -251,7 +282,7 @@ export function MemberClubSection({ statusLine }: MemberClubSectionProps) {
       {selectedVenue && (
         <ReservationModal
           venue={selectedVenue}
-          allVenues={STATIC_CLUB_VENUES}
+          allVenues={displayVenues}
           onClose={() => setSelectedVenue(null)}
         />
       )}

@@ -18,6 +18,8 @@ type MemberEventsState = {
   error: string | null;
   /** Track in-flight RSVP actions per event id */
   rsvpLoading: Record<string, boolean>;
+  /** Track in-flight favorite toggle actions per event id */
+  favoriteLoading: Record<string, boolean>;
 };
 
 const initialState: MemberEventsState = {
@@ -31,6 +33,7 @@ const initialState: MemberEventsState = {
   loaded: false,
   error: null,
   rsvpLoading: {},
+  favoriteLoading: {},
 };
 
 // ── Async Thunks ─────────────────────────────────────────────────────────────
@@ -91,6 +94,23 @@ export const joinEventWaitlist = createAsyncThunk(
   },
 );
 
+/** Toggle favorite/bookmark status for an event */
+export const toggleFavoriteEvent = createAsyncThunk(
+  "memberEvents/toggleFavorite",
+  async (
+    { id, isFavorite }: { id: string; isFavorite: boolean },
+    { rejectWithValue },
+  ) => {
+    try {
+      await memberEventsApi.toggleFavorite(id, isFavorite);
+      return { id, isFavorite };
+    } catch (error) {
+      const apiError = error as ApiError;
+      return rejectWithValue(apiError.message ?? "Failed to update favorite status");
+    }
+  },
+);
+
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
 function patchEventStatus(
@@ -100,6 +120,16 @@ function patchEventStatus(
 ): EventItem[] {
   return events.map((e) =>
     e.id === id ? { ...e, userStatus: status } : e,
+  );
+}
+
+function patchEventFavorite(
+  events: EventItem[],
+  id: string,
+  isFavorite: boolean,
+): EventItem[] {
+  return events.map((e) =>
+    e.id === id ? { ...e, isFavorite } : e,
   );
 }
 
@@ -113,6 +143,18 @@ function patchAll(
   state.nextMonth = patchEventStatus(state.nextMonth, id, status);
   state.otherUpcoming = patchEventStatus(state.otherUpcoming, id, status);
   state.past = patchEventStatus(state.past, id, status);
+}
+
+function patchAllFavorite(
+  state: MemberEventsState,
+  id: string,
+  isFavorite: boolean,
+) {
+  state.featured = patchEventFavorite(state.featured, id, isFavorite);
+  state.thisWeek = patchEventFavorite(state.thisWeek, id, isFavorite);
+  state.nextMonth = patchEventFavorite(state.nextMonth, id, isFavorite);
+  state.otherUpcoming = patchEventFavorite(state.otherUpcoming, id, isFavorite);
+  state.past = patchEventFavorite(state.past, id, isFavorite);
 }
 
 // ── Slice ─────────────────────────────────────────────────────────────────────
@@ -191,6 +233,19 @@ const memberEventsSlice = createSlice({
       })
       .addCase(joinEventWaitlist.rejected, (state, action) => {
         state.rsvpLoading[action.meta.arg] = false;
+      });
+
+    // ── Toggle Favorite ────────────────────────────────────────────────────
+    builder
+      .addCase(toggleFavoriteEvent.pending, (state, action) => {
+        state.favoriteLoading[action.meta.arg.id] = true;
+      })
+      .addCase(toggleFavoriteEvent.fulfilled, (state, action) => {
+        state.favoriteLoading[action.payload.id] = false;
+        patchAllFavorite(state, action.payload.id, action.payload.isFavorite);
+      })
+      .addCase(toggleFavoriteEvent.rejected, (state, action) => {
+        state.favoriteLoading[action.meta.arg.id] = false;
       });
   },
 });

@@ -51,10 +51,10 @@ export function VehicleSourcingTrackRequestStep({
   const [steps, setSteps] = useState<UiTimelineStep[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [fetchError, setFetchError] = useState<string | null>(null);
+  const [assignee, setAssignee] = useState<{ name: string; initials: string } | null>(null);
 
   useEffect(() => {
     if (!requestId) {
-      // No ID available — show static fallback skeleton steps
       setSteps(mapSourcingTimeline([]));
       return;
     }
@@ -68,6 +68,17 @@ export function VehicleSourcingTrackRequestStep({
       .then((res) => {
         if (cancelled) return;
         setSteps(mapSourcingTimeline(res.data.timeline ?? []));
+
+        const a = res.data.assignee;
+        if (a?.name) {
+          const initials = a.name
+            .split(" ")
+            .slice(0, 2)
+            .map((w: string) => w[0])
+            .join("")
+            .toUpperCase();
+          setAssignee({ name: a.name, initials });
+        }
       })
       .catch((err: unknown) => {
         if (cancelled) return;
@@ -75,7 +86,6 @@ export function VehicleSourcingTrackRequestStep({
           (err as { message?: string }).message ??
           "Could not load request status.";
         setFetchError(message);
-        // Show fallback steps so the UI is never empty
         setSteps(mapSourcingTimeline([]));
       })
       .finally(() => {
@@ -138,9 +148,9 @@ export function VehicleSourcingTrackRequestStep({
       {/* Assigned manager */}
       <ConciergeCard
         sectionLabel="Your Manager"
-        name="James Alderton"
-        initials="JA"
-        subtitle="Acquisition Manager · Available now"
+        name={assignee?.name ?? "Toybox Concierge"}
+        initials={assignee?.initials ?? "TC"}
+        subtitle={assignee ? "Acquisition Manager · Available now" : "Awaiting assignment"}
       />
     </div>
   );

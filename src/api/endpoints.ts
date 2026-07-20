@@ -36,6 +36,8 @@ export const API_ENDPOINTS = {
     request: (id: string | number) => `/api/v1/sourcing/requests/${id}`,
     status: (id: string | number) => `/api/v1/sourcing/requests/${id}/status`,
     cancel: (id: string | number) => `/api/v1/sourcing/requests/${id}/cancel`,
+    approveVehicle: (id: string | number) => `/api/v1/sourcing/requests/${id}/approve-vehicle`,
+    rejectVehicle: (id: string | number) => `/api/v1/sourcing/requests/${id}/reject-vehicle`,
   },
   clubhouse: {
     spaces: "/api/v1/clubhouse/spaces",
@@ -212,6 +214,7 @@ export const API_ENDPOINTS = {
   memberChat: {
     initiate: "/api/v1/chat/initiate",
     messages: "/api/v1/chat/messages",
+    markRead: "/api/v1/chat/read",
   },
   events: {
     createevent: "/api/v1/admin/events",
@@ -230,6 +233,7 @@ export const API_ENDPOINTS = {
     join:      (id: string) => `/api/v1/events/${id}/join`,
     leave:     (id: string) => `/api/v1/events/${id}/leave`,
     waitlist:  (id: string) => `/api/v1/events/${id}/waitlist`,
+    favorite:  (id: string) => `/api/v1/events/${id}/favorite`,
     detail:    (id: string) => `/api/v1/events/${id}`,
   },
   communications: {

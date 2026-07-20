@@ -14,7 +14,7 @@ export const memberNav: MemberNavItem[] = [
   { id: "overview", label: "Home", href: MEMBER_BASE },
   { id: "diary", label: "Diary", href: `${MEMBER_BASE}/diary` },
   { id: "garage", label: "Garage", href: `${MEMBER_BASE}/garage` },
-  { id: "events", label: "Events", href: `${MEMBER_BASE}/events`, badge: { count: 3, tone: "gold" } },
+  { id: "events", label: "Events", href: `${MEMBER_BASE}/events` },
 ];
 
 // Services section

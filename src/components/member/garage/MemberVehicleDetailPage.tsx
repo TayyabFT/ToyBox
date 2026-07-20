@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { notFound } from "next/navigation";
 import { memberVehiclesApi } from "@/api/memberVehicles.api";
+import { memberSourcingApi } from "@/api/memberSourcing.api";
+import { authApi } from "@/api/auth.api";
 import { mapMemberVehicleDetail } from "@/lib/garage";
 import { MemberVehicleDetailSkeleton } from "./MemberGarageSkeleton";
 import { MemberVehicleDetailHeader } from "./MemberVehicleDetailHeader";
@@ -10,6 +12,8 @@ import { MemberVehicleHeroCard } from "./MemberVehicleHeroCard";
 import { MemberVehicleHealthCard } from "./MemberVehicleHealthCard";
 import { MemberVehicleRequestsCard } from "./MemberVehicleRequestsCard";
 import { MemberVehicleSpecsCard } from "./MemberVehicleSpecsCard";
+import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServiceModal";
+import { VehicleConfirmationModal } from "./VehicleConfirmationModal";
 import type { MemberVehicleDetail } from "./types";
 
 type MemberVehicleDetailPageProps = {
@@ -23,6 +27,14 @@ export function MemberVehicleDetailPage({
   const [loading, setLoading] = useState(true);
   const [notFoundState, setNotFoundState] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [maintenanceOpen, setMaintenanceOpen] = useState(false);
+  const [confirmationOpen, setConfirmationOpen] = useState(false);
+  const [sourcingRequestId, setSourcingRequestId] = useState<string | null>(null);
+  const requestsRef = useRef<HTMLDivElement>(null);
+
+  function handleBookServices() {
+    setMaintenanceOpen(true);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -36,7 +48,41 @@ export function MemberVehicleDetailPage({
         const response = await memberVehiclesApi.getById(vehicleId);
 
         if (!cancelled) {
-          setVehicle(mapMemberVehicleDetail(response.data));
+          const mapped = mapMemberVehicleDetail(response.data);
+          setVehicle(mapped);
+
+          if (mapped.statusTone === "in_review") {
+            // Use sourcingRequestId from the vehicle detail if the backend provided it
+            if (mapped.sourcingRequestId) {
+              setSourcingRequestId(mapped.sourcingRequestId);
+              setConfirmationOpen(true);
+            } else {
+              // Fallback: look up the pending sourcing request for this member
+              try {
+                const profile = await authApi.getProfile();
+                const memberId = profile.data.id;
+                if (memberId && !cancelled) {
+                  const sourcingRes = await memberSourcingApi.listRequests(memberId);
+                  const requests = (sourcingRes as { data?: { requests?: Array<{ id: string; status?: string }> } }).data?.requests ?? [];
+                  // Find the most recent active sourcing request (offer ready or searching)
+                  const active = requests.find(
+                    (r) =>
+                      r.status === "Offer ready" ||
+                      r.status === "Searching for vehicle" ||
+                      r.status === "Request received" ||
+                      r.status === "Vehicle found" ||
+                      r.status === "Inspection in progress",
+                  );
+                  if (active && !cancelled) {
+                    setSourcingRequestId(active.id);
+                    setConfirmationOpen(true);
+                  }
+                }
+              } catch {
+                // Fallback failed silently — popup won't open but page still renders
+              }
+            }
+          }
         }
       } catch (err) {
         if (!cancelled) {
@@ -78,7 +124,7 @@ export function MemberVehicleDetailPage({
   if (error) {
     return (
       <div className="space-y-6 p-8">
-        <MemberVehicleDetailHeader />
+        <MemberVehicleDetailHeader onBookServices={handleBookServices} />
         <p className="font-roboto text-sm text-pink">{error}</p>
       </div>
     );
@@ -88,22 +134,27 @@ export function MemberVehicleDetailPage({
     notFound();
   }
 
+  const isInReview = vehicle.statusTone === "in_review";
+
   return (
-    <div className="space-y-6 p-8">
-      <MemberVehicleDetailHeader />
+    <div className="relative space-y-6 p-8">
+      <MemberVehicleDetailHeader onBookServices={handleBookServices} />
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
         <div className="space-y-6">
           <MemberVehicleHeroCard vehicle={vehicle} />
-          <MemberVehicleRequestsCard
-            vehicleId={vehicleId}
-            vehicleName={`${vehicle.make} ${vehicle.model}`.trim()}
-            vehicleMake={vehicle.make}
-            vehicleModel={vehicle.model}
-            vehicleYear={vehicle.specs.year}
-            vehicleColour={vehicle.ownership.colour}
-            requests={vehicle.requests}
-          />
+          <div ref={requestsRef}>
+            <MemberVehicleRequestsCard
+              vehicleId={vehicleId}
+              vehicleName={`${vehicle.make} ${vehicle.model}`.trim()}
+              vehicleMake={vehicle.make}
+              vehicleModel={vehicle.model}
+              vehicleYear={vehicle.specs.year}
+              vehicleColour={vehicle.ownership.colour}
+              requests={vehicle.requests}
+              hidden={isInReview}
+            />
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -114,6 +165,38 @@ export function MemberVehicleDetailPage({
           />
         </div>
       </div>
+
+      <MaintenanceServiceModal
+        vehicleId={vehicleId}
+        open={maintenanceOpen}
+        onClose={() => setMaintenanceOpen(false)}
+      />
+
+      {isInReview && sourcingRequestId ? (
+        <VehicleConfirmationModal
+          open={confirmationOpen}
+          sourcingRequestId={sourcingRequestId}
+          onApproved={() => {
+            setConfirmationOpen(false);
+            // Reload vehicle data so status updates
+            setLoading(true);
+            memberVehiclesApi
+              .getById(vehicleId)
+              .then((res) => setVehicle(mapMemberVehicleDetail(res.data)))
+              .catch(() => {})
+              .finally(() => setLoading(false));
+          }}
+          onRejected={() => {
+            setConfirmationOpen(false);
+            setLoading(true);
+            memberVehiclesApi
+              .getById(vehicleId)
+              .then((res) => setVehicle(mapMemberVehicleDetail(res.data)))
+              .catch(() => {})
+              .finally(() => setLoading(false));
+          }}
+        />
+      ) : null}
     </div>
   );
 }

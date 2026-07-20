@@ -52,7 +52,7 @@ export function MemberEditProfileModal({
             type="button"
             onClick={onClose}
             disabled={saving}
-            className={`${memberRequestModalSecondaryButtonClass} w-full flex-none`}
+            className={`${memberRequestModalSecondaryButtonClass} w-full sm:flex-1`}
           >
             Cancel
           </button>
@@ -60,9 +60,9 @@ export function MemberEditProfileModal({
             type="button"
             onClick={() => onSave(form)}
             disabled={saving}
-            className={memberRequestModalPrimaryButtonFullClass}
+            className={`${memberRequestModalPrimaryButtonFullClass} sm:flex-1`}
           >
-            {saving ? "Saving..." : "Save Changes"}
+            {saving ? "Saving..." : "Save"}
           </button>
         </div>
       }
@@ -95,12 +95,6 @@ export function MemberEditProfileModal({
           onChange={(event) => updateField("email", event.target.value)}
         />
 
-        <Input
-          label="Job Title"
-          value={form.jobTitle}
-          onChange={(event) => updateField("jobTitle", event.target.value)}
-        />
-
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-[140px_1fr]">
           <Input
             label="Country Code"
@@ -118,24 +112,19 @@ export function MemberEditProfileModal({
           />
         </div>
 
-        <Input
-          label="Residence"
-          value={form.residence}
-          onChange={(event) => updateField("residence", event.target.value)}
-        />
-
         <div className="flex w-full flex-col gap-1">
           <label
-            htmlFor="member-profile-address"
+            htmlFor="member-profile-residence"
             className="font-roboto text-[11px] font-medium tracking-[0.15em] text-[#6E6455] uppercase"
           >
-            Address
+            Residence
           </label>
           <textarea
-            id="member-profile-address"
-            value={form.address}
+            id="member-profile-residence"
+            value={form.residence}
             rows={3}
-            onChange={(event) => updateField("address", event.target.value)}
+            placeholder="Enter your residence address"
+            onChange={(event) => updateField("residence", event.target.value)}
             className="font-roboto w-full resize-none rounded-lg border border-[#D4A84740] bg-[#11100C] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-[#7D7460] focus:border-[#C9A84C]"
           />
         </div>

@@ -25,11 +25,9 @@ const EMPTY_EDIT_FORM: MemberProfileEditFormState = {
   lastName: "",
   displayHandle: "",
   email: "",
-  jobTitle: "",
   mobile: "",
   mobileCountryCode: "",
   residence: "",
-  address: "",
   coverImageUrl: "",
 };
 

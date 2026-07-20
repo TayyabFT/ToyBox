@@ -81,4 +81,17 @@ export const memberEventsApi = {
       API_ENDPOINTS.memberEvents.waitlist(id),
       { method: "DELETE" },
     ),
+
+  /**
+   * PATCH /api/v1/events/:id/favorite
+   * Toggles the favorite/bookmark status for an event the member has joined.
+   */
+  toggleFavorite: (id: string, isFavorite: boolean) =>
+    apiClient<MemberEventsRsvpResponse>(
+      API_ENDPOINTS.memberEvents.favorite(id),
+      {
+        method: "PATCH",
+        body: { isFavorite },
+      },
+    ),
 };

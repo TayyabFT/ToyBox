@@ -19,9 +19,17 @@ import {
 import { RequestStepper } from "../shared/RequestStepper";
 import { VehicleSourcingConfirmedStep } from "./VehicleSourcingConfirmedStep";
 import { VehicleSourcingDetailsForm } from "./VehicleSourcingDetailsForm";
+import { VehicleSourcingLandingStep } from "./VehicleSourcingLandingStep";
 import { VehicleSourcingReviewStep } from "./VehicleSourcingReviewStep";
 import { VehicleSourcingTrackRequestStep } from "./VehicleSourcingTrackRequestStep";
 import type { VehicleSourcingDetailsFormState } from "./types";
+
+// Steps:
+//  0 = landing (history + new request CTA)
+//  1 = details form
+//  2 = review brief
+//  3 = confirmed
+//  4 = track request
 
 const BASE_FORM_STATE: VehicleSourcingDetailsFormState = {
   make: "",
@@ -76,7 +84,7 @@ export function VehicleSourcingModal({
   vehicleYear,
   vehicleColour,
 }: VehicleSourcingModalProps) {
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(0);
   const [form, setForm] = useState<VehicleSourcingDetailsFormState>(() =>
     buildInitialFormState(vehicleMake, vehicleModel, vehicleYear, vehicleColour),
   );
@@ -84,21 +92,28 @@ export function VehicleSourcingModal({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitResult, setSubmitResult] = useState<SubmitResult | null>(null);
 
-  const isReview = step === 2;
+  const isLanding  = step === 0;
+  const isReview   = step === 2;
   const isConfirmed = step === 3;
-  const isTracking = step === 4;
+  const isTracking  = step === 4;
 
   function handleChange(patch: Partial<VehicleSourcingDetailsFormState>) {
     setForm((current) => ({ ...current, ...patch }));
   }
 
   function handleClose() {
-    setStep(1);
+    setStep(0);
     setForm(buildInitialFormState(vehicleMake, vehicleModel, vehicleYear, vehicleColour));
     setSubmitError(null);
     setIsSubmitting(false);
     setSubmitResult(null);
     onClose();
+  }
+
+  function handleNewRequest() {
+    setForm(buildInitialFormState(vehicleMake, vehicleModel, vehicleYear, vehicleColour));
+    setSubmitError(null);
+    setStep(1);
   }
 
   function handleEditBrief() {
@@ -147,9 +162,21 @@ export function VehicleSourcingModal({
     setStep(4);
   }
 
+  // ── Footer ──────────────────────────────────────────────────────────────────
+
   let footer: React.ReactNode = null;
 
-  if (step === 1) {
+  if (step === 0) {
+    footer = (
+      <button
+        type="button"
+        onClick={handleNewRequest}
+        className={`${memberRequestModalPrimaryButtonFullClass} gap-2 uppercase`}
+      >
+        + New Sourcing Request
+      </button>
+    );
+  } else if (step === 1) {
     footer = (
       <button
         type="button"
@@ -219,32 +246,42 @@ export function VehicleSourcingModal({
     );
   }
 
+  // ── Header labels ───────────────────────────────────────────────────────────
+
+  const titleBefore = isTracking
+    ? "Request "
+    : isReview
+      ? "Review "
+      : isConfirmed
+        ? "Review "
+        : "Vehicle ";
+
+  const titleAfter = isTracking
+    ? "Detail"
+    : isReview
+      ? "Brief"
+      : isConfirmed
+        ? "Request"
+        : "Sourcing";
+
   return (
     <MemberRequestModalFrame
       open={open}
       onClose={handleClose}
       garageLabel={isTracking ? undefined : isConfirmed ? "Garage." : "Garage"}
-      titleBefore={
-        isTracking
-          ? "Request "
-          : isReview
-            ? "Review "
-            : isConfirmed
-              ? "Review "
-              : "Vehicle "
+      titleBefore={titleBefore}
+      titleAfter={titleAfter}
+      stepper={
+        isLanding || isTracking
+          ? undefined
+          : <RequestStepper currentStep={step - 1} />
       }
-      titleAfter={
-        isTracking
-          ? "Detail"
-          : isReview
-            ? "Brief"
-            : isConfirmed
-              ? "Request"
-              : "Sourcing"
-      }
-      stepper={isTracking ? undefined : <RequestStepper currentStep={step} />}
       footer={footer}
     >
+      {step === 0 && (
+        <VehicleSourcingLandingStep onNewRequest={handleNewRequest} />
+      )}
+
       {step === 1 && (
         <VehicleSourcingDetailsForm value={form} onChange={handleChange} />
       )}

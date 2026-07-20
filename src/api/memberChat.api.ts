@@ -4,6 +4,7 @@ import type {
   ApiError,
   ApiResponse,
   ChatInitiateResponse,
+  ChatMarkReadResponse,
   ChatSendMessageResponse,
   MemberChatInboxResponse,
   MemberChatInitiateRequest,
@@ -49,6 +50,14 @@ export const memberChatApi = {
       await apiClient<ChatInitiateResponse>(API_ENDPOINTS.memberChat.initiate, {
         method: "POST",
         body,
+      }),
+    ),
+
+  markRead: async (contactId: string) =>
+    ensureSuccess(
+      await apiClient<ChatMarkReadResponse>(API_ENDPOINTS.memberChat.markRead, {
+        method: "PATCH",
+        body: { contactId },
       }),
     ),
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { authApi } from "@/api/auth.api";
 import { memberDetailingApi } from "@/api/memberDetailing.api";
 import {
@@ -19,10 +19,25 @@ import { DetailingWashConfirmedStep } from "./DetailingWashConfirmedStep";
 import { DetailingWashDetailsForm } from "./DetailingWashDetailsForm";
 import { DetailingWashReviewStep } from "./DetailingWashReviewStep";
 import { RequestStepper } from "../shared/RequestStepper";
+import { ModalLoadingSkeleton } from "../shared/ModalLoadingSkeleton";
 import { calculateWashTotal, formatWashTotal } from "./washOptions";
 import type { WashDetailsFormState } from "./types";
+import type { MemberDetailingBookingProgressData } from "@/types/api";
 
 import { generateDateOptions } from "@/components/member/garage/shared/requestFormUi";
+
+/** Statuses that mean the booking is still active (not done/cancelled) */
+const ACTIVE_STATUSES = new Set([
+  "request received",
+  "awaiting confirmation",
+  "confirmed",
+  "in progress",
+  "in-progress",
+]);
+
+function isActiveStatus(status?: string): boolean {
+  return ACTIVE_STATUSES.has((status ?? "").trim().toLowerCase());
+}
 
 // Today's ISO key for the initial date selection
 function getTodayIso(): string {
@@ -55,17 +70,70 @@ export function DetailingWashModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  function handleChange(patch: Partial<WashDetailsFormState>) {
-    setForm((current) => ({ ...current, ...patch }));
-  }
+  // Active booking state
+  const [isCheckingActive, setIsCheckingActive] = useState(false);
+  const [progressData, setProgressData] = useState<MemberDetailingBookingProgressData | null>(null);
+  const [activeBookingTotal, setActiveBookingTotal] = useState<string | null>(null);
 
+  // Track the last vehicleId we ran the check for to avoid repeat fetches
+  const checkedForRef = useRef<string | null>(null);
+
+  // When the modal opens, check for an existing active booking for this vehicle
+  useEffect(() => {
+    if (!open) return;
+    // Avoid redundant calls if we already checked for this vehicle in this session
+    if (checkedForRef.current === vehicleId) return;
+
+    async function checkActiveBooking() {
+      setIsCheckingActive(true);
+      try {
+        const profile = await authApi.getProfile();
+        const memberId = profile.data.id;
+        if (!memberId) return;
+
+        const listRes = await memberDetailingApi.getBookings(memberId);
+        const bookings = listRes.data.bookings ?? [];
+
+        // Find the most recent active booking for this vehicle
+        const active = bookings.find(
+          (b) =>
+            String(b.vehicleId) === String(vehicleId) &&
+            isActiveStatus(b.status),
+        );
+
+        if (active?.id) {
+          // Fetch live progress for that booking
+          const progressRes = await memberDetailingApi.getProgress(String(active.id));
+          setProgressData(progressRes.data);
+          setActiveBookingTotal(active.totalLabel ?? null);
+          setStep(4); // Jump straight to Booking Status
+        }
+      } catch {
+        // Silently fall through — if the check fails just show the form as normal
+      } finally {
+        setIsCheckingActive(false);
+        checkedForRef.current = vehicleId;
+      }
+    }
+
+    void checkActiveBooking();
+  }, [open, vehicleId]);
+
+  // Reset when modal closes
   function handleClose() {
     setStep(1);
     setForm(INITIAL_FORM_STATE);
     setReferenceNumber("");
     setSubmitError(null);
     setIsSubmitting(false);
+    setProgressData(null);
+    setActiveBookingTotal(null);
+    checkedForRef.current = null;
     onClose();
+  }
+
+  function handleChange(patch: Partial<WashDetailsFormState>) {
+    setForm((current) => ({ ...current, ...patch }));
   }
 
   function handleContinueToReview() {
@@ -111,11 +179,16 @@ export function DetailingWashModal({
   }
 
   const isTracking = step === 4;
-  const bookingTotal = formatWashTotal(calculateWashTotal(form));
+
+  // Use active booking total when viewing an existing booking, otherwise form total
+  const bookingTotal = activeBookingTotal ?? formatWashTotal(calculateWashTotal(form));
 
   let footer: React.ReactNode = null;
 
-  if (step === 1) {
+  if (isCheckingActive) {
+    // Show nothing in the footer while we're checking
+    footer = null;
+  } else if (step === 1) {
     footer = (
       <button
         type="button"
@@ -195,26 +268,40 @@ export function DetailingWashModal({
       headerSubtitle={isTracking ? `${bookingTotal} . In Progress` : undefined}
       titleBefore={isTracking ? "Booking " : "Detailing & "}
       titleAfter={isTracking ? "Status" : "Wash"}
-      stepper={isTracking ? undefined : <RequestStepper currentStep={step} completedLineVariant="muted" labelVariant="normal" />}
+      stepper={
+        isTracking
+          ? undefined
+          : isCheckingActive
+            ? undefined
+            : <RequestStepper currentStep={step} completedLineVariant="muted" labelVariant="normal" />
+      }
       footer={footer}
     >
-      {step === 1 && (
-        <DetailingWashDetailsForm value={form} onChange={handleChange} />
-      )}
+      {isCheckingActive ? (
+        <ModalLoadingSkeleton />
+      ) : (
+        <>
+          {step === 1 && (
+            <DetailingWashDetailsForm value={form} onChange={handleChange} />
+          )}
 
-      {step === 2 && (
-        <DetailingWashReviewStep vehicleName={vehicleName} form={form} />
-      )}
+          {step === 2 && (
+            <DetailingWashReviewStep vehicleName={vehicleName} form={form} />
+          )}
 
-      {step === 3 && (
-        <DetailingWashConfirmedStep
-          vehicleName={vehicleName}
-          form={form}
-          referenceNumber={referenceNumber}
-        />
-      )}
+          {step === 3 && (
+            <DetailingWashConfirmedStep
+              vehicleName={vehicleName}
+              form={form}
+              referenceNumber={referenceNumber}
+            />
+          )}
 
-      {step === 4 && <DetailingWashBookingStatusStep form={form} />}
+          {step === 4 && (
+            <DetailingWashBookingStatusStep form={form} progressData={progressData} />
+          )}
+        </>
+      )}
     </MemberRequestModalFrame>
   );
 }

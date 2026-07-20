@@ -22,6 +22,20 @@ type FieldErrors = {
   confirmPassword?: string;
 };
 
+type PasswordRules = {
+  lowercase: boolean;
+  uppercase: boolean;
+  number: boolean;
+  minLength: boolean;
+};
+
+const getPasswordRules = (password: string): PasswordRules => ({
+  lowercase: /[a-z]/.test(password),
+  uppercase: /[A-Z]/.test(password),
+  number: /[0-9]/.test(password),
+  minLength: password.length >= 8,
+});
+
 const validateSetupPassword = (
   email: string,
   newPassword: string,
@@ -57,6 +71,58 @@ const validateSetupPassword = (
   return errors;
 };
 
+interface PasswordRequirementsProps {
+  password: string;
+  visible: boolean;
+}
+
+function PasswordRequirements({ password, visible }: PasswordRequirementsProps) {
+  const rules = getPasswordRules(password);
+
+  const requirements: { key: keyof PasswordRules; label: string; bold: string }[] = [
+    { key: "lowercase", label: "At least one ", bold: "lowercase letter" },
+    { key: "uppercase", label: "At least one ", bold: "uppercase letter" },
+    { key: "number", label: "At least one ", bold: "number" },
+    { key: "minLength", label: "Minimum ", bold: "8 characters" },
+  ];
+
+  if (!visible) return null;
+
+  return (
+    <div className="rounded-lg border border-[#C9A84C22] bg-[#0D0C0A] px-4 py-3.5 space-y-2">
+      <p className="font-copperplate text-[9px] tracking-[0.22em] text-[#C9A84C] uppercase">
+        Password Must Contain
+      </p>
+      <ul className="space-y-1.5">
+        {requirements.map(({ key, label, bold }) => {
+          const met = rules[key];
+          return (
+            <li key={key} className="flex items-center gap-2.5">
+              <span
+                className={`flex h-4 w-4 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold transition-colors duration-200 ${
+                  met
+                    ? "bg-[#7dbfa022] text-[#7dbfa0]"
+                    : "bg-[#d8999922] text-[#d89999]"
+                }`}
+              >
+                {met ? "✓" : "✕"}
+              </span>
+              <span
+                className={`font-roboto text-[11px] transition-colors duration-200 ${
+                  met ? "text-[#7dbfa0]" : "text-[#d89999]"
+                }`}
+              >
+                {label}
+                <strong className="font-semibold">{bold}</strong>
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 const SetupPasswordPage = () => {
   const router = useRouter();
   const dispatch = useAppDispatch();
@@ -66,6 +132,7 @@ const SetupPasswordPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [passwordFocused, setPasswordFocused] = useState(false);
 
   const hasSetupToken = useClientStorage(
     () => !!getStoredSetupToken(),
@@ -204,7 +271,14 @@ const SetupPasswordPage = () => {
                   }));
                 }
               }}
+              onFocus={() => setPasswordFocused(true)}
+              onBlur={() => setPasswordFocused(false)}
               autoComplete="new-password"
+            />
+
+            <PasswordRequirements
+              password={newPassword}
+              visible={passwordFocused || newPassword.length > 0}
             />
 
             <Input

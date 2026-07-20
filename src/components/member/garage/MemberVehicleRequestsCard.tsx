@@ -73,6 +73,8 @@ type MemberVehicleRequestsCardProps = {
   vehicleYear?: string;
   vehicleColour?: string;
   requests: MemberVehicleRequestItem[];
+  /** When true the card is hidden — used while a sourcing request is in review */
+  hidden?: boolean;
 };
 
 export function MemberVehicleRequestsCard({
@@ -83,7 +85,9 @@ export function MemberVehicleRequestsCard({
   vehicleYear,
   vehicleColour,
   requests,
+  hidden = false,
 }: MemberVehicleRequestsCardProps) {
+  if (hidden) return null;
   const [isTransportOpen, setIsTransportOpen] = useState(false);
   const [isDetailingOpen, setIsDetailingOpen] = useState(false);
   const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);

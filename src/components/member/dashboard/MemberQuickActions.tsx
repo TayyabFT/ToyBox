@@ -29,27 +29,27 @@ function resolveIcon(id: string) {
 
 export function MemberQuickActions({ actions }: MemberQuickActionsProps) {
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4 mb-10">
+    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4 mb-6 md:mb-10">
       {actions.map((action) => (
         <Link
           key={action.id}
           href={action.href}
-          className="flex cursor-pointer items-center gap-3 rounded-xl border border-accent/10 bg-card px-4 py-4 transition-colors hover:border-primary/30"
+          className="flex cursor-pointer items-center gap-2 rounded-xl border border-accent/10 bg-card px-2.5 py-3 transition-colors hover:border-primary/30 overflow-hidden sm:gap-3 sm:px-4 sm:py-4"
         >
-            <span className="flex size-12 shrink-0 items-center justify-center rounded-xl border border-accent/22 bg-accent/6 text-accent [&_svg]:size-[18px]">
-              {resolveIcon(action.id)}
-            </span>
+          <span className="flex size-9 shrink-0 items-center justify-center rounded-xl border border-accent/22 bg-accent/6 text-accent [&_svg]:size-[14px] sm:size-12 sm:[&_svg]:size-[18px]">
+            {resolveIcon(action.id)}
+          </span>
 
           <span className="min-w-0 flex-1 space-y-0.5">
-            <span className="font-copperplate block text-[14px] leading-tight text-foreground uppercase">
+            <span className="font-copperplate block text-[11px] sm:text-[14px] leading-tight text-foreground uppercase">
               {action.title}
             </span>
-            <span className="font-Roboto block text-[10px] tracking-[0.08em] text-secondary uppercase mt-2">
+            <span className="font-Roboto block text-[8px] sm:text-[9px] tracking-[0.06em] sm:tracking-[0.08em] text-secondary uppercase mt-1 sm:mt-2">
               {action.subtitle}
             </span>
           </span>
 
-          <ChevronRight className="size-4 text-primary"  />
+          <ChevronRight className="hidden size-4 text-primary sm:block" />
         </Link>
       ))}
     </div>

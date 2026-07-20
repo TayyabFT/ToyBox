@@ -8,7 +8,53 @@ import { MemberGarageCard } from "./MemberGarageCard";
 import { MemberGarageFilters } from "./MemberGarageFilters";
 import { MemberGarageHeader } from "./MemberGarageHeader";
 import { MemberGarageSkeleton, MemberGarageCardsSkeleton } from "./MemberGarageSkeleton";
+import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
 import type { GarageFilter, GarageFilterKey, GarageVehicle } from "./types";
+
+function GarageEmptyState({ filter }: { filter: GarageFilterKey }) {
+  const isFiltered = filter !== "all";
+
+  return (
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-accent/10 bg-card px-6 py-16 text-center">
+      {/* Car icon */}
+      <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-accent/15 bg-elevated">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden>
+          <path
+            d="M6 20H7.5L9.5 14H22.5L24.5 20H26"
+            stroke="var(--accent)"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M6 20H26V23C26 23.55 25.55 24 25 24H7C6.45 24 6 23.55 6 23V20Z"
+            stroke="var(--accent)"
+            strokeWidth="1.25"
+            strokeLinejoin="round"
+          />
+          <circle cx="10" cy="23.5" r="1.5" fill="var(--accent)" />
+          <circle cx="22" cy="23.5" r="1.5" fill="var(--accent)" />
+          <path
+            d="M9.5 14L11.5 10H20.5L22.5 14"
+            stroke="var(--accent)"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      </div>
+
+      <p className="font-copperplate mb-2 text-[15px] tracking-[0.12em] text-foreground-soft uppercase">
+        {isFiltered ? "No vehicles in this category" : "Your garage is empty"}
+      </p>
+      <p className="font-roboto max-w-[260px] text-[11px] leading-relaxed text-secondary">
+        {isFiltered
+          ? "No vehicles match the selected filter. Try switching to a different category."
+          : "Your collection will appear here once vehicles have been added to your account."}
+      </p>
+    </div>
+  );
+}
 
 export function MemberGaragePage() {
   const [memberId, setMemberId] = useState<string | null>(null);
@@ -19,6 +65,7 @@ export function MemberGaragePage() {
   ]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sourcingOpen, setSourcingOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -94,7 +141,7 @@ export function MemberGaragePage() {
 
   return (
     <div className="space-y-6 p-8">
-      <MemberGarageHeader />
+      <MemberGarageHeader onSourcingClick={() => setSourcingOpen(true)} />
 
       {error ? (
         <p className="font-roboto rounded-xl border border-pink/20 bg-pink/5 px-4 py-3 text-[12px] text-pink">
@@ -111,7 +158,7 @@ export function MemberGaragePage() {
       {loading ? (
         <MemberGarageCardsSkeleton />
       ) : vehicles.length === 0 && !error ? (
-        <p className="font-roboto text-[12px] text-secondary">No vehicles found.</p>
+        <GarageEmptyState filter={activeFilter} />
       ) : (
         <div className="grid grid-cols-1 gap-5 xl:grid-cols-2">
           {vehicles.map((vehicle) => (
@@ -119,6 +166,11 @@ export function MemberGaragePage() {
           ))}
         </div>
       )}
+
+      <VehicleSourcingModal
+        open={sourcingOpen}
+        onClose={() => setSourcingOpen(false)}
+      />
     </div>
   );
 }

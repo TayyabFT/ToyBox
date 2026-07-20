@@ -38,6 +38,8 @@ export function StatCard({
   const iconBoxClass =
     iconSize === "lg" ? `size-14 ${svgSizeClass}` : `size-12 ${svgSizeClass}`;
 
+  const isNegativeTrend = trend?.trim().startsWith("-") ?? false;
+
   return (
     <div className="stat-card-shell group flex min-h-[148px] cursor-pointer flex-col justify-between rounded-2xl p-5 transition-all duration-200">
       <div className="flex items-start justify-between gap-3">
@@ -70,8 +72,12 @@ export function StatCard({
             {subtext}
           </p>
           {trend && (
-            <span className="font-roboto flex items-center gap-0.5 text-[10px] font-semibold tracking-[0.06em] text-teal group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]">
-              <TrendUp />
+            <span
+              className={`font-roboto flex items-center gap-0.5 text-[10px] font-semibold tracking-[0.06em] group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)] ${
+                isNegativeTrend ? "text-pink" : "text-teal"
+              }`}
+            >
+              <TrendUp className={isNegativeTrend ? "rotate-180" : undefined} />
               {trend}
             </span>
           )}

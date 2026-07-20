@@ -203,9 +203,9 @@ const QUICK_ACTION_MAP: Record<
     icon: "maintenance",
   },
   vehicle_source: {
-    id: "sourcing",
-    title: "Vehicle Sourcing",
-    subtitle: "Acquire & find cars",
+ id: "parking",
+    title: "Vehicle Parking",
+    subtitle: "Request parking slot",
     icon: "sourcing",
   },
 };
@@ -509,5 +509,8 @@ export function mapMemberVehicleDetail(
     health: mapHealthMetrics(data),
     healthCtaLabel: "Request Detailing",
     documents: mapVehicleDocuments(data),
+    sourcingRequestId: details?.sourcingRequestId != null
+      ? String(details.sourcingRequestId)
+      : undefined,
   };
 }

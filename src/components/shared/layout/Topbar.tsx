@@ -150,7 +150,7 @@ export function Topbar({
 
   return (
     <>
-      <header className="flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-accent/8 bg-[var(--shell-bg)] px-4 sm:px-6 lg:px-8">
+      <header className="fixed top-0 right-0 left-0 z-30 flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-accent/8 bg-[var(--shell-bg)] px-4 sm:px-6 lg:left-[340px] lg:px-8">
         <nav
           aria-label="Breadcrumb"
           className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] tracking-[0.14em] uppercase"

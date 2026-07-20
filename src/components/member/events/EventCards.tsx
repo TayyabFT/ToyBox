@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { EventItem } from "./types";
 import { AttendeeAvatarStack } from "@/components/member/common/AttendeeAvatarStack";
 
@@ -25,14 +28,44 @@ function AvatarStack({ count, names, initials }: { count: number; names?: string
 type CardProps = {
   event: EventItem;
   rsvpLoading?: boolean;
+  favoriteLoading?: boolean;
   onRsvpToggle?: (id: string, currentStatus: string | null) => void;
+  onFavoriteToggle?: (id: string, currentFavorite: boolean) => void;
   onClick?: () => void;
 };
 
+// ── Image Placeholder ─────────────────────────────────────────────────────────
+
+function EventImagePlaceholder({ title }: { title: string }) {
+  return (
+    <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-accent/5 via-accent/8 to-accent/5">
+      <svg
+        width="64"
+        height="64"
+        viewBox="0 0 24 24"
+        fill="none"
+        className="text-accent/20"
+      >
+        <rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" strokeWidth="1.5" />
+        <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor" />
+        <path d="M3 16L8 11L13 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 15L15 12L21 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    </div>
+  );
+}
+
 // ── Featured Card ─────────────────────────────────────────────────────────────
 
-export function EventsFeaturedCard({ event, rsvpLoading = false, onRsvpToggle }: CardProps) {
+export function EventsFeaturedCard({ 
+  event, 
+  rsvpLoading = false, 
+  favoriteLoading = false,
+  onRsvpToggle, 
+  onFavoriteToggle 
+}: CardProps) {
   const tagClass = TAG_TONE[event.tagTone] ?? TAG_TONE.gold;
+  const [imageError, setImageError] = useState(false);
 
   // Build time label: "19:00 — 23:00" or just "19:00"
   const timeDisplay = event.timeEndLabel
@@ -44,11 +77,16 @@ export function EventsFeaturedCard({ event, rsvpLoading = false, onRsvpToggle }:
       <div className="flex flex-col md:flex-row">
         {/* ── Left: image ────────────────────────────────────────────── */}
         <div className="relative h-[220px] overflow-hidden md:h-auto md:min-h-[260px] md:w-[45%]">
-          <img
-            src={event.imageUrl}
-            alt={event.title}
-            className="h-full w-full object-cover object-center"
-          />
+          {!imageError && event.imageUrl ? (
+            <img
+              src={event.imageUrl}
+              alt={event.title}
+              className="h-full w-full object-cover object-center"
+              onError={() => setImageError(true)}
+            />
+          ) : (
+            <EventImagePlaceholder title={event.title} />
+          )}
           {/* Tag pill – top-left */}
           <span
             className="font-Roboto absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[10px] font-bold tracking-[0.18em] text-dark uppercase"
@@ -200,18 +238,44 @@ export function EventsFeaturedCard({ event, rsvpLoading = false, onRsvpToggle }:
               {/* Bookmark icon button */}
               <button
                 type="button"
-                aria-label="Save event"
-                className="flex size-10 items-center justify-center rounded-full border-[1.5px] border-primary/25 bg-elevated text-secondary hover:border-primary/40 hover:text-primary transition-colors"
+                aria-label={event.isFavorite ? "Remove bookmark" : "Save event"}
+                disabled={favoriteLoading}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onFavoriteToggle?.(event.id, event.isFavorite ?? false);
+                }}
+                className={`flex size-10 items-center justify-center rounded-full border-[1.5px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  event.isFavorite
+                    ? "border-primary/60 bg-primary/10 text-primary"
+                    : "border-primary/25 bg-elevated text-secondary hover:border-primary/40 hover:text-primary"
+                }`}
               >
-                <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
-                  <path
-                    d="M2.5 1.5H10.5V12L6.5 9L2.5 12V1.5Z"
-                    stroke="currentColor"
-                    strokeWidth="1"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                {favoriteLoading ? (
+                  <svg className="animate-spin" width="13" height="13" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8z" />
+                  </svg>
+                ) : event.isFavorite ? (
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="currentColor">
+                    <path
+                      d="M2.5 1.5H10.5V12L6.5 9L2.5 12V1.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <svg width="13" height="13" viewBox="0 0 13 13" fill="none">
+                    <path
+                      d="M2.5 1.5H10.5V12L6.5 9L2.5 12V1.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
               </button>
             </div>
           </div>
@@ -225,6 +289,7 @@ export function EventsFeaturedCard({ event, rsvpLoading = false, onRsvpToggle }:
 
 export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onClick }: CardProps) {
   const tagClass = TAG_TONE[event.tagTone] ?? TAG_TONE.gold;
+  const [imageError, setImageError] = useState(false);
 
   return (
     <div
@@ -233,11 +298,16 @@ export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onCli
     >
       {/* Image */}
       <div className="relative h-[210px] w-full overflow-hidden">
-        <img
-          src={event.imageUrl}
-          alt={event.title}
-          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
-        />
+        {!imageError && event.imageUrl ? (
+          <img
+            src={event.imageUrl}
+            alt={event.title}
+            className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <EventImagePlaceholder title={event.title} />
+        )}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"

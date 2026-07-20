@@ -74,11 +74,11 @@ function FeaturedCard({ event }: { event: MemberDiaryEvent }) {
         </span>
 
         {/* Date + time + title overlay */}
-        <div className="absolute bottom-0 left-0 right-0 space-y-1.5 p-4">
-          <p className="font-roboto text-[9px] tracking-[0.14em] text-accent uppercase">
+        <div className="absolute bottom-0 left-0 right-0 space-y-1 p-3 sm:space-y-1.5 sm:p-4">
+          <p className="font-roboto text-[8px] sm:text-[9px] tracking-[0.14em] text-accent uppercase">
             {event.dateShort} · {event.time}
           </p>
-          <h3 className="font-roboto text-[16px] font-bold leading-tight tracking-[0.03em] text-white uppercase">
+          <h3 className="font-roboto text-[13px] sm:text-[16px] font-bold leading-tight tracking-[0.03em] text-white uppercase">
             {event.title}
           </h3>
         </div>
@@ -135,11 +135,11 @@ function DiaryRow({ event }: { event: MemberDiaryEvent }) {
       className="flex items-center gap-3.5 rounded-[16px] border border-white/6 card-view px-4 py-3.5 transition-colors hover:border-accent/20"
     >
       {/* Date column */}
-      <div className="flex w-10 shrink-0 flex-col items-center gap-0.5">
-        <span className="font-roboto text-[9px] font-medium tracking-[0.12em] text-accent uppercase">
+      <div className="flex w-8 shrink-0 flex-col items-center gap-0.5 sm:w-10">
+        <span className="font-roboto text-[8px] sm:text-[9px] font-medium tracking-[0.12em] text-accent uppercase">
           {event.dayName}
         </span>
-        <span className="font-roboto text-[24px] font-light leading-none text-foreground">
+        <span className="font-roboto text-[20px] sm:text-[24px] font-light leading-none text-foreground">
           {event.dayLabel}
         </span>
       </div>

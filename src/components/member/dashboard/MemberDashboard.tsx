@@ -50,7 +50,7 @@ export function MemberDashboard() {
   // First load failed with no cached data — show a full-page retry message.
   if (error && !loaded) {
     return (
-      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 p-8 text-center">
+      <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 py-8 text-center">
         <div className="space-y-2">
           <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
             Dashboard Unavailable
@@ -71,7 +71,7 @@ export function MemberDashboard() {
   }
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-5 px-4 py-5 sm:px-6 sm:py-6 md:px-8 md:py-8">
       {error && (
         <div className="flex items-center justify-between font-roboto rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-500">
           <span>{error}</span>
@@ -87,7 +87,8 @@ export function MemberDashboard() {
 
       <MemberGreeting memberName={data.memberName} sublabel={sublabel} />
 
-      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.5fr_1fr] mb-10">
+      {/* Hero row: membership card + club banner — stacks on mobile */}
+      <div className="grid grid-cols-1 items-stretch gap-4 xl:grid-cols-[1.5fr_1fr] mb-6 md:mb-10">
         <MembershipCard
           memberName={data.memberName}
           memberNumber={data.memberNumber}
@@ -101,7 +102,8 @@ export function MemberDashboard() {
 
       <MemberQuickActions actions={quickActions} />
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[1.5fr_1fr] mb-10">
+      {/* Collection + Diary — stacks on mobile, side-by-side on xl */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.5fr_1fr] mb-6 md:mb-10">
         <MemberCollectionSection vehicles={data.vehicles} />
         <MemberDiarySection events={data.diary} />
       </div>
@@ -111,7 +113,8 @@ export function MemberDashboard() {
         statusLine={data.clubStatusLine}
       />
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-14">
+      {/* News + Activity — stacks on mobile, side-by-side on xl */}
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mt-8 md:mt-14">
         <MemberNewsSection items={data.news} />
         <MemberActivitySection items={data.recentActivity} />
       </div>

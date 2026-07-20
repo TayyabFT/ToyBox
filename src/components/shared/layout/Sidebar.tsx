@@ -29,6 +29,7 @@ import {
 } from "@/components/common/Svgs";
 import { chatApi } from "@/api/chat.api";
 import { memberChatApi } from "@/api/memberChat.api";
+import { memberEventsApi } from "@/api/memberEvents.api";
 import { getUnreadConversationCount } from "@/lib/concierge";
 import { getMemberUnreadMessageCount } from "@/lib/memberConcierge";
 import { useTheme } from "@/components/common/ThemeProvider";
@@ -290,6 +291,7 @@ export function Sidebar({
   const { theme } = useTheme();
   const isLightMode = theme === "light";
   const [conciergeUnreadCount, setConciergeUnreadCount] = useState(0);
+  const [eventsUpcomingCount, setEventsUpcomingCount] = useState(0);
 
   useEffect(() => {
     onMobileClose?.();
@@ -334,33 +336,77 @@ export function Sidebar({
     };
   }, [role, pathname]);
 
+  useEffect(() => {
+    if (role !== "member") return;
+
+    let cancelled = false;
+
+    async function loadEventsUpcomingCount() {
+      try {
+        const response = await memberEventsApi.getGrouped();
+        if (!cancelled) {
+          const { featured, thisWeek, nextMonth } = response.data;
+          // Deduplicate by id across all groups, then count events not yet joined
+          const seen = new Set<string>();
+          const allUpcoming = [...(featured ?? []), ...(thisWeek ?? []), ...(nextMonth ?? [])];
+          let count = 0;
+          for (const event of allUpcoming) {
+            if (!seen.has(event.id)) {
+              seen.add(event.id);
+              if (!event.isJoined) {
+                count++;
+              }
+            }
+          }
+          setEventsUpcomingCount(count);
+        }
+      } catch {
+        if (!cancelled) {
+          setEventsUpcomingCount(0);
+        }
+      }
+    }
+
+    loadEventsUpcomingCount();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role, pathname]);
+
   const sections = useMemo(
     () =>
       spec.sections.map((section) => ({
         ...section,
         items: section.items.map((item) => {
-          if (item.id !== "concierge" || conciergeUnreadCount <= 0) {
-            return item;
+          // Concierge unread badge
+          if (item.id === "concierge" && conciergeUnreadCount > 0) {
+            if (role === "staff") {
+              return {
+                ...item,
+                badge: { count: conciergeUnreadCount, tone: "gold" as const },
+              };
+            }
+            if (role === "member") {
+              return {
+                ...item,
+                badge: { count: conciergeUnreadCount, tone: "pink" as const },
+              };
+            }
           }
 
-          if (role === "staff") {
+          // Events upcoming badge (member only)
+          if (item.id === "events" && role === "member" && eventsUpcomingCount > 0) {
             return {
               ...item,
-              badge: { count: conciergeUnreadCount, tone: "gold" as const },
-            };
-          }
-
-          if (role === "member") {
-            return {
-              ...item,
-              badge: { count: conciergeUnreadCount, tone: "pink" as const },
+              badge: { count: eventsUpcomingCount, tone: "gold" as const },
             };
           }
 
           return item;
         }),
       })),
-    [spec, role, conciergeUnreadCount],
+    [spec, role, conciergeUnreadCount, eventsUpcomingCount],
   );
 
   return (

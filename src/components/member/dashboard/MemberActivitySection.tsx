@@ -44,7 +44,7 @@ function ActivityRow({
   const titleHighlight = item.titleHighlight ?? split.highlight;
 
   return (
-    <div className="relative flex gap-5">
+    <div className="relative flex gap-3 sm:gap-5">
       {/* Timeline column — node + connector */}
       <div className="relative flex w-5 shrink-0 flex-col items-center">
         {/* Outer ring + inner filled dot */}
@@ -68,7 +68,7 @@ function ActivityRow({
         </p>
 
         {/* Title — Copperplate, prefix foreground + em-dash + highlight gold */}
-        <h3 className="font-copperplate mt-0.5 text-[14px] leading-snug tracking-[0.03em] text-foreground uppercase">
+        <h3 className="font-copperplate mt-0.5 text-[12px] sm:text-[14px] leading-snug tracking-[0.03em] text-foreground uppercase">
           {titlePrefix}
           {titleHighlight && (
             <>
@@ -79,7 +79,7 @@ function ActivityRow({
         </h3>
 
         {/* Detail */}
-        <p className="font-roboto mt-1.5 text-[12px] leading-relaxed text-secondary/70">
+        <p className="font-roboto mt-1 sm:mt-1.5 text-[11px] sm:text-[12px] leading-relaxed text-secondary/70">
           {item.detail}
         </p>
       </div>
@@ -100,7 +100,7 @@ export function MemberActivitySection({ items }: MemberActivitySectionProps) {
           <p className={dashboardSectionSubtitleClass}>Your last week</p>
         </div>
         <Link
-          href="/member/events"
+          href="/member/diary"
           className="flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-transparent px-3 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5"
         >
           <span className="font-roboto text-[10px] font-semibold tracking-[0.14em] text-accent uppercase">

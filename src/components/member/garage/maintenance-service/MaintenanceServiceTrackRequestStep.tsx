@@ -1,3 +1,5 @@
+"use client";
+
 import {
   MemberGarageChevronRight,
   MemberServiceCentreStarIcon,
@@ -12,6 +14,103 @@ import {
   getMaintenanceServiceCentre,
 } from "./maintenanceOptions";
 import type { MaintenanceDetailsFormState } from "./types";
+import type {
+  MaintenanceTimelineStep,
+  MemberMaintenanceRequestStatusData,
+} from "@/types/api";
+
+// ── Timeline mapping ──────────────────────────────────────────────────────────
+
+/**
+ * Maps backend timeline step keys to the display labels shown in the design.
+ * Falls back to the label from the API if the key is not listed here.
+ */
+const STEP_LABEL_MAP: Record<string, string> = {
+  request_sent:        "Request received",
+  vehicle_picked_up:   "Vehicle transport arranged",
+  service_in_progress: "Vehicle at service centre",
+  awaiting_approval:   "Service report & sign-off",
+  ready_for_delivery:  "Vehicle returned to Toybox",
+  completed:           "Completed",
+};
+
+/**
+ * Meta text shown below each timeline step when completed/active.
+ * Active steps show a highlighted "In progress" label; pending shows "Pending".
+ */
+function resolveStepMeta(
+  step: MaintenanceTimelineStep,
+  index: number,
+  allSteps: MaintenanceTimelineStep[],
+): { text: string; className?: string } {
+  const norm = (step.status ?? "").toLowerCase();
+
+  if (norm === "active") {
+    // The active step always shows the "In progress" meta in primary colour
+    return { text: "In progress · Service underway", className: "text-primary" };
+  }
+
+  if (norm === "pending" || norm === "skipped") {
+    // Last pending step shows an estimated return date placeholder
+    const isLastPending =
+      allSteps.slice(index + 1).every((s) => (s.status ?? "") === "pending");
+    return { text: isLastPending ? "Pending" : "Pending" };
+  }
+
+  // Completed — show a formatted timestamp when available
+  if (step.completedAt) {
+    const d = new Date(step.completedAt);
+    const month = d.toLocaleString("en-US", { month: "short" });
+    const day = d.getDate();
+    const time = d.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+    return { text: `${month} ${day} · ${time}` };
+  }
+
+  return { text: "" };
+}
+
+function mapApiTimeline(timeline: MaintenanceTimelineStep[]): DotTimelineStep[] {
+  const visible = timeline.filter((s) => s.status !== "skipped");
+
+  return visible.map((step, idx) => {
+    const rawStatus = (step.status ?? "pending").toLowerCase();
+    const status: DotTimelineStep["status"] =
+      rawStatus === "completed" ? "completed"
+      : rawStatus === "active"    ? "active"
+      : "pending";
+
+    const label =
+      STEP_LABEL_MAP[step.key ?? ""] || step.label || `Step ${idx + 1}`;
+
+    const { text, className } = resolveStepMeta(step, idx, visible);
+
+    return {
+      id: idx + 1,
+      status,
+      title: label,
+      meta: text,
+      ...(className ? { metaClassName: className } : {}),
+    };
+  });
+}
+
+/** Hardcoded fallback used before the API responds */
+function buildFallbackSteps(): DotTimelineStep[] {
+  return [
+    { id: 1, status: "completed", title: "Request received",            meta: "" },
+    { id: 2, status: "completed", title: "Booking confirmed with centre", meta: "" },
+    { id: 3, status: "completed", title: "Vehicle transport arranged",   meta: "Pickup scheduled" },
+    { id: 4, status: "active",    title: "Vehicle at service centre",    meta: "In progress · Service underway", metaClassName: "text-primary" },
+    { id: 5, status: "pending",   title: "Service report & sign-off",    meta: "Pending" },
+    { id: 6, status: "pending",   title: "Vehicle returned to Toybox",   meta: "Pending" },
+  ];
+}
+
+// ── Service centre card ───────────────────────────────────────────────────────
 
 function ServiceCentreIcon({ type }: { type: "star" | "workshop" }) {
   const shellClass =
@@ -32,57 +131,31 @@ function ServiceCentreIcon({ type }: { type: "star" | "workshop" }) {
   );
 }
 
+// ── Main component ────────────────────────────────────────────────────────────
+
 type MaintenanceServiceTrackRequestStepProps = {
   form: MaintenanceDetailsFormState;
+  /** Live status data from GET /api/v1/maintenance/requests/:id/status */
+  statusData?: MemberMaintenanceRequestStatusData | null;
 };
 
 export function MaintenanceServiceTrackRequestStep({
   form,
+  statusData,
 }: MaintenanceServiceTrackRequestStepProps) {
   const serviceCentre = getMaintenanceServiceCentre(form.serviceCentre);
 
-  const steps: DotTimelineStep[] = [
-    {
-      id: 1,
-      status: "completed",
-      title: "Request received",
-      meta: "Apr 29 · 9:41 AM",
-    },
-    {
-      id: 2,
-      status: "completed",
-      title: "Booking confirmed with centre",
-      meta: "Apr 30 · 11:20 AM · Sarah K.",
-    },
-    {
-      id: 3,
-      status: "completed",
-      title: "Vehicle transport arranged",
-      meta: "Pickup scheduled",
-    },
-    {
-      id: 4,
-      status: "active",
-      title: "Vehicle at service centre",
-      meta: "In progress · Service underway",
-      metaClassName: "text-primary",
-    },
-    {
-      id: 5,
-      status: "pending",
-      title: "Service report & sign-off",
-      meta: "Pending",
-    },
-    {
-      id: 6,
-      status: "pending",
-      title: "Vehicle returned to Toybox",
-      meta: "Est. 1 May · 5:00 PM",
-    },
-  ];
+  const steps =
+    statusData?.timeline && statusData.timeline.length > 0
+      ? mapApiTimeline(statusData.timeline)
+      : buildFallbackSteps();
+
+  // Use real reference number when available, fall back to date-based one
+  const referenceDisplay = statusData?.referenceNumber ?? form.preferredDate;
 
   return (
     <div className="space-y-6">
+      {/* Summary card */}
       <div className="overflow-hidden rounded-2xl border border-accent/12 garage-review-card">
         <div className="flex items-start justify-between gap-4 px-4 py-4">
           <div className="min-w-0">
@@ -90,7 +163,7 @@ export function MaintenanceServiceTrackRequestStep({
               {formatMaintenanceTrackingTitle(form.vehicle, form.serviceType)}
             </p>
             <p className="font-roboto mt-1 text-[10px] tracking-[0.08em] text-secondary uppercase">
-              REF {form.preferredDate}
+              REF {referenceDisplay}
             </p>
           </div>
 
@@ -121,8 +194,10 @@ export function MaintenanceServiceTrackRequestStep({
         </button>
       </div>
 
+      {/* Live timeline */}
       <DotTimeline steps={steps} />
 
+      {/* Concierge card */}
       <ConciergeCard
         sectionLabel="Your Concierge"
         name="Sarah Khalid"

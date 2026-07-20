@@ -7,6 +7,7 @@ import {
   joinEvent,
   leaveEvent,
   setFilter,
+  toggleFavoriteEvent,
 } from "@/store/slices/memberEventsSlice";
 import { showError, showSuccess } from "@/lib/toast";
 import {
@@ -76,6 +77,7 @@ export function MemberEvents() {
     loaded,
     error,
     rsvpLoading,
+    favoriteLoading,
   } = useAppSelector((state) => state.memberEvents);
 
   const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
@@ -125,6 +127,18 @@ export function MemberEvents() {
       } else {
         showError((result.payload as string) ?? "Failed to RSVP");
       }
+    }
+  };
+
+  // ── Favorite toggle ──────────────────────────────────────────────────────
+
+  const handleFavoriteToggle = async (eventId: string, currentFavorite: boolean) => {
+    const newFavorite = !currentFavorite;
+    const result = await dispatch(toggleFavoriteEvent({ id: eventId, isFavorite: newFavorite }));
+    if (toggleFavoriteEvent.fulfilled.match(result)) {
+      showSuccess(newFavorite ? "Event bookmarked" : "Bookmark removed");
+    } else {
+      showError((result.payload as string) ?? "Failed to update bookmark");
     }
   };
 
@@ -188,7 +202,9 @@ export function MemberEvents() {
         <EventsFeaturedCard
           event={activeHero}
           rsvpLoading={!!rsvpLoading[activeHero.id]}
+          favoriteLoading={!!favoriteLoading[activeHero.id]}
           onRsvpToggle={handleRsvpToggle}
+          onFavoriteToggle={handleFavoriteToggle}
         />
       ) : null}
 
@@ -241,8 +257,8 @@ export function MemberEvents() {
           </section>
         ))
       ) : (
-        /* Empty state */
-        !loading && (
+        /* Empty state - only show if there's no hero card either */
+        !loading && !activeHero && (
           <div className="flex flex-col items-center gap-3 rounded-2xl border border-accent/10 bg-card py-16 text-center">
             <p className="font-copperplate text-[18px] text-foreground uppercase tracking-[0.05em]">
               No Events

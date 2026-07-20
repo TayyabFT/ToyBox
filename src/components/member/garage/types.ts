@@ -104,6 +104,8 @@ export type MemberVehicleDetail = {
   health: MemberVehicleHealthMetric[];
   healthCtaLabel: string;
   documents: MemberVehicleDocument[];
+  /** Sourcing request ID — present when statusTone is "in_review" */
+  sourcingRequestId?: string;
 };
 
 export type GarageFilterKey =

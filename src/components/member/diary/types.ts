@@ -3,7 +3,8 @@ export type DiaryEntryKind =
   | "service"
   | "drive"
   | "dining"
-  | "acquisition";
+  | "acquisition"
+  | "reservation";
 
 export type DiaryEntry = {
   id: string;

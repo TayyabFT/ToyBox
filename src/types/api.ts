@@ -349,6 +349,8 @@ export type MemberVehicleDetailsRaw = {
   statusKey?: string;
   memberId?: string;
   ownerName?: string;
+  /** Sourcing request ID — returned when the vehicle is in_review */
+  sourcingRequestId?: string | number;
   quickStats?: MemberVehicleQuickStatsRaw;
   healthSummary?: {
     overallPercent?: number;
@@ -549,6 +551,88 @@ export type DetailingBookingConfirmationData = {
 export type CreateDetailingBookingResponse =
   ApiResponse<DetailingBookingConfirmationData>;
 
+// ── Member Detailing — list & progress ──────────────────────────────────────
+
+/** One item from GET /api/v1/detailing/bookings */
+export type MemberDetailingBookingSummary = {
+  id?: string | number;
+  referenceNumber?: string;
+  status?: string;
+  serviceType?: string;
+  vehicleId?: string | number;
+  vehicle?: string;
+  package?: DetailingBookingPackageData;
+  addons?: DetailingBookingAddonData[];
+  totalEstimate?: number;
+  totalLabel?: string;
+  currency?: string;
+  scheduledDate?: string;
+  preferredDateLabel?: string;
+  timeWindow?: string;
+  timeWindowStart?: string;
+  timeWindowEnd?: string;
+  location?: string;
+  serviceLocation?: string;
+  specialInstructions?: string;
+  notes?: string;
+  createdAt?: string;
+};
+
+export type MemberDetailingBookingsData = {
+  count?: number;
+  bookings?: MemberDetailingBookingSummary[];
+};
+
+export type MemberDetailingBookingsResponse = ApiResponse<MemberDetailingBookingsData>;
+
+/** One step from the booking progress timeline */
+export type DetailingTimelineStep = {
+  key?: string;
+  label?: string;
+  status?: "completed" | "active" | "pending" | "skipped" | string;
+  completedAt?: string | null;
+  meta?: {
+    staffName?: string;
+    staffRole?: string;
+    bay?: string;
+    estimatedMinutesRemaining?: number;
+    estimatedCompletionTime?: string | null;
+  } | null;
+};
+
+export type DetailingConcierge = {
+  name?: string;
+  role?: string;
+  technicianName?: string;
+  avatarUrl?: string;
+};
+
+export type MemberDetailingBookingProgressData = {
+  id?: string | number;
+  referenceNumber?: string;
+  status?: string;
+  service?: string;
+  vehicle?: string;
+  vehicleId?: string | number;
+  packageName?: string;
+  location?: string;
+  scheduledDate?: string;
+  preferredDateLabel?: string;
+  timeWindow?: string;
+  totalEstimate?: number;
+  currency?: string;
+  timeline?: DetailingTimelineStep[];
+  concierge?: DetailingConcierge;
+  detailer?: { name?: string; role?: string; avatarUrl?: string };
+  estimatedMinutesRemaining?: number | null;
+  estimatedCompletionTime?: string | null;
+  bayLocation?: string;
+  canCancel?: boolean;
+};
+
+export type MemberDetailingBookingProgressResponse =
+  ApiResponse<MemberDetailingBookingProgressData>;
+
 // ── Member Maintenance Request ────────────────────────────────────────────────
 
 export type CreateMaintenanceRequestBody = {
@@ -596,6 +680,59 @@ export type MaintenanceRequestConfirmationData = {
 export type CreateMaintenanceRequestResponse =
   ApiResponse<MaintenanceRequestConfirmationData>;
 
+// ── Member Maintenance — list & status ────────────────────────────────────────
+
+/** One item from GET /api/v1/maintenance/requests */
+export type MemberMaintenanceRequestSummary = {
+  id?: string | number;
+  referenceNumber?: string;
+  status?: string;
+  vehicle?: string;
+  vehicleId?: string | number;
+  memberId?: string | number;
+  services?: MaintenanceRequestServiceData[];
+  scheduledAt?: string;
+  location?: string;
+  locationKey?: string;
+  notes?: string;
+  totalAmount?: number;
+  currency?: string;
+  lineItems?: MaintenanceRequestLineItemData[];
+  canCancel?: boolean;
+  requiresApproval?: boolean;
+  isPaid?: boolean;
+  createdAt?: string;
+};
+
+export type MemberMaintenanceRequestsData = {
+  count?: number;
+  requests?: MemberMaintenanceRequestSummary[];
+};
+
+export type MemberMaintenanceRequestsResponse =
+  ApiResponse<MemberMaintenanceRequestsData>;
+
+/** One step in the maintenance timeline */
+export type MaintenanceTimelineStep = {
+  key?: string;
+  label?: string;
+  status?: "completed" | "active" | "pending" | "skipped" | string;
+  completedAt?: string | null;
+};
+
+/** Response from GET /api/v1/maintenance/requests/:id/status */
+export type MemberMaintenanceRequestStatusData = {
+  id?: string | number;
+  referenceNumber?: string;
+  status?: string;
+  vehicle?: string;
+  timeline?: MaintenanceTimelineStep[];
+  canCancel?: boolean;
+};
+
+export type MemberMaintenanceRequestStatusResponse =
+  ApiResponse<MemberMaintenanceRequestStatusData>;
+
 export type AttendingMemberPreview = {
   name: string;
   initial: string;
@@ -622,6 +759,19 @@ export type MemberDashboardQuickActionRaw = {
   path?: string;
 };
 
+export type MemberDashboardReservationRaw = {
+  id?: string;
+  referenceNumber?: string;
+  areaTitle?: string | null;
+  areaType?: string;
+  reservationDate?: string;
+  timeSlot?: string;
+  guests?: number;
+  status?: string;
+  createdAt?: string;
+  confirmedAt?: string | null;
+};
+
 export type MemberDashboardSummaryData = {
   memberId?: string;
   stats?: MemberDashboardStatsRaw;
@@ -633,6 +783,7 @@ export type MemberDashboardSummaryData = {
     featured?: MemberDashboardEventRaw[];
     thisWeek?: MemberDashboardEventRaw[];
   };
+  recentReservations?: MemberDashboardReservationRaw[];
   quickActions?: MemberDashboardQuickActionRaw[];
 };
 
@@ -1656,6 +1807,9 @@ export type SourcingRequestRaw = {
   yearMin?: number;
   yearMax?: number;
   colour?: string;
+  budgetMin?: number;
+  budgetMax?: number;
+  currency?: string;
   memberId?: number | string;
   member?: {
     id?: number | string;
@@ -4171,6 +4325,11 @@ export type SourcingRequestStatusData = {
   timeline?: SourcingRequestStatusTimeline[];
   matches?: unknown[];
   canCancel?: boolean;
+  assignee?: {
+    id?: string | null;
+    name?: string;
+    email?: string | null;
+  } | null;
 };
 
 export type CreateSourcingRequestResponse =
@@ -4178,3 +4337,33 @@ export type CreateSourcingRequestResponse =
 
 export type SourcingRequestStatusResponse =
   ApiResponse<SourcingRequestStatusData>;
+
+export type MemberSourcingRequestItem = {
+  id: string;
+  referenceNumber: string;
+  make: string;
+  model: string;
+  status: string;
+  statusLabel: string;
+  yearRange: string;
+  colour: string;
+  budget: string;
+  tags: string[];
+  assigneeName: string;
+  assigneeInitials: string;
+  assigneeNote: string;
+  createdAt: string;
+};
+
+export type MemberSourcingRequestsData =
+  | MemberSourcingRequestItem[]
+  | SourcingRequestRaw[]
+  | {
+      requests?: SourcingRequestRaw[];
+      items?: SourcingRequestRaw[];
+      data?: SourcingRequestRaw[];
+      total?: number;
+    };
+
+export type MemberSourcingRequestsResponse =
+  ApiResponse<MemberSourcingRequestsData>;

@@ -24,6 +24,17 @@ export function MemberConciergePage() {
   const [threads, setThreads] = useState<MemberChatThread[]>([]);
   const [loading, setLoading] = useState(true);
 
+  const markContactRead = useCallback((contactId: string) => {
+    setThreads((prev) =>
+      prev.map((thread) =>
+        thread.contact.id === contactId
+          ? { ...thread, unreadForMember: 0 }
+          : thread,
+      ),
+    );
+    memberChatApi.markRead(contactId).catch(() => {});
+  }, []);
+
   const loadInbox = useCallback(async () => {
     setLoading(true);
 
@@ -33,11 +44,22 @@ export function MemberConciergePage() {
 
       setThreads(nextThreads);
       setSelectedContactId((current) => {
-        if (current && nextThreads.some((thread) => thread.contact.id === current)) {
-          return current;
+        const next = (() => {
+          if (current && nextThreads.some((thread) => thread.contact.id === current)) {
+            return current;
+          }
+          return nextThreads[0]?.contact.id ?? null;
+        })();
+
+        // Mark the selected thread as read if it has unread messages
+        if (next) {
+          const thread = nextThreads.find((t) => t.contact.id === next);
+          if ((thread?.unreadForMember ?? 0) > 0) {
+            memberChatApi.markRead(next).catch(() => {});
+          }
         }
 
-        return nextThreads[0]?.contact.id ?? null;
+        return next;
       });
     } catch {
       setThreads([]);
@@ -83,13 +105,18 @@ export function MemberConciergePage() {
       filteredRequests.some((request) => request.id === selectedContactId),
   );
 
+  function handleSelectContact(contactId: string) {
+    setSelectedContactId(contactId);
+    markContactRead(contactId);
+  }
+
   function handleHandleAlert() {
     const firstUnread = threads.find(
       (thread) => (thread.unreadForMember ?? 0) > 0,
     );
 
     if (firstUnread) {
-      setSelectedContactId(firstUnread.contact.id);
+      handleSelectContact(firstUnread.contact.id);
     }
   }
 
@@ -115,16 +142,16 @@ export function MemberConciergePage() {
         <ConciergeAlertBar alert={alert} onHandle={handleHandleAlert} />
       ) : null}
 
-      <div className="grid grid-cols-1 gap-6 xl:grid-cols-3">
+      <div className="grid grid-cols-1 items-stretch gap-6 xl:grid-cols-3">
         <OpenRequestsPanel
           requests={filteredRequests}
           activeCount={activeCount}
           selectedId={selectedContactId ?? ""}
           loading={loading}
-          onSelect={setSelectedContactId}
+          onSelect={handleSelectContact}
         />
 
-        <div className="col-span-2">
+        <div className="col-span-2 flex flex-col">
           <ConciergeChatPanel
             enabled={isChatSelected}
             contactId={selectedContactId ?? undefined}

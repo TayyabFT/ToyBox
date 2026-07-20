@@ -227,7 +227,7 @@ export function VehicleSourcingDetailsForm({
         />
       </div>
 
-      <div className="space-y-2.5">
+      {/* <div className="space-y-2.5">
         <RequestFieldLabel>Assigned To</RequestFieldLabel>
         <div className="flex items-center gap-3 rounded-xl border border-accent/12 garage-form-row px-4 py-3.5">
           <span className="font-roboto flex size-11 shrink-0 items-center justify-center rounded-full border border-primary/40 bg-primary/8 text-[13px] font-semibold text-primary">
@@ -251,7 +251,7 @@ export function VehicleSourcingDetailsForm({
             <MemberGarageConciergeChatIcon />
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

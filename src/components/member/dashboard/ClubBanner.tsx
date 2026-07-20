@@ -170,11 +170,11 @@ export function ClubBanner({ venues }: ClubBannerProps) {
       />
 
       {/* Content */}
-      <div className="relative flex h-full min-h-[200px] w-full flex-col justify-end p-6 space-y-3">
+      <div className="relative flex h-full min-h-[200px] w-full flex-col justify-end p-4 space-y-2 sm:p-6 sm:space-y-3">
         {/* Headline */}
         <h3
           className={[
-            "font-copperplate text-[22px] leading-tight uppercase transition-opacity duration-300",
+            "font-copperplate text-[18px] sm:text-[22px] leading-tight uppercase transition-opacity duration-300",
             animating ? "opacity-0" : "opacity-100",
           ].join(" ")}
         >

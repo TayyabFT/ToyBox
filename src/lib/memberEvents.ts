@@ -89,6 +89,7 @@ export function mapMemberEventRaw(
   const rsvpStatus = raw.myRsvp?.status;
   const userStatus: "going" | null =
     rsvpStatus === "going" ? "going" : null;
+  const isFavorite = raw.myRsvp?.isFavorite ?? false;
 
   // Build detail lines for featured card
   const detailLines: EventItem["detailLines"] = [];
@@ -130,6 +131,7 @@ export function mapMemberEventRaw(
     attendingCount: raw.attendingCount,
     attendingMembers: raw.attendingMembers,
     userStatus,
+    isFavorite,
     isFeatured,
     filter,
     detailLines: isFeatured ? detailLines : undefined,

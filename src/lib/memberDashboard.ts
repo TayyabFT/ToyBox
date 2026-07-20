@@ -6,6 +6,7 @@ import type {
   MemberDashboardEventRaw,
   MemberDashboardGarageVehicleRaw,
   MemberDashboardQuickActionRaw,
+  MemberDashboardReservationRaw,
   MemberDashboardSummaryData,
   NotificationInboxData,
 } from "@/types/api";
@@ -67,7 +68,11 @@ function resolveMemberNumber(profile?: AuthProfileData | null): string {
   }
 
   if (profile?.memberNumber?.trim()) {
-    return `No. ${profile.memberNumber.trim()}`;
+    const raw = profile.memberNumber.trim();
+    // If it looks like a UUID (contains hyphens and is long), show only first 8 chars
+    const isUuid = raw.length > 12 && raw.includes("-");
+    const display = isUuid ? raw.slice(0, 8).toUpperCase() : raw;
+    return `No. ${display}`;
   }
 
   return "—";
@@ -285,7 +290,10 @@ function mapKpis(
 }
 
 function mapNewsItems(notifications: InboxNotificationRaw[]): MemberNewsItem[] {
-  return notifications.slice(0, 3).map((item, index) => {
+  const bulletins = notifications.filter(
+    (item) => item.type === "bulletin",
+  );
+  return bulletins.slice(0, 3).map((item, index) => {
     const mapped = mapInboxNotification(item);
     const title = mapped?.title || "Notification";
     const subtitle = mapped?.subheading || "";
@@ -304,20 +312,56 @@ function mapNewsItems(notifications: InboxNotificationRaw[]): MemberNewsItem[] {
 
 function mapActivityItems(
   notifications: InboxNotificationRaw[],
+  reservations?: MemberDashboardReservationRaw[],
 ): MemberActivityItem[] {
-  return notifications.slice(0, 4).map((item, index) => {
-    const mapped = mapInboxNotification(item);
-    const title = mapped?.title || "Activity";
-    const detail = mapped?.subheading || "";
+  const items: MemberActivityItem[] = [];
 
-    return {
-      id: mapped?.id || String(index),
-      title,
-      detail,
+  // Map reservations first — they're the most relevant new activity
+  for (const res of reservations ?? []) {
+    const areaLabel = (res.areaTitle || res.areaType || "Clubhouse")
+      .replace(/_/g, " ")
+      .replace(/\b\w/g, (c) => c.toUpperCase());
+
+    const statusLabel =
+      res.status === "confirmed"
+        ? "Confirmed"
+        : res.status === "pending"
+          ? "Pending Confirmation"
+          : res.status
+              ? res.status.charAt(0).toUpperCase() + res.status.slice(1)
+              : "Submitted";
+
+    const guestLine = res.guests
+      ? `${res.guests} guest${res.guests !== 1 ? "s" : ""}`
+      : "";
+    const slotLine = res.timeSlot ? ` · ${res.timeSlot}` : "";
+
+    items.push({
+      id: `res-${res.id ?? res.referenceNumber ?? items.length}`,
+      title: `Clubhouse — ${areaLabel}`,
+      titlePrefix: "Clubhouse",
+      titleHighlight: areaLabel,
+      detail: `${guestLine}${slotLine} · ${statusLabel}`,
+      timeLabel: formatRelativeTime(res.confirmedAt ?? res.createdAt),
+      tone: "gold",
+    });
+  }
+
+  // Fill remaining slots from notifications
+  const remaining = Math.max(0, 4 - items.length);
+  for (const item of notifications.slice(0, remaining)) {
+    const mapped = mapInboxNotification(item);
+    const idx = items.length;
+    items.push({
+      id: mapped?.id || String(idx),
+      title: mapped?.title || "Activity",
+      detail: mapped?.subheading || "",
       timeLabel: formatRelativeTime(item.createdAt),
-      tone: index % 2 === 0 ? "gold" : "default",
-    };
-  });
+      tone: idx % 2 === 0 ? "gold" : "default",
+    });
+  }
+
+  return items.slice(0, 4);
 }
 
 // ── Clubhouse venues ─────────────────────────────────────────────────────────
@@ -372,38 +416,71 @@ function resolveVenueIconKey(
 }
 
 function resolveVenueFooter(space: ClubhouseSpaceRaw): string | undefined {
+  if (space.areaType === "restaurant") {
+    // Show service hours e.g. "10:00 – 22:00"
+    if (space.openingTime && space.closingTime) {
+      return `${space.openingTime} – ${space.closingTime}`;
+    }
+    if (space.capacity) return `Cap. ${space.capacity}`;
+  }
+
+  if (space.areaType === "suite_lounge") {
+    // Show room count e.g. "4 ROOMS"
+    if (space.roomCount) {
+      return `${space.roomCount} ROOM${space.roomCount !== 1 ? "S" : ""}`;
+    }
+    if (space.capacity) return `Cap. ${space.capacity}`;
+  }
+
+  if (space.areaType === "private_lounge") {
+    // Show 24/7 status or capacity e.g. "OPEN 24/7"
+    if (space.isAvailable24x7) return "OPEN 24/7";
+    if (space.capacity) return `Cap. ${space.capacity}`;
+  }
+
+  // Generic fallback
   if (space.openingTime && space.closingTime) {
     return `${space.openingTime} – ${space.closingTime}`;
   }
+  if (space.roomCount) return `${space.roomCount} ROOM${space.roomCount !== 1 ? "S" : ""}`;
   if (space.capacity) return `Cap. ${space.capacity}`;
-  if (space.roomCount) return `${space.roomCount} ROOMS`;
   return undefined;
 }
 
 export function buildClubStatusLine(clubhouse?: ClubhouseOverviewData | null): string {
-  if (!clubhouse?.totalSpaces) {
-    return memberDashboardMock.clubStatusLine ?? "Available to Book";
+  // No API data — show generic fallback
+  if (!clubhouse) return "Available to Book";
+
+  const { counts, totalSpaces, name } = clubhouse;
+
+  const parts: string[] = [];
+
+  // Venue name from API (e.g. "The Club")
+  if (name?.trim() && name.trim().toLowerCase() !== "the club") {
+    parts.push(name.trim());
   }
 
-  const { counts, totalSpaces } = clubhouse;
-  const segments: string[] = [];
-
+  // Space type counts e.g. "1 Restaurant · 2 Lounges · 4 Suites"
+  const spaceParts: string[] = [];
+  if (counts.restaurant > 0) {
+    spaceParts.push(`${counts.restaurant} Restaurant${counts.restaurant !== 1 ? "s" : ""}`);
+  }
   if (counts.privateLounge > 0) {
-    segments.push(`${counts.privateLounge} Lounge${counts.privateLounge !== 1 ? "s" : ""}`);
+    spaceParts.push(`${counts.privateLounge} Lounge${counts.privateLounge !== 1 ? "s" : ""}`);
   }
   if (counts.suiteLounge > 0) {
-    segments.push(`${counts.suiteLounge} Suite${counts.suiteLounge !== 1 ? "s" : ""}`);
-  }
-  if (counts.restaurant > 0) {
-    segments.push(`${counts.restaurant} Restaurant${counts.restaurant !== 1 ? "s" : ""}`);
+    spaceParts.push(`${counts.suiteLounge} Suite${counts.suiteLounge !== 1 ? "s" : ""}`);
   }
 
-  const summary =
-    segments.length > 0
-      ? segments.join(" · ")
-      : `${totalSpaces} Space${totalSpaces !== 1 ? "s" : ""}`;
+  if (spaceParts.length > 0) {
+    parts.push(spaceParts.join(" · "));
+  } else if (totalSpaces > 0) {
+    parts.push(`${totalSpaces} Space${totalSpaces !== 1 ? "s" : ""}`);
+  }
 
-  return `${summary} · Available to Book`;
+  parts.push("Available to Book");
+
+  return parts.join(" · ");
 }
 
 export function mapClubVenues(
@@ -411,12 +488,21 @@ export function mapClubVenues(
   limit?: number
 ): import("@/components/member/dashboard/types").MemberClubVenue[] {
   if (!clubhouse?.spaces?.length) {
-    // Fallback to curated mock venues when DB has no spaces seeded yet
-    return memberDashboardMock.clubVenues;
+    // No spaces seeded yet — return empty so static layout falls through in the UI
+    return [];
   }
 
-  const spaces = sortClubSpaces(clubhouse.spaces);
-  const sliced = limit !== undefined ? spaces.slice(0, limit) : spaces;
+  // Group by areaType and pick one representative space per group
+  // (the dashboard shows one card per area type, not one per space)
+  const grouped = new Map<string, ClubhouseSpaceRaw>();
+  for (const space of sortClubSpaces(clubhouse.spaces)) {
+    if (!grouped.has(space.areaType)) {
+      grouped.set(space.areaType, space);
+    }
+  }
+
+  const representatives = Array.from(grouped.values());
+  const sliced = limit !== undefined ? representatives.slice(0, limit) : representatives;
 
   return sliced.map((space) => {
     const iconKey = resolveVenueIconKey(space.areaType);
@@ -478,7 +564,7 @@ export function mapMemberDashboard(
   const vehicles = (dashboard?.garage?.vehicles ?? []).map(mapVehicle);
   const diary = events.map(mapDiaryEvent);
   const news = mapNewsItems(notifications);
-  const recentActivity = mapActivityItems(notifications);
+  const recentActivity = mapActivityItems(notifications, dashboard?.recentReservations);
   const clubVenues = mapClubVenues(clubhouse, 3);
   const clubStatusLine = buildClubStatusLine(clubhouse);
 

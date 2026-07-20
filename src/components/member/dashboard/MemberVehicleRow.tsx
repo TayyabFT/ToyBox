@@ -53,8 +53,8 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
   return (
     <div className="group flex overflow-hidden rounded-2xl border border-accent/10 card-view transition-all duration-200 hover:border-accent/20">
 
-      {/* Left — Image block, fixed size, relative for badge overlay */}
-      <div className="relative h-[130px] w-[175px] shrink-0 overflow-hidden bg-elevated">
+      {/* Left — Image block */}
+      <div className="relative h-[110px] w-[120px] shrink-0 overflow-hidden bg-elevated sm:h-[130px] sm:w-[175px]">
         {vehicle.imageUrl ? (
           <img
             src={vehicle.imageUrl}
@@ -97,34 +97,34 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
       </div>
 
       {/* Right — Content */}
-      <div className="flex min-h-0 flex-1 items-center gap-4 px-5 py-4">
+      <div className="flex min-h-0 flex-1 flex-col justify-center gap-3 px-3 py-3 sm:flex-row sm:items-center sm:gap-4 sm:px-5 sm:py-4">
 
         {/* Vehicle info */}
-        <div className="flex-1 space-y-2.5 min-w-0">
-          {/* Name — Brand white, Model gold, wraps naturally */}
+        <div className="flex-1 space-y-2 min-w-0 sm:space-y-2.5">
+          {/* Name — Brand white, Model gold */}
           <div>
-            <h3 className="font-copperplate text-[13px] leading-snug tracking-[0.04em] text-foreground">
+            <h3 className="font-copperplate text-[12px] leading-snug tracking-[0.04em] text-foreground sm:text-[13px]">
               {brand}{" "}
               <span className="text-accent">{model}</span>
             </h3>
-            <p className="font-Roboto mt-0.5 text-[9px] tracking-[0.1em] text-secondary/70 uppercase">
+            <p className="font-Roboto mt-0.5 truncate text-[9px] tracking-[0.1em] text-secondary/70 uppercase">
               {[vehicle.year, vehicle.engine, vehicle.bay].filter(Boolean).join(" · ")}
             </p>
           </div>
 
-          {/* Metrics */}
-          <div className="flex items-start gap-8">
+          {/* Metrics — wrap on small, row on sm+ */}
+          <div className="flex flex-wrap items-start gap-x-5 gap-y-2 sm:gap-8">
             {/* Col 1 */}
             {vehicle.odometer && (
               <div>
                 <p className="font-roboto text-[8px] tracking-[0.12em] text-secondary/50 uppercase">Odometer</p>
-                <p className="font-roboto mt-0.5 text-[13px] text-foreground">{vehicle.odometer}</p>
+                <p className="font-roboto mt-0.5 text-[12px] text-foreground sm:text-[13px]">{vehicle.odometer}</p>
               </div>
             )}
             {vehicle.returns && (
               <div>
                 <p className="font-roboto text-[8px] tracking-[0.12em] text-secondary/50 uppercase">Returns</p>
-                <p className="font-roboto mt-0.5 text-[13px] text-foreground">{vehicle.returns}</p>
+                <p className="font-roboto mt-0.5 text-[12px] text-foreground sm:text-[13px]">{vehicle.returns}</p>
               </div>
             )}
 
@@ -132,22 +132,22 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
             {vehicle.inspected && (
               <div>
                 <p className="font-roboto text-[8px] tracking-[0.12em] text-secondary/50 uppercase">Inspected</p>
-                <p className="font-roboto mt-0.5 text-[13px] text-foreground">{vehicle.inspected}</p>
+                <p className="font-roboto mt-0.5 text-[12px] text-foreground sm:text-[13px]">{vehicle.inspected}</p>
               </div>
             )}
             {vehicle.engineer && (
               <div>
                 <p className="font-roboto text-[8px] tracking-[0.12em] text-secondary/50 uppercase">Engineer</p>
-                <p className="font-roboto mt-0.5 text-[13px] text-foreground">{vehicle.engineer}</p>
+                <p className="font-roboto mt-0.5 text-[12px] text-foreground sm:text-[13px]">{vehicle.engineer}</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* DETAILS button — right side */}
+        {/* DETAILS button */}
         <Link
           href={`/member/garage/${vehicle.id}`}
-          className="shrink-0 flex items-center gap-1.5 rounded-full border border-accent/22 px-4 py-2 transition-all hover:border-accent/40 hover:bg-accent/5"
+          className="shrink-0 self-end flex items-center gap-1.5 rounded-full border border-accent/22 px-3 py-1.5 transition-all hover:border-accent/40 hover:bg-accent/5 sm:self-auto sm:px-4 sm:py-2"
         >
           <span className="font-roboto text-[9px] font-semibold tracking-[0.16em] text-accent uppercase">
             Details

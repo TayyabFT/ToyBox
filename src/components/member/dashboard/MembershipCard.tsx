@@ -35,7 +35,7 @@ export function MembershipCard({
             "radial-gradient(ellipse at 60% 30%, #e8e3d8 0%, #cdc8bc 55%, #c2bdb1 100%)",
         }}
       >
-        <div className="relative flex h-full w-full flex-col justify-between px-8 py-6">
+        <div className="relative flex h-full w-full flex-col justify-between px-5 py-5 sm:px-8 sm:py-6">
           {/* Top */}
           <div className="flex items-center justify-between">
             <Image
@@ -43,45 +43,45 @@ export function MembershipCard({
               alt="Toy Box"
               width={100}
               height={50}
-              className="h-14 w-auto"
+              className="h-9 w-auto sm:h-14"
             />
           </div>
 
           {/* Name — both words dark, no gold split */}
-          <div className="py-2">
+          <div className="py-1 sm:py-2">
             <h2
-              className="font-copperplate uppercase leading-none tracking-[0.04em]"
-              style={{ fontSize: "clamp(30px, 5vw, 35px)", color: "#1a1816" }}
+              className="font-copperplate uppercase leading-tight tracking-[0.04em] text-[clamp(18px,6vw,35px)]"
+              style={{ color: "#1a1816" }}
             >
               {firstName} {lastName}
             </h2>
           </div>
 
           {/* Bottom row */}
-          <div className="flex items-end justify-between">
-            <div className="space-y-1">
+          <div className="flex items-end justify-between gap-2">
+            <div className="space-y-1 min-w-0">
               <p
-                className="font-roboto text-[9px] tracking-[0.22em] uppercase"
+                className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
                 style={{ color: "rgba(26,24,22,0.45)" }}
               >
                 Member
               </p>
               <p
-                className="font-roboto text-[15px] tracking-[0.06em]"
+                className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em] truncate"
                 style={{ color: "rgba(26,24,22,0.70)" }}
               >
                 {memberNumber}
               </p>
             </div>
-            <div className="space-y-1 text-right">
+            <div className="space-y-1 text-right shrink-0">
               <p
-                className="font-roboto text-[9px] tracking-[0.22em] uppercase"
+                className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
                 style={{ color: "rgba(26,24,22,0.45)" }}
               >
                 Founding
               </p>
               <p
-                className="font-roboto text-[15px] tracking-[0.06em]"
+                className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em]"
                 style={{ color: "rgba(26,24,22,0.70)" }}
               >
                 {validityDate ?? memberSince}
@@ -107,7 +107,7 @@ export function MembershipCard({
       }}
     >
       <div
-        className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[16px] px-8 py-6"
+        className="relative flex h-full w-full flex-col justify-between overflow-hidden rounded-[16px] px-5 py-5 sm:px-8 sm:py-6"
         style={{
           background:
             "radial-gradient(ellipse at 18% 60%, #1e1810 0%, #141009 45%, #0d0b07 100%)",
@@ -120,15 +120,14 @@ export function MembershipCard({
             alt="Toy Box"
             width={100}
             height={50}
-            className="h-14 w-auto"
+            className="h-9 w-auto sm:h-14"
           />
         </div>
 
         {/* Name — first white, last gold */}
-        <div className="py-2">
+        <div className="py-1 sm:py-2">
           <h2
-            className="font-copperplate uppercase leading-none tracking-[0.04em]"
-            style={{ fontSize: "clamp(30px, 5vw, 35px)" }}
+            className="font-copperplate uppercase leading-tight tracking-[0.04em] text-[clamp(18px,6vw,35px)]"
           >
             <span style={{ color: "#EDE4CE" }}>{firstName} </span>
             <span style={{ color: "#C9A84C" }}>{lastName}</span>
@@ -136,30 +135,30 @@ export function MembershipCard({
         </div>
 
         {/* Bottom row */}
-        <div className="flex items-end justify-between">
-          <div className="space-y-1">
+        <div className="flex items-end justify-between gap-2">
+          <div className="space-y-1 min-w-0">
             <p
-              className="font-roboto text-[9px] tracking-[0.22em] uppercase"
+              className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
               style={{ color: "rgba(201,168,76,0.55)" }}
             >
               Member
             </p>
             <p
-              className="font-roboto text-[15px] tracking-[0.06em]"
+              className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em] truncate"
               style={{ color: "rgba(237,228,206,0.75)" }}
             >
               {memberNumber}
             </p>
           </div>
-          <div className="space-y-1 text-right">
+          <div className="space-y-1 text-right shrink-0">
             <p
-              className="font-roboto text-[9px] tracking-[0.22em] uppercase"
+              className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
               style={{ color: "rgba(201,168,76,0.55)" }}
             >
               Founding
             </p>
             <p
-              className="font-roboto text-[15px] tracking-[0.06em]"
+              className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em]"
               style={{ color: "rgba(237,228,206,0.75)" }}
             >
               {validityDate ?? memberSince}

@@ -23,7 +23,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
 
       <div className="relative flex gap-4 p-4">
         {/* Thumbnail */}
-        <div className="size-[72px] shrink-0 overflow-hidden rounded-xl bg-elevated flex items-center justify-center">
+        <div className="size-[56px] shrink-0 overflow-hidden rounded-xl bg-elevated flex items-center justify-center sm:size-[72px]">
           {item.imageUrl ? (
             <img
               src={item.imageUrl}
@@ -57,7 +57,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
             <span className="text-secondary/50"> · {item.timeLabel}</span>
           </p>
 
-          <h3 className="font-roboto text-[12px] font-bold leading-snug tracking-[0.03em] text-foreground uppercase">
+          <h3 className="font-roboto text-[11px] sm:text-[12px] font-bold leading-snug tracking-[0.03em] text-foreground uppercase">
             {titlePrefix}
             {titleHighlight && (
               <>
@@ -67,7 +67,7 @@ function NewsCard({ item }: { item: MemberNewsItem }) {
             )}
           </h3>
 
-          <p className="font-roboto line-clamp-2 text-[11px] leading-relaxed text-secondary/75">
+          <p className="font-roboto line-clamp-2 text-[10px] sm:text-[11px] leading-relaxed text-secondary/75">
             {item.subtitle}
           </p>
         </div>
@@ -101,7 +101,7 @@ export function MemberNewsSection({ items }: MemberNewsSectionProps) {
           </p>
         </div>
         <Link
-          href="/member"
+          href="/member/the-club"
           className="flex shrink-0 items-center gap-1 rounded-full border border-accent/30 bg-transparent px-3 py-1.5 transition-all hover:border-accent/50 hover:bg-accent/5 news-all-btn"
         >
           <span className="font-roboto text-[10px] font-semibold tracking-[0.16em] text-accent uppercase">

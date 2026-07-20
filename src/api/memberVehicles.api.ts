@@ -16,20 +16,24 @@ export type MemberGarageListParams = {
 
 export const memberVehiclesApi = {
   /**
-   * GET /api/v1/vehicles?memberId=...&filter=...&garageStatus=...&search=...
-   * Returns the member's full garage list plus tab counts for the filter pills.
+   * GET /api/v1/vehicles?memberId=...&filter=mine&garageStatus=...&search=...
+   * Returns the member's own garage list plus tab counts for the filter pills.
+   * `filter` is always "mine" for member-facing requests — "all" is admin-only.
+   * Tab keys like "ready", "in_service", "modern", etc. go into `garageStatus`.
    */
-  getGarage: ({
-    memberId,
-    garageStatus = "all",
-    filter = "all",
-    search,
-  }: MemberGarageListParams) => {
-    const qs = new URLSearchParams({
-      memberId,
-      filter,
-      garageStatus,
-    });
+  getGarage: ({ memberId, filter = "all", search }: MemberGarageListParams) => {
+    // UI tab "all" → filter=mine (show this member's full collection)
+    // UI tab "priority" → filter=priority
+    // Everything else (status/era tabs) → filter=mine + garageStatus=<tab>
+    const isBackendFilter = filter === "priority";
+
+    const qs = new URLSearchParams({ memberId });
+
+    qs.set("filter", isBackendFilter ? filter : "mine");
+
+    if (filter !== "all" && !isBackendFilter) {
+      qs.set("garageStatus", filter);
+    }
 
     if (search) {
       qs.set("search", search);

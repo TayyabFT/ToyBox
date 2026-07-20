@@ -91,14 +91,16 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
               </p>
             </div>
 
-            <button
-              type="button"
-              onClick={() => setIsDocumentsOpen(true)}
-              className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
-            >
-              View Document
-              <MemberGarageChevronRight className="size-[10px]" color="currentColor" />
-            </button>
+            {vehicle.statusTone !== "in_review" && (
+              <button
+                type="button"
+                onClick={() => setIsDocumentsOpen(true)}
+                className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
+              >
+                View Document
+                <MemberGarageChevronRight className="size-[10px]" color="currentColor" />
+              </button>
+            )}
           </div>
         </div>
       </div>

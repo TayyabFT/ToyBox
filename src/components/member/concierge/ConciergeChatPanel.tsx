@@ -127,7 +127,7 @@ export function ConciergeChatPanel({
   }
 
   return (
-    <section className="flex max-h-[600px] flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
+    <section className="flex h-[calc(100vh-220px)] min-h-[400px] flex-col overflow-hidden rounded-2xl border border-accent/10 bg-card">
       {!enabled ? (
         <div className="flex flex-1 flex-col items-center justify-center py-16 text-center">
           <p className="font-roboto text-[11px] tracking-[0.06em] text-secondary uppercase">

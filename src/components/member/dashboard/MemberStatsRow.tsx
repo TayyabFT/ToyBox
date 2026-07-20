@@ -22,7 +22,7 @@ const ICON_MAP: Record<IconKey, React.ReactNode> = {
 
 export function MemberStatsRow({ kpis }: MemberStatsRowProps) {
   return (
-    <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
+    <div className="grid grid-cols-2 gap-2.5 sm:gap-3 xl:grid-cols-4">
       {kpis.map((kpi, i) => {
         const isFeatured = i === 0;
         const iconKey = kpi.iconKey as IconKey;

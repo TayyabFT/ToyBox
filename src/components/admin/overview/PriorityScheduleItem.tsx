@@ -30,9 +30,9 @@ export function PriorityScheduleItem({
         <p className="font-roboto text-[20px] font-semibold leading-none tracking-[0.04em] text-foreground-soft">
           {time}
         </p>
-        <p className="font-roboto text-[9px] tracking-[0.1em] text-secondary uppercase">
+        {/* <p className="font-roboto text-[9px] tracking-[0.1em] text-secondary uppercase">
           {countdown}
-        </p>
+        </p> */}
       </div>
 
       <div className="min-w-0 flex-1 space-y-1">

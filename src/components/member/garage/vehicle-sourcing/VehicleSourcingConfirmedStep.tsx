@@ -60,13 +60,13 @@ export function VehicleSourcingConfirmedStep({
         </div>
       </div>
 
-      <div className="mt-5 w-full">
+      {/* <div className="mt-5 w-full">
         <ConciergeCard
           name="James Alderton"
           initials="JA"
           subtitle="Acquisition Manager · Available now"
         />
-      </div>
+      </div> */}
     </div>
   );
 }

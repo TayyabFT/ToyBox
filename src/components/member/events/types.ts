@@ -19,6 +19,7 @@ export type EventItem = {
   attendingCount?: number;
   attendingMembers?: { name: string; initial: string }[];
   userStatus?: "going" | "rsvp" | null;
+  isFavorite?: boolean; // Whether the user has bookmarked this event
   isFeatured?: boolean;
   filter: EventFilter[];
   detailLines?: { icon: "pin" | "users" | "badge"; text: string }[];

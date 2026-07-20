@@ -21,9 +21,9 @@ export function StaffLayout({ children }: StaffLayoutProps) {
         mobileOpen={mobileMenuOpen}
         onMobileClose={() => setMobileMenuOpen(false)}
       />
-      <div className="flex min-h-screen flex-1 flex-col overflow-hidden lg:pl-[340px]">
+      <div className="flex min-h-screen flex-1 flex-col lg:pl-[340px]">
         <Topbar role="staff" onMenuClick={() => setMobileMenuOpen(true)} />
-        <main className="flex-1 overflow-auto bg-background">{children}</main>
+        <main className="flex-1 overflow-auto bg-background pt-[72px]">{children}</main>
       </div>
     </div>
   );
