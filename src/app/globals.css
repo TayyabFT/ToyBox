@@ -774,6 +774,84 @@ html[data-theme="dark"] .admin-resolve-btn.admin-gold-cta {
   box-shadow: none !important;
 }
 
+/* ── Garage · Add Vehicle button ────────────────────────────────────── */
+.garage-add-vehicle-btn {
+  position: relative;
+  overflow: hidden;
+  /* rich two-stop gold gradient */
+  background: linear-gradient(135deg, #b8922a 0%, #f0d060 40%, #c9922a 80%, #e8c84a 100%);
+  color: #1a1510;
+  /* crisp top-edge highlight + warm glow */
+  border: 1px solid rgba(255, 230, 120, 0.55);
+  box-shadow:
+    0 0 0 1px rgba(180, 130, 20, 0.25),
+    0 4px 18px rgba(200, 155, 30, 0.45),
+    0 1px 0 rgba(255, 248, 180, 0.6) inset;
+  transition:
+    transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.22s ease,
+    filter 0.22s ease;
+}
+
+/* diagonal sweep shimmer */
+.garage-add-vehicle-btn__shimmer {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 200, 0.35) 50%,
+    transparent 70%
+  );
+  background-size: 200% 100%;
+  background-position: -100% 0;
+  transition: background-position 0.55s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.garage-add-vehicle-btn:hover .garage-add-vehicle-btn__shimmer {
+  background-position: 200% 0;
+}
+
+.garage-add-vehicle-btn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 0 0 1px rgba(200, 160, 30, 0.4),
+    0 8px 28px rgba(200, 155, 30, 0.55),
+    0 1px 0 rgba(255, 248, 180, 0.7) inset;
+  filter: brightness(1.08);
+}
+
+.garage-add-vehicle-btn:active {
+  transform: translateY(0px);
+  box-shadow:
+    0 0 0 1px rgba(180, 130, 20, 0.3),
+    0 2px 10px rgba(200, 155, 30, 0.35),
+    0 1px 0 rgba(255, 248, 180, 0.5) inset;
+  filter: brightness(0.97);
+}
+
+/* light theme variant — warm taupe gradient */
+html[data-theme="light"] .garage-add-vehicle-btn {
+  background: linear-gradient(135deg, #7a6a50 0%, #c8b898 45%, #8a7660 80%, #b8a880 100%) !important;
+  color: #1a1510 !important;
+  border: 1px solid rgba(160, 130, 80, 0.5) !important;
+  box-shadow:
+    0 0 0 1px rgba(120, 95, 50, 0.2),
+    0 4px 16px rgba(120, 90, 30, 0.3),
+    0 1px 0 rgba(220, 200, 160, 0.5) inset !important;
+}
+
+html[data-theme="light"] .garage-add-vehicle-btn:hover {
+  filter: brightness(1.06) !important;
+  box-shadow:
+    0 0 0 1px rgba(120, 95, 50, 0.3),
+    0 8px 24px rgba(120, 90, 30, 0.4),
+    0 1px 0 rgba(220, 200, 160, 0.6) inset !important;
+}
+/* ─────────────────────────────────────────────────────────────────────── */
+
 .admin-modal-panel {
   background-color: var(--card);
   background-image: none;

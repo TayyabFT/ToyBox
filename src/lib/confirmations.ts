@@ -1,5 +1,6 @@
 import { hasResourceId, toResourceId } from "@/lib/resourceId";
 import type {
+  AdminBookingRaw,
   SourcingRequestRaw,
   SourcingSummary,
   SourcingSummaryStat,
@@ -233,6 +234,121 @@ export function createEmptyConfirmationStats(): ConfirmationStatsDisplay {
     completedToday: { ...fallbackStats[2], value: "0" },
     shiftProgress: { ...fallbackStats[3], value: "0%" },
   };
+}
+
+// ── Per-section booking mapping (dedicated section arrays) ──────────────────
+//
+// The staff sourcing-requests endpoint now returns each section's bookings
+// as its own array (pendingBookings / inReviewBookings / confirmedBookings /
+// completedTodayBookings) alongside the combined `requests` list. The panels
+// below are mapped straight from these section arrays instead of splitting
+// the combined list client-side.
+
+function getBookingVehicleTitle(item: AdminBookingRaw): string {
+  const vehicle = item.vehicle;
+
+  if (vehicle && typeof vehicle === "object") {
+    const title =
+      vehicle.displayName?.trim() ||
+      [vehicle.make, vehicle.model].filter(Boolean).join(" ").trim();
+
+    if (title) return title;
+  }
+
+  return "Vehicle offer pending";
+}
+
+function formatBookingApiDate(value?: string): string {
+  if (!value?.trim()) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return value.trim().toUpperCase();
+
+  return date
+    .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+    .toUpperCase();
+}
+
+function formatBookingSchedule(item: AdminBookingRaw, fallbackDate?: string): string {
+  const preferredDates =
+    item.preferredDates && typeof item.preferredDates === "object"
+      ? item.preferredDates
+      : undefined;
+
+  const start = formatBookingApiDate(preferredDates?.start || item.offerStartDate);
+  const end = formatBookingApiDate(preferredDates?.end || item.offerEndDate);
+
+  if (start && end && start !== end) return `${start} – ${end}`;
+  if (start) return start;
+  if (end) return end;
+
+  return formatBookingApiDate(fallbackDate) || "—";
+}
+
+function mapBookingItem(
+  item: AdminBookingRaw,
+  options: { showOfferVehicle: boolean; fallbackDate?: string },
+): ConfirmationRequestItem | null {
+  const id = item.id ?? item.sourcingRequestId;
+
+  if (id === undefined || id === null) return null;
+
+  const memberName = item.member?.name?.trim() || "Member";
+  const memberId = item.member?.id;
+
+  return {
+    id: String(id),
+    vehicle: getBookingVehicleTitle(item),
+    reference: item.referenceNumber?.trim() || `SRC-${id}`,
+    member: memberName.toUpperCase(),
+    memberId: hasResourceId(memberId) ? toResourceId(memberId) : "",
+    memberName,
+    schedule: formatBookingSchedule(item, options.fallbackDate),
+    status: mapConfirmationTone(item.confirmationStatus),
+    confirmationStatus: item.confirmationStatus?.trim().toLowerCase() ?? "",
+    showOfferVehicle: options.showOfferVehicle,
+  };
+}
+
+export function mapConfirmationPendingBookings(
+  bookings: AdminBookingRaw[] | undefined,
+): ConfirmationRequestItem[] {
+  return (bookings ?? [])
+    .map((item) =>
+      mapBookingItem(item, { showOfferVehicle: true, fallbackDate: item.createdAt }),
+    )
+    .filter((item): item is ConfirmationRequestItem => item !== null);
+}
+
+export function mapConfirmationInReviewBookings(
+  bookings: AdminBookingRaw[] | undefined,
+): ConfirmationRequestItem[] {
+  return (bookings ?? [])
+    .map((item) =>
+      mapBookingItem(item, { showOfferVehicle: false, fallbackDate: item.assignedAt }),
+    )
+    .filter((item): item is ConfirmationRequestItem => item !== null);
+}
+
+export function mapConfirmationConfirmedBookings(
+  bookings: AdminBookingRaw[] | undefined,
+): ConfirmationRequestItem[] {
+  return (bookings ?? [])
+    .map((item) =>
+      mapBookingItem(item, { showOfferVehicle: false, fallbackDate: item.confirmedAt }),
+    )
+    .filter((item): item is ConfirmationRequestItem => item !== null);
+}
+
+export function mapConfirmationCompletedBookings(
+  bookings: AdminBookingRaw[] | undefined,
+): ConfirmationRequestItem[] {
+  return (bookings ?? [])
+    .map((item) =>
+      mapBookingItem(item, { showOfferVehicle: false, fallbackDate: item.confirmedAt }),
+    )
+    .filter((item): item is ConfirmationRequestItem => item !== null);
 }
 
 export function getInReviewPendingCount(data: unknown): number {

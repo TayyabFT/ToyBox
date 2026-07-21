@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MemberGreeting } from "@/components/member/dashboard/MemberGreeting";
 import { MembershipCard } from "@/components/member/dashboard/MembershipCard";
 import { ClubBanner } from "@/components/member/dashboard/ClubBanner";
@@ -12,6 +12,7 @@ import { MemberClubSection } from "@/components/member/dashboard/MemberClubSecti
 import { MemberNewsSection } from "@/components/member/dashboard/MemberNewsSection";
 import { MemberActivitySection } from "@/components/member/dashboard/MemberActivitySection";
 import { MemberDashboardSkeleton } from "@/components/member/dashboard/MemberDashboardSkeleton";
+import { VehicleSourcingModal } from "@/components/member/garage/vehicle-sourcing/VehicleSourcingModal";
 import { showError } from "@/lib/toast";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { fetchMemberDashboard } from "@/store/slices/memberDashboardSlice";
@@ -21,6 +22,7 @@ export function MemberDashboard() {
   const { data, quickActions, loading, loaded, error } = useAppSelector(
     (state) => state.memberDashboard,
   );
+  const [sourcingOpen, setSourcingOpen] = useState(false);
 
   const loadDashboard = useCallback(async (force?: boolean) => {
     const result = await dispatch(fetchMemberDashboard(force));
@@ -100,7 +102,7 @@ export function MemberDashboard() {
 
       <MemberStatsRow kpis={data.kpis} />
 
-      <MemberQuickActions actions={quickActions} />
+      <MemberQuickActions actions={quickActions} onSourcingClick={() => setSourcingOpen(true)} />
 
       {/* Collection + Diary — stacks on mobile, side-by-side on xl */}
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.5fr_1fr] mb-6 md:mb-10">
@@ -118,6 +120,11 @@ export function MemberDashboard() {
         <MemberNewsSection items={data.news} />
         <MemberActivitySection items={data.recentActivity} />
       </div>
+
+      <VehicleSourcingModal
+        open={sourcingOpen}
+        onClose={() => setSourcingOpen(false)}
+      />
     </div>
   );
 }

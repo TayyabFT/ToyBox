@@ -104,7 +104,22 @@ export function MemberDiary() {
       .getDiary()
       .then((res) => {
         if (res.success && res.data) {
-          setData(res.data);
+          const diaryData = res.data;
+
+          // Replace the backend "DRIVES" stat with "SERVICES" computed from
+          // diary entries — no backend change needed.
+          const allEntries = diaryData.groups.flatMap((g) => g.entries);
+          const servicesCount = allEntries.filter((e) =>
+            ["service", "parking", "reservation", "acquisition"].includes(e.kind),
+          ).length;
+
+          const remappedStats = diaryData.stats.map((s) =>
+            s.label === "DRIVES"
+              ? { value: String(servicesCount), label: "SERVICES" }
+              : s,
+          );
+
+          setData({ ...diaryData, stats: remappedStats });
         } else {
           setError(res.message || "Failed to load diary");
         }

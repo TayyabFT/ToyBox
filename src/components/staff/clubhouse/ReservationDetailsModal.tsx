@@ -222,9 +222,9 @@ export function ReservationDetailsModal({
 
         {actionable && reservation ? (
           <div className="flex gap-3 border-t border-accent/10 px-6 py-5">
-            <FooterButton disabled={busy} onClick={onEdit}>
+            {/* <FooterButton disabled={busy} onClick={onEdit}>
               Edit
-            </FooterButton>
+            </FooterButton> */}
             <FooterButton disabled={busy} variant="danger" onClick={onCancel}>
               Cancel
             </FooterButton>

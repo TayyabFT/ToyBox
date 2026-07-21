@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ConfirmationPendingClock,
   ConfirmationShiftProgress,
@@ -11,9 +11,11 @@ import { sourcingApi } from "@/api/sourcing.api";
 import {
   createEmptyConfirmationStats,
   getInReviewPendingCount,
+  mapConfirmationCompletedBookings,
+  mapConfirmationConfirmedBookings,
+  mapConfirmationInReviewBookings,
+  mapConfirmationPendingBookings,
   mapConfirmationSummary,
-  mapSourcingRequests,
-  splitConfirmationRequests,
 } from "@/lib/confirmations";
 import { showError } from "@/lib/toast";
 import { StatCard } from "@/components/staff/overview/StatCard";
@@ -30,7 +32,10 @@ export function ConfirmationsPage() {
   const [stats, setStats] = useState<ConfirmationStatsDisplay>(
     createEmptyConfirmationStats(),
   );
-  const [requests, setRequests] = useState<ConfirmationRequestItem[]>([]);
+  const [pending, setPending] = useState<ConfirmationRequestItem[]>([]);
+  const [inReview, setInReview] = useState<ConfirmationRequestItem[]>([]);
+  const [confirmed, setConfirmed] = useState<ConfirmationRequestItem[]>([]);
+  const [completed, setCompleted] = useState<ConfirmationRequestItem[]>([]);
   const [inReviewCount, setInReviewCount] = useState(0);
   const [offerRequest, setOfferRequest] = useState<ConfirmationRequestItem | null>(
     null,
@@ -41,18 +46,24 @@ export function ConfirmationsPage() {
 
     try {
       const response = await sourcingApi.getStaffRequests();
-      const items = mapSourcingRequests(response.data);
+      const { data } = response;
 
-      setRequests(items);
-      setStats(mapConfirmationSummary(response.data));
-      setInReviewCount(getInReviewPendingCount(response.data));
+      setPending(mapConfirmationPendingBookings(data.pendingBookings));
+      setInReview(mapConfirmationInReviewBookings(data.inReviewBookings));
+      setConfirmed(mapConfirmationConfirmedBookings(data.confirmedBookings));
+      setCompleted(mapConfirmationCompletedBookings(data.completedTodayBookings));
+      setStats(mapConfirmationSummary(data));
+      setInReviewCount(getInReviewPendingCount(data));
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
         "Failed to load bookings";
 
       showError(message);
-      setRequests([]);
+      setPending([]);
+      setInReview([]);
+      setConfirmed([]);
+      setCompleted([]);
       setStats(createEmptyConfirmationStats());
       setInReviewCount(0);
     } finally {
@@ -63,11 +74,6 @@ export function ConfirmationsPage() {
   useEffect(() => {
     loadConfirmations();
   }, [loadConfirmations]);
-
-  const { pending, inReview, confirmed, completed } = useMemo(
-    () => splitConfirmationRequests(requests),
-    [requests],
-  );
 
   return (
     <div className="space-y-8 p-8">

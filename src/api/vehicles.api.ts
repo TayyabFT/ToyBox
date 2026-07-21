@@ -33,10 +33,11 @@ export const vehiclesApi = {
     return apiClient<VehicleInventoryResponse>(endpoint);
   },
 
-  addToInventory: (form: AddVehicleFormState) => {
+  addToInventory: (form: AddVehicleFormState, apiUrl?: string) => {
+    const endpoint = apiUrl || API_ENDPOINTS.vehicles.inventory;
     if (hasDocumentFiles(form)) {
       return apiClient<AddVehicleInventoryResponse>(
-        API_ENDPOINTS.vehicles.inventory,
+        endpoint,
         {
           method: "POST",
           formData: buildAddVehicleFormData(form),
@@ -45,7 +46,7 @@ export const vehiclesApi = {
     }
 
     return apiClient<AddVehicleInventoryResponse>(
-      API_ENDPOINTS.vehicles.inventory,
+      endpoint,
       {
         method: "POST",
         body: buildAddVehicleJsonPayload(form),

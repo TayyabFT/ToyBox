@@ -8,8 +8,9 @@ import { MemberGarageCard } from "./MemberGarageCard";
 import { MemberGarageFilters } from "./MemberGarageFilters";
 import { MemberGarageHeader } from "./MemberGarageHeader";
 import { MemberGarageSkeleton, MemberGarageCardsSkeleton } from "./MemberGarageSkeleton";
-import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
 import type { GarageFilter, GarageFilterKey, GarageVehicle } from "./types";
+import { AddVehicleModal } from "@/components/staff/vehicles/add-vehicle";
+import { API_ENDPOINTS } from "@/api/endpoints";
 
 function GarageEmptyState({ filter }: { filter: GarageFilterKey }) {
   const isFiltered = filter !== "all";
@@ -66,7 +67,8 @@ export function MemberGaragePage() {
   const [loading, setLoading] = useState(true);
   const [initialLoaded, setInitialLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sourcingOpen, setSourcingOpen] = useState(false);
+  const [addVehicleOpen, setAddVehicleOpen] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -134,7 +136,7 @@ export function MemberGaragePage() {
     return () => {
       cancelled = true;
     };
-  }, [memberId, activeFilter]);
+  }, [memberId, activeFilter, refreshTrigger]);
 
   // Initial load only — show full-page skeleton until the very first response resolves.
   if (!initialLoaded && loading && !error) {
@@ -143,7 +145,7 @@ export function MemberGaragePage() {
 
   return (
     <div className="space-y-5 sm:space-y-6 p-4 sm:p-6 lg:p-8">
-      <MemberGarageHeader onSourcingClick={() => setSourcingOpen(true)} />
+      <MemberGarageHeader onAddVehicleClick={() => setAddVehicleOpen(true)} />
 
       {error ? (
         <p className="font-roboto rounded-xl border border-pink/20 bg-pink/5 px-4 py-3 text-[12px] text-pink">
@@ -169,9 +171,11 @@ export function MemberGaragePage() {
         </div>
       )}
 
-      <VehicleSourcingModal
-        open={sourcingOpen}
-        onClose={() => setSourcingOpen(false)}
+      <AddVehicleModal
+        open={addVehicleOpen}
+        onClose={() => setAddVehicleOpen(false)}
+        onSuccess={() => setRefreshTrigger((prev) => prev + 1)}
+        apiUrl={API_ENDPOINTS.memberVehicles.list}
       />
     </div>
   );

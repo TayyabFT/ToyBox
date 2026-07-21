@@ -528,7 +528,7 @@ export function mapQuickActions(
   return [
     { id: "garage", title: "Garage", subtitle: "View Collection", href: "/member/garage" },
     { id: "concierge", title: "Concierge", subtitle: "Contact James", href: "/member/concierge" },
-    { id: "book", title: "Book", subtitle: "Reserve a spot", href: "/member/concierge" },
+    { id: "book", title: "Parking", subtitle: "Reserve a spot", href: "/member/garage" },
     { id: "sourcing", title: "Source", subtitle: "Find Rare Cars", href: "/member/garage" },
   ];
 }

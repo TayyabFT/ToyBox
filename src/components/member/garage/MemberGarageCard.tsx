@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { MemberGarageChevronRight } from "@/components/common/Svgs";
+import { resolveAssetUrl } from "@/lib/resolveAssetUrl";
 import type { GarageVehicle, GarageVehicleStatusTone } from "./types";
 
 const statusToneClass: Record<GarageVehicleStatusTone, string> = {
@@ -20,7 +21,7 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
       <div className="relative h-[180px] sm:h-[220px] w-full bg-elevated">
         {vehicle.imageUrl ? (
           <img
-            src={vehicle.imageUrl}
+            src={resolveAssetUrl(vehicle.imageUrl)}
             alt={`${vehicle.make} ${vehicle.model}`}
             className="h-full w-full object-cover"
           />

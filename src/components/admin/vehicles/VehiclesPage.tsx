@@ -105,7 +105,7 @@ export function VehiclesPage() {
         activeSummaryKey={activeSummaryKey}
         onSummaryClick={handleSummaryClick}
       />
-      <BayMap bayMap={bayMap} loading={loading} />
+      {/* <BayMap bayMap={bayMap} loading={loading} /> */}
       <VehicleOperations
         operations={operations}
         activeFilter={activeFilter}
@@ -116,6 +116,10 @@ export function VehiclesPage() {
         total={total}
         onPageChange={setPage}
       />
+
+
+
+      
       <AddVehicleModal
         open={addVehicleOpen}
         onClose={() => setAddVehicleOpen(false)}

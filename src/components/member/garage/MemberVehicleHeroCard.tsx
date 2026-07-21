@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import { VehicleDocumentsModal } from "./VehicleDocumentsModal";
+import { resolveAssetUrl } from "@/lib/resolveAssetUrl";
 import type { GarageVehicleStatusTone, MemberVehicleDetail } from "./types";
 
 const statusToneClass: Record<GarageVehicleStatusTone, string> = {
@@ -26,7 +27,7 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
         <div className="relative h-[200px] sm:h-[240px] w-full">
           {vehicle.imageUrl ? (
             <img
-              src={vehicle.imageUrl}
+              src={resolveAssetUrl(vehicle.imageUrl)}
               alt={`${vehicle.make} ${vehicle.model}`}
               className="h-full w-full object-cover"
             />

@@ -30,12 +30,14 @@ type AddVehicleModalProps = {
   open: boolean;
   onClose: () => void;
   onSuccess?: () => void | Promise<void>;
+  apiUrl?: string;
 };
 
 export function AddVehicleModal({
   open,
   onClose,
   onSuccess,
+  apiUrl,
 }: AddVehicleModalProps) {
   const { theme } = useTheme();
   const isLight = theme === "light";
@@ -94,7 +96,7 @@ export function AddVehicleModal({
     setSubmitting(true);
 
     try {
-      const response = await vehiclesApi.addToInventory(form);
+      const response = await vehiclesApi.addToInventory(form, apiUrl);
 
       showSuccess(response.message || "Vehicle added successfully");
       resetForm();

@@ -1826,6 +1826,10 @@ export type SourcingRequestRaw = {
 
 export type StaffSourcingRequestsData = {
   summary?: SourcingSummary;
+  pendingBookings?: AdminBookingRaw[];
+  inReviewBookings?: AdminBookingRaw[];
+  confirmedBookings?: AdminBookingRaw[];
+  completedTodayBookings?: AdminBookingRaw[];
   requests?: SourcingRequestRaw[];
   total?: number;
   count?: number;
@@ -1869,6 +1873,7 @@ export type AdminBookingRaw = {
   status?: string;
   assignedAt?: string;
   confirmedAt?: string;
+  createdAt?: string;
 };
 
 export type AdminInReviewBookingRaw = AdminBookingRaw;
