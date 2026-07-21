@@ -2,7 +2,7 @@
 
 // ── Field label ───────────────────────────────────────────────────────────────
 
-export function RequestFieldLabel({ children }: { children: string }) {
+export function RequestFieldLabel({ children }: { children: React.ReactNode }) {
   return (
     <p className="font-roboto text-[10px] font-medium tracking-[0.18em] text-section-label uppercase">
       {children}
