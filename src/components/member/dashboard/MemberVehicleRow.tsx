@@ -7,15 +7,27 @@ const statusConfig: Record<
 > = {
   ready: {
     label: "READY",
-    badgeCls: "border-teal/40 bg-teal/12 text-teal",
+    badgeCls: "border-teal/60 bg-teal/25 text-teal",
   },
   in_service: {
     label: "IN SERVICE",
-    badgeCls: "border-accent/40 bg-accent/12 text-accent",
+    badgeCls: "border-accent/60 bg-accent/25 text-accent",
   },
   scheduled: {
     label: "SCHEDULED",
-    badgeCls: "border-accent/30 bg-accent/10 text-accent",
+    badgeCls: "border-accent/60 bg-accent/25 text-accent",
+  },
+  stored: {
+    label: "STORED",
+    badgeCls: "border-accent/50 bg-dark/80 text-accent",
+  },
+  away: {
+    label: "AWAY",
+    badgeCls: "border-accent/50 bg-dark/80 text-accent",
+  },
+  in_review: {
+    label: "IN REVIEW",
+    badgeCls: "border-pink/60 bg-pink/20 text-pink",
   },
 };
 
@@ -87,9 +99,9 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
 
         {/* Status badge — overlaid on bottom-left of image */}
         <div className="absolute bottom-2.5 left-2.5">
-          <div className={`flex items-center gap-1 rounded-full border px-2 py-0.5 backdrop-blur-sm ${st.badgeCls}`}>
-            <span className="size-1 shrink-0 rounded-full bg-current" />
-            <span className="font-roboto text-[8px] font-bold tracking-[0.1em]">
+          <div className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1 backdrop-blur-sm ${st.badgeCls}`}>
+            <span className="size-1.5 shrink-0 rounded-full bg-current" />
+            <span className="font-roboto text-[9px] font-bold tracking-[0.12em]">
               {st.label}
             </span>
           </div>

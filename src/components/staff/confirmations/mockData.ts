@@ -2,7 +2,7 @@ import type { ConfirmationStatItem } from "./types";
 
 export const confirmationStats: ConfirmationStatItem[] = [
   {
-    label: "Pending Confirm",
+    label: "Assigned",
     value: "5",
     subtext: "Awaiting Your Action",
   },

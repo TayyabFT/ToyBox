@@ -9,7 +9,7 @@ import type {
 
 export const serviceRequestStats: ServiceRequestStat[] = [
   {
-    label: "Pending Confirm",
+    label: "Assigned",
     value: "0",
     subtext: "Awaiting your action",
     icon: "urgent",

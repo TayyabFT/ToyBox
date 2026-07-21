@@ -222,13 +222,19 @@ export function AdminOverviewPage() {
   const staffOnShift = overview?.staffOnShift;
   const todaySchedule = overview?.todaySchedule;
 
-  const tickerItems = (ticker?.alerts ?? []).slice(0, TICKER_VISIBLE_COUNT).map((a) => {
-    const dashIdx = a.message.indexOf(" — ");
-    return {
-      highlight: dashIdx > -1 ? a.message.slice(0, dashIdx) : a.message,
-      detail: a.detail,
-    };
-  });
+  const criticalTickerAlerts = (ticker?.alerts ?? []).filter(
+    (alert) => alert.severity?.trim().toLowerCase() === "critical",
+  );
+  const criticalTickerCount = criticalTickerAlerts.length;
+  const tickerItems = criticalTickerAlerts
+    .slice(0, TICKER_VISIBLE_COUNT)
+    .map((a) => {
+      const dashIdx = a.message.indexOf(" — ");
+      return {
+        highlight: dashIdx > -1 ? a.message.slice(0, dashIdx) : a.message,
+        detail: a.detail,
+      };
+    });
 
   const queueRows = (conciergeQueue?.items ?? []).map((item) => ({
     initial: item.memberName.charAt(0).toUpperCase(),
@@ -262,9 +268,9 @@ export function AdminOverviewPage() {
     <div className="space-y-7 p-8">
       <DashboardGreeting greeting={greeting.greeting} name={greeting.name} />
 
-      {(ticker?.criticalCount ?? 0) > 0 && (
+      {criticalTickerCount > 0 && (
         <UrgentAlertBar
-          count={ticker!.criticalCount}
+          count={criticalTickerCount}
           items={tickerItems}
           actionLabel="Review all"
           onReviewAll={scrollToCriticalAlerts}

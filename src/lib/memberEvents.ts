@@ -52,7 +52,6 @@ function mapCategory(category?: string): EventFilter {
     auctions: "auctions",
     dining:   "dining",
     track:    "track",
-    concours: "concours",
   };
   return map[category?.toLowerCase() ?? ""] ?? "all";
 }
@@ -66,7 +65,6 @@ function tagFromCategory(
     auctions: { tag: "AUCTION", tagTone: "gold" },
     dining:   { tag: "DINING",  tagTone: "teal" },
     track:    { tag: "TRACK",   tagTone: "gold" },
-    concours: { tag: "SHOW",    tagTone: "teal" },
     social:   { tag: "SOCIAL",  tagTone: "pink" },
   };
   return map[category?.toLowerCase() ?? ""] ?? { tag: "EVENT", tagTone: "gold" };
@@ -158,27 +156,10 @@ export function groupFlatEvents(
   rawEvents: MemberEventRaw[],
   refDate: Date = new Date(),
 ) {
-  // Map all rows without the featured override — tags are based on category.
-  // We apply "FEATURED TONIGHT" only to the single hero card below.
-  const mapped = rawEvents.map((r) => mapMemberEventRaw(r, false));
+  // ── Date boundaries ─────────────────────────────────────────────────────
 
-  // Determine the active featured hero event: prefer one explicitly flagged
-  // isFeatured by the API, otherwise fall back to the first event.
-  const heroRaw = rawEvents.find((r) => r.isFeatured) ?? rawEvents[0];
-  const heroEvent = heroRaw
-    ? mapMemberEventRaw(heroRaw, true)  // hero gets "FEATURED TONIGHT" tag
-    : null;
-
-  // The featured list returned should only contain the active hero
-  const featured = heroEvent ? [heroEvent] : [];
-  
-  // All remaining events to be grouped in the grids (excluding the hero)
-  const gridEvents = mapped.filter((e) => e.id !== heroEvent?.id);
-
-  // Date boundaries
-  const ref = new Date(refDate);
-  
   // Monday of the reference week
+  const ref = new Date(refDate);
   const day = ref.getDay();
   const diff = ref.getDate() - day + (day === 0 ? -6 : 1);
   const weekStart = new Date(ref.setDate(diff));
@@ -195,10 +176,47 @@ export function groupFlatEvents(
   const nextEnd = new Date(refDate.getFullYear(), refDate.getMonth() + 2, 0);
   nextEnd.setHours(23, 59, 59, 999);
 
+  // Helper: is this raw event in the past?
+  const isEventPast = (r: MemberEventRaw) => {
+    const d = new Date(r.startsAt ?? "");
+    return !isNaN(d.getTime()) && d.getTime() < weekStart.getTime();
+  };
+
+  // ── Hero selection ───────────────────────────────────────────────────────
+  // Prefer a non-past isFeatured event, then any non-past event,
+  // then fall back to the first event (may be past — handled below).
+
+  const heroRaw =
+    rawEvents.find((r) => r.isFeatured && !isEventPast(r)) ??
+    rawEvents.find((r) => !isEventPast(r)) ??
+    rawEvents[0];
+
+  const heroIsPast = heroRaw ? isEventPast(heroRaw) : false;
+
+  // Hero only gets "FEATURED TONIGHT" tag when it is a current/future event
+  const heroEvent = heroRaw
+    ? mapMemberEventRaw(heroRaw, !heroIsPast)
+    : null;
+
+  // The featured list holds only the hero (it may be empty if all events are past)
+  // If the hero is past, it belongs in past[] not featured[]
+  const featured = heroEvent && !heroIsPast ? [heroEvent] : [];
+
+  // Map all rows without the featured override for grid display
+  const mapped = rawEvents.map((r) => mapMemberEventRaw(r, false));
+
+  // All events to be grouped in grids (excluding the hero)
+  const gridEvents = mapped.filter((e) => e.id !== heroEvent?.id);
+
   const thisWeek: EventItem[] = [];
   const nextMonth: EventItem[] = [];
   const otherUpcoming: EventItem[] = [];
   const past: EventItem[] = [];
+
+  // If hero is past, include it in the past list so isPast works correctly
+  if (heroEvent && heroIsPast) {
+    past.push(heroEvent);
+  }
 
   for (const e of gridEvents) {
     if (!e.dateLabel) {

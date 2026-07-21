@@ -3,12 +3,11 @@ import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import type { GarageVehicle, GarageVehicleStatusTone } from "./types";
 
 const statusToneClass: Record<GarageVehicleStatusTone, string> = {
-  ready:      "border-teal/40 bg-teal/15 text-teal-700 dark:text-teal-300",
-  in_service: "border-pink/40 bg-pink/15 text-pink",
-  away:       "border-accent/40 bg-accent/15 text-foreground font-semibold",
-  stored:     "border-accent/40 bg-black/55 text-foreground backdrop-blur-sm",
-  in_review:  "border-info/30 bg-info/10 text-foreground backdrop-blur-sm",
-
+  ready:      "border-teal/60 bg-teal/25 text-teal",
+  in_service: "border-accent/60 bg-accent/25 text-accent",
+  away:       "border-accent/50 bg-dark/85 text-accent backdrop-blur-sm",
+  stored:     "border-accent/50 bg-dark/85 text-accent backdrop-blur-sm",
+  in_review:  "border-pink/60 bg-pink/20 text-pink backdrop-blur-sm",
 };
 
 type MemberGarageCardProps = {

@@ -144,35 +144,94 @@ export function MemberEvents() {
 
   // ── Render helpers ────────────────────────────────────────────────────────
 
-  // Compute the event currently displayed as the active hero card
-  const activeHero =
-    (selectedEventId &&
-      [...featured, ...thisWeek, ...nextMonth, ...otherUpcoming, ...past].find(
-        (e) => e.id === selectedEventId,
-      )) ||
-    featured[0] ||
-    thisWeek[0] ||
-    nextMonth[0] ||
-    otherUpcoming[0] ||
-    past[0] ||
-    null;
+  // The "default" hero is the best non-past event (what loads on page load)
+  const defaultHero =
+    featured[0] ?? thisWeek[0] ?? nextMonth[0] ?? otherUpcoming[0] ?? past[0] ?? null;
 
-  // Filter the currently active hero event out of all lists to prevent duplication
+  // The actively selected hero (null means use default)
+  const selectedEvent =
+    selectedEventId
+      ? [...featured, ...thisWeek, ...nextMonth, ...otherUpcoming, ...past].find(
+          (e) => e.id === selectedEventId,
+        ) ?? null
+      : null;
+
+  const activeHero = selectedEvent ?? defaultHero;
+
+  // Whether the hero being shown is a past event
+  const heroIsPast = past.some((e) => e.id === activeHero?.id);
+
+  // When a past event is selected as hero, the defaultHero (an upcoming event
+  // that lives in featured[]) would disappear from the page entirely because
+  // featured[] is not rendered in the grids. Re-inject it into the appropriate
+  // upcoming group so it stays visible.
+  const injectedFeatured =
+    heroIsPast && defaultHero && !past.some((e) => e.id === defaultHero.id)
+      ? defaultHero
+      : null;
+
+  // Build grid groups. Exclude the active hero only when it is a non-past event
+  // (prevents duplication). Past hero stays in PAST EVENTS grid so upcoming
+  // sections remain intact.
+  const excludeFromGridId = heroIsPast ? null : activeHero?.id;
+
   const groups = [
-    { id: "this-week", label: "THIS WEEK", events: thisWeek.filter((e) => e.id !== activeHero?.id) },
-    { id: "next-month", label: "NEXT MONTH", events: nextMonth.filter((e) => e.id !== activeHero?.id) },
-    { id: "other-upcoming", label: "UPCOMING", events: otherUpcoming.filter((e) => e.id !== activeHero?.id) },
-    { id: "past-events", label: "PAST EVENTS", events: past.filter((e) => e.id !== activeHero?.id) },
+    {
+      id: "this-week",
+      label: "THIS WEEK",
+      events: [
+        ...(injectedFeatured && thisWeek.length === 0 && nextMonth.length === 0 && otherUpcoming.length === 0 ? [] : []),
+        ...thisWeek.filter((e) => e.id !== excludeFromGridId),
+      ],
+    },
+    {
+      id: "next-month",
+      label: "NEXT MONTH",
+      events: nextMonth.filter((e) => e.id !== excludeFromGridId),
+    },
+    {
+      id: "other-upcoming",
+      label: "UPCOMING",
+      // Inject the displaced featured event into "Upcoming" if no other group will show it
+      events: [
+        ...( injectedFeatured &&
+             !thisWeek.some((e) => e.id === injectedFeatured.id) &&
+             !nextMonth.some((e) => e.id === injectedFeatured.id)
+          ? [injectedFeatured]
+          : []
+        ),
+        ...otherUpcoming.filter((e) => e.id !== excludeFromGridId),
+      ],
+    },
+    {
+      id: "past-events",
+      label: "PAST EVENTS",
+      events: past.filter((e) => e.id !== excludeFromGridId),
+    },
   ].filter((g) => g.events.length > 0);
 
   const isFirstLoad = loading && !loaded;
+
+  // ── Eyebrow status label ──────────────────────────────────────────────────
+  // Derive which group the active hero belongs to, so the eyebrow reflects
+  // the currently displayed event rather than just the first non-empty group.
+
+  const eyebrowLabel = (() => {
+    if (!loaded || !activeHero) return "Upcoming";
+    if (featured.some((e) => e.id === activeHero.id))    return "Featured";
+    if (thisWeek.some((e) => e.id === activeHero.id))    return "This Week";
+    if (nextMonth.some((e) => e.id === activeHero.id))   return "Next Month";
+    if (otherUpcoming.some((e) => e.id === activeHero.id)) return "Upcoming";
+    if (past.some((e) => e.id === activeHero.id))        return "Past";
+    return "Upcoming";
+  })();
 
   // ── Return ────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-8 p-8">
       <div className="space-y-2">
-        <p className={memberPageEyebrowClass}>Upcoming</p>
+        <p className={memberPageEyebrowClass}>{eyebrowLabel}</p>
         <h1 className={memberPageTitleClass}>
           <span className={memberPageTitleAccentClass}>Events</span>
         </h1>
@@ -201,6 +260,7 @@ export function MemberEvents() {
       ) : activeHero ? (
         <EventsFeaturedCard
           event={activeHero}
+          isPast={heroIsPast}
           rsvpLoading={!!rsvpLoading[activeHero.id]}
           favoriteLoading={!!favoriteLoading[activeHero.id]}
           onRsvpToggle={handleRsvpToggle}
