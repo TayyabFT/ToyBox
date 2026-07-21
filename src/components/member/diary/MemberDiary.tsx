@@ -106,20 +106,35 @@ export function MemberDiary() {
         if (res.success && res.data) {
           const diaryData = res.data;
 
-          // Replace the backend "DRIVES" stat with "SERVICES" computed from
-          // diary entries — no backend change needed.
-          const allEntries = diaryData.groups.flatMap((g) => g.entries);
-          const servicesCount = allEntries.filter((e) =>
-            ["service", "parking", "reservation", "acquisition"].includes(e.kind),
+          // Strip service-request entries from every group
+          const filteredGroups = diaryData.groups
+            .map((group) => {
+              const filteredEntries = group.entries.filter(
+                (e) => e.kind !== "service",
+              );
+              const count = filteredEntries.length;
+              return {
+                ...group,
+                entries: filteredEntries,
+                countLabel: `${count} ${count === 1 ? "ENTRY" : "ENTRIES"}`,
+              };
+            })
+            .filter((group) => group.entries.length > 0);
+
+          // Replace the backend "DRIVES" stat with "RESERVATION" —
+          // count all clubhouse reservation diary entries.
+          const allEntries = filteredGroups.flatMap((g) => g.entries);
+          const reservationCount = allEntries.filter(
+            (e) => e.kind === "reservation",
           ).length;
 
           const remappedStats = diaryData.stats.map((s) =>
             s.label === "DRIVES"
-              ? { value: String(servicesCount), label: "SERVICES" }
+              ? { value: String(reservationCount), label: "RESERVATION" }
               : s,
           );
 
-          setData({ ...diaryData, stats: remappedStats });
+          setData({ ...diaryData, groups: filteredGroups, stats: remappedStats });
         } else {
           setError(res.message || "Failed to load diary");
         }

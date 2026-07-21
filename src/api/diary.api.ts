@@ -146,13 +146,44 @@ function getGroupId(rawDate: Date): "this-week" | "earlier-this-month" | "earlie
   return "earlier";
 }
 
+// Parse a formatted dateLabel like "SAT 26 APR" back into a sortable Date.
+// Falls back to epoch (0) when parsing fails.
+function parseDateLabel(label: string | undefined): Date {
+  if (!label) return new Date(0);
+  // Expected format: "DAY DD MON" e.g. "SAT 26 APR"
+  const parts = label.trim().split(/\s+/);
+  if (parts.length < 3) return new Date(0);
+  const day = parseInt(parts[1], 10);
+  const monthStr = parts[2];
+  const MONTHS = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+  const month = MONTHS.indexOf(monthStr.toUpperCase());
+  if (isNaN(day) || month === -1) return new Date(0);
+  // Use current year as baseline; if month is in the future assume previous year
+  const now = new Date();
+  let year = now.getFullYear();
+  if (month > now.getMonth()) year -= 1;
+  return new Date(year, month, day, 23, 59, 59);
+}
+
 // ── Merge parking sessions into existing diary groups ────────────────────────
 
 function mergeParkingIntoGroups(
   groups: DiaryGroup[],
   sessions: ParkingSessionRaw[],
 ): DiaryGroup[] {
-  if (sessions.length === 0) return groups;
+  if (sessions.length === 0) {
+    // Even with no parking sessions, sort each existing group's entries newest-first
+    return groups
+      .map((group) => {
+        const sorted = [...group.entries].sort((a, b) => {
+          const aDate = parseDateLabel(a.dateLabel);
+          const bDate = parseDateLabel(b.dateLabel);
+          return bDate.getTime() - aDate.getTime();
+        });
+        return { ...group, entries: sorted };
+      })
+      .filter((g) => g.entries.length > 0);
+  }
 
   const entries = sessions
     .map(mapSessionToDiaryEntry)
@@ -167,11 +198,14 @@ function mergeParkingIntoGroups(
     "earlier": { label: "EARLIER" },
   };
 
-  // Pre-populate with existing groups; attach a rawDate for sorting by cloning entries
+  // Pre-populate with existing groups; tag each entry with a parsed date for sorting
   for (const group of groups) {
     groupMap.set(group.id, {
       ...group,
-      rawEntries: group.entries.map((e) => ({ ...e, rawDate: new Date(0) })),
+      rawEntries: group.entries.map((e) => ({
+        ...e,
+        rawDate: parseDateLabel(e.dateLabel),
+      })),
     });
   }
 
@@ -191,11 +225,7 @@ function mergeParkingIntoGroups(
     groupMap.get(gid)!.entries.push(entry);
   }
 
-  // Re-sort each group's entries: parking entries mixed with existing ones
-  // For existing (non-parking) entries we don't have rawDate, so just push parking
-  // entries to the front/back based on whether it's an "earlier" group or recent.
-  // Simple approach: for each group, sort parking entries by rawDate desc and
-  // prepend them before the existing non-parking entries.
+  // Groups emitted newest-first
   const GROUP_ORDER: Array<"this-week" | "earlier-this-month" | "earlier"> = [
     "this-week", "earlier-this-month", "earlier",
   ];
@@ -206,25 +236,20 @@ function mergeParkingIntoGroups(
     const group = groupMap.get(gid);
     if (!group) continue;
 
-    // Separate parking entries from existing entries
-    const parkingEntries = group.entries
-      .filter((e) => e.kind === "parking")
-      .sort((a, b) => {
-        const aRaw = group.rawEntries.find((r) => r.id === a.id);
-        const bRaw = group.rawEntries.find((r) => r.id === b.id);
-        return (bRaw?.rawDate.getTime() ?? 0) - (aRaw?.rawDate.getTime() ?? 0);
-      });
-    const otherEntries = group.entries.filter((e) => e.kind !== "parking");
+    // Sort ALL entries newest-first using the rawEntries date map
+    const rawMap = new Map(group.rawEntries.map((r) => [r.id, r.rawDate]));
+    const sorted = [...group.entries].sort((a, b) => {
+      const aTime = rawMap.get(a.id)?.getTime() ?? parseDateLabel(a.dateLabel).getTime();
+      const bTime = rawMap.get(b.id)?.getTime() ?? parseDateLabel(b.dateLabel).getTime();
+      return bTime - aTime; // descending → newest first
+    });
 
-    // Merged: parking first (most recent), then existing entries
-    const merged = [...parkingEntries, ...otherEntries];
-    const count = merged.length;
-
+    const count = sorted.length;
     result.push({
       id: group.id,
       label: group.label,
       countLabel: `${count} ${count === 1 ? "ENTRY" : "ENTRIES"}`,
-      entries: merged,
+      entries: sorted,
     });
   }
 

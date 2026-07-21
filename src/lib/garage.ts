@@ -15,6 +15,7 @@ import type {
   MemberVehicleDocument,
   MemberVehicleDocumentIconTone,
   MemberVehicleHealthMetric,
+  MemberVehicleRecentRequest,
   MemberVehicleRequestItem,
 } from "@/components/member/garage/types";
 
@@ -417,6 +418,135 @@ function mapVehicleDocuments(
   );
 }
 
+function formatRequestDate(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const REQUEST_TYPE_TITLE_MAP: Record<string, string> = {
+  transport: "Transport & Delivery",
+  detailing: "Detailing & Wash",
+  maintenance: "Maintenance & Service",
+  parking: "Vehicle Parking",
+  sourcing: "Vehicle Sourcing",
+  garage_request: "Vehicle Request",
+};
+
+function resolveRequestIconType(
+  source?: string,
+  type?: string,
+): MemberVehicleRecentRequest["type"] {
+  const norm = `${source || ""} ${type || ""}`.toLowerCase();
+  if (norm.includes("transport")) return "transport";
+  if (norm.includes("detail")) return "detailing";
+  if (norm.includes("maint")) return "maintenance";
+  if (norm.includes("park")) return "parking";
+  if (norm.includes("sourc")) return "sourcing";
+  return "garage_request";
+}
+
+function extractRefCode(item: any): string | undefined {
+  if (item.referenceNumber) return String(item.referenceNumber);
+  if (typeof item.title === "string") {
+    if (/^TB\s*[-–]/i.test(item.title) || /^REF\s*[-–]/i.test(item.title) || /^MAINT\s*[-–]/i.test(item.title) || /^TR\s*[-–]/i.test(item.title)) {
+      return item.title.trim();
+    }
+    if (item.title.includes(" — ")) {
+      return item.title.split(" — ")[1]?.trim();
+    }
+  }
+  return item.sourceId ? String(item.sourceId) : undefined;
+}
+
+function resolveHumanRequestTitle(
+  source?: string,
+  type?: string,
+  rawTitle?: string,
+): string {
+  const requestType = resolveRequestIconType(source, type);
+  const defaultTitle = REQUEST_TYPE_TITLE_MAP[requestType] || "Vehicle Request";
+
+  if (!rawTitle || typeof rawTitle !== "string") {
+    return defaultTitle;
+  }
+
+  // If rawTitle is just a reference code like "TB-2026-0721-155" or "TB - 2026 - 0721 - 155", override with default title
+  if (/^TB\s*[-–]/i.test(rawTitle) || /^REF\s*[-–]/i.test(rawTitle) || /^MAINT\s*[-–]/i.test(rawTitle) || /^TR\s*[-–]/i.test(rawTitle)) {
+    return defaultTitle;
+  }
+
+  // If rawTitle is something like "Maintenance — TB-123", return clean name
+  if (rawTitle.includes(" — ")) {
+    const mainPart = rawTitle.split(" — ")[0].trim();
+    if (mainPart.toLowerCase() === "maintenance") return "Maintenance & Service";
+    if (mainPart.toLowerCase() === "transport") return "Transport & Delivery";
+    if (mainPart.toLowerCase() === "detailing") return "Detailing & Wash";
+    return mainPart;
+  }
+
+  return rawTitle;
+}
+
+function mapRecentRequests(
+  requestsRaw?: Record<string, unknown>,
+): MemberVehicleRecentRequest[] {
+  if (!requestsRaw) return [];
+  const rawList =
+    (requestsRaw.all as unknown[]) ||
+    [...((requestsRaw.active as unknown[]) || []), ...((requestsRaw.past as unknown[]) || [])];
+
+  if (!Array.isArray(rawList)) return [];
+
+  return rawList.map((item: any) => {
+    const statusStr = String(item.status || "Submitted");
+    const statusLower = statusStr.toLowerCase();
+
+    let statusTone: MemberVehicleRecentRequest["statusTone"] = "pending";
+    if (statusLower.includes("complete") || statusLower.includes("approved")) {
+      statusTone = "completed";
+    } else if (statusLower.includes("cancel") || statusLower.includes("reject")) {
+      statusTone = "cancelled";
+    } else if (
+      statusLower.includes("progress") ||
+      statusLower.includes("accept") ||
+      statusLower.includes("active") ||
+      statusLower.includes("ready")
+    ) {
+      statusTone = "in_progress";
+    }
+
+    const type = resolveRequestIconType(item.source, item.type);
+    const title = resolveHumanRequestTitle(item.source, item.type, item.title);
+    const refCode = extractRefCode(item);
+    const dateLabel = formatRequestDate(item.createdAt);
+
+    // Build subtitle: Ref Code · Date (e.g. "TB-2026-0721-155 · 21 Jul 2026")
+    const subParts: string[] = [];
+    if (refCode) subParts.push(refCode);
+    if (dateLabel) subParts.push(dateLabel);
+
+    const subtitle = subParts.length > 0 ? subParts.join(" · ") : (item.subtitle || "");
+
+    return {
+      id: String(item.id || item.sourceId || Math.random()),
+      title,
+      type,
+      status: statusStr,
+      statusTone,
+      createdAt: item.createdAt,
+      dateLabel,
+      subtitle,
+      referenceNumber: refCode,
+    };
+  });
+}
+
 export function mapMemberVehicleDetail(
   data: MemberVehicleDetailData,
 ): MemberVehicleDetail {
@@ -467,6 +597,7 @@ export function mapMemberVehicleDetail(
     lastInspectedLabel: "Health report",
     lastInspectedValue: formatGeneratedAt(data.healthReport?.generatedAt),
     requests: mapQuickActions(details?.quickActions),
+    recentRequests: mapRecentRequests(data.requests),
     specs: {
       make: displayOrDash(vehicleSpecs?.brand || generalInfo?.make || make),
       model: displayOrDash(vehicleSpecs?.model || generalInfo?.model || model),

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { notFound } from "next/navigation";
 import { memberVehiclesApi } from "@/api/memberVehicles.api";
 import { memberSourcingApi } from "@/api/memberSourcing.api";
+import { memberParkingApi } from "@/api/memberParking.api";
 import { authApi } from "@/api/auth.api";
 import { mapMemberVehicleDetail } from "@/lib/garage";
 import { MemberVehicleDetailSkeleton } from "./MemberGarageSkeleton";
@@ -14,7 +15,7 @@ import { MemberVehicleRequestsCard } from "./MemberVehicleRequestsCard";
 import { MemberVehicleSpecsCard } from "./MemberVehicleSpecsCard";
 import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServiceModal";
 import { VehicleConfirmationModal } from "./VehicleConfirmationModal";
-import type { MemberVehicleDetail } from "./types";
+import type { MemberVehicleDetail, MemberVehicleRecentRequest } from "./types";
 
 type MemberVehicleDetailPageProps = {
   vehicleId: string;
@@ -30,6 +31,7 @@ export function MemberVehicleDetailPage({
   const [maintenanceOpen, setMaintenanceOpen] = useState(false);
   const [confirmationOpen, setConfirmationOpen] = useState(false);
   const [sourcingRequestId, setSourcingRequestId] = useState<string | null>(null);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const requestsRef = useRef<HTMLDivElement>(null);
 
   function handleBookServices() {
@@ -49,6 +51,63 @@ export function MemberVehicleDetailPage({
 
         if (!cancelled) {
           const mapped = mapMemberVehicleDetail(response.data);
+
+          // Fetch parking sessions for this vehicle to merge with recent requests
+          try {
+            const parkingRes = await memberParkingApi.getSessions({ vehicleId });
+            const sessionsData = (parkingRes as any)?.data;
+            const sessions =
+              Array.isArray(sessionsData)
+                ? sessionsData
+                : sessionsData?.sessions || sessionsData?.rows || sessionsData?.items || [];
+
+            if (Array.isArray(sessions) && sessions.length > 0) {
+              const parkingRequests: MemberVehicleRecentRequest[] = sessions.map((s: any) => {
+                const slotLabel = s.slot?.label || s.slot?.slotCode || "Slot";
+                const statusStr = String(s.status || "Pending");
+                const statusLower = statusStr.toLowerCase();
+                let statusTone: MemberVehicleRecentRequest["statusTone"] = "pending";
+                if (statusLower.includes("complete")) statusTone = "completed";
+                else if (statusLower.includes("cancel")) statusTone = "cancelled";
+                else if (statusLower.includes("active") || statusLower.includes("accept")) statusTone = "in_progress";
+
+                return {
+                  id: `parking-${s.id || s.referenceNumber || Math.random()}`,
+                  title: `Vehicle Parking — ${s.mode === "pickup" ? "Valet Pickup" : "Self Drop-Off"}`,
+                  type: "parking" as const,
+                  status: statusStr.charAt(0).toUpperCase() + statusStr.slice(1),
+                  statusTone,
+                  createdAt: s.createdAt || s.scheduledStartAt,
+                  dateLabel: s.scheduledStartAt
+                    ? new Date(s.scheduledStartAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
+                    : "",
+                  subtitle: `Slot ${slotLabel} ${s.referenceNumber ? `· Ref: ${s.referenceNumber}` : ""}`,
+                  referenceNumber: s.referenceNumber,
+                };
+              });
+
+              const existingIds = new Set((mapped.recentRequests || []).map((r) => r.id));
+              const merged = [...(mapped.recentRequests || [])];
+              for (const pr of parkingRequests) {
+                if (!existingIds.has(pr.id) && !existingIds.has(pr.referenceNumber || "")) {
+                  merged.push(pr);
+                }
+              }
+              merged.sort((a, b) => {
+                const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+                const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+                return timeB - timeA;
+              });
+              mapped.recentRequests = merged;
+            }
+          } catch {
+            // Fallback: keep existing mapped recent requests
+          }
+
           setVehicle(mapped);
 
           if (mapped.statusTone === "in_review") {
@@ -111,7 +170,7 @@ export function MemberVehicleDetailPage({
     return () => {
       cancelled = true;
     };
-  }, [vehicleId]);
+  }, [vehicleId, refreshTrigger]);
 
   if (!loading && notFoundState) {
     notFound();
@@ -152,7 +211,9 @@ export function MemberVehicleDetailPage({
               vehicleYear={vehicle.specs.year}
               vehicleColour={vehicle.ownership.colour}
               requests={vehicle.requests}
+              recentRequests={vehicle.recentRequests}
               hidden={isInReview}
+              onRequestCreated={() => setRefreshTrigger((prev) => prev + 1)}
             />
           </div>
         </div>

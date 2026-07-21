@@ -86,6 +86,18 @@ export type MemberVehicleRequestItem = {
   icon: "transport" | "detailing" | "maintenance" | "sourcing" | "parking";
 };
 
+export type MemberVehicleRecentRequest = {
+  id: string;
+  title: string;
+  type: "transport" | "detailing" | "maintenance" | "sourcing" | "parking" | "garage_request";
+  status: string;
+  statusTone?: "pending" | "in_progress" | "completed" | "cancelled";
+  createdAt?: string;
+  dateLabel?: string;
+  subtitle?: string;
+  referenceNumber?: string;
+};
+
 export type MemberVehicleDetail = {
   id: string;
   make: string;
@@ -99,6 +111,7 @@ export type MemberVehicleDetail = {
   lastInspectedLabel: string;
   lastInspectedValue: string;
   requests: MemberVehicleRequestItem[];
+  recentRequests?: MemberVehicleRecentRequest[];
   specs: MemberVehicleSpecs;
   ownership: MemberVehicleOwnership;
   health: MemberVehicleHealthMetric[];

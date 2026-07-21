@@ -14,7 +14,7 @@ import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServic
 import { ParkingModal } from "./parking/ParkingModal";
 import { TransportDeliveryModal } from "./transport-delivery/TransportDeliveryModal";
 import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
-import type { MemberVehicleRequestItem } from "./types";
+import type { MemberVehicleRecentRequest, MemberVehicleRequestItem } from "./types";
 
 function RequestIcon({ icon }: { icon: MemberVehicleRequestItem["icon"] }) {
   const iconClass = icon === "sourcing" ? "size-5" : "size-[18px]";
@@ -71,6 +71,84 @@ function RequestRowContent({ request }: { request: MemberVehicleRequestItem }) {
   );
 }
 
+function getStatusBadgeStyle(tone?: MemberVehicleRecentRequest["statusTone"]) {
+  switch (tone) {
+    case "completed":
+      return "border-green-500/30 bg-green-500/10 text-green-400";
+    case "in_progress":
+      return "border-teal/30 bg-teal/10 text-teal";
+    case "cancelled":
+      return "border-pink/30 bg-pink/10 text-pink";
+    case "pending":
+    default:
+      return "border-gold/30 bg-gold/10 text-gold";
+  }
+}
+
+const REQUEST_TYPE_FALLBACK_TITLES: Record<string, string> = {
+  transport: "Transport & Delivery",
+  detailing: "Detailing & Wash",
+  maintenance: "Maintenance & Service",
+  parking: "Vehicle Parking",
+  sourcing: "Vehicle Sourcing",
+  garage_request: "Vehicle Request",
+};
+
+function formatDisplayTitle(item: MemberVehicleRecentRequest): string {
+  if (
+    !item.title ||
+    /^TB\s*[-–]/i.test(item.title) ||
+    /^REF\s*[-–]/i.test(item.title) ||
+    /^MAINT\s*[-–]/i.test(item.title) ||
+    /^TR\s*[-–]/i.test(item.title)
+  ) {
+    return REQUEST_TYPE_FALLBACK_TITLES[item.type] || "Vehicle Request";
+  }
+  return item.title;
+}
+
+function formatDisplaySubtitle(item: MemberVehicleRecentRequest): string {
+  // If title was originally a reference number (like TB-2026-0721-155), make sure the ref number is shown in subtitle
+  const originalWasRef = /^TB\s*[-–]/i.test(item.title) || /^REF\s*[-–]/i.test(item.title);
+  
+  if (originalWasRef && !item.subtitle?.includes(item.title)) {
+    const datePart = item.dateLabel ? ` · ${item.dateLabel}` : "";
+    return `${item.title}${datePart}`;
+  }
+
+  return item.subtitle || item.dateLabel || "";
+}
+
+function RecentRequestRow({ item }: { item: MemberVehicleRecentRequest }) {
+  const badgeStyle = getStatusBadgeStyle(item.statusTone);
+  const displayTitle = formatDisplayTitle(item);
+  const displaySubtitle = formatDisplaySubtitle(item);
+
+  return (
+    <div className="flex w-full items-center justify-between gap-3 rounded-xl border border-accent/10 bg-surface/60 px-3.5 py-3 transition-colors hover:bg-surface">
+      <div className="flex min-w-0 items-center gap-3">
+        <span className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-accent/8">
+          <RequestIcon icon={item.type === "garage_request" ? "transport" : item.type} />
+        </span>
+        <div className="min-w-0">
+          <p className="font-roboto text-[12px] font-medium text-foreground truncate">
+            {displayTitle}
+          </p>
+          <p className="font-roboto text-[10px] text-secondary truncate">
+            {displaySubtitle}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex shrink-0 items-center gap-2">
+        <span className={`font-roboto rounded-full border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider ${badgeStyle}`}>
+          {item.status}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 type MemberVehicleRequestsCardProps = {
   vehicleId: string;
   vehicleName: string;
@@ -79,8 +157,11 @@ type MemberVehicleRequestsCardProps = {
   vehicleYear?: string;
   vehicleColour?: string;
   requests: MemberVehicleRequestItem[];
+  recentRequests?: MemberVehicleRecentRequest[];
   /** When true the card is hidden — used while a sourcing request is in review */
   hidden?: boolean;
+  /** Callback fired after a request modal is submitted to refresh request data */
+  onRequestCreated?: () => void;
 };
 
 export function MemberVehicleRequestsCard({
@@ -91,7 +172,9 @@ export function MemberVehicleRequestsCard({
   vehicleYear,
   vehicleColour,
   requests,
+  recentRequests = [],
   hidden = false,
+  onRequestCreated,
 }: MemberVehicleRequestsCardProps) {
   if (hidden) return null;
   const [isTransportOpen, setIsTransportOpen] = useState(false);
@@ -163,29 +246,69 @@ export function MemberVehicleRequestsCard({
         )}
       </div>
 
+      {/* Recent Requests List */}
+      <div className="mt-5 pt-4 border-t border-accent/10">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-copperplate text-[12px] uppercase text-secondary tracking-wider">
+            Recent <span className="text-primary">Requests</span>
+          </h3>
+          {recentRequests.length > 0 && (
+            <span className="font-roboto text-[10px] font-medium text-secondary bg-accent/10 px-2 py-0.5 rounded-full">
+              {recentRequests.length}
+            </span>
+          )}
+        </div>
+
+        {recentRequests.length > 0 ? (
+          <div className="space-y-2 max-h-[320px] overflow-y-auto pr-1">
+            {recentRequests.map((item) => (
+              <RecentRequestRow key={item.id} item={item} />
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-xl border border-dashed border-accent/15 p-4 text-center">
+            <p className="font-roboto text-[11px] text-secondary">
+              No requests made for this vehicle yet.
+            </p>
+          </div>
+        )}
+      </div>
+
       <TransportDeliveryModal
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isTransportOpen}
-        onClose={() => setIsTransportOpen(false)}
+        onClose={() => {
+          setIsTransportOpen(false);
+          onRequestCreated?.();
+        }}
       />
 
       <DetailingWashModal
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isDetailingOpen}
-        onClose={() => setIsDetailingOpen(false)}
+        onClose={() => {
+          setIsDetailingOpen(false);
+          onRequestCreated?.();
+        }}
       />
 
       <MaintenanceServiceModal
         vehicleId={vehicleId}
         open={isMaintenanceOpen}
-        onClose={() => setIsMaintenanceOpen(false)}
+        onClose={() => {
+          setIsMaintenanceOpen(false);
+          onRequestCreated?.();
+        }}
       />
 
       <VehicleSourcingModal
         open={isSourcingOpen}
-        onClose={() => setIsSourcingOpen(false)}
+        onClose={() => {
+          setIsSourcingOpen(false);
+          onRequestCreated?.();
+        }}
         vehicleMake={vehicleMake}
         vehicleModel={vehicleModel}
         vehicleYear={vehicleYear}
@@ -196,7 +319,10 @@ export function MemberVehicleRequestsCard({
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isParkingOpen}
-        onClose={() => setIsParkingOpen(false)}
+        onClose={() => {
+          setIsParkingOpen(false);
+          onRequestCreated?.();
+        }}
       />
     </div>
   );
