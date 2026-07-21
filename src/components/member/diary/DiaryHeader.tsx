@@ -61,36 +61,36 @@ export function DiaryHeader({
           className="diary-record-surface pointer-events-none absolute inset-0"
         />
 
-        <div className="relative flex flex-col p-5">
-          <div className="space-y-2.5 sm:p-7 md:p-2">
+        <div className="relative flex flex-col p-4 sm:p-5">
+          <div className="space-y-2 sm:space-y-2.5 sm:px-2 sm:pb-2 md:px-2 md:pb-2">
             <p className="diary-record-eyebrow font-roboto text-[10px] font-semibold tracking-[0.24em] uppercase">
               {recordEyebrow}
             </p>
-            <h2 className="font-copperplate text-[16px] font-normal leading-tight tracking-[0.05em] sm:text-[20px] md:text-[24px]">
+            <h2 className="font-copperplate text-[15px] font-normal leading-tight tracking-[0.05em] sm:text-[18px] md:text-[22px] lg:text-[24px]">
               <span className="diary-record-title">{recordTitlePrefix} </span>
               <span className="diary-record-highlight font-normal">
                 {recordTitleHighlight}
               </span>
             </h2>
-            <p className="diary-record-subtitle font-roboto text-[13px] font-light leading-relaxed tracking-[0.01em] sm:text-[14px]">
+            <p className="diary-record-subtitle font-roboto text-[12px] font-light leading-relaxed tracking-[0.01em] sm:text-[13px] md:text-[14px]">
               {recordSubtitle}
             </p>
           </div>
 
-          <div className="diary-record-stats relative mt-4 grid grid-cols-2 gap-y-6 rounded-[23px] text-center sm:grid-cols-4">
+          <div className="diary-record-stats relative mt-4 grid grid-cols-2 gap-y-4 sm:gap-y-6 rounded-[23px] text-center sm:grid-cols-4">
             {stats.map((stat, idx) => (
               <div
                 key={stat.label}
                 className={[
-                  "space-y-1.5 px-2 py-3 sm:space-y-2 sm:px-2 sm:py-3 md:px-3",
+                  "space-y-1 sm:space-y-1.5 px-2 py-2.5 sm:py-3 md:px-3",
                   idx % 2 !== 0 ? "border-l border-accent/10" : "",
                   idx > 0 ? "sm:border-l sm:border-accent/10" : "sm:border-l-0",
                 ].join(" ")}
               >
-                <p className="diary-record-stat-value font-copperplate text-[24px] leading-none tracking-[0.01em]">
+                <p className="diary-record-stat-value font-copperplate text-[20px] sm:text-[24px] leading-none tracking-[0.01em]">
                   {stat.value}
                 </p>  
-                <p className="diary-record-stat-label font-roboto text-[8.5px] tracking-[0.14em] uppercase sm:text-[10px] sm:tracking-[0.16em]">
+                <p className="diary-record-stat-label font-roboto text-[8px] tracking-[0.12em] uppercase sm:text-[8.5px] sm:tracking-[0.14em] md:text-[10px] md:tracking-[0.16em]">
                   {stat.label}
                 </p>
               </div>

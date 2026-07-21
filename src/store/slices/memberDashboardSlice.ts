@@ -1,9 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { authApi } from "@/api/auth.api";
 import { clubhouseApi } from "@/api/clubhouse.api";
 import { memberDashboardApi } from "@/api/memberDashboard.api";
 import { notificationsApi } from "@/api/notifications.api";
-import type { MemberDashboardData } from "@/components/member/dashboard/types";
+import type { MemberActivityItem, MemberDashboardData } from "@/components/member/dashboard/types";
 import {
   createEmptyMemberDashboard,
   mapMemberDashboard,
@@ -76,6 +76,13 @@ const memberDashboardSlice = createSlice({
       state.loaded = false;
       state.error = null;
     },
+    /** Prepend a parking activity item to recentActivity (max 4 kept). */
+    prependParkingActivity: (state, action: PayloadAction<MemberActivityItem>) => {
+      state.data.recentActivity = [
+        action.payload,
+        ...state.data.recentActivity,
+      ].slice(0, 4);
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -96,5 +103,5 @@ const memberDashboardSlice = createSlice({
   },
 });
 
-export const { clearMemberDashboard } = memberDashboardSlice.actions;
+export const { clearMemberDashboard, prependParkingActivity } = memberDashboardSlice.actions;
 export default memberDashboardSlice.reducer;

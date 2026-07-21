@@ -15,7 +15,7 @@ function GarageEmptyState({ filter }: { filter: GarageFilterKey }) {
   const isFiltered = filter !== "all";
 
   return (
-    <div className="flex flex-col items-center justify-center rounded-2xl border border-accent/10 bg-card px-6 py-16 text-center">
+    <div className="flex flex-col items-center justify-center rounded-2xl border border-accent/10 bg-card px-4 sm:px-6 py-12 sm:py-16 text-center">
       {/* Car icon */}
       <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-accent/15 bg-elevated">
         <svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden>
@@ -64,6 +64,7 @@ export function MemberGaragePage() {
     { key: "all", label: "All" },
   ]);
   const [loading, setLoading] = useState(true);
+  const [initialLoaded, setInitialLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [sourcingOpen, setSourcingOpen] = useState(false);
 
@@ -123,6 +124,7 @@ export function MemberGaragePage() {
       } finally {
         if (!cancelled) {
           setLoading(false);
+          setInitialLoaded(true);
         }
       }
     }
@@ -134,13 +136,13 @@ export function MemberGaragePage() {
     };
   }, [memberId, activeFilter]);
 
-  // Initial load — show full-page skeleton until the first response resolves.
-  if (loading && vehicles.length === 0 && !error) {
+  // Initial load only — show full-page skeleton until the very first response resolves.
+  if (!initialLoaded && loading && !error) {
     return <MemberGarageSkeleton />;
   }
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-5 sm:space-y-6 p-4 sm:p-6 lg:p-8">
       <MemberGarageHeader onSourcingClick={() => setSourcingOpen(true)} />
 
       {error ? (

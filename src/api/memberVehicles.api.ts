@@ -7,10 +7,10 @@ import type {
 
 export type MemberGarageListParams = {
   memberId: string;
-  /** Garage tab key, e.g. "all" | "ready" | "in_service" | "away" | "modern" | "classic" | "stored" | "in_review" */
-  garageStatus?: string;
-  /** Ownership scope the backend accepts: "all" | "priority" | "mine" */
-  filter?: "all" | "priority" | "mine";
+  /** Garage status tab key — maps to garageStatus query param.
+   *  "all" means no status filter (returns all member vehicles).
+   *  Accepted values mirror the backend Joi schema. */
+  garageStatus?: "all" | "ready" | "in_service" | "away" | "modern" | "classic" | "stored" | "in_review";
   search?: string;
 };
 
@@ -21,18 +21,15 @@ export const memberVehiclesApi = {
    * `filter` is always "mine" for member-facing requests — "all" is admin-only.
    * Tab keys like "ready", "in_service", "modern", etc. go into `garageStatus`.
    */
-  getGarage: ({ memberId, filter = "all", search }: MemberGarageListParams) => {
-    // UI tab "all" → filter=mine (show this member's full collection)
-    // UI tab "priority" → filter=priority
-    // Everything else (status/era tabs) → filter=mine + garageStatus=<tab>
-    const isBackendFilter = filter === "priority";
+  getGarage: ({ memberId, garageStatus = "all", search }: MemberGarageListParams) => {
+    // Always use filter=mine for member-facing requests.
+    // garageStatus "all" means no status filter — just return all member vehicles.
+    // Any other garageStatus value (ready, in_service, away, modern, classic, stored, in_review)
+    // is forwarded as garageStatus query param.
+    const qs = new URLSearchParams({ memberId, filter: "mine" });
 
-    const qs = new URLSearchParams({ memberId });
-
-    qs.set("filter", isBackendFilter ? filter : "mine");
-
-    if (filter !== "all" && !isBackendFilter) {
-      qs.set("garageStatus", filter);
+    if (garageStatus !== "all") {
+      qs.set("garageStatus", garageStatus);
     }
 
     if (search) {

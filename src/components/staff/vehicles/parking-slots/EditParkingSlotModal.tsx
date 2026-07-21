@@ -49,7 +49,7 @@ function ToggleButton({
       onClick={onClick}
       className={`font-roboto cursor-pointer rounded-xl px-2 py-3 text-[10px] tracking-[0.08em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${className} ${
         active
-          ? "bg-gradient-to-r from-gold-bright to-primary font-bold text-dark"
+          ? "staff-add-cta bg-gradient-to-r from-gold-bright to-primary font-bold text-dark"
           : "border border-accent/18 bg-input-muted text-primary hover:border-accent/50"
       }`}
     >
@@ -321,7 +321,7 @@ export function EditParkingSlotModal({
             type="button"
             onClick={() => void handleSubmit()}
             disabled={submitting}
-            className="font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
+            className="staff-add-cta font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Saving..." : "Save Changes"}
           </button>

@@ -1,6 +1,6 @@
 import { overviewLabelClass, overviewRowMetaClass, overviewRowTitleClass } from "./panelStyles";
 
-type PriorityTone = "urgent" | "high";
+type PriorityTone = "urgent" | "high" | "normal";
 
 export type OpenRequestRowData = {
   initial: string;
@@ -15,6 +15,7 @@ export type OpenRequestRowData = {
 const priorityClass: Record<PriorityTone, string> = {
   urgent: "bg-pink/15 text-pink",
   high: "bg-accent/15 text-accent",
+  normal: "bg-secondary/15 text-secondary",
 };
 
 const headerClass =

@@ -3,11 +3,12 @@ import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import type { GarageVehicle, GarageVehicleStatusTone } from "./types";
 
 const statusToneClass: Record<GarageVehicleStatusTone, string> = {
-  ready:      "border-teal/40 bg-teal/15 text-teal",
+  ready:      "border-teal/40 bg-teal/15 text-teal-700 dark:text-teal-300",
   in_service: "border-pink/40 bg-pink/15 text-pink",
-  away:       "border-accent/40 bg-accent/15 text-foreground",
+  away:       "border-accent/40 bg-accent/15 text-foreground font-semibold",
   stored:     "border-accent/40 bg-black/55 text-foreground backdrop-blur-sm",
-  in_review:  "border-info/40 bg-info/15 text-info",
+  in_review:  "border-info/30 bg-info/10 text-foreground backdrop-blur-sm",
+
 };
 
 type MemberGarageCardProps = {
@@ -17,7 +18,7 @@ type MemberGarageCardProps = {
 export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-accent/10 bg-card">
-      <div className="relative h-[220px] w-full bg-elevated">
+      <div className="relative h-[180px] sm:h-[220px] w-full bg-elevated">
         {vehicle.imageUrl ? (
           <img
             src={vehicle.imageUrl}
@@ -59,9 +60,9 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
         )}
       </div>
 
-      <div className="space-y-4 p-5">
+      <div className="space-y-3 sm:space-y-4 p-4 sm:p-5">
         <div className="space-y-1">
-          <h3 className="font-copperplate text-[16px] leading-tight uppercase">
+          <h3 className="font-copperplate text-[15px] sm:text-[16px] leading-tight uppercase">
             <span className="text-foreground">{vehicle.make} </span>
             <span className="text-primary">{vehicle.model}</span>
           </h3>
@@ -70,23 +71,23 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
           </p>
         </div>
 
-        <div className="grid min-w-0 grid-cols-3 gap-2 rounded-xl bg-elevated p-3">
+        <div className="grid min-w-0 grid-cols-3 gap-2 rounded-xl bg-elevated p-2.5 sm:p-3">
           {vehicle.stats.map((stat) => (
             <div key={stat.label} className="min-w-0 overflow-hidden">
               <p
-                className="font-copperplate truncate text-[18px] leading-tight tabular-nums text-foreground"
+                className="font-copperplate truncate text-[16px] sm:text-[18px] leading-tight tabular-nums text-foreground"
                 title={stat.value}
               >
                 {stat.value}
               </p>
-              <p className="font-roboto mt-1.5 truncate text-[9px] tracking-[0.12em] text-secondary uppercase">
+              <p className="font-roboto mt-1 sm:mt-1.5 truncate text-[8.5px] sm:text-[9px] tracking-[0.12em] text-secondary uppercase">
                 {stat.label}
               </p>
             </div>
           ))}
         </div>
 
-        <div className="flex items-end justify-between gap-3 border-t border-accent/10 pt-4">
+        <div className="flex items-end justify-between gap-3 border-t border-accent/10 pt-3 sm:pt-4">
           <div className="space-y-0.5">
             <p className="font-roboto text-[9px] tracking-[0.12em] text-secondary/70 uppercase">
               {vehicle.lastInspectedLabel}
@@ -98,7 +99,7 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
 
           <Link
             href={`/member/garage/${vehicle.id}`}
-            className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/20 bg-elevated px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-foreground/70 uppercase transition-colors hover:border-primary/40 hover:bg-accent/8 hover:text-primary"
+            className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/20 bg-elevated px-3 sm:px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-foreground/70 uppercase transition-colors hover:border-primary/40 hover:bg-accent/8 hover:text-primary"
           >
             Details
             <MemberGarageChevronRight className="size-[10px]" color="currentColor" />

@@ -7,3 +7,4 @@ export { ShimmerBlock } from "./ShimmerBlock";
 export { PageLoadingShimmer } from "./PageLoadingShimmer";
 export { Pagination } from "./Pagination";
 export * from "./Svgs";
+export { ModalPortal } from "./ModalPortal";

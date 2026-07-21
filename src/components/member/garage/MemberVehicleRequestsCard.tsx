@@ -7,9 +7,11 @@ import {
   MemberVehicleMaintenanceIcon,
   MemberVehicleSourcingIcon,
   MemberVehicleTransportIcon,
+  NavParking,
 } from "@/components/common/Svgs";
 import { DetailingWashModal } from "./detailing-wash/DetailingWashModal";
 import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServiceModal";
+import { ParkingModal } from "./parking/ParkingModal";
 import { TransportDeliveryModal } from "./transport-delivery/TransportDeliveryModal";
 import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
 import type { MemberVehicleRequestItem } from "./types";
@@ -37,6 +39,10 @@ function RequestIcon({ icon }: { icon: MemberVehicleRequestItem["icon"] }) {
 
   if (icon === "maintenance") {
     return <MemberVehicleMaintenanceIcon className={iconClass} />;
+  }
+
+  if (icon === "parking") {
+    return <NavParking className="size-[18px]" />;
   }
 
   return <MemberVehicleSourcingIcon className={iconClass} />;
@@ -92,6 +98,7 @@ export function MemberVehicleRequestsCard({
   const [isDetailingOpen, setIsDetailingOpen] = useState(false);
   const [isMaintenanceOpen, setIsMaintenanceOpen] = useState(false);
   const [isSourcingOpen, setIsSourcingOpen] = useState(false);
+  const [isParkingOpen, setIsParkingOpen] = useState(false);
 
   const rowClassName =
     "group flex w-full cursor-pointer items-center gap-3 rounded-xl border border-transparent bg-surface px-4 py-3.5 text-left transition-colors hover:border-primary/40 hover:bg-primary/6";
@@ -114,6 +121,11 @@ export function MemberVehicleRequestsCard({
 
     if (requestId === "sourcing") {
       setIsSourcingOpen(true);
+      return;
+    }
+
+    if (requestId === "parking") {
+      setIsParkingOpen(true);
     }
   }
 
@@ -122,16 +134,17 @@ export function MemberVehicleRequestsCard({
     "detailing",
     "maintenance",
     "sourcing",
+    "parking",
   ]);
 
   return (
-    <div className="rounded-2xl border border-accent/10 bg-card p-5">
-      <h2 className="font-copperplate text-[15px] uppercase">
+    <div className="rounded-2xl border border-accent/10 bg-card p-4 sm:p-5">
+      <h2 className="font-copperplate text-[14px] sm:text-[15px] uppercase">
         <span className="text-foreground">Vehicle </span>
         <span className="text-primary">Requests</span>
       </h2>
 
-      <div className="mt-4 space-y-2.5">
+      <div className="mt-3 sm:mt-4 space-y-2.5">
         {requests.map((request) =>
           interactiveRequestIds.has(request.id) ? (
             <button
@@ -177,6 +190,13 @@ export function MemberVehicleRequestsCard({
         vehicleModel={vehicleModel}
         vehicleYear={vehicleYear}
         vehicleColour={vehicleColour}
+      />
+
+      <ParkingModal
+        vehicleId={vehicleId}
+        vehicleName={vehicleName}
+        open={isParkingOpen}
+        onClose={() => setIsParkingOpen(false)}
       />
     </div>
   );

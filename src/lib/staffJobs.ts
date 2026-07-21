@@ -348,6 +348,7 @@ export type StaffJobListItem = {
   referenceId: string;
   referenceNumber: string;
   referenceType: string;
+  vehicle?: string;
   statusLabel: string;
   statusTone: JobStatusTone;
   metaLine?: string;
@@ -413,6 +414,11 @@ export function mapStaffJobListItem(job: StaffActiveJobRaw): StaffJobListItem | 
     referenceId: job.referenceId?.trim() || job.id.trim(),
     referenceNumber: job.referenceNumber?.trim() || job.referenceId?.trim() || job.id.trim(),
     referenceType: job.referenceType?.trim() || "Service",
+    vehicle:
+      job.vehicleName?.trim() ||
+      job.vehicle?.trim() ||
+      job.detail?.vehicle?.trim() ||
+      undefined,
     statusLabel:
       job.statusBadge?.label?.trim() || formatStatusLabel(queueStatus),
     statusTone: mapStatusTone(queueStatus, job.statusBadge?.tone),
@@ -572,6 +578,7 @@ export function mapStaffActiveJob(job: StaffActiveJobRaw | null): StaffActiveJob
     statusTone: mapStatusTone(queueStatus, job.statusBadge?.tone),
     queueStatus,
     vehicle:
+      job.vehicleName?.trim() ||
       job.vehicle?.trim() ||
       job.detail?.vehicle?.trim() ||
       job.title?.trim() ||

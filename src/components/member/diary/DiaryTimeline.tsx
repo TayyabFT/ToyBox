@@ -67,9 +67,9 @@ export function DiaryTimeline({ groups }: { groups: DiaryGroup[] }) {
         const isLastOfAll = item.entry.id === lastEntryId;
 
         return (
-          <div key={item.entry.id} className="relative pb-8 last:pb-0">
+          <div key={item.entry.id} className="relative pb-6 sm:pb-8 last:pb-0">
             {/* Left column (timeline node + line) absolute */}
-            <div className="absolute left-[0px] w-6 top-0 bottom-0 flex justify-center">
+            <div className="absolute left-[0px] w-5 sm:w-6 top-0 bottom-0 flex justify-center">
               {/* Line */}
               <span
                 aria-hidden
@@ -79,13 +79,13 @@ export function DiaryTimeline({ groups }: { groups: DiaryGroup[] }) {
                 ].join(" ")}
               />
               {/* Dot node */}
-              <span className="relative z-10 mt-1.5 flex size-5 items-center justify-center rounded-full border border-accent/50 bg-background shadow-[0_0_0_4px_var(--background)]">
-                <span className="size-2 rounded-full bg-accent" />
+              <span className="relative z-10 mt-1.5 flex size-4 sm:size-5 items-center justify-center rounded-full border border-accent/50 bg-background shadow-[0_0_0_4px_var(--background)]">
+                <span className="size-1.5 sm:size-2 rounded-full bg-accent" />
               </span>
             </div>
 
             {/* Right column (Entry Content) */}
-            <div className="min-w-0 ml-10">
+            <div className="min-w-0 ml-8 sm:ml-10">
               <DiaryEntryCard entry={item.entry} />
             </div>
           </div>

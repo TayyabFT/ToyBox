@@ -83,7 +83,7 @@ export type MemberVehicleRequestItem = {
   id: string;
   title: string;
   subtitle: string;
-  icon: "transport" | "detailing" | "maintenance" | "sourcing";
+  icon: "transport" | "detailing" | "maintenance" | "sourcing" | "parking";
 };
 
 export type MemberVehicleDetail = {

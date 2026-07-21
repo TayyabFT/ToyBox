@@ -28,7 +28,6 @@ export const staffOperationsNav: StaffNavItem[] = [
     label: "Inspections",
     href: `${STAFF_BASE}/inspections`,
     section: "operations",
-    badge: { count: 4, tone: "gold" },
   },
   {
     id: "health-reports",
@@ -41,14 +40,12 @@ export const staffOperationsNav: StaffNavItem[] = [
     label: "Service Requests",
     href: `${STAFF_BASE}/service-requests`,
     section: "operations",
-    badge: { count: 3, tone: "pink" },
   },
   {
     id: "photo-uploads",
     label: "Photo Uploads",
     href: `${STAFF_BASE}/photo-uploads`,
     section: "operations",
-    badge: { count: 6, tone: "teal" },
   },
   {
     id: "clubhouse",

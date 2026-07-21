@@ -31,6 +31,17 @@ import type { VehicleSourcingDetailsFormState } from "./types";
 //  3 = confirmed
 //  4 = track request
 
+// Required text fields the member must fill before continuing to review.
+function isDetailsFormValid(form: VehicleSourcingDetailsFormState): boolean {
+  return (
+    form.make.trim().length > 0 &&
+    form.model.trim().length > 0 &&
+    form.yearFrom.trim().length > 0 &&
+    form.yearTo.trim().length > 0 &&
+    form.preferredColour.trim().length > 0
+  );
+}
+
 const BASE_FORM_STATE: VehicleSourcingDetailsFormState = {
   make: "",
   model: "",
@@ -177,11 +188,13 @@ export function VehicleSourcingModal({
       </button>
     );
   } else if (step === 1) {
+    const formValid = isDetailsFormValid(form);
     footer = (
       <button
         type="button"
         onClick={handleContinueToReview}
-        className={`${memberRequestModalPrimaryButtonFullClass} gap-2 uppercase`}
+        disabled={!formValid}
+        className={`${memberRequestModalPrimaryButtonFullClass} gap-2 uppercase disabled:cursor-not-allowed disabled:opacity-40`}
       >
         Continue to review
         <RightArrow className="shrink-0" />

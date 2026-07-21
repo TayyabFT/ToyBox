@@ -203,10 +203,10 @@ const QUICK_ACTION_MAP: Record<
     icon: "maintenance",
   },
   vehicle_source: {
- id: "parking",
+    id: "parking",
     title: "Vehicle Parking",
     subtitle: "Request parking slot",
-    icon: "sourcing",
+    icon: "parking",
   },
 };
 

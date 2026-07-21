@@ -78,6 +78,23 @@ function formatDaysPending(days: number, taskStatus: string): string {
   return statusLabel ? `${statusLabel} · ${daysLabel}` : daysLabel;
 }
 
+function mapQueuePriority(urgency: string): "urgent" | "high" | "normal" {
+  if (urgency === "urgent") return "urgent";
+  if (urgency === "high") return "high";
+  return "normal";
+}
+
+function formatWaitingMinutes(minutes: number): string {
+  if (minutes < 60) return `${minutes}m`;
+
+  const hours = Math.floor(minutes / 60);
+
+  if (hours < 24) return `${hours}h`;
+
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
 function mapStaffStatus(status: string): "online" | "active" | "meeting" {
   if (status === "meeting") return "meeting";
   if (status === "active") return "active";
@@ -216,11 +233,13 @@ export function AdminOverviewPage() {
   const queueRows = (conciergeQueue?.items ?? []).map((item) => ({
     initial: item.memberName.charAt(0).toUpperCase(),
     memberName: item.memberName.toUpperCase(),
-    memberMeta: `No. ${item.memberNumber} · ${item.requestType}`,
+    memberMeta: [item.memberNumber ? `No. ${item.memberNumber}` : null, item.requestType]
+      .filter(Boolean)
+      .join(" · "),
     memberAvatarUrl: item.memberAvatarUrl || undefined,
     request: item.vehicleLabel ? `${item.title} · ${item.vehicleLabel}` : item.title,
-    priority: (item.urgency === "urgent" ? "urgent" : "high") as "urgent" | "high",
-    waiting: `${item.waitingMinutes}m`,
+    priority: mapQueuePriority(item.urgency),
+    waiting: formatWaitingMinutes(item.waitingMinutes),
   }));
 
   const staffRows = (staffOnShift?.members ?? []).map((m) => ({

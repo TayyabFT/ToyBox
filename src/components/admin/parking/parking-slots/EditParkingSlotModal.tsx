@@ -17,8 +17,8 @@ type EditParkingSlotModalProps = {
   onSuccess?: () => void | Promise<void>;
 };
 
-const fieldBorder = "border-[#D4A8472E]";
-const fieldClass = `font-roboto w-full rounded-xl border ${fieldBorder} bg-[#11100C] px-4 py-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent/60 disabled:cursor-not-allowed disabled:opacity-60`;
+const fieldBorder = "border-accent/18";
+const fieldClass = `font-roboto w-full rounded-xl border ${fieldBorder} bg-input-muted px-4 py-3.5 text-sm text-foreground outline-none transition-colors focus:border-accent/60 disabled:cursor-not-allowed disabled:opacity-60`;
 
 function FieldLabel({ children }: { children: string }) {
   return (
@@ -48,8 +48,8 @@ function ToggleButton({
       onClick={onClick}
       className={`font-roboto cursor-pointer rounded-xl px-2 py-3 text-[10px] tracking-[0.08em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-60 ${className} ${
         active
-          ? "bg-gradient-to-r from-gold-bright to-primary font-bold text-dark"
-          : `border ${fieldBorder} bg-[#11100C] text-primary hover:border-accent/50`
+          ? "admin-parking-gold-cta bg-gradient-to-r from-gold-bright to-primary font-bold text-dark"
+          : `border ${fieldBorder} bg-input-muted text-primary hover:border-accent/50`
       }`}
     >
       {children}
@@ -121,7 +121,7 @@ export function EditParkingSlotModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className={`relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border ${fieldBorder} bg-[#11100C] shadow-[var(--shadow-modal)]`}
+        className={`relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border ${fieldBorder} bg-card shadow-[var(--shadow-modal)]`}
       >
         <div className={`shrink-0 border-b ${fieldBorder} px-6 pb-5 pt-6`}>
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
@@ -272,7 +272,7 @@ export function EditParkingSlotModal({
             </div>
           </div>
 
-          <label className="font-roboto flex cursor-pointer items-center gap-3 rounded-xl border border-[#D4A8472E] bg-[#11100C] px-4 py-3.5">
+          <label className="font-roboto flex cursor-pointer items-center gap-3 rounded-xl border border-accent/18 bg-input-muted px-4 py-3.5">
             <input
               type="checkbox"
               checked={form.isActive ?? true}
@@ -312,7 +312,7 @@ export function EditParkingSlotModal({
             type="button"
             onClick={handleClose}
             disabled={submitting}
-            className={`font-roboto cursor-pointer rounded-xl border ${fieldBorder} bg-[#11100C] px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-foreground uppercase transition-colors hover:border-accent/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60`}
+            className={`font-roboto cursor-pointer rounded-xl border ${fieldBorder} bg-input-muted px-5 py-3 text-[11px] font-semibold tracking-[0.12em] text-foreground uppercase transition-colors hover:border-accent/50 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60`}
           >
             Cancel
           </button>
@@ -320,7 +320,7 @@ export function EditParkingSlotModal({
             type="button"
             onClick={() => void handleSubmit()}
             disabled={submitting}
-            className="font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
+            className="admin-parking-gold-cta font-roboto cursor-pointer rounded-xl bg-gradient-to-r from-gold-bright to-primary px-5 py-3 text-[11px] font-bold tracking-[0.12em] text-dark uppercase disabled:cursor-not-allowed disabled:opacity-60"
           >
             {submitting ? "Saving..." : "Save Changes"}
           </button>

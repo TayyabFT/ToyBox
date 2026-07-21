@@ -2516,6 +2516,8 @@ export type StaffActiveJobRaw = {
   requestTypeLabel?: string;
   title?: string;
   vehicle?: string;
+  vehicleId?: string;
+  vehicleName?: string;
   member?: string;
   memberName?: string;
   assignee?: string;
@@ -2644,6 +2646,34 @@ export type AdminServiceRequestJobDetailData = {
 
 export type AdminServiceRequestJobDetailResponse =
   ApiResponse<AdminServiceRequestJobDetailData>;
+
+export type AdminNavigationBadgeKey = "concierge" | "serviceRequests" | "bookings";
+
+export type AdminNavigationBadgesData = {
+  concierge?: number;
+  serviceRequests?: number;
+  bookings?: number;
+};
+
+export type AdminNavigationBadgesResponse =
+  ApiResponse<AdminNavigationBadgesData>;
+
+export type AdminNavigationBadgeResolveRequest = {
+  key: AdminNavigationBadgeKey;
+};
+
+export type AdminNavigationBadgeResolveResponse = ApiResponse<unknown>;
+
+export type StaffNavigationBadgesData = Record<string, number>;
+
+export type StaffNavigationBadgesResponse =
+  ApiResponse<StaffNavigationBadgesData>;
+
+export type StaffNavigationBadgeResolveRequest = {
+  key: string;
+};
+
+export type StaffNavigationBadgeResolveResponse = ApiResponse<unknown>;
 
 export type StaffInspectionStatRaw = {
   value?: string | number;

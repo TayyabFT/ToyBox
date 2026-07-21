@@ -15,7 +15,7 @@ export function RequestFieldLabel({ children }: { children: string }) {
 export function RequestRadioDot({ selected }: { selected: boolean }) {
   return (
     <span
-      className={`flex size-5 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
+      className={`flex size-6 shrink-0 items-center justify-center rounded-full border-2 transition-colors ${
         selected ? "border-primary" : "border-secondary/40"
       }`}
     >
@@ -138,22 +138,15 @@ export function PreferredDatePicker({
               key={option.key}
               type="button"
               onClick={() => onChange(option.key)}
-              className={`font-roboto flex h-11 flex-col items-center justify-center rounded-lg text-center transition-colors ${
+              className={`font-roboto flex h-11 sm:h-11 flex-col items-center justify-center rounded-lg text-center transition-colors ${
                 selected
                   ? "bg-primary text-dark"
                   : "garage-form-chip border border-accent/10 text-foreground-soft hover:border-accent/25"
               }`}
             >
-              <span className="text-[13px] font-semibold leading-none">
+              <span className="text-[12px] sm:text-[13px] font-semibold leading-none">
                 {option.day}
               </span>
-              {/* <span
-                className={`mt-0.5 text-[9px] font-medium ${
-                  selected ? "text-dark/70" : "text-secondary"
-                }`} 
-              >
-                {option.month}
-              </span> */}
             </button>
           );
         })}

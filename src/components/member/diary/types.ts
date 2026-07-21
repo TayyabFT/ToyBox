@@ -4,7 +4,8 @@ export type DiaryEntryKind =
   | "drive"
   | "dining"
   | "acquisition"
-  | "reservation";
+  | "reservation"
+  | "parking";
 
 export type DiaryEntry = {
   id: string;
@@ -17,6 +18,10 @@ export type DiaryEntry = {
   titleHighlight?: string;
   description: string;
   tags: string[];
+  /** Optional status pill shown alongside tags (e.g. "PENDING", "ACCEPTED"). */
+  statusLabel?: string;
+  /** Tone for the status pill. */
+  statusTone?: "gold" | "teal" | "green" | "red" | "muted";
   /** Optional hero image — renders the entry as a featured card. */
   imageUrl?: string;
   /** Small pill shown over the hero image. */

@@ -56,13 +56,13 @@ export function MemberVehicleHealthCard({
   onCtaClick,
 }: MemberVehicleHealthCardProps) {
   return (
-    <div className="rounded-2xl border border-accent/10 bg-card p-5">
-      <h2 className="font-copperplate text-[15px] uppercase">
+    <div className="rounded-2xl border border-accent/10 bg-card p-4 sm:p-5">
+      <h2 className="font-copperplate text-[14px] sm:text-[15px] uppercase">
         <span className="text-foreground">Vehicle </span>
         <span className="text-primary">Health</span>
       </h2>
 
-      <div className="mt-5 space-y-5">
+      <div className="mt-4 sm:mt-5 space-y-4 sm:space-y-5">
         {health.map((metric) => (
           <HealthRow key={metric.label} metric={metric} />
         ))}
@@ -71,7 +71,7 @@ export function MemberVehicleHealthCard({
       <button
         type="button"
         onClick={onCtaClick}
-        className="font-roboto mt-6 w-full cursor-pointer rounded-xl bg-primary py-3.5 text-[13px] font-semibold text-dark transition-colors hover:bg-[#D4B45C]"
+        className="font-roboto mt-5 sm:mt-6 w-full cursor-pointer rounded-xl bg-primary py-3 sm:py-3.5 text-[13px] font-semibold text-dark transition-colors hover:bg-[#D4B45C]"
       >
         {ctaLabel}
       </button>

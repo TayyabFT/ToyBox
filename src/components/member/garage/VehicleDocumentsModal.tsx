@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { ModalPortal } from "@/components/common/ModalPortal";
 import {
   MemberGarageChevronRight,
   MemberGarageUploadOutlineIcon,
@@ -158,64 +159,71 @@ export function VehicleDocumentsModal({
   if (!open) return null;
 
   return (
-    <div className={memberRequestModalOverlayClass}>
-      <div className={memberRequestModalBackdropClass} onClick={onClose} />
+    <ModalPortal>
+      <div className={memberRequestModalOverlayClass}>
+        <div className={memberRequestModalBackdropClass} onClick={onClose} />
 
-      <div className={`${memberRequestModalPanelClass} max-w-[640px]`}>
-        <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">
-          <button
-            type="button"
-            onClick={onClose}
-            className={memberRequestModalCloseClass}
-            aria-label="Close"
-          >
-            ✕
-          </button>
+        <div className={`${memberRequestModalPanelClass} sm:max-w-[640px]`}>
+          {/* Mobile drag handle */}
+          <div className="flex sm:hidden justify-center pt-3 pb-1 shrink-0">
+            <span className="h-1 w-10 rounded-full bg-accent/25" />
+          </div>
 
-          <div className="flex flex-col gap-4 pr-10 sm:flex-row sm:items-start sm:justify-between">
-            <h2 className="font-copperplate text-[20px] leading-none tracking-[0.04em] uppercase">
-              <span className="text-foreground-soft">Vehicle </span>
-              <span className="text-primary">Documents</span>
-            </h2>
-
+          <div className="relative shrink-0 border-b border-accent/10 px-5 sm:px-6 pb-4 sm:pb-5 pt-5 sm:pt-6">
             <button
               type="button"
-              className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 self-start rounded-full border border-primary/40 px-4 py-2 text-[10px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary hover:bg-primary/8"
+              onClick={onClose}
+              className={memberRequestModalCloseClass}
+              aria-label="Close"
             >
-              <MemberGarageUploadOutlineIcon className="size-3.5" color="currentColor" />
-              Upload Document
+              ✕
             </button>
+
+            <div className="flex flex-col gap-3 sm:gap-4 pr-10 sm:flex-row sm:items-start sm:justify-between">
+              <h2 className="font-copperplate text-[18px] sm:text-[20px] leading-none tracking-[0.04em] uppercase">
+                <span className="text-foreground-soft">Vehicle </span>
+                <span className="text-primary">Documents</span>
+              </h2>
+
+              <button
+                type="button"
+                className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 self-start rounded-full border border-primary/40 px-4 py-2 text-[10px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary hover:bg-primary/8"
+              >
+                <MemberGarageUploadOutlineIcon className="size-3.5" color="currentColor" />
+                Upload Document
+              </button>
+            </div>
+          </div>
+
+          <div className={`${memberRequestModalBodyClass} space-y-2.5`}>
+            {documents.length > 0 ? (
+              documents.map((document) => {
+                const isSelected = selectedKey === document.key;
+
+                return (
+                  <div key={document.key} className="space-y-2">
+                    <DocumentRow
+                      document={document}
+                      isSelected={isSelected}
+                      onSelect={() =>
+                        setSelectedKey((current) =>
+                          current === document.key ? null : document.key,
+                        )
+                      }
+                    />
+
+                    {isSelected ? <DocumentPreview document={document} /> : null}
+                  </div>
+                );
+              })
+            ) : (
+              <p className="font-roboto py-8 text-center text-sm text-secondary">
+                No documents uploaded for this vehicle yet.
+              </p>
+            )}
           </div>
         </div>
-
-        <div className={`${memberRequestModalBodyClass} space-y-2.5`}>
-          {documents.length > 0 ? (
-            documents.map((document) => {
-              const isSelected = selectedKey === document.key;
-
-              return (
-                <div key={document.key} className="space-y-2">
-                  <DocumentRow
-                    document={document}
-                    isSelected={isSelected}
-                    onSelect={() =>
-                      setSelectedKey((current) =>
-                        current === document.key ? null : document.key,
-                      )
-                    }
-                  />
-
-                  {isSelected ? <DocumentPreview document={document} /> : null}
-                </div>
-              );
-            })
-          ) : (
-            <p className="font-roboto py-8 text-center text-sm text-secondary">
-              No documents uploaded for this vehicle yet.
-            </p>
-          )}
-        </div>
       </div>
-    </div>
+    </ModalPortal>
   );
 }

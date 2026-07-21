@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import {
   Calendar,
@@ -30,15 +30,23 @@ import {
 import { chatApi } from "@/api/chat.api";
 import { memberChatApi } from "@/api/memberChat.api";
 import { memberEventsApi } from "@/api/memberEvents.api";
+import { adminNavigationApi } from "@/api/adminNavigation.api";
+import { staffNavigationApi } from "@/api/staffNavigation.api";
 import { getUnreadConversationCount } from "@/lib/concierge";
 import { getMemberUnreadMessageCount } from "@/lib/memberConcierge";
 import { useTheme } from "@/components/common/ThemeProvider";
 import {
   ADMIN_PROFILE_PATH,
   adminManageNav,
+  adminNavItems,
   adminOperationsNav,
 } from "@/lib/adminNav";
-import { staffManagementNav, staffOperationsNav } from "@/lib/staffNav";
+import type { AdminNavigationBadgeKey } from "@/types/api";
+import {
+  staffManagementNav,
+  staffNavItems,
+  staffOperationsNav,
+} from "@/lib/staffNav";
 import { memberNav, memberServicesNav, memberAccountNav } from "@/lib/memberNav";
 import { SidebarProfileFooter } from "@/components/shared/layout/SidebarProfileFooter";
 import type { UserRole } from "@/lib/auth";
@@ -171,6 +179,23 @@ function isNavActive(pathname: string, href: string, base: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
+const ADMIN_BADGE_KEY_BY_NAV_ID: Record<string, AdminNavigationBadgeKey> = {
+  concierge: "concierge",
+  "service-requests": "serviceRequests",
+  bookings: "bookings",
+};
+
+// e.g. "service-requests" -> "serviceRequests", matching the badges API's key casing.
+function navIdToBadgeKey(navId: string): string {
+  return navId.replace(/-([a-z])/g, (_match, letter: string) =>
+    letter.toUpperCase(),
+  );
+}
+
+// Staff's concierge badge is already driven by live chat unread counts below —
+// keep it that way and don't let the generic navigation-badges API touch it.
+const STAFF_BADGE_EXCLUDED_NAV_IDS = new Set(["concierge"]);
+
 function NavSection({
   section,
   pathname,
@@ -292,6 +317,10 @@ export function Sidebar({
   const isLightMode = theme === "light";
   const [conciergeUnreadCount, setConciergeUnreadCount] = useState(0);
   const [eventsUpcomingCount, setEventsUpcomingCount] = useState(0);
+  const [adminBadges, setAdminBadges] = useState<
+    Record<AdminNavigationBadgeKey, number>
+  >({ concierge: 0, serviceRequests: 0, bookings: 0 });
+  const adminBadgesRef = useRef(adminBadges);
 
   useEffect(() => {
     onMobileClose?.();
@@ -374,6 +403,112 @@ export function Sidebar({
     };
   }, [role, pathname]);
 
+  useEffect(() => {
+    adminBadgesRef.current = adminBadges;
+  }, [adminBadges]);
+
+  useEffect(() => {
+    if (role !== "admin") return;
+
+    let cancelled = false;
+
+    async function loadAdminBadges() {
+      try {
+        const response = await adminNavigationApi.getBadges();
+
+        if (!cancelled) {
+          setAdminBadges({
+            concierge: response.data.concierge ?? 0,
+            serviceRequests: response.data.serviceRequests ?? 0,
+            bookings: response.data.bookings ?? 0,
+          });
+        }
+      } catch {
+        if (!cancelled) {
+          setAdminBadges({ concierge: 0, serviceRequests: 0, bookings: 0 });
+        }
+      }
+    }
+
+    loadAdminBadges();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role]);
+
+  // Clear a badge once its nav tab is opened.
+  useEffect(() => {
+    if (role !== "admin") return;
+
+    const activeNavId = Object.keys(ADMIN_BADGE_KEY_BY_NAV_ID).find((navId) => {
+      const item = adminNavItems.find((navItem) => navItem.id === navId);
+      return item ? isNavActive(pathname, item.href, spec.base) : false;
+    });
+
+    if (!activeNavId) return;
+
+    const badgeKey = ADMIN_BADGE_KEY_BY_NAV_ID[activeNavId];
+
+    if (adminBadgesRef.current[badgeKey] <= 0) return;
+
+    setAdminBadges((current) => ({ ...current, [badgeKey]: 0 }));
+    void adminNavigationApi.resolveBadge(badgeKey).catch(() => {});
+  }, [role, pathname, spec.base]);
+
+  const [staffBadges, setStaffBadges] = useState<Record<string, number>>({});
+  const staffBadgesRef = useRef(staffBadges);
+
+  useEffect(() => {
+    staffBadgesRef.current = staffBadges;
+  }, [staffBadges]);
+
+  useEffect(() => {
+    if (role !== "staff") return;
+
+    let cancelled = false;
+
+    async function loadStaffBadges() {
+      try {
+        const response = await staffNavigationApi.getBadges();
+
+        if (!cancelled) {
+          setStaffBadges(response.data ?? {});
+        }
+      } catch {
+        if (!cancelled) {
+          setStaffBadges({});
+        }
+      }
+    }
+
+    loadStaffBadges();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [role]);
+
+  // Clear a staff badge once its nav tab is opened.
+  useEffect(() => {
+    if (role !== "staff") return;
+
+    const activeItem = staffNavItems.find(
+      (navItem) =>
+        !STAFF_BADGE_EXCLUDED_NAV_IDS.has(navItem.id) &&
+        isNavActive(pathname, navItem.href, spec.base),
+    );
+
+    if (!activeItem) return;
+
+    const badgeKey = navIdToBadgeKey(activeItem.id);
+
+    if ((staffBadgesRef.current[badgeKey] ?? 0) <= 0) return;
+
+    setStaffBadges((current) => ({ ...current, [badgeKey]: 0 }));
+    void staffNavigationApi.resolveBadge(badgeKey).catch(() => {});
+  }, [role, pathname, spec.base]);
+
   const sections = useMemo(
     () =>
       spec.sections.map((section) => ({
@@ -403,10 +538,42 @@ export function Sidebar({
             };
           }
 
+          // Admin nav badges — only the items the badges API returns counts for.
+          if (role === "admin") {
+            const badgeKey = ADMIN_BADGE_KEY_BY_NAV_ID[item.id];
+            const count = badgeKey ? adminBadges[badgeKey] : 0;
+
+            if (count > 0) {
+              return {
+                ...item,
+                badge: { count, tone: "gold" as const },
+              };
+            }
+          }
+
+          // Staff nav badges — only the items the badges API returns counts for.
+          if (role === "staff" && !STAFF_BADGE_EXCLUDED_NAV_IDS.has(item.id)) {
+            const count = staffBadges[navIdToBadgeKey(item.id)] ?? 0;
+
+            if (count > 0) {
+              return {
+                ...item,
+                badge: { count, tone: "gold" as const },
+              };
+            }
+          }
+
           return item;
         }),
       })),
-    [spec, role, conciergeUnreadCount, eventsUpcomingCount],
+    [
+      spec,
+      role,
+      conciergeUnreadCount,
+      eventsUpcomingCount,
+      adminBadges,
+      staffBadges,
+    ],
   );
 
   return (

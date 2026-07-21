@@ -17,6 +17,11 @@ export function StaffJobListCard({ job }: StaffJobListCardProps) {
           <p className="font-copperplate text-[9px] tracking-[0.1em] text-secondary uppercase">
             {job.referenceNumber}
           </p>
+          {job.vehicle ? (
+            <p className="font-roboto text-[11px] tracking-[0.02em] text-foreground">
+              {job.vehicle}
+            </p>
+          ) : null}
         </div>
         <JobStatusBadge label={job.statusLabel} tone={job.statusTone} />
       </div>

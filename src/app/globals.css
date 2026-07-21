@@ -599,6 +599,31 @@ h6 {
   font-weight: 400 !important;
 }
 
+/* Light theme — the dark-tuned gradient/text above is unreadable on light
+   surfaces, so give the toast its own light-appropriate treatment. */
+[data-theme="light"] .toybox-toast {
+  background: linear-gradient(135deg, var(--card) 0%, #ffffff 100%) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent) !important;
+  box-shadow: 0 20px 50px rgba(26, 24, 22, 0.14), 0 0 0 1px rgba(255, 255, 255, 0.4) inset !important;
+  color: var(--foreground) !important;
+}
+
+[data-theme="light"] .toybox-toast-title {
+  color: var(--foreground) !important;
+}
+
+[data-theme="light"] .toybox-toast-message {
+  color: var(--secondary) !important;
+}
+
+[data-theme="light"] .Toastify__progress-bar--bg {
+  background: rgba(26, 24, 22, 0.08) !important;
+}
+
+[data-theme="light"] .Toastify__close-button {
+  color: var(--secondary) !important;
+}
+
 /* Progress bar */
 .Toastify__progress-bar {
   height: 3px !important;
@@ -904,6 +929,36 @@ input[type="number"] {
 }
 
 [data-theme="light"] .staff-modal-date-field {
+  color-scheme: light;
+}
+
+/* ── Parking modal date/time inputs ─────────────────────────────────────── */
+/* The input value text is hidden (text-transparent) and a styled <span>    */
+/* overlay shows formatted text. The picker-indicator stays visible so the  */
+/* user can tap it to open the native picker.                               */
+
+.parking-datetime-input {
+  background: transparent;
+  color: transparent;
+  caret-color: transparent;
+  outline: none;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.parking-datetime-input::-webkit-calendar-picker-indicator {
+  opacity: 1;
+  cursor: pointer;
+  filter: invert(0.7) sepia(0.4) saturate(3) hue-rotate(5deg);
+  width: 18px;
+  height: 18px;
+}
+
+[data-theme="dark"] .parking-datetime-input {
+  color-scheme: dark;
+}
+
+[data-theme="light"] .parking-datetime-input {
   color-scheme: light;
 }
 
@@ -1332,6 +1387,17 @@ html[data-theme="light"] .garage-filter-inactive:hover {
 }
 
 [data-theme="light"] .staff-add-cta:hover {
+  background-image: linear-gradient(90deg, #958770 0%, #d8d1c6 100%) !important;
+}
+
+/* Same gold→primary gradient issue as .staff-add-cta above, for the admin
+   parking Add/Edit Slot modals' CTA button and active toggle pills. */
+[data-theme="light"] .admin-parking-gold-cta {
+  background-image: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%) !important;
+  color: #1a1816 !important;
+}
+
+[data-theme="light"] .admin-parking-gold-cta:hover {
   background-image: linear-gradient(90deg, #958770 0%, #d8d1c6 100%) !important;
 }
 

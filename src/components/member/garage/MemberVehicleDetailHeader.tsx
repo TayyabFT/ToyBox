@@ -11,8 +11,8 @@ export function MemberVehicleDetailHeader({ onBookServices }: MemberVehicleDetai
   const router = useRouter();
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
-      <div className="space-y-3">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="space-y-2 sm:space-y-3">
         <button
           type="button"
           onClick={() => router.back()}
@@ -36,11 +36,11 @@ export function MemberVehicleDetailHeader({ onBookServices }: MemberVehicleDetai
           Back
         </button>
 
-        <div className="space-y-2">
+        <div className="space-y-1.5 sm:space-y-2">
           <p className="font-roboto text-[10px] tracking-[0.18em] text-primary uppercase">
             Your Collection
           </p>
-          <h1 className="font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground-soft uppercase">
+          <h1 className="font-copperplate text-[28px] sm:text-[32px] md:text-[36px] leading-none tracking-[0.04em] text-foreground-soft uppercase">
             Details
           </h1>
         </div>
@@ -49,7 +49,7 @@ export function MemberVehicleDetailHeader({ onBookServices }: MemberVehicleDetai
       <button
         type="button"
         onClick={onBookServices}
-        className="font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[12px] font-semibold text-dark transition-colors hover:bg-[#D4B45C]"
+        className="font-roboto flex w-full sm:w-auto shrink-0 cursor-pointer items-center justify-center gap-2 rounded-full bg-primary px-5 py-2.5 text-[12px] font-semibold text-dark transition-colors hover:bg-[#D4B45C]"
       >
         <MemberGarageRefreshIcon className="size-[14px]" color="currentColor" />
         Book Services

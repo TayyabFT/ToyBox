@@ -31,6 +31,11 @@ export const API_ENDPOINTS = {
   memberMaintenance: {
     requests: "/api/v1/maintenance/requests",
   },
+  memberParking: {
+    slots: "/api/v1/parking/slots",
+    sessions: "/api/v1/parking/sessions",
+    sessionDetail: (id: string | number) => `/api/v1/parking/sessions/${id}`,
+  },
   memberSourcing: {
     requests: "/api/v1/sourcing/requests",
     request: (id: string | number) => `/api/v1/sourcing/requests/${id}`,
@@ -111,6 +116,14 @@ export const API_ENDPOINTS = {
     detail: (taskQueueId: string) =>
       `/api/v1/admin/service-requests/jobs/${taskQueueId}`,
     all: "/api/v1/admin/service-requests/jobs",
+  },
+  adminNavigation: {
+    badges: "/api/v1/admin/navigation/badges",
+    resolveBadge: "/api/v1/admin/navigation/badges/resolve",
+  },
+  staffNavigation: {
+    badges: "/api/v1/staff/navigation/badges",
+    resolveBadge: "/api/v1/staff/navigation/badges/resolve",
   },
   staffOverview: {
     overview: "/api/v1/staff/overview",

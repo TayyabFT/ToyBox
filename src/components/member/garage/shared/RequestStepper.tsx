@@ -52,7 +52,7 @@ export function RequestStepper({
               className={`flex items-center ${isLast ? "" : "min-w-0 flex-1"}`}
             >
               <span
-                className={`font-roboto flex size-9 shrink-0 items-center justify-center rounded-full text-[12px] font-semibold ${
+                className={`font-roboto flex size-8 sm:size-9 shrink-0 items-center justify-center rounded-full text-[11px] sm:text-[12px] font-semibold ${
                   isReached
                     ? "bg-primary text-dark shadow-[0_0_16px_rgba(201,168,76,0.4)]"
                     : "garage-form-chip border border-accent/15 text-foreground-soft/50"

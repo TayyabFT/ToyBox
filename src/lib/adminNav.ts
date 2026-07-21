@@ -31,7 +31,6 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Members",
     href: `${ADMIN_BASE}/members`,
     section: "operations",
-    badge: { count: 142, tone: "gold" },
   },
   {
     id: "staff",
@@ -44,7 +43,6 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Vehicles",
     href: `${ADMIN_BASE}/vehicles`,
     section: "operations",
-    badge: { count: 287, tone: "gold" },
   },
   {
     id: "concierge",
@@ -57,7 +55,6 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Bookings",
     href: `${ADMIN_BASE}/bookings`,
     section: "operations",
-    badge: { count: 5, tone: "gold" },
   },
   {
     id: "service-requests",
@@ -70,7 +67,6 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Events",
     href: `${ADMIN_BASE}/events`,
     section: "operations",
-    badge: { count: 12, tone: "gold" },
   },
   {
     id: "clubhouse",
@@ -89,7 +85,6 @@ export const adminOperationsNav: AdminNavItem[] = [
     label: "Workshop",
     href: `${ADMIN_BASE}/workshop`,
     section: "operations",
-    badge: { count: 5, tone: "gold" },
   },
 ];
 

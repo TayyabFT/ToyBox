@@ -23,7 +23,7 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
   return (
     <>
       <div className="overflow-hidden rounded-2xl border border-accent/10 bg-card">
-        <div className="relative h-[240px] w-full">
+        <div className="relative h-[200px] sm:h-[240px] w-full">
           {vehicle.imageUrl ? (
             <img
               src={vehicle.imageUrl}
@@ -54,9 +54,9 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
           )}
         </div>
 
-        <div className="space-y-4 p-5">
+        <div className="space-y-3 sm:space-y-4 p-4 sm:p-5">
           <div className="space-y-1">
-            <h2 className="font-copperplate text-[18px] leading-tight uppercase">
+            <h2 className="font-copperplate text-[16px] sm:text-[18px] leading-tight uppercase">
               <span className="text-foreground">{vehicle.make} </span>
               <span className="text-primary">{vehicle.model}</span>
             </h2>
@@ -65,23 +65,23 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
             </p>
           </div>
 
-          <div className="grid min-w-0 grid-cols-4 gap-2 rounded-lg bg-accent/10 p-4">
+          <div className="grid min-w-0 grid-cols-4 gap-1.5 sm:gap-2 rounded-lg bg-accent/10 p-3 sm:p-4">
             {vehicle.stats.map((stat) => (
               <div key={stat.label} className="min-w-0 overflow-hidden text-center">
                 <p
-                  className="font-copperplate truncate text-[18px] leading-tight tabular-nums text-foreground"
+                  className="font-copperplate truncate text-[15px] sm:text-[18px] leading-tight tabular-nums text-foreground"
                   title={stat.value}
                 >
                   {stat.value}
                 </p>
-                <p className="font-roboto mt-1.5 truncate text-[9px] tracking-[0.12em] text-secondary uppercase">
+                <p className="font-roboto mt-1 sm:mt-1.5 truncate text-[8px] sm:text-[9px] tracking-[0.12em] text-secondary uppercase">
                   {stat.label}
                 </p>
               </div>
             ))}
           </div>
 
-          <div className="flex items-end justify-between gap-3 border-t border-accent/10 pt-4">
+          <div className="flex items-end justify-between gap-3 border-t border-accent/10 pt-3 sm:pt-4">
             <div className="space-y-0.5">
               <p className="font-roboto text-[9px] tracking-[0.12em] text-secondary/70 uppercase">
                 {vehicle.lastInspectedLabel}
@@ -95,7 +95,7 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
               <button
                 type="button"
                 onClick={() => setIsDocumentsOpen(true)}
-                className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
+                className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-3 sm:px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
               >
                 View Document
                 <MemberGarageChevronRight className="size-[10px]" color="currentColor" />

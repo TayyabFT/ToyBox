@@ -210,7 +210,7 @@ export function VehicleSourcingLandingStep({ onNewRequest }: VehicleSourcingLand
   return (
     <div className="space-y-5">
       {/* Hero image */}
-      <div className="relative h-[180px] w-full overflow-hidden rounded-xl bg-elevated">
+      <div className="relative h-[140px] sm:h-[180px] w-full overflow-hidden rounded-xl bg-elevated">
         <img
           src="/images/sourcing-hero.png"
           alt="Vehicle sourcing"
