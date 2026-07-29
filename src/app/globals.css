@@ -478,6 +478,14 @@ h6 {
   width: 380px;
 }
 
+@media (max-width: 420px) {
+  .Toastify__toast-container {
+    width: calc(100vw - 16px);
+    left: 8px !important;
+    right: 8px !important;
+  }
+}
+
 .toybox-toast {
   font-family: var(--font-roboto), sans-serif !important;
   background: linear-gradient(135deg, var(--card) 0%, #1a1814 100%) !important;

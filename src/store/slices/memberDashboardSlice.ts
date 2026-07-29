@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 import { authApi } from "@/api/auth.api";
 import { clubhouseApi } from "@/api/clubhouse.api";
 import { memberDashboardApi } from "@/api/memberDashboard.api";
+import { memberEventsApi } from "@/api/memberEvents.api";
 import { notificationsApi } from "@/api/notifications.api";
 import type { MemberActivityItem, MemberDashboardData } from "@/components/member/dashboard/types";
 import {
@@ -40,12 +41,13 @@ export const fetchMemberDashboard = createAsyncThunk(
         };
       }
 
-      const [dashboardResponse, profileResponse, inboxResponse, clubhouseResponse] =
+      const [dashboardResponse, profileResponse, inboxResponse, clubhouseResponse, groupedEventsResponse] =
         await Promise.all([
           memberDashboardApi.getSummary(),
           authApi.getProfile(),
           notificationsApi.getInbox().catch(() => null),
           clubhouseApi.getOverview().catch(() => null),
+          memberEventsApi.getGrouped().catch(() => null),
         ]);
 
       return {
@@ -54,6 +56,7 @@ export const fetchMemberDashboard = createAsyncThunk(
           profileResponse.data,
           inboxResponse?.data,
           clubhouseResponse?.data,
+          groupedEventsResponse?.data,
         ),
         quickActions: mapQuickActions(dashboardResponse.data?.quickActions),
       };

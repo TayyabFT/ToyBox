@@ -92,6 +92,7 @@ export function MemberEditProfileModal({
           label="Email"
           type="email"
           value={form.email}
+          disabled
           onChange={(event) => updateField("email", event.target.value)}
         />
 

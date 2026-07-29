@@ -132,7 +132,7 @@ export function MemberConciergePage() {
   }
 
   return (
-    <div className="space-y-6 p-8">
+    <div className="space-y-4 p-4 sm:space-y-6 sm:p-6 lg:p-8">
       <ConciergeGreeting
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
@@ -142,7 +142,7 @@ export function MemberConciergePage() {
         <ConciergeAlertBar alert={alert} onHandle={handleHandleAlert} />
       ) : null}
 
-      <div className="grid grid-cols-1 items-stretch gap-6 xl:grid-cols-3">
+      <div className="grid grid-cols-1 items-stretch gap-4 sm:gap-6 lg:grid-cols-3">
         <OpenRequestsPanel
           requests={filteredRequests}
           activeCount={activeCount}
@@ -151,7 +151,7 @@ export function MemberConciergePage() {
           onSelect={handleSelectContact}
         />
 
-        <div className="col-span-2 flex flex-col">
+        <div className="col-span-1 flex flex-col lg:col-span-2">
           <ConciergeChatPanel
             enabled={isChatSelected}
             contactId={selectedContactId ?? undefined}

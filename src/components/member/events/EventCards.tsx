@@ -68,9 +68,9 @@ export function EventsFeaturedCard({
 
   return (
     <div className="events-featured-card overflow-hidden rounded-[18px] border border-accent/10 bg-card">
-      <div className="flex flex-col md:flex-row">
+      <div className="flex flex-col sm:flex-row">
         {/* ── Left: image ────────────────────────────────────────────── */}
-        <div className="relative h-[220px] overflow-hidden md:h-auto md:min-h-[260px] md:w-[45%]">
+        <div className="relative h-[200px] overflow-hidden sm:h-auto sm:min-h-[240px] sm:w-[42%]">
           {!imageError && event.imageUrl ? (
             <img
               src={event.imageUrl}

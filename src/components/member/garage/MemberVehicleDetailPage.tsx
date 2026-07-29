@@ -199,7 +199,7 @@ export function MemberVehicleDetailPage({
     <div className="relative space-y-5 sm:space-y-6 p-4 sm:p-6 lg:p-8">
       <MemberVehicleDetailHeader onBookServices={handleBookServices} />
 
-      <div className="grid grid-cols-1 gap-5 sm:gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2">
         <div className="space-y-5 sm:space-y-6">
           <MemberVehicleHeroCard vehicle={vehicle} />
           <div ref={requestsRef}>

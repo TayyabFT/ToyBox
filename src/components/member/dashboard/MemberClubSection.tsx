@@ -128,7 +128,7 @@ export function VenueCard({
       onClick={onClick}
       className="group relative block min-w-0 flex-1 overflow-hidden rounded-[18px]"
     >
-      <div className="relative h-[240px] w-full bg-surface sm:h-[280px] md:h-[320px]">
+      <div className="relative h-[200px] w-full bg-surface sm:h-[240px] md:h-[320px]">
         {venue.imageUrl ? (
           <img
             src={venue.imageUrl}

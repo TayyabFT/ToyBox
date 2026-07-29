@@ -11,8 +11,8 @@ export function TermsPrivacyPage() {
   const ActiveSection = termsSectionComponents[activeId];
 
   return (
-    <div className="p-8">
-      <div className="mb-10 lg:hidden">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-8 lg:hidden">
         <TermsOnThisPageNav activeId={activeId} onSelect={setActiveId} />
       </div>
 

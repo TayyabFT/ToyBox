@@ -26,7 +26,7 @@ export function ConciergeGreeting({
         <p className="font-roboto text-xs tracking-[0.14em] text-primary uppercase">
           {dateLabel}
         </p>
-        <h1 className="font-copperplate text-[32px] leading-tight">
+        <h1 className="font-copperplate text-[24px] leading-tight sm:text-[32px]">
           <span className="text-foreground">Concierge </span>
           <span className="text-primary">Desk</span>
         </h1>

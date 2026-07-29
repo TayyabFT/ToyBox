@@ -41,8 +41,8 @@ function EventsSkeletonCard() {
 function EventsFeaturedSkeleton() {
   return (
     <div className="animate-pulse overflow-hidden rounded-[18px] border border-accent/10 bg-card">
-      <div className="flex flex-col md:flex-row">
-        <div className="h-[220px] bg-elevated md:h-auto md:w-[45%]" />
+      <div className="flex flex-col sm:flex-row">
+        <div className="h-[200px] bg-elevated sm:h-auto sm:w-[42%]" />
         <div className="flex flex-1 flex-col gap-4 p-6">
           <div className="space-y-3">
             <div className="h-2.5 w-32 rounded bg-elevated" />
@@ -229,7 +229,7 @@ export function MemberEvents() {
   // ── Return ────────────────────────────────────────────────────────────────
 
   return (
-    <div className="space-y-8 p-8">
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8 sm:space-y-8">
       <div className="space-y-2">
         <p className={memberPageEyebrowClass}>{eyebrowLabel}</p>
         <h1 className={memberPageTitleClass}>

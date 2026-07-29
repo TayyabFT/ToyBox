@@ -782,6 +782,7 @@ export type MemberDashboardSummaryData = {
   events?: {
     featured?: MemberDashboardEventRaw[];
     thisWeek?: MemberDashboardEventRaw[];
+    nextMonth?: MemberDashboardEventRaw[];
   };
   recentReservations?: MemberDashboardReservationRaw[];
   quickActions?: MemberDashboardQuickActionRaw[];

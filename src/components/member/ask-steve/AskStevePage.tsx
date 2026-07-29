@@ -23,7 +23,7 @@ export function AskStevePage() {
 
   if (hasConversation) {
     return (
-      <div className="mx-auto flex h-[calc(100vh-72px)] w-full max-w-4xl flex-col px-8 py-6">
+      <div className="mx-auto flex h-[calc(100vh-72px)] w-full max-w-4xl flex-col px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
         <AskSteveChatPanel
           messages={messages}
           messagesContainerRef={messagesContainerRef}
@@ -39,7 +39,7 @@ export function AskStevePage() {
   }
 
   return (
-    <div className="relative flex flex-col px-8 pb-32 pt-10">
+    <div className="relative flex flex-col px-4 pb-32 pt-8 sm:px-6 sm:pt-10 lg:px-8">
       <div className="mx-auto w-full max-w-4xl">
         {loading ? (
           <div className="flex items-center justify-center py-20">
@@ -48,7 +48,7 @@ export function AskStevePage() {
             </p>
           </div>
         ) : (
-          <div className="flex w-full flex-col items-center gap-10">
+          <div className="flex w-full flex-col items-center gap-8 sm:gap-10">
             <AskSteveHero greeting={greeting} />
             <AskSteveSuggestions
               disabled={sending || resetting}
@@ -58,8 +58,8 @@ export function AskStevePage() {
         )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 z-10 bg-background lg:pl-[340px]">
-        <div className="mx-auto w-full max-w-4xl px-8 pb-8 pt-4">
+      <div className="fixed bottom-0 left-0 right-0 z-10 bg-background lg:left-[340px]">
+        <div className="mx-auto w-full max-w-4xl px-4 pb-6 pt-3 sm:px-6 sm:pb-8 sm:pt-4 lg:px-8">
           <AskSteveInputBar
             value={draft}
             onChange={setDraft}

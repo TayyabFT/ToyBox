@@ -38,7 +38,7 @@ function spaceToVenue(space: ClubhouseSpaceCardRaw, section: ClubhouseAreaSectio
 
 function TheClubSkeleton() {
   return (
-    <div className="mx-auto w-full space-y-10 px-8 pb-12 pt-5 animate-pulse">
+    <div className="mx-auto w-full space-y-8 px-4 pb-10 pt-5 animate-pulse sm:px-6 sm:space-y-10 lg:px-8 lg:pb-12">
       <div className="space-y-2">
         <div className="h-3 w-32 rounded bg-elevated" />
         <div className="h-10 w-64 rounded bg-elevated" />
@@ -167,7 +167,7 @@ function SpaceCard({
       onClick={onBook}
       className="group relative block w-full overflow-hidden rounded-[18px] text-left"
     >
-      <div className="relative h-[300px] w-full bg-surface">
+      <div className="relative h-[220px] w-full bg-surface sm:h-[300px]">
         {image ? (
           <img
             src={image}
@@ -280,7 +280,7 @@ export function MemberTheClubPage() {
 
   if (error) {
     return (
-      <div className="mx-auto w-full px-8 py-16 flex flex-col items-center justify-center text-center space-y-6">
+      <div className="mx-auto w-full px-4 py-12 flex flex-col items-center justify-center text-center space-y-6 sm:px-8 sm:py-16">
         <div className="rounded-full bg-destructive/10 p-4 border border-destructive/20 text-destructive">
           <svg className="size-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
@@ -306,13 +306,13 @@ export function MemberTheClubPage() {
   }
 
   return (
-    <div className="mx-auto w-full space-y-12 px-8 pb-16 pt-5">
+    <div className="mx-auto w-full space-y-10 px-4 pb-12 pt-5 sm:px-6 sm:space-y-12 lg:px-8 lg:pb-16">
       {/* Page header */}
       <div className="space-y-1.5">
         <p className="font-Roboto text-[10px] font-medium tracking-[0.24em] text-secondary uppercase">
           {statusLine}
         </p>
-        <h1 className="font-copperplate text-[38px] font-light leading-none tracking-[-0.75px] uppercase sm:text-[46px]">
+        <h1 className="font-copperplate text-[28px] font-light leading-none tracking-[-0.75px] uppercase sm:text-[38px] md:text-[46px]">
           <span className="text-foreground">Club </span>
           <span className="font-normal text-primary">House</span>
         </h1>

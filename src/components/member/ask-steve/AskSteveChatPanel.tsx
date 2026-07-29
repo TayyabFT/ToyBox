@@ -31,13 +31,13 @@ export function AskSteveChatPanel({
 
   return (
     <section className="flex h-[calc(100vh-120px)] w-full flex-col overflow-hidden">
-      <div className="shrink-0 px-2 py-5">
+      <div className="shrink-0 px-2 py-4 sm:py-5">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <h2 className="font-copperplate text-[28px] leading-none tracking-[0.06em] text-foreground uppercase">
+            <h2 className="font-copperplate text-[22px] leading-none tracking-[0.06em] text-foreground uppercase sm:text-[28px]">
               Ask Steve
             </h2>
-            <p className="font-roboto !mt-3 text-[11px] tracking-[0.12em] text-secondary uppercase">
+            <p className="font-roboto !mt-2 text-[10px] tracking-[0.12em] text-secondary uppercase sm:!mt-3 sm:text-[11px]">
               Your private intelligence
             </p>
           </div>

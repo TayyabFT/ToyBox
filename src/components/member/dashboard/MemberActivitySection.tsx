@@ -88,7 +88,6 @@ function ActivityRow({
 }
 
 export function MemberActivitySection({ items }: MemberActivitySectionProps) {
-  console.log("items",items)
   return (
     <div className="space-y-5">
       {/* Header */}

@@ -8,6 +8,7 @@ import type {
   MemberDashboardQuickActionRaw,
   MemberDashboardReservationRaw,
   MemberDashboardSummaryData,
+  MemberEventsGroupedData,
   NotificationInboxData,
 } from "@/types/api";
 import type {
@@ -252,12 +253,26 @@ function dedupeEvents(events: MemberDashboardEventRaw[]): MemberDashboardEventRa
 function mapKpis(
   dashboard?: MemberDashboardSummaryData | null,
   profile?: AuthProfileData | null,
+  eventsGrouped?: MemberEventsGroupedData | null,
 ): MemberKpi[] {
   const stats = dashboard?.stats;
   const memberDays = profile?.memberDays ?? profile?.stats?.memberDays ?? 0;
-  const featuredCount = dashboard?.events?.featured?.length ?? 0;
-  const weekCount = dashboard?.events?.thisWeek?.length ?? 0;
-  const upcomingEvents = featuredCount + weekCount;
+  const now = new Date();
+  const allEvents = dedupeEvents([
+    ...(dashboard?.events?.featured ?? []),
+    ...(dashboard?.events?.thisWeek ?? []),
+    ...(dashboard?.events?.nextMonth ?? []),
+    ...((eventsGrouped?.featured as MemberDashboardEventRaw[]) ?? []),
+    ...((eventsGrouped?.thisWeek as MemberDashboardEventRaw[]) ?? []),
+    ...((eventsGrouped?.nextMonth as MemberDashboardEventRaw[]) ?? []),
+  ]);
+  const upcomingEvents = allEvents.filter((e) => {
+    const iso = e.startsAt || (e as { endsAt?: string }).endsAt;
+    if (!iso) return false;
+    const endIso = (e as { endsAt?: string }).endsAt ?? e.startsAt;
+    const endDate = new Date(endIso ?? "");
+    return !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime();
+  }).length;
   const tierLabel = resolveMembershipTier(profile);
 
   return [
@@ -314,9 +329,9 @@ function mapActivityItems(
   notifications: InboxNotificationRaw[],
   reservations?: MemberDashboardReservationRaw[],
 ): MemberActivityItem[] {
-  const items: MemberActivityItem[] = [];
+  // Collect all candidates with a raw timestamp for sorting
+  const candidates: { item: MemberActivityItem; ts: number }[] = [];
 
-  // Map reservations first — they're the most relevant new activity
   for (const res of reservations ?? []) {
     const areaLabel = (res.areaTitle || res.areaType || "Clubhouse")
       .replace(/_/g, " ")
@@ -335,33 +350,42 @@ function mapActivityItems(
       ? `${res.guests} guest${res.guests !== 1 ? "s" : ""}`
       : "";
     const slotLine = res.timeSlot ? ` · ${res.timeSlot}` : "";
+    const rawTs = res.confirmedAt ?? res.createdAt;
 
-    items.push({
-      id: `res-${res.id ?? res.referenceNumber ?? items.length}`,
-      title: `Clubhouse — ${areaLabel}`,
-      titlePrefix: "Clubhouse",
-      titleHighlight: areaLabel,
-      detail: `${guestLine}${slotLine} · ${statusLabel}`,
-      timeLabel: formatRelativeTime(res.confirmedAt ?? res.createdAt),
-      tone: "gold",
+    candidates.push({
+      item: {
+        id: `res-${res.id ?? res.referenceNumber ?? candidates.length}`,
+        title: `Clubhouse — ${areaLabel}`,
+        titlePrefix: "Clubhouse",
+        titleHighlight: areaLabel,
+        detail: `${guestLine}${slotLine} · ${statusLabel}`,
+        timeLabel: formatRelativeTime(rawTs),
+        tone: "gold",
+      },
+      ts: rawTs ? new Date(rawTs).getTime() : 0,
     });
   }
 
-  // Fill remaining slots from notifications
-  const remaining = Math.max(0, 4 - items.length);
-  for (const item of notifications.slice(0, remaining)) {
-    const mapped = mapInboxNotification(item);
-    const idx = items.length;
-    items.push({
-      id: mapped?.id || String(idx),
-      title: mapped?.title || "Activity",
-      detail: mapped?.subheading || "",
-      timeLabel: formatRelativeTime(item.createdAt),
-      tone: idx % 2 === 0 ? "gold" : "default",
+  for (const notification of notifications) {
+    const mapped = mapInboxNotification(notification);
+    const idx = candidates.length;
+    candidates.push({
+      item: {
+        id: mapped?.id || String(idx),
+        title: mapped?.title || "Activity",
+        detail: mapped?.subheading || "",
+        timeLabel: formatRelativeTime(notification.createdAt),
+        tone: idx % 2 === 0 ? "gold" : "default",
+      },
+      ts: notification.createdAt ? new Date(notification.createdAt).getTime() : 0,
     });
   }
 
-  return items.slice(0, 4);
+  // Sort newest first, then take the top 4
+  return candidates
+    .sort((a, b) => b.ts - a.ts)
+    .slice(0, 4)
+    .map(({ item }) => item);
 }
 
 // ── Clubhouse venues ─────────────────────────────────────────────────────────
@@ -554,11 +578,16 @@ export function mapMemberDashboard(
   profile?: AuthProfileData | null,
   inbox?: NotificationInboxData | null,
   clubhouse?: ClubhouseOverviewData | null,
+  eventsGrouped?: MemberEventsGroupedData | null,
 ): MemberDashboardData {
   const notifications = extractNotifications(inbox);
   const events = dedupeEvents([
     ...(dashboard?.events?.featured ?? []),
     ...(dashboard?.events?.thisWeek ?? []),
+    ...(dashboard?.events?.nextMonth ?? []),
+    ...((eventsGrouped?.featured as MemberDashboardEventRaw[]) ?? []),
+    ...((eventsGrouped?.thisWeek as MemberDashboardEventRaw[]) ?? []),
+    ...((eventsGrouped?.nextMonth as MemberDashboardEventRaw[]) ?? []),
   ]);
 
   const vehicles = (dashboard?.garage?.vehicles ?? []).map(mapVehicle);
@@ -573,7 +602,7 @@ export function mapMemberDashboard(
     memberNumber: resolveMemberNumber(profile),
     membershipTier: resolveMembershipTier(profile),
     memberSince: resolveMemberSince(profile),
-    kpis: mapKpis(dashboard, profile),
+    kpis: mapKpis(dashboard, profile, eventsGrouped),
     vehicles,
     diary,
     clubVenues,

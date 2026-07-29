@@ -177,9 +177,11 @@ export function groupFlatEvents(
   nextEnd.setHours(23, 59, 59, 999);
 
   // Helper: is this raw event in the past?
+  // An event is only past if its endsAt (or startsAt if endsAt is missing) is before refDate.
   const isEventPast = (r: MemberEventRaw) => {
-    const d = new Date(r.startsAt ?? "");
-    return !isNaN(d.getTime()) && d.getTime() < weekStart.getTime();
+    const endIso = r.endsAt ?? r.startsAt;
+    const d = new Date(endIso ?? "");
+    return !isNaN(d.getTime()) && d.getTime() < refDate.getTime();
   };
 
   // ── Hero selection ───────────────────────────────────────────────────────
@@ -225,15 +227,21 @@ export function groupFlatEvents(
       continue;
     }
 
-    const eventDate = new Date(e.id && rawEvents.find(r => r.id === e.id)?.startsAt || "");
+    const rawEvent = rawEvents.find((r) => r.id === e.id);
+    const eventDate = new Date(rawEvent?.startsAt || "");
+    const endDate = rawEvent?.endsAt ? new Date(rawEvent.endsAt) : eventDate;
+
     if (isNaN(eventDate.getTime())) {
       otherUpcoming.push(e);
       continue;
     }
 
-    if (eventDate.getTime() < weekStart.getTime()) {
+    if (rawEvent && isEventPast(rawEvent)) {
       past.push(e);
     } else if (eventDate.getTime() >= weekStart.getTime() && eventDate.getTime() <= weekEnd.getTime()) {
+      thisWeek.push(e);
+    } else if (eventDate.getTime() < weekStart.getTime() && endDate.getTime() >= refDate.getTime()) {
+      // Ongoing event: started before this week but endsAt has not passed yet → treat as thisWeek
       thisWeek.push(e);
     } else if (eventDate.getTime() >= nextStart.getTime() && eventDate.getTime() <= nextEnd.getTime()) {
       nextMonth.push(e);

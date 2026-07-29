@@ -375,14 +375,17 @@ export function Sidebar({
         const response = await memberEventsApi.getGrouped();
         if (!cancelled) {
           const { featured, thisWeek, nextMonth } = response.data;
-          // Deduplicate by id across all groups, then count events not yet joined
+          // Deduplicate by id across all groups, then count events not yet joined and not yet started
           const seen = new Set<string>();
           const allUpcoming = [...(featured ?? []), ...(thisWeek ?? []), ...(nextMonth ?? [])];
+          const now = new Date();
           let count = 0;
           for (const event of allUpcoming) {
             if (!seen.has(event.id)) {
               seen.add(event.id);
-              if (!event.isJoined) {
+              const startDate = event.startsAt ? new Date(event.startsAt) : null;
+              const hasNotStarted = !startDate || startDate.getTime() > now.getTime();
+              if (!event.isJoined && hasNotStarted) {
                 count++;
               }
             }

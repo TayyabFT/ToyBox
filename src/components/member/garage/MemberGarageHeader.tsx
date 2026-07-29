@@ -4,7 +4,7 @@ type MemberGarageHeaderProps = {
 
 export function MemberGarageHeader({ onAddVehicleClick }: MemberGarageHeaderProps) {
   return (
-    <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex items-end justify-between gap-4">
       <div className="space-y-1.5 sm:space-y-2">
         <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           Your Collection
@@ -17,7 +17,7 @@ export function MemberGarageHeader({ onAddVehicleClick }: MemberGarageHeaderProp
       <button
         type="button"
         onClick={onAddVehicleClick}
-        className="garage-add-vehicle-btn font-roboto shrink-0 cursor-pointer rounded-full px-7 py-3 text-[10px] font-semibold tracking-[0.18em] uppercase"
+        className="garage-add-vehicle-btn font-roboto shrink-0 cursor-pointer rounded-full px-5 py-2.5 text-[10px] font-semibold tracking-[0.18em] uppercase sm:px-7 sm:py-3"
       >
         <span className="garage-add-vehicle-btn__shimmer" aria-hidden="true" />
         <span className="relative flex items-center gap-2">

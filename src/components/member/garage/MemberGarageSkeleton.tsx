@@ -42,7 +42,7 @@ function GarageCardSkeleton() {
 
 export function MemberGarageCardsSkeleton() {
   return (
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-2 animate-pulse">
+    <div className="grid grid-cols-1 gap-5 lg:grid-cols-2 animate-pulse">
       {Array.from({ length: 4 }).map((_, i) => (
         <GarageCardSkeleton key={i} />
       ))}
@@ -60,12 +60,12 @@ export function MemberGarageSkeleton() {
       aria-label="Loading garage"
     >
       {/* Header: eyebrow + title + button */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+      <div className="flex items-end justify-between gap-4">
         <div className="space-y-2">
           <Skeleton className="h-3 w-28" />
           <Skeleton className="h-7 sm:h-9 w-24 sm:w-32" />
         </div>
-        <Skeleton className="h-10 w-full sm:w-36 rounded-full" />
+        <Skeleton className="h-9 w-32 shrink-0 rounded-full sm:h-10 sm:w-36" />
       </div>
 
       {/* Filter tabs */}
@@ -211,7 +211,7 @@ export function MemberVehicleDetailSkeleton() {
       </div>
 
       {/* Two-column layout */}
-      <div className="grid grid-cols-1 gap-5 sm:gap-6 xl:grid-cols-2">
+      <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2">
         {/* Left column */}
         <div className="space-y-5 sm:space-y-6">
           <VehicleHeroCardSkeleton />
