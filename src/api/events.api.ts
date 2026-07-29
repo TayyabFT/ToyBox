@@ -10,6 +10,9 @@ import type {
   UpdateEventNotesResponse,
 } from "@/types/api";
 
+/** Fields accepted by the PATCH /admin/events/:id endpoint */
+export type UpdateEventRequest = Partial<CreateEventRequest>;
+
 export const eventsApi = {
   create: (payload: CreateEventRequest) =>
     apiClient<EventResponse>(API_ENDPOINTS.events.createevent, {
@@ -34,7 +37,7 @@ export const eventsApi = {
 
   updateEvent: (
     id: string | number,
-    payload: Partial<Pick<CreateEventRequest, "status">>,
+    payload: UpdateEventRequest,
   ) =>
     apiClient<EventResponse>(API_ENDPOINTS.events.update(id), {
       method: "PATCH",
@@ -55,5 +58,11 @@ export const eventsApi = {
     apiClient<UpdateEventNotesResponse>(API_ENDPOINTS.events.notes(id), {
       method: "PATCH",
       body: payload,
+    }),
+
+  /** Returns a sorted list of distinct vehicle makes present in the system. */
+  getVehicleMakes: () =>
+    apiClient<{ data: string[] }>(API_ENDPOINTS.events.vehicleMakes, {
+      method: "GET",
     }),
 };

@@ -22,6 +22,7 @@ interface EventItem {
   wait: number;
   progress: number;
   status: string; // raw status from API e.g. "draft" | "published" | "past"
+  hasEligibility?: boolean;
 }
 
 interface EventsCardProps {
@@ -72,6 +73,7 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
           wait: waitlistCount,
           progress: capacity ? (attendingCount / capacity) * 100 : 0,
           status: apiEvent.status?.toLowerCase() || "draft",
+          hasEligibility: Boolean(apiEvent.eligibility?.enabled),
         };
       });
 
@@ -172,13 +174,20 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
                   alt={event.title} 
                   className="w-full h-full object-cover opacity-80"
                 />
-                <span className={`absolute top-4 left-4 bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
-                  isPublishedEventStatus(event.status)
-                    ? "text-teal border-teal/30"
-                    : "text-accent border-accent/20"
-                }`}>
-                  {event.tag}
-                </span>
+                <div className="absolute top-4 left-4 flex flex-wrap gap-1.5 items-center">
+                  <span className={`bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
+                    isPublishedEventStatus(event.status)
+                      ? "text-teal border-teal/30"
+                      : "text-accent border-accent/20"
+                  }`}>
+                    {event.tag}
+                  </span>
+                  {event.hasEligibility && (
+                    <span className="bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border text-pink border-pink/30">
+                      RESTRICTED
+                    </span>
+                  )}
+                </div>
                 <span className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-wider text-foreground px-3 py-1 rounded-full border border-accent/12">
                   {event.confirmedCount} / {event.totalCount} CONFIRMED
                 </span>

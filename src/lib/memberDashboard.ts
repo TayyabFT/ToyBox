@@ -253,26 +253,28 @@ function dedupeEvents(events: MemberDashboardEventRaw[]): MemberDashboardEventRa
 function mapKpis(
   dashboard?: MemberDashboardSummaryData | null,
   profile?: AuthProfileData | null,
-  eventsGrouped?: MemberEventsGroupedData | null,
+  eventsFlat?: MemberDashboardEventRaw[] | null,
 ): MemberKpi[] {
   const stats = dashboard?.stats;
   const memberDays = profile?.memberDays ?? profile?.stats?.memberDays ?? 0;
   const now = new Date();
-  const allEvents = dedupeEvents([
-    ...(dashboard?.events?.featured ?? []),
-    ...(dashboard?.events?.thisWeek ?? []),
-    ...(dashboard?.events?.nextMonth ?? []),
-    ...((eventsGrouped?.featured as MemberDashboardEventRaw[]) ?? []),
-    ...((eventsGrouped?.thisWeek as MemberDashboardEventRaw[]) ?? []),
-    ...((eventsGrouped?.nextMonth as MemberDashboardEventRaw[]) ?? []),
-  ]);
-  const upcomingEvents = allEvents.filter((e) => {
-    const iso = e.startsAt || (e as { endsAt?: string }).endsAt;
-    if (!iso) return false;
-    const endIso = (e as { endsAt?: string }).endsAt ?? e.startsAt;
-    const endDate = new Date(endIso ?? "");
-    return !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime();
-  }).length;
+
+  // Count all eligible events whose end time (or start time if no end) has not passed.
+  // Uses the full flat list so events beyond "next month" (the "UPCOMING" section on the
+  // events page) are included — matching what the Events page and the sidebar badge show.
+  const seen = new Set<string>();
+  let upcomingEvents = 0;
+  for (const e of eventsFlat ?? []) {
+    const key = String(e.id ?? "");
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    const endIso = e.endsAt ?? e.startsAt;
+    const endDate = endIso ? new Date(endIso) : null;
+    if (endDate && !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime()) {
+      upcomingEvents++;
+    }
+  }
+
   const tierLabel = resolveMembershipTier(profile);
 
   return [
@@ -578,16 +580,15 @@ export function mapMemberDashboard(
   profile?: AuthProfileData | null,
   inbox?: NotificationInboxData | null,
   clubhouse?: ClubhouseOverviewData | null,
-  eventsGrouped?: MemberEventsGroupedData | null,
+  eventsFlat?: { events?: MemberDashboardEventRaw[] } | null,
 ): MemberDashboardData {
   const notifications = extractNotifications(inbox);
+
+  // Diary cards use events from the dashboard summary (featured/thisWeek/nextMonth only)
   const events = dedupeEvents([
     ...(dashboard?.events?.featured ?? []),
     ...(dashboard?.events?.thisWeek ?? []),
     ...(dashboard?.events?.nextMonth ?? []),
-    ...((eventsGrouped?.featured as MemberDashboardEventRaw[]) ?? []),
-    ...((eventsGrouped?.thisWeek as MemberDashboardEventRaw[]) ?? []),
-    ...((eventsGrouped?.nextMonth as MemberDashboardEventRaw[]) ?? []),
   ]);
 
   const vehicles = (dashboard?.garage?.vehicles ?? []).map(mapVehicle);
@@ -602,7 +603,7 @@ export function mapMemberDashboard(
     memberNumber: resolveMemberNumber(profile),
     membershipTier: resolveMembershipTier(profile),
     memberSince: resolveMemberSince(profile),
-    kpis: mapKpis(dashboard, profile, eventsGrouped),
+    kpis: mapKpis(dashboard, profile, eventsFlat?.events ?? null),
     vehicles,
     diary,
     clubVenues,

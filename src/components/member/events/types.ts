@@ -9,6 +9,7 @@ export type EventItem = {
   titleHighlight?: string;
   location: string;
   dateLabel: string;   // e.g. "SAT 26 APR"
+  dateEndLabel?: string; // e.g. "SUN 27 APR" (if multi-day event)
   timeLabel?: string;  // e.g. "19:00"
   timeEndLabel?: string; // e.g. "23:00" — shown as range on featured card
   description?: string; // short paragraph shown on featured card only

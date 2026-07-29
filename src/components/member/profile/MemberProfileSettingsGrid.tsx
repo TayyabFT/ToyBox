@@ -152,15 +152,22 @@ function SettingsRow({
 
   if (isInteractive) {
     return (
-      <button
-        type="button"
+      <div
+        role="button"
+        tabIndex={0}
         onClick={() => onExpand(item.id)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            onExpand(item.id);
+          }
+        }}
         className={`flex w-full cursor-pointer items-center gap-3 rounded-lg px-1 py-3.5 text-left transition-colors ${
           expanded ? "bg-accent/8" : "hover:bg-accent/5"
         }`}
       >
         {content}
-      </button>
+      </div>
     );
   }
 

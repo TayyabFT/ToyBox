@@ -40,6 +40,7 @@ export const eventsPageMock: EventsData = {
           location: "Memorial Park Ramp",
           dateLabel: "SAT 26 APR",
           timeLabel: "06:00",
+          timeEndLabel: "09:00",
           tag: "APR 26",
           tagTone: "gold",
           imageUrl:
@@ -56,6 +57,7 @@ export const eventsPageMock: EventsData = {
           location: "Clubhouse",
           dateLabel: "SAT 26 APR",
           timeLabel: "20:00",
+          timeEndLabel: "23:00",
           tag: "APR 26",
           tagTone: "gold",
           imageUrl:
@@ -72,6 +74,7 @@ export const eventsPageMock: EventsData = {
           location: "Members' Lounge",
           dateLabel: "SAT 26 APR",
           timeLabel: "19:00",
+          timeEndLabel: "22:00",
           tag: "APR 26",
           tagTone: "gold",
           imageUrl:
@@ -94,6 +97,7 @@ export const eventsPageMock: EventsData = {
           location: "Yas Marina",
           dateLabel: "SAT 10 MAY",
           timeLabel: "09:00",
+          timeEndLabel: "14:00",
           tag: "APR 23",
           tagTone: "gold",
           imageUrl:
@@ -126,6 +130,7 @@ export const eventsPageMock: EventsData = {
           location: "Expedition Basecamp",
           dateLabel: "SAT 30 MAY",
           timeLabel: "16:30",
+          timeEndLabel: "20:00",
           tag: "SUN 27",
           tagTone: "gold",
           imageUrl:

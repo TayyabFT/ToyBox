@@ -62,9 +62,20 @@ export function EventsFeaturedCard({
 }: CardProps) {
   const [imageError, setImageError] = useState(false);
 
-  const timeDisplay = event.timeEndLabel
-    ? `${event.timeLabel} — ${event.timeEndLabel}`
-    : event.timeLabel;
+  const rangeDisplay = (() => {
+    if (event.dateEndLabel && event.dateEndLabel !== event.dateLabel) {
+      const startStr = event.timeLabel ? `${event.dateLabel} ${event.timeLabel}` : event.dateLabel;
+      const endStr = event.timeEndLabel ? `${event.dateEndLabel} ${event.timeEndLabel}` : event.dateEndLabel;
+      return `${startStr} — ${endStr}`;
+    }
+    if (event.timeLabel && event.timeEndLabel && event.timeLabel !== event.timeEndLabel) {
+      return `${event.dateLabel} · ${event.timeLabel} - ${event.timeEndLabel}`;
+    }
+    if (event.timeLabel) {
+      return `${event.dateLabel} · ${event.timeLabel}`;
+    }
+    return event.dateLabel;
+  })();
 
   return (
     <div className="events-featured-card overflow-hidden rounded-[18px] border border-accent/10 bg-card">
@@ -93,10 +104,7 @@ export function EventsFeaturedCard({
           <div className="space-y-3">
             {/* Date · time */}
             <p className="font-roboto text-[11px] tracking-[0.16em] uppercase">
-              <span className="font-Roboto text-primary">{event.dateLabel}</span>
-              {timeDisplay && (
-                <span className="font-Roboto text-primary"> · {timeDisplay}</span>
-              )}
+              <span className="font-Roboto text-primary">{rangeDisplay}</span>
             </p>
 
             {/* Title */}
@@ -233,6 +241,21 @@ export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onCli
   const tagClass = TAG_TONE[event.tagTone] ?? TAG_TONE.gold;
   const [imageError, setImageError] = useState(false);
 
+  const gridTimeRange = (() => {
+    if (event.dateEndLabel && event.dateEndLabel !== event.dateLabel) {
+      const startStr = event.timeLabel ? `${event.dateLabel} ${event.timeLabel}` : event.dateLabel;
+      const endStr = event.timeEndLabel ? `${event.dateEndLabel} ${event.timeEndLabel}` : event.dateEndLabel;
+      return `${startStr} — ${endStr}`;
+    }
+    if (event.timeLabel && event.timeEndLabel && event.timeLabel !== event.timeEndLabel) {
+      return `${event.dateLabel} — ${event.timeLabel} - ${event.timeEndLabel}`;
+    }
+    if (event.timeLabel) {
+      return `${event.dateLabel} — ${event.timeLabel}`;
+    }
+    return event.dateLabel;
+  })();
+
   return (
     <div
       onClick={onClick}
@@ -274,11 +297,8 @@ export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onCli
             <span className="text-primary">{event.titleHighlight}</span>
           )}
         </h3>
-        <p className="font-Roboto text-[9.5px] font-medium tracking-[0.14em] uppercase">
-          <span className="text-primary">{event.dateLabel}</span>
-          {event.timeLabel && (
-            <span className="text-secondary/55 text-[9px]"> — {event.timeLabel}</span>
-          )}
+        <p className="font-Roboto text-[9.5px] font-medium tracking-[0.14em] uppercase text-primary">
+          {gridTimeRange}
         </p>
       </div>
     </div>

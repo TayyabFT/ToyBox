@@ -70,6 +70,15 @@ function tagFromCategory(
   return map[category?.toLowerCase() ?? ""] ?? { tag: "EVENT", tagTone: "gold" };
 }
 
+function getFallbackEndsAt(startsAt?: string): string | undefined {
+  if (!startsAt) return undefined;
+  const d = new Date(startsAt);
+  if (isNaN(d.getTime())) return undefined;
+  // Default to 2 hours duration if endsAt is not specified
+  const end = new Date(d.getTime() + 2 * 60 * 60 * 1000);
+  return end.toISOString();
+}
+
 // ── Main mapper ───────────────────────────────────────────────────────────────
 
 export function mapMemberEventRaw(
@@ -113,15 +122,26 @@ export function mapMemberEventRaw(
     detailLines.push({ icon: "badge", text: "Open to all members" });
   }
 
+  const startsAtIso = raw.startsAt;
+  const endsAtIso = raw.endsAt || getFallbackEndsAt(startsAtIso);
+
+  const startDateLabel = formatDateLabel(startsAtIso);
+  const endDateLabel = endsAtIso ? formatDateLabel(endsAtIso) : undefined;
+  const dateEndLabel = endDateLabel && endDateLabel !== startDateLabel ? endDateLabel : undefined;
+
+  const timeLabel = formatTimeLabel(startsAtIso, raw.isAllDay);
+  const timeEndLabel = endsAtIso && !raw.isAllDay ? formatTimeLabel(endsAtIso) : undefined;
+
   return {
     id: raw.id,
     title: raw.title ?? "",
     titlePrefix: prefix,
     titleHighlight: highlight,
     location: raw.location ?? "",
-    dateLabel: formatDateLabel(raw.startsAt),
-    timeLabel: formatTimeLabel(raw.startsAt, raw.isAllDay),
-    timeEndLabel: raw.endsAt ? formatTimeLabel(raw.endsAt) : undefined,
+    dateLabel: startDateLabel,
+    dateEndLabel,
+    timeLabel,
+    timeEndLabel,
     description: raw.description,
     tag: isFeatured ? "FEATURED TONIGHT" : tag,
     tagTone: isFeatured ? "gold" : tagTone,

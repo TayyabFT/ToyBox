@@ -290,6 +290,7 @@ export function EventsPage() {
       capacity: raw?.capacity ?? 50,
       accessType: raw?.accessType ?? "open",
       status: raw?.status ?? "draft",
+      eligibility: raw?.eligibility ?? null,
     });
     setIsFormOpen(true);
   };

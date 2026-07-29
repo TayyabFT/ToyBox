@@ -47,7 +47,8 @@ export const fetchMemberDashboard = createAsyncThunk(
           authApi.getProfile(),
           notificationsApi.getInbox().catch(() => null),
           clubhouseApi.getOverview().catch(() => null),
-          memberEventsApi.getGrouped().catch(() => null),
+          // Use the flat endpoint so events beyond "next month" are included in the KPI count
+          memberEventsApi.getFlat({ limit: 100 }).catch(() => null),
         ]);
 
       return {

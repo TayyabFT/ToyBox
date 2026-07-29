@@ -372,22 +372,22 @@ export function Sidebar({
 
     async function loadEventsUpcomingCount() {
       try {
-        const response = await memberEventsApi.getGrouped();
+        // Use the flat endpoint (limit=100) so events beyond "next month" (the
+        // "UPCOMING" section on the events page) are included in the count.
+        const response = await memberEventsApi.getFlat({ limit: 100 });
         if (!cancelled) {
-          const { featured, thisWeek, nextMonth } = response.data;
-          // Deduplicate by id across all groups, then count events not yet joined and not yet started
-          const seen = new Set<string>();
-          const allUpcoming = [...(featured ?? []), ...(thisWeek ?? []), ...(nextMonth ?? [])];
+          const events = response.data.events ?? [];
           const now = new Date();
+          const seen = new Set<string>();
           let count = 0;
-          for (const event of allUpcoming) {
-            if (!seen.has(event.id)) {
-              seen.add(event.id);
-              const startDate = event.startsAt ? new Date(event.startsAt) : null;
-              const hasNotStarted = !startDate || startDate.getTime() > now.getTime();
-              if (!event.isJoined && hasNotStarted) {
-                count++;
-              }
+          for (const event of events) {
+            if (seen.has(event.id)) continue;
+            seen.add(event.id);
+            // Count any event whose end time (or start time if no end) hasn't passed
+            const endIso = event.endsAt ?? event.startsAt;
+            const endDate = endIso ? new Date(endIso) : null;
+            if (endDate && !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime()) {
+              count++;
             }
           }
           setEventsUpcomingCount(count);

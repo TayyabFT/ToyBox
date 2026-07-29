@@ -20,7 +20,7 @@ export function MemberCollectionSection({ vehicles }: MemberCollectionSectionPro
         <div className="space-y-1">
           <h2 className={dashboardSectionHeadingClass}>
             <span className={dashboardSectionHeadingPrefixClass}>Your </span>
-            <span className={dashboardSectionHeadingAccentClass}>Collection</span>
+            <span className={dashboardSectionHeadingAccentClass}>Garage</span>
           </h2>
           <p className={dashboardSectionSubtitleClass}>
             {vehicles.length} Motor Cars · {readyCount} Ready

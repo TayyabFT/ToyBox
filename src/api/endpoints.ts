@@ -239,6 +239,7 @@ export const API_ENDPOINTS = {
     sendUpdate: (id: string | number) =>
       `/api/v1/admin/events/${id}/send-update`,
     notes: (id: string | number) => `/api/v1/admin/events/${id}/notes`,
+    vehicleMakes: "/api/v1/admin/vehicles/makes",
   },
   /** Member-facing events — uses the public/optionalAuth routes */
   memberEvents: {

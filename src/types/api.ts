@@ -743,6 +743,7 @@ export type MemberDashboardEventRaw = {
   title?: string;
   location?: string;
   startsAt?: string;
+  endsAt?: string;
   imageUrl?: string | null;
   category?: string;
   isFeatured?: boolean;
@@ -3246,6 +3247,26 @@ export type MemberChatThreadMessagesResponse =
   ApiResponse<MemberChatThreadMessagesData>;
 export type MemberChatMessagesResponse = ApiResponse<ChatMessagesData>;
 
+export type EventEligibilityConfig = {
+  enabled: boolean;
+  requiresVehicle?: boolean;
+  vehicleFilters?: {
+    enabled?: boolean;
+    makes?: string[]; // e.g. ["MG", "Haval"] — must match makes present in the Vehicle table
+  } | null;
+  joinDate?: {
+    enabled: boolean;
+    mode: "relative" | "custom";
+    relativeMonths?: number | null;
+    startDate?: string | null;
+    endDate?: string | null;
+  };
+  designations?: {
+    enabled: boolean;
+    tiers: string[];
+  };
+};
+
 export type CreateEventRequest = {
   title: string;
   category: "auctions" | "drives" | "social" | string;
@@ -3259,6 +3280,7 @@ export type CreateEventRequest = {
   capacity: number;
   accessType: "open" | "invite-only" | string;
   status: "published" | "confirmed" | "draft" | "past" | string;
+  eligibility?: EventEligibilityConfig | null;
 };
 
 export type EventResponse = CreateEventRequest & {
