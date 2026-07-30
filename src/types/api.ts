@@ -4454,13 +4454,19 @@ export type MarketplaceVehicleRaw = {
   id?: string | number;
   title?: string;
   description?: string;
+  /** Alias for title — used in search */
+  displayName?: string;
   make?: string;
   model?: string;
   variant?: string;
   year?: number | string;
   color?: string;
+  /** Alias for color */
   colour?: string;
+  /** Vehicle category e.g. Supercar, Grand Tourer */
+  vehicleType?: string;
   mileage?: number | string;
+  mileageLabel?: string;
   vin?: string;
   chassisNo?: string;
   plate?: string;
@@ -4475,6 +4481,8 @@ export type MarketplaceVehicleRaw = {
   storageBay?: string;
   images?: string[];
   imageUrl?: string;
+  /** Derived first-image alias used by cards */
+  coverImage?: string | null;
   vehicleImages?: string[];
   specifications?: Record<string, unknown>;
   vehicleInfo?: {
@@ -4504,10 +4512,42 @@ export type MarketplaceVehicleRaw = {
     percentage?: number | string;
     note?: string;
   }>;
+  /** Backend list price */
   price?: number | string;
   discount?: number | string;
+  /** price - discount */
   finalPrice?: number | string;
+  /** Alias for price (before discount) */
+  originalPrice?: number | string;
+  /** Legacy price field used by mock data / old API shape */
+  priceAed?: number;
+  /** Pre-formatted price string e.g. "AED 900,000" */
+  priceLabel?: string;
+  currency?: string;
   status?: MarketplaceVehicleStatus;
+  statusLabel?: string;
+  /** Whether this vehicle is pinned as a featured listing */
+  isFeatured?: boolean;
+  /** Favourite state — set by normalizeVehicle from backend isFavorite */
+  isFavorited?: boolean;
+  /** Raw backend favourite field name */
+  isFavorite?: boolean;
+  /** Seller info */
+  sellerType?: string;
+  sellerName?: string;
+  listedAt?: string;
+  /** Vehicle highlight bullet points */
+  highlights?: string[];
+  engineType?: string;
+  exteriorColor?: string;
+  collectionEra?: string;
+  /** Member's active offer on this vehicle (present on /my-vehicles) */
+  myOffer?: {
+    id?: string;
+    offerPrice?: number;
+    status?: string;
+    statusLabel?: string;
+  } | null;
   createdAt?: string;
   updatedAt?: string;
 };
@@ -4541,6 +4581,8 @@ export type MarketplaceVehicleWizardRequest = {
   price: number;
   discount: number;
   status: MarketplaceVehicleStatus;
+  /** Required by backend wizard schema */
+  registrationStep?: "complete";
 };
 
 export type MarketplaceVehicleCreateRequest = MarketplaceVehicleWizardRequest;

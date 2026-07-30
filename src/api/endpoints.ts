@@ -280,6 +280,19 @@ export const API_ENDPOINTS = {
     stats: "/api/v1/admin/analytics/stats",
     dashboard: "/api/v1/admin/analytics",
   },
+  marketplace: {
+    vehicles: "/api/v1/marketplace/vehicles",
+    vehicleFavorite: (id: string | number) => `/api/v1/marketplace/vehicles/${id}/favorite`,
+    myVehicles: "/api/v1/marketplace/my-vehicles",
+    myOffers: "/api/v1/marketplace/my-offers",
+    favorites: "/api/v1/marketplace/favorites",
+    offers: "/api/v1/marketplace/offers",
+    // Legacy listing endpoints (kept for detail/purchase fallback)
+    listings: "/api/v1/marketplace/listings",
+    detail: (id: string | number) => `/api/v1/marketplace/listings/${id}`,
+    purchase: (id: string | number) => `/api/v1/marketplace/listings/${id}/purchase`,
+    favorite: (id: string | number) => `/api/v1/marketplace/listings/${id}/favorite`,
+  },
   ai: {
     conversation: "/api/v1/ai/conversation",
     conversationReset: "/api/v1/ai/conversation/reset",

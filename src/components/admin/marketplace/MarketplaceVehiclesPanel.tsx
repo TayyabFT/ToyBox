@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { Pagination } from "@/components/common/Pagination";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import { MarketplaceVehicleStatusBadge } from "./MarketplaceStatusBadge";
 import type { MarketplaceVehicleItem } from "./types";
@@ -19,6 +20,8 @@ const FILTERS = [
   { key: "sold", label: "Sold" },
 ] as const;
 
+const PAGE_SIZE = 8;
+
 type FilterKey = (typeof FILTERS)[number]["key"];
 
 export function MarketplaceVehiclesPanel({
@@ -28,15 +31,28 @@ export function MarketplaceVehiclesPanel({
   onDelete,
 }: MarketplaceVehiclesPanelProps) {
   const [filter, setFilter] = useState<FilterKey>("all");
+  const [page, setPage] = useState(1);
 
-  const rows = useMemo(() => {
+  const filtered = useMemo(() => {
     if (filter === "all") return vehicles;
     return vehicles.filter((vehicle) => vehicle.statusTone === filter);
   }, [filter, vehicles]);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+
+  const rows = useMemo(() => {
+    const start = (currentPage - 1) * PAGE_SIZE;
+    return filtered.slice(start, start + PAGE_SIZE);
+  }, [currentPage, filtered]);
+
+  useEffect(() => {
+    setPage(1);
+  }, [filter, vehicles]);
+
   return (
     <section
-      className="rounded-2xl border border-accent/12 bg-card p-5"
+      className="rounded-2xl border border-accent/12 bg-card p-4 sm:p-5"
       aria-busy={loading}
     >
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -52,7 +68,6 @@ export function MarketplaceVehiclesPanel({
         <div className="flex flex-wrap gap-2">
           {FILTERS.map((item) => {
             const active = filter === item.key;
-
             return (
               <button
                 key={item.key}
@@ -71,8 +86,8 @@ export function MarketplaceVehiclesPanel({
         </div>
       </div>
 
-      <div className="mt-5 overflow-x-auto">
-        <table className="w-full min-w-[980px] border-collapse">
+      <div className="mt-5 -mx-4 sm:-mx-5 overflow-x-auto px-4 sm:px-5">
+        <table className="w-full min-w-[720px] border-collapse">
           <thead>
             <tr className="border-b border-accent/10">
               {["Vehicle", "Year / Specs", "Price", "Final"].map((label) => (
@@ -86,7 +101,7 @@ export function MarketplaceVehiclesPanel({
               <th className="font-roboto px-3 pb-3 text-center text-[9px] font-medium tracking-[0.12em] text-secondary uppercase">
                 Status
               </th>
-              <th className="font-roboto sticky right-0 bg-card px-3 pb-3 text-right text-[9px] font-medium tracking-[0.12em] text-secondary uppercase">
+              <th className="font-roboto px-3 pb-3 text-right text-[9px] font-medium tracking-[0.12em] text-secondary uppercase">
                 Actions
               </th>
             </tr>
@@ -154,7 +169,7 @@ export function MarketplaceVehiclesPanel({
                     </div>
                   </td>
 
-                  <td className="sticky right-0 bg-card px-3 py-4 text-right">
+                  <td className="px-3 py-4 text-right">
                     <div className="flex flex-wrap items-center justify-end gap-2">
                       <button
                         type="button"
@@ -187,6 +202,16 @@ export function MarketplaceVehiclesPanel({
           </tbody>
         </table>
       </div>
+
+      <Pagination
+        currentPage={currentPage}
+        totalItems={filtered.length}
+        pageSize={PAGE_SIZE}
+        onPageChange={setPage}
+        itemLabel="vehicles"
+        disabled={loading}
+        className="mt-4"
+      />
     </section>
   );
 }

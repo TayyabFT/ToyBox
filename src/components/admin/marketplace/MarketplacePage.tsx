@@ -220,7 +220,7 @@ export function MarketplacePage() {
   }
 
   return (
-    <div className="space-y-7 p-8">
+    <div className="space-y-5 p-4 sm:p-6 lg:p-8 sm:space-y-7">
       <MarketplacePageHeader onAddVehicleClick={openCreateVehicle} />
 
       <MarketplaceTabs

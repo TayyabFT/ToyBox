@@ -217,15 +217,7 @@ export function MarketplaceVehicleFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <button
-        type="button"
-        aria-label="Close modal backdrop"
-        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={() => {
-          if (submitting) return;
-          onClose();
-        }}
-      />
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
       <div className="admin-modal-panel relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border border-accent/20 shadow-[var(--shadow-modal)]">
         <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">

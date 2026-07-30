@@ -15,6 +15,7 @@ export const memberNav: MemberNavItem[] = [
   { id: "diary", label: "Diary", href: `${MEMBER_BASE}/diary` },
   { id: "garage", label: "Garage", href: `${MEMBER_BASE}/garage` },
   { id: "events", label: "Events", href: `${MEMBER_BASE}/events` },
+  { id: "marketplace", label: "Marketplace", href: `${MEMBER_BASE}/marketplace` },
 ];
 
 // Services section

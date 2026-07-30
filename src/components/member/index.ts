@@ -33,3 +33,6 @@ export { MemberConciergePage } from "./concierge";
 
 // The Club
 export { MemberTheClubPage } from "./the-club/MemberTheClubPage";
+
+// Marketplace
+export { MarketplacePage } from "./marketplace";

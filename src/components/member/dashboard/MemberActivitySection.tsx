@@ -12,7 +12,19 @@ type MemberActivitySectionProps = {
   items: MemberActivityItem[];
 };
 
-function splitActivityTitle(title: string): { prefix: string; highlight: string } {
+function splitActivityTitle(title: string): {
+  prefix: string;
+  highlight: string;
+} {
+  const messagePrefix = "New message from ";
+
+  if (title.startsWith(messagePrefix)) {
+    return {
+      prefix: "New message from",
+      highlight: title.slice(messagePrefix.length).trim(),
+    };
+  }
+
   const dashIdx = title.indexOf("—");
   if (dashIdx !== -1) {
     return {
@@ -31,7 +43,6 @@ function splitActivityTitle(title: string): { prefix: string; highlight: string 
 
   return { prefix: title, highlight: "" };
 }
-
 function ActivityRow({
   item,
   isLast,
@@ -39,6 +50,7 @@ function ActivityRow({
   item: MemberActivityItem;
   isLast: boolean;
 }) {
+  console.log("item",item)
   const split = splitActivityTitle(item.title);
   const titlePrefix = item.titlePrefix ?? split.prefix;
   const titleHighlight = item.titleHighlight ?? split.highlight;

@@ -13,12 +13,12 @@ export function MarketplacePageHeader({
   const isLight = theme === "light";
 
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div className="space-y-2">
         <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           — Marketplace Management
         </p>
-        <h1 className="font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground uppercase">
+        <h1 className="font-copperplate text-[28px] leading-none tracking-[0.04em] text-foreground uppercase sm:text-[36px]">
           Marketplace
         </h1>
       </div>
@@ -26,7 +26,7 @@ export function MarketplacePageHeader({
       <button
         type="button"
         onClick={onAddVehicleClick}
-        className="admin-gold-cta font-roboto shrink-0 cursor-pointer rounded-full px-6 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase"
+        className="admin-gold-cta font-roboto w-full cursor-pointer rounded-full px-6 py-3 text-[10px] font-semibold tracking-[0.16em] uppercase sm:w-auto sm:shrink-0"
         style={
           isLight
             ? {

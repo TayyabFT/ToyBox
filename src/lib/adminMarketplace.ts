@@ -476,6 +476,24 @@ export function buildMarketplaceVehicleWizardPayload(
     form;
   const make = vehicleInfo.name.trim() || vehicleInfo.model.trim();
 
+  // ── Use the wizard (nested) shape ────────────────────────────────────────
+  // The backend accepts Joi.alternatives: wizard body OR flat body.
+  // We use the wizard shape so all vehicle metadata is preserved.
+  //
+  // ownershipInfo.chassisNo has min(5) — send a placeholder when blank so
+  // validation passes; the admin can fill it in later via edit.
+  const chassisNo = ownershipInfo.chassisNo.trim() || "N/A-0";
+  const plate     = ownershipInfo.plate.trim()     || "N/A";
+  const storageBay= ownershipInfo.storageBay.trim()|| "N/A";
+  const colour    = ownershipInfo.colour.trim()    || "N/A";
+  const mileage   = ownershipInfo.mileage.trim()   || "0";
+
+  // purchasedAt must be a date string — default to today when blank
+  const today = new Date().toISOString().slice(0, 10);
+  const purchasedAt = ownershipInfo.purchased.trim()
+    ? parsePurchasedAt(ownershipInfo.purchased)
+    : today;
+
   return {
     vehicleInfo: {
       make,
@@ -490,12 +508,12 @@ export function buildMarketplaceVehicleWizardPayload(
       fuelType: fuelType.trim(),
     },
     ownershipInfo: {
-      colour: ownershipInfo.colour.trim(),
-      chassisNo: ownershipInfo.chassisNo.trim(),
-      plate: ownershipInfo.plate.trim(),
-      purchasedAt: parsePurchasedAt(ownershipInfo.purchased),
-      storageBay: ownershipInfo.storageBay.trim(),
-      mileage: ownershipInfo.mileage.trim(),
+      colour,
+      chassisNo,
+      plate,
+      purchasedAt,
+      storageBay,
+      mileage,
     },
     health: HEALTH_CATEGORIES.map(({ key }) => ({
       category: key,
@@ -505,6 +523,7 @@ export function buildMarketplaceVehicleWizardPayload(
     price: toNumber(price),
     discount: toNumber(discount),
     status: status.trim() || "AVAILABLE",
+    registrationStep: "complete" as const,
   };
 }
 
@@ -535,14 +554,14 @@ export function buildMarketplaceVehicleFormData(
   formData.append("price", String(payload.price));
   formData.append("discount", String(payload.discount));
   formData.append("status", payload.status);
+  formData.append("registrationStep", "complete");
 
-  // Nested JSON also sent for backends that read multipart nested fields.
-  formData.append("vehicleInfo", JSON.stringify(payload.vehicleInfo));
-  formData.append("ownershipInfo", JSON.stringify(payload.ownershipInfo));
+  // Nested JSON fields — backend multipart parser reads these
+  formData.append("vehicleInfo", JSON.stringify(vehicleInfo));
+  formData.append("ownershipInfo", JSON.stringify(ownershipInfo));
 
   for (const field of DOC_FIELDS) {
     const file = form.docs[field.key];
-
     if (file) {
       formData.append(field.key, file);
     }
