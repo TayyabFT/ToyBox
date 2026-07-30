@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { memberMarketplaceApi, type MarketplaceListingsParams } from "@/api/memberMarketplace.api";
-import { MOCK_MARKETPLACE_LISTINGS } from "@/components/member/marketplace/mockListings";
 import type { ApiError, MarketplaceVehicleRaw } from "@/types/api";
 
 // ── State ─────────────────────────────────────────────────────────────────────
@@ -52,16 +51,7 @@ export const fetchMarketplaceListings = createAsyncThunk(
       const featured = (dataObj as { featured?: MarketplaceVehicleRaw[] })?.featured ?? [];
       const listings = (dataObj as { listings?: MarketplaceVehicleRaw[] })?.listings ?? [];
 
-      // Empty → fall back to mock data so the page always shows content
-      if (vehicles.length === 0 && featured.length === 0 && listings.length === 0) {
-        return {
-          featured: MOCK_MARKETPLACE_LISTINGS.filter((v) => v.isFeatured),
-          listings: MOCK_MARKETPLACE_LISTINGS.filter((v) => !v.isFeatured),
-        };
-      }
-
       // vehicles[] response: all vehicles go into listings[]
-      // The page picks its own hero from the first item — no isFeatured needed
       if (vehicles.length > 0) {
         return {
           featured: [],
@@ -70,12 +60,9 @@ export const fetchMarketplaceListings = createAsyncThunk(
       }
 
       return { featured, listings };
-    } catch {
-      // API unavailable → use mock data
-      return {
-        featured: MOCK_MARKETPLACE_LISTINGS.filter((v) => v.isFeatured),
-        listings: MOCK_MARKETPLACE_LISTINGS.filter((v) => !v.isFeatured),
-      };
+    } catch (error) {
+      const apiError = error as ApiError;
+      return rejectWithValue(apiError.message ?? "Failed to load marketplace");
     }
   },
 );
