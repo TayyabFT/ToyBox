@@ -6,6 +6,7 @@ import { ConfirmationsPage } from "@/components/admin/confirmations";
 import { ConciergePage } from "@/components/admin/concierge";
 import { EventsPage } from "@/components/admin/events";
 import { MembersPage } from "@/components/admin/members";
+import { MarketplacePage } from "@/components/admin/marketplace";
 import { AdminOverviewPage } from "@/components/admin/overview";
 import { ParkingPage } from "@/components/admin/parking";
 import { ServiceRequestsPage } from "@/components/admin/service-requests";
@@ -66,6 +67,10 @@ export default async function AdminSectionPage({ params }: PageProps) {
 
   if (navItem.id === "workshop") {
     return <WorkshopPage />;
+  }
+
+  if (navItem.id === "marketplace") {
+    return <MarketplacePage />;
   }
 
   if (navItem.id === "communications") {

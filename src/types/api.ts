@@ -4428,3 +4428,132 @@ export type MemberSourcingRequestsData =
 
 export type MemberSourcingRequestsResponse =
   ApiResponse<MemberSourcingRequestsData>;
+
+export type MarketplaceVehicleStatus =
+  | "AVAILABLE"
+  | "RESERVED"
+  | "SOLD"
+  | string;
+
+export type MarketplaceOfferStatus =
+  | "PENDING"
+  | "PAYMENT_PENDING"
+  | "REJECTED"
+  | "PURCHASED"
+  | "COUNTERED"
+  | string;
+
+export type MarketplaceOfferAction =
+  | "approve"
+  | "reject"
+  | "counter"
+  | "approve_payment"
+  | "reject_payment";
+
+export type MarketplaceVehicleRaw = {
+  id?: string | number;
+  title?: string;
+  description?: string;
+  make?: string;
+  model?: string;
+  variant?: string;
+  year?: number | string;
+  color?: string;
+  colour?: string;
+  mileage?: number | string;
+  vin?: string;
+  transmission?: string;
+  fuelType?: string;
+  images?: string[];
+  imageUrl?: string;
+  specifications?: Record<string, unknown>;
+  price?: number | string;
+  discount?: number | string;
+  finalPrice?: number | string;
+  status?: MarketplaceVehicleStatus;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type MarketplaceVehicleCreateRequest = {
+  title: string;
+  description: string;
+  make: string;
+  model: string;
+  variant: string;
+  year: number;
+  color: string;
+  mileage: number;
+  vin: string;
+  transmission: string;
+  fuelType: string;
+  images: string[];
+  specifications: Record<string, unknown>;
+  price: number;
+  discount: number;
+  status: MarketplaceVehicleStatus;
+};
+
+export type MarketplaceVehicleUpdateRequest = MarketplaceVehicleCreateRequest;
+
+export type MarketplaceOfferMemberRaw = {
+  id?: string;
+  name?: string;
+  email?: string;
+  tier?: string;
+  profileImageUrl?: string;
+};
+
+export type MarketplaceOfferRaw = {
+  id?: string | number;
+  status?: MarketplaceOfferStatus;
+  offerPrice?: number | string;
+  counterOfferPrice?: number | string;
+  remarks?: string;
+  note?: string;
+  createdAt?: string;
+  updatedAt?: string;
+  member?: MarketplaceOfferMemberRaw;
+  memberId?: string;
+  memberName?: string;
+  vehicle?: MarketplaceVehicleRaw;
+  vehicleId?: string | number;
+  marketplaceVehicleId?: string | number;
+};
+
+export type MarketplaceOfferActionRequest = {
+  action: MarketplaceOfferAction;
+  counterOfferPrice: number;
+  remarks: string;
+};
+
+export type MarketplaceVehiclesListData =
+  | MarketplaceVehicleRaw[]
+  | {
+      items?: MarketplaceVehicleRaw[];
+      vehicles?: MarketplaceVehicleRaw[];
+      data?: MarketplaceVehicleRaw[];
+      count?: number;
+      total?: number;
+    };
+
+export type MarketplaceOffersListData =
+  | MarketplaceOfferRaw[]
+  | {
+      items?: MarketplaceOfferRaw[];
+      offers?: MarketplaceOfferRaw[];
+      data?: MarketplaceOfferRaw[];
+      count?: number;
+      total?: number;
+    };
+
+export type MarketplaceVehiclesListResponse =
+  ApiResponse<MarketplaceVehiclesListData>;
+export type MarketplaceVehicleDetailResponse =
+  ApiResponse<MarketplaceVehicleRaw>;
+export type MarketplaceVehicleMutationResponse =
+  ApiResponse<MarketplaceVehicleRaw>;
+export type MarketplaceOffersListResponse =
+  ApiResponse<MarketplaceOffersListData>;
+export type MarketplaceOfferDetailResponse = ApiResponse<MarketplaceOfferRaw>;
+export type MarketplaceOfferActionResponse = ApiResponse<MarketplaceOfferRaw>;

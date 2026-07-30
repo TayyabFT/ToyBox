@@ -46,7 +46,7 @@ export function Dropdown({
   }, []);
 
   return (
-    <div ref={containerRef} className="group flex w-full flex-col gap-2">
+    <div ref={containerRef} className="group flex w-full flex-col gap-1">
       {label && (
         <span className="text-[11px] font-medium tracking-[0.15em] font-roboto text-section-label uppercase">
           {label}

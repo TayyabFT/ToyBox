@@ -86,6 +86,12 @@ export const adminOperationsNav: AdminNavItem[] = [
     href: `${ADMIN_BASE}/workshop`,
     section: "operations",
   },
+  {
+    id: "marketplace",
+    label: "Marketplace",
+    href: `${ADMIN_BASE}/marketplace`,
+    section: "operations",
+  },
 ];
 
 export const adminManageNav: AdminNavItem[] = [

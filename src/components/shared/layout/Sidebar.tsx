@@ -21,6 +21,7 @@ import {
   NavClubhouse,
   NavCommunications,
   NavGarage,
+  NavMarketplace,
   NavParking,
   Sunburst,
   User,
@@ -160,7 +161,7 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
   // Member-specific
   "the-club": (active) => <NavClubhouse active={active} />,
   diary: (active) => <Calendar active={active} />,
-  marketplace: (active) => <Sunburst active={active} />,
+  marketplace: (active) => <NavMarketplace active={active} />,
   profile: (active) => <User active={active} />,
   help: (active) => <HelpSupport active={active} />,
   "terms-privacy": (active) => <TermsPrivacy active={active} />,

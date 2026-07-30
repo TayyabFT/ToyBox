@@ -65,10 +65,10 @@
   --stat-card-hover-to: #8b6f2a;
   --stat-card-hover-fg: #0a0806;
   --stat-card-hover-fg-muted: rgba(10, 8, 6, 0.6);
-  --stat-card-active-from: #3a3530;
-  --stat-card-active-to: #8a7d6a;
-  --stat-card-active-fg: #f2ead5;
-  --stat-card-active-fg-muted: rgba(242, 234, 213, 0.7);
+  --stat-card-active-from: #f0c566;
+  --stat-card-active-to: #8b6f2a;
+  --stat-card-active-fg: #0a0806;
+  --stat-card-active-fg-muted: rgba(10, 8, 6, 0.6);
   --stat-card-bg: var(--card);
   --stat-card-border: radial-gradient(100% 100% at 50% 0%,
       rgba(240, 237, 230, 0.14) 0%,

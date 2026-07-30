@@ -120,7 +120,7 @@ export function StatCard({
         )}
         {trend && (
           <span
-            className="font-roboto flex items-center gap-0.5 text-[11px] sm:text-[12px] font-medium tracking-[0.04em] text-teal group-hover:text-[color-mix(in_srgb,var(--stat-card-hover-fg)_70%,transparent)]"
+            className={`font-roboto flex items-center gap-0.5 text-[11px] sm:text-[12px] font-medium tracking-[0.04em] text-teal ${hoverTrendClass}`}
           >
             <TrendUp className={hoverTrendIconClass} color="currentColor" />
             {trend}
