@@ -21,6 +21,7 @@ import type {
 } from "@/components/member/dashboard/types";
 import { memberDashboardMock } from "@/components/member/dashboard/mockData";
 import { mapInboxNotification } from "@/lib/notifications";
+import { parseEventDate } from "@/lib/memberEvents";
 
 export type MemberQuickActionView = {
   id: string;
@@ -259,18 +260,22 @@ function mapKpis(
   const memberDays = profile?.memberDays ?? profile?.stats?.memberDays ?? 0;
   const now = new Date();
 
-  // Count all eligible events whose end time (or start time if no end) has not passed.
-  // Uses the full flat list so events beyond "next month" (the "UPCOMING" section on the
-  // events page) are included — matching what the Events page and the sidebar badge show.
+  // Count all eligible events whose starting date has not passed yet (startsAt > now)
   const seen = new Set<string>();
   let upcomingEvents = 0;
-  for (const e of eventsFlat ?? []) {
-    const key = String(e.id ?? "");
+  const rawEventsList = [
+    ...(eventsFlat ?? []),
+    ...(dashboard?.events?.featured ?? []),
+    ...(dashboard?.events?.thisWeek ?? []),
+    ...(dashboard?.events?.nextMonth ?? []),
+  ];
+
+  for (const e of rawEventsList) {
+    const key = String(e.id ?? e.title ?? "");
     if (!key || seen.has(key)) continue;
     seen.add(key);
-    const endIso = e.endsAt ?? e.startsAt;
-    const endDate = endIso ? new Date(endIso) : null;
-    if (endDate && !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime()) {
+    const startDate = parseEventDate(e.startsAt);
+    if (startDate && startDate.getTime() > now.getTime()) {
       upcomingEvents++;
     }
   }

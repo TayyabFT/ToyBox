@@ -31,6 +31,7 @@ import {
 import { chatApi } from "@/api/chat.api";
 import { memberChatApi } from "@/api/memberChat.api";
 import { memberEventsApi } from "@/api/memberEvents.api";
+import { parseEventDate } from "@/lib/memberEvents";
 import { adminNavigationApi } from "@/api/adminNavigation.api";
 import { staffNavigationApi } from "@/api/staffNavigation.api";
 import { getUnreadConversationCount } from "@/lib/concierge";
@@ -384,10 +385,9 @@ export function Sidebar({
           for (const event of events) {
             if (seen.has(event.id)) continue;
             seen.add(event.id);
-            // Count any event whose end time (or start time if no end) hasn't passed
-            const endIso = event.endsAt ?? event.startsAt;
-            const endDate = endIso ? new Date(endIso) : null;
-            if (endDate && !isNaN(endDate.getTime()) && endDate.getTime() >= now.getTime()) {
+            // Count only events whose starting date has not passed yet (startsAt > now)
+            const startDate = parseEventDate(event.startsAt);
+            if (startDate && startDate.getTime() > now.getTime()) {
               count++;
             }
           }

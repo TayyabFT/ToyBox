@@ -13,10 +13,20 @@ const MON_ABBR = [
   "JUL", "AUG", "SEP", "OCT", "NOV", "DEC",
 ] as const;
 
+export function parseEventDate(iso?: string | null): Date | null {
+  if (!iso) return null;
+  const normalized = iso.trim().replace(/^(\d{4}-\d{2}-\d{2})\s+(\d{2}:)/, "$1T$2");
+  const d = new Date(normalized);
+  if (!isNaN(d.getTime())) return d;
+  const dDirect = new Date(iso);
+  if (!isNaN(dDirect.getTime())) return dDirect;
+  return null;
+}
+
 function formatDateLabel(iso?: string): string {
   if (!iso) return "";
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return "";
+  const d = parseEventDate(iso);
+  if (!d) return "";
   const day = DAY_ABBR[d.getDay()];
   const num = d.getDate();
   const mon = MON_ABBR[d.getMonth()];
@@ -26,8 +36,8 @@ function formatDateLabel(iso?: string): string {
 function formatTimeLabel(iso?: string, isAllDay?: boolean): string | undefined {
   if (isAllDay) return "All Day";
   if (!iso) return undefined;
-  const d = new Date(iso);
-  if (isNaN(d.getTime())) return undefined;
+  const d = parseEventDate(iso);
+  if (!d) return undefined;
   const hh = String(d.getHours()).padStart(2, "0");
   const mm = String(d.getMinutes()).padStart(2, "0");
   return `${hh}:${mm}`;
@@ -72,9 +82,8 @@ function tagFromCategory(
 
 function getFallbackEndsAt(startsAt?: string): string | undefined {
   if (!startsAt) return undefined;
-  const d = new Date(startsAt);
-  if (isNaN(d.getTime())) return undefined;
-  // Default to 2 hours duration if endsAt is not specified
+  const d = parseEventDate(startsAt);
+  if (!d) return undefined;
   const end = new Date(d.getTime() + 2 * 60 * 60 * 1000);
   return end.toISOString();
 }
@@ -84,9 +93,10 @@ function getFallbackEndsAt(startsAt?: string): string | undefined {
 export function mapMemberEventRaw(
   raw: MemberEventRaw,
   isFeaturedOverride?: boolean,
+  tagOverride?: string,
 ): EventItem {
   const { prefix, highlight } = splitTitle(raw.title ?? "Unnamed Event");
-  const { tag, tagTone } = tagFromCategory(raw.category);
+  const { tag: categoryTag, tagTone: categoryTagTone } = tagFromCategory(raw.category);
   const isFeatured = isFeaturedOverride ?? raw.isFeatured ?? false;
   const filter: EventFilter[] = ["all", mapCategory(raw.category)].filter(
     (f, i, arr) => arr.indexOf(f) === i,
@@ -132,6 +142,20 @@ export function mapMemberEventRaw(
   const timeLabel = formatTimeLabel(startsAtIso, raw.isAllDay);
   const timeEndLabel = endsAtIso && !raw.isAllDay ? formatTimeLabel(endsAtIso) : undefined;
 
+  let finalTag = tagOverride ?? categoryTag;
+  let finalTagTone: "gold" | "teal" | "pink" = categoryTagTone;
+
+  if (isFeatured) {
+    finalTag = "FEATURED TONIGHT";
+    finalTagTone = "gold";
+  } else if (tagOverride === "IN PROGRESS") {
+    finalTag = "IN PROGRESS";
+    finalTagTone = "gold";
+  } else if (tagOverride === "PAST") {
+    finalTag = "PAST";
+    finalTagTone = "pink";
+  }
+
   return {
     id: raw.id,
     title: raw.title ?? "",
@@ -143,8 +167,8 @@ export function mapMemberEventRaw(
     timeLabel,
     timeEndLabel,
     description: raw.description,
-    tag: isFeatured ? "FEATURED TONIGHT" : tag,
-    tagTone: isFeatured ? "gold" : tagTone,
+    tag: finalTag,
+    tagTone: finalTagTone,
     imageUrl: raw.imageUrl ?? "",
     attendingCount: raw.attendingCount,
     attendingMembers: raw.attendingMembers,
@@ -169,126 +193,118 @@ export function mapMemberEventGroups(data: {
 }
 
 /**
- * Categorizes a flat list of raw events into Featured, This Week, Next Month,
- * Upcoming (future other weeks), and Past sections.
+ * Categorizes a flat list of raw events into Featured, In Progress (started but not ended),
+ * Upcoming (starting date has not passed yet), and Past sections.
  */
 export function groupFlatEvents(
   rawEvents: MemberEventRaw[],
   refDate: Date = new Date(),
 ) {
-  // ── Date boundaries ─────────────────────────────────────────────────────
-
-  // Monday of the reference week
-  const ref = new Date(refDate);
-  const day = ref.getDay();
-  const diff = ref.getDate() - day + (day === 0 ? -6 : 1);
-  const weekStart = new Date(ref.setDate(diff));
-  weekStart.setHours(0, 0, 0, 0);
-
-  // Sunday of the reference week
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekEnd.getDate() + 6);
-  weekEnd.setHours(23, 59, 59, 999);
-
-  // Next calendar month boundaries
-  const nextStart = new Date(refDate.getFullYear(), refDate.getMonth() + 1, 1);
-  nextStart.setHours(0, 0, 0, 0);
-  const nextEnd = new Date(refDate.getFullYear(), refDate.getMonth() + 2, 0);
-  nextEnd.setHours(23, 59, 59, 999);
-
-  // Helper: is this raw event in the past?
-  // An event is only past if its endsAt (or startsAt if endsAt is missing) is before refDate.
-  const isEventPast = (r: MemberEventRaw) => {
-    const endIso = r.endsAt ?? r.startsAt;
-    const d = new Date(endIso ?? "");
-    return !isNaN(d.getTime()) && d.getTime() < refDate.getTime();
+  const getEventDates = (r: MemberEventRaw) => {
+    const dStart = parseEventDate(r.startsAt);
+    let dEnd = parseEventDate(r.endsAt);
+    if (!dEnd && dStart) {
+      dEnd = new Date(dStart.getTime() + 2 * 3600 * 1000);
+    }
+    return { dStart, dEnd };
   };
 
-  // ── Hero selection ───────────────────────────────────────────────────────
-  // Prefer a non-past isFeatured event, then any non-past event,
-  // then fall back to the first event (may be past — handled below).
+  const isEventPast = (r: MemberEventRaw) => {
+    const { dEnd } = getEventDates(r);
+    if (!dEnd) return false;
+    return dEnd.getTime() < refDate.getTime();
+  };
 
+  const isEventInProgress = (r: MemberEventRaw) => {
+    const { dStart, dEnd } = getEventDates(r);
+    if (!dStart || !dEnd) return false;
+    const refTs = refDate.getTime();
+    return dStart.getTime() <= refTs && dEnd.getTime() >= refTs;
+  };
+
+  const isEventUpcoming = (r: MemberEventRaw) => {
+    const { dStart } = getEventDates(r);
+    if (!dStart) return false;
+    return dStart.getTime() > refDate.getTime();
+  };
+
+  // Hero selection: ONLY pick an event that is actually UPCOMING (startsAt > now)
   const heroRaw =
-    rawEvents.find((r) => r.isFeatured && !isEventPast(r)) ??
-    rawEvents.find((r) => !isEventPast(r)) ??
+    rawEvents.find((r) => r.isFeatured && isEventUpcoming(r)) ??
+    rawEvents.find((r) => isEventUpcoming(r)) ??
+    rawEvents.find((r) => isEventInProgress(r)) ??
     rawEvents[0];
 
   const heroIsPast = heroRaw ? isEventPast(heroRaw) : false;
+  const heroIsInProgress = heroRaw ? isEventInProgress(heroRaw) : false;
+  const heroIsUpcoming = heroRaw ? isEventUpcoming(heroRaw) : false;
 
-  // Hero only gets "FEATURED TONIGHT" tag when it is a current/future event
   const heroEvent = heroRaw
-    ? mapMemberEventRaw(heroRaw, !heroIsPast)
+    ? mapMemberEventRaw(
+        heroRaw,
+        heroIsUpcoming,
+        heroIsInProgress ? "IN PROGRESS" : heroIsPast ? "PAST" : undefined,
+      )
     : null;
 
-  // The featured list holds only the hero (it may be empty if all events are past)
-  // If the hero is past, it belongs in past[] not featured[]
-  const featured = heroEvent && !heroIsPast ? [heroEvent] : [];
+  const featured = heroEvent && heroIsUpcoming ? [heroEvent] : [];
 
-  // Map all rows without the featured override for grid display
-  const mapped = rawEvents.map((r) => mapMemberEventRaw(r, false));
+  const mapped = rawEvents.map((r) => {
+    let tagOverride: string | undefined;
+    if (isEventInProgress(r)) tagOverride = "IN PROGRESS";
+    else if (isEventPast(r)) tagOverride = "PAST";
+    return mapMemberEventRaw(r, false, tagOverride);
+  });
 
-  // All events to be grouped in grids (excluding the hero)
   const gridEvents = mapped.filter((e) => e.id !== heroEvent?.id);
 
-  const thisWeek: EventItem[] = [];
-  const nextMonth: EventItem[] = [];
-  const otherUpcoming: EventItem[] = [];
-  const past: EventItem[] = [];
+  const thisWeek: EventItem[] = []; // Holds IN PROGRESS events
+  const nextMonth: EventItem[] = []; // Empty
+  const otherUpcoming: EventItem[] = []; // Holds UPCOMING events (startsAt > refDate)
+  const past: EventItem[] = []; // Holds PAST events
 
-  // If hero is past, include it in the past list so isPast works correctly
   if (heroEvent && heroIsPast) {
     past.push(heroEvent);
   }
 
   for (const e of gridEvents) {
-    if (!e.dateLabel) {
-      // Default to other upcoming if date is invalid
-      otherUpcoming.push(e);
-      continue;
-    }
-
     const rawEvent = rawEvents.find((r) => r.id === e.id);
-    const eventDate = new Date(rawEvent?.startsAt || "");
-    const endDate = rawEvent?.endsAt ? new Date(rawEvent.endsAt) : eventDate;
-
-    if (isNaN(eventDate.getTime())) {
+    if (!rawEvent) {
       otherUpcoming.push(e);
       continue;
     }
 
-    if (rawEvent && isEventPast(rawEvent)) {
+    if (isEventPast(rawEvent)) {
       past.push(e);
-    } else if (eventDate.getTime() >= weekStart.getTime() && eventDate.getTime() <= weekEnd.getTime()) {
+    } else if (isEventInProgress(rawEvent)) {
       thisWeek.push(e);
-    } else if (eventDate.getTime() < weekStart.getTime() && endDate.getTime() >= refDate.getTime()) {
-      // Ongoing event: started before this week but endsAt has not passed yet → treat as thisWeek
-      thisWeek.push(e);
-    } else if (eventDate.getTime() >= nextStart.getTime() && eventDate.getTime() <= nextEnd.getTime()) {
-      nextMonth.push(e);
+    } else if (isEventUpcoming(rawEvent)) {
+      otherUpcoming.push(e);
     } else {
       otherUpcoming.push(e);
     }
   }
 
-  // Sort groups chronologically
   const sortByDate = (a: EventItem, b: EventItem) => {
     const rA = rawEvents.find((r) => r.id === a.id);
     const rB = rawEvents.find((r) => r.id === b.id);
-    const dateA = new Date(rA?.startsAt || "");
-    const dateB = new Date(rB?.startsAt || "");
-    return dateA.getTime() - dateB.getTime();
+    const dateA = parseEventDate(rA?.startsAt);
+    const dateB = parseEventDate(rB?.startsAt);
+    const tA = dateA ? dateA.getTime() : 0;
+    const tB = dateB ? dateB.getTime() : 0;
+    return tA - tB;
   };
 
   thisWeek.sort(sortByDate);
-  nextMonth.sort(sortByDate);
   otherUpcoming.sort(sortByDate);
-  // Sort past reverse chronologically (most recent past event first)
   past.sort((a, b) => {
     const rA = rawEvents.find((r) => r.id === a.id);
     const rB = rawEvents.find((r) => r.id === b.id);
-    const dateA = new Date(rA?.startsAt || "");
-    const dateB = new Date(rB?.startsAt || "");
-    return dateB.getTime() - dateA.getTime();
+    const dateA = parseEventDate(rA?.startsAt);
+    const dateB = parseEventDate(rB?.startsAt);
+    const tA = dateA ? dateA.getTime() : 0;
+    const tB = dateB ? dateB.getTime() : 0;
+    return tB - tA;
   });
 
   return {

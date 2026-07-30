@@ -71,9 +71,9 @@ export function MarketplaceDetailModal({
       />
 
       {/* Panel */}
-      <div className="Custom__Scrollbar relative z-10 max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-[24px] bg-card shadow-2xl sm:rounded-[24px]">
+      <div className="Custom__Scrollbar relative z-10 max-h-[92dvh] w-full max-w-2xl overflow-y-auto rounded-t-[24px] bg-card shadow-2xl sm:rounded-[24px]  mr-2 ml-2">
         {/* Hero image */}
-        <div className="relative h-[220px] w-full overflow-hidden bg-surface sm:h-[280px]">
+        <div className="relative h-[220px] w-full overflow-hidden bg-surface sm:h-[280px] ">
           {image ? (
             <img
               src={image}
@@ -136,22 +136,20 @@ export function MarketplaceDetailModal({
               {listing.displayPrice}
             </p>
             <span
-              className={`font-roboto inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[9px] font-semibold tracking-[0.14em] uppercase ${
-                listing.statusTone === "teal"
-                  ? "border-teal/25 bg-teal/8 text-teal"
-                  : listing.statusTone === "gold"
-                    ? "border-accent/25 bg-accent/8 text-accent"
-                    : "border-pink/25 bg-pink/8 text-pink"
-              }`}
+              className={`font-roboto inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[9px] font-semibold tracking-[0.14em] uppercase ${listing.statusTone === "teal"
+                ? "border-teal/25 bg-teal/8 text-teal"
+                : listing.statusTone === "gold"
+                  ? "border-accent/25 bg-accent/8 text-accent"
+                  : "border-pink/25 bg-pink/8 text-pink"
+                }`}
             >
               <span
-                className={`size-1.5 rounded-full ${
-                  listing.statusTone === "teal"
-                    ? "bg-teal"
-                    : listing.statusTone === "gold"
-                      ? "bg-accent"
-                      : "bg-pink"
-                }`}
+                className={`size-1.5 rounded-full ${listing.statusTone === "teal"
+                  ? "bg-teal"
+                  : listing.statusTone === "gold"
+                    ? "bg-accent"
+                    : "bg-pink"
+                  }`}
               />
               {(listing.statusLabel ?? listing.status ?? "Available").toUpperCase()}
             </span>

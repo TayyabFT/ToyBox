@@ -120,7 +120,6 @@ export function mapAdminConfirmationStats(data: unknown): ConfirmationStatItem[]
       label: fallbackStats[2].label,
       value: summary.completedToday.value,
       subtext: summary.completedToday.subtext,
-      accent: "teal",
     },
     {
       label: fallbackStats[3].label,

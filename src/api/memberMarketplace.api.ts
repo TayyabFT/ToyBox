@@ -1,8 +1,8 @@
 import { apiClient } from "@/api/client";
 import { API_ENDPOINTS } from "@/api/endpoints";
 import type {
-  MarketplaceListingsResponse,
-  MarketplacePurchaseResponse,
+  MarketplaceVehiclesListResponse,
+  MarketplaceVehicleMutationResponse,
   MarketplaceVehicleRaw,
 } from "@/types/api";
 
@@ -79,7 +79,7 @@ export const memberMarketplaceApi = {
    */
   getListings: async (
     params?: MarketplaceListingsParams,
-  ): Promise<MarketplaceListingsResponse> => {
+  ): Promise<MarketplaceVehiclesListResponse> => {
     const query = new URLSearchParams();
     if (params?.search) query.set("search", params.search);
     if (params?.make) query.set("make", params.make);
@@ -105,7 +105,7 @@ export const memberMarketplaceApi = {
         featured: [],
         listings: vehicles,
       },
-    } as unknown as MarketplaceListingsResponse;
+    } as unknown as MarketplaceVehiclesListResponse;
   },
 
   /**
@@ -181,7 +181,7 @@ export const memberMarketplaceApi = {
 
   /** @deprecated use submitOffer instead */
   purchase: (id: string, body?: { listingId?: string; notes?: string }) =>
-    apiClient<MarketplacePurchaseResponse>(
+    apiClient<MarketplaceVehicleMutationResponse>(
       API_ENDPOINTS.marketplace.purchase(id),
       { method: "POST", body: body ?? {} },
     ),

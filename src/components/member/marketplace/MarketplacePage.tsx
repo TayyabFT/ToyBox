@@ -24,6 +24,7 @@ import {
   type MarketplaceListingView,
 } from "./types";
 import type { MarketplaceVehicleRaw } from "@/types/api";
+import { VehicleSourcingModal } from "@/components/member/garage/vehicle-sourcing/VehicleSourcingModal";
 
 // ── Skeletons ─────────────────────────────────────────────────────────────────
 
@@ -117,6 +118,7 @@ export function MarketplacePage() {
 
   const [selectedListing, setSelectedListing] =
     useState<MarketplaceListingView | null>(null);
+  const [sourcingOpen, setSourcingOpen] = useState(false);
 
   // ── Fetch ────────────────────────────────────────────────────────────────
 
@@ -244,16 +246,41 @@ export function MarketplacePage() {
   return (
     <div className="space-y-6 p-4 sm:p-6 lg:p-8 sm:space-y-8">
       {/* Page header */}
-      <div className="space-y-2">
-        <p className={memberPageEyebrowClass}>{eyebrow}</p>
-        <h1 className={memberPageTitleClass}>
-          <span className={memberPageTitleAccentClass}>Market</span>
-          <span className="text-foreground">place</span>
-        </h1>
-        <p className="font-roboto max-w-lg text-[12px] leading-relaxed text-secondary/60">
-          Exclusive vehicles curated for club members. Browse the collection and
-          express interest in any listing.
-        </p>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="space-y-2">
+          <p className={memberPageEyebrowClass}>{eyebrow}</p>
+          <h1 className={memberPageTitleClass}>
+            <span className={memberPageTitleAccentClass}>Market</span>
+            <span className="text-foreground">place</span>
+          </h1>
+          <p className="font-roboto max-w-lg text-[12px] leading-relaxed text-secondary/60">
+            Exclusive vehicles curated for club members. Browse the collection and
+            express interest in any listing.
+          </p>
+        </div>
+
+        {/* Add Sourcing Request button */}
+        <button
+          type="button"
+          id="add-sourcing-request-btn"
+          onClick={() => setSourcingOpen(true)}
+          className="font-roboto inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-all hover:bg-accent/90 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] active:scale-[0.97] sm:w-auto sm:shrink-0 sm:justify-start"
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden
+          >
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Add Sourcing Request
+        </button>
       </div>
 
       {/* Search */}
@@ -402,6 +429,12 @@ export function MarketplacePage() {
           onClose={() => setSelectedListing(null)}
         />
       )}
+
+      {/* Vehicle Sourcing modal */}
+      <VehicleSourcingModal
+        open={sourcingOpen}
+        onClose={() => setSourcingOpen(false)}
+      />
     </div>
   );
 }

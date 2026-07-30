@@ -21,7 +21,6 @@ export const confirmationStats: ConfirmationStatItem[] = [
     label: "Completed Today",
     value: "9",
     subtext: "Confirmed Done",
-    accent: "teal",
   },
   {
     label: "Shift Progress",

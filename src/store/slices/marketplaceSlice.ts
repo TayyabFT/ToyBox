@@ -47,9 +47,10 @@ export const fetchMarketplaceListings = createAsyncThunk(
       // Support both response shapes:
       //   /marketplace/vehicles  → data.vehicles[]
       //   legacy /listings       → data.featured[] + data.listings[]
-      const vehicles = data?.vehicles ?? [];
-      const featured = data?.featured ?? [];
-      const listings = data?.listings ?? [];
+      const dataObj = Array.isArray(data) ? { vehicles: data } : data;
+      const vehicles = dataObj?.vehicles ?? [];
+      const featured = (dataObj as { featured?: MarketplaceVehicleRaw[] })?.featured ?? [];
+      const listings = (dataObj as { listings?: MarketplaceVehicleRaw[] })?.listings ?? [];
 
       // Empty → fall back to mock data so the page always shows content
       if (vehicles.length === 0 && featured.length === 0 && listings.length === 0) {

@@ -21,7 +21,7 @@ import {
 } from "@/components/member/memberPageStyles";
 import { EventsFilterTabs } from "./EventsFilterTabs";
 import { EventsFeaturedCard, EventsGridCard } from "./EventCards";
-import type { EventFilter } from "./types";
+import type { EventFilter, EventItem } from "./types";
 
 // ── Skeleton ──────────────────────────────────────────────────────────────────
 
@@ -161,68 +161,63 @@ export function MemberEvents() {
   // Whether the hero being shown is a past event
   const heroIsPast = past.some((e) => e.id === activeHero?.id);
 
-  // When a past event is selected as hero, the defaultHero (an upcoming event
-  // that lives in featured[]) would disappear from the page entirely because
-  // featured[] is not rendered in the grids. Re-inject it into the appropriate
-  // upcoming group so it stays visible.
+  // When a non-default event is selected as activeHero, defaultHero (the default featured event)
+  // must be injected into its respective grid section so it doesn't disappear from the page.
   const injectedFeatured =
-    heroIsPast && defaultHero && !past.some((e) => e.id === defaultHero.id)
+    activeHero && defaultHero && activeHero.id !== defaultHero.id
       ? defaultHero
       : null;
 
-  // Build grid groups. Exclude the active hero only when it is a non-past event
-  // (prevents duplication). Past hero stays in PAST EVENTS grid so upcoming
-  // sections remain intact.
-  const excludeFromGridId = heroIsPast ? null : activeHero?.id;
+  // Exclude the active hero from grid sections to prevent visual duplication
+  const excludeFromGridId = activeHero?.id ?? null;
+
+  const dedupeById = (list: EventItem[]) =>
+    list.filter((e, idx, arr) => arr.findIndex((item) => item.id === e.id) === idx);
 
   const groups = [
     {
-      id: "this-week",
-      label: "THIS WEEK",
-      events: [
-        ...(injectedFeatured && thisWeek.length === 0 && nextMonth.length === 0 && otherUpcoming.length === 0 ? [] : []),
+      id: "in-progress",
+      label: "IN PROGRESS",
+      events: dedupeById([
+        ...(injectedFeatured && thisWeek.some((e) => e.id === injectedFeatured.id)
+          ? [injectedFeatured]
+          : []),
         ...thisWeek.filter((e) => e.id !== excludeFromGridId),
-      ],
-    },
-    {
-      id: "next-month",
-      label: "NEXT MONTH",
-      events: nextMonth.filter((e) => e.id !== excludeFromGridId),
+      ]),
     },
     {
       id: "other-upcoming",
       label: "UPCOMING",
-      // Inject the displaced featured event into "Upcoming" if no other group will show it
-      events: [
-        ...( injectedFeatured &&
-             !thisWeek.some((e) => e.id === injectedFeatured.id) &&
-             !nextMonth.some((e) => e.id === injectedFeatured.id)
+      events: dedupeById([
+        ...(injectedFeatured &&
+           (featured.some((e) => e.id === injectedFeatured.id) ||
+            otherUpcoming.some((e) => e.id === injectedFeatured.id))
           ? [injectedFeatured]
-          : []
-        ),
+          : []),
         ...otherUpcoming.filter((e) => e.id !== excludeFromGridId),
-      ],
+      ]),
     },
     {
       id: "past-events",
       label: "PAST EVENTS",
-      events: past.filter((e) => e.id !== excludeFromGridId),
+      events: dedupeById([
+        ...(injectedFeatured && past.some((e) => e.id === injectedFeatured.id)
+          ? [injectedFeatured]
+          : []),
+        ...past.filter((e) => e.id !== excludeFromGridId),
+      ]),
     },
   ].filter((g) => g.events.length > 0);
 
   const isFirstLoad = loading && !loaded;
 
   // ── Eyebrow status label ──────────────────────────────────────────────────
-  // Derive which group the active hero belongs to, so the eyebrow reflects
-  // the currently displayed event rather than just the first non-empty group.
-
   const eyebrowLabel = (() => {
     if (!loaded || !activeHero) return "Upcoming";
-    if (featured.some((e) => e.id === activeHero.id))    return "Featured";
-    if (thisWeek.some((e) => e.id === activeHero.id))    return "This Week";
-    if (nextMonth.some((e) => e.id === activeHero.id))   return "Next Month";
+    if (featured.some((e) => e.id === activeHero.id)) return "Featured";
+    if (thisWeek.some((e) => e.id === activeHero.id)) return "In Progress";
     if (otherUpcoming.some((e) => e.id === activeHero.id)) return "Upcoming";
-    if (past.some((e) => e.id === activeHero.id))        return "Past";
+    if (past.some((e) => e.id === activeHero.id)) return "Past";
     return "Upcoming";
   })();
 
