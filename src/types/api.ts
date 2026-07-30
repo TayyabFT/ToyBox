@@ -4462,11 +4462,48 @@ export type MarketplaceVehicleRaw = {
   colour?: string;
   mileage?: number | string;
   vin?: string;
+  chassisNo?: string;
+  plate?: string;
+  engine?: string;
+  power?: string;
+  drive?: string;
+  zeroToHundred?: string;
+  topSpeed?: string;
   transmission?: string;
   fuelType?: string;
+  purchasedAt?: string;
+  storageBay?: string;
   images?: string[];
   imageUrl?: string;
+  vehicleImages?: string[];
   specifications?: Record<string, unknown>;
+  vehicleInfo?: {
+    name?: string;
+    make?: string;
+    model?: string;
+    year?: number | string;
+    engine?: string;
+    power?: string;
+    transmission?: string;
+    drive?: string;
+    zeroToHundred?: string;
+    topSpeed?: string;
+    fuelType?: string;
+  };
+  ownershipInfo?: {
+    colour?: string;
+    color?: string;
+    chassisNo?: string;
+    plate?: string;
+    purchasedAt?: string;
+    storageBay?: string;
+    mileage?: string | number;
+  };
+  health?: Array<{
+    category?: string;
+    percentage?: number | string;
+    note?: string;
+  }>;
   price?: number | string;
   discount?: number | string;
   finalPrice?: number | string;
@@ -4475,26 +4512,39 @@ export type MarketplaceVehicleRaw = {
   updatedAt?: string;
 };
 
-export type MarketplaceVehicleCreateRequest = {
-  title: string;
-  description: string;
-  make: string;
-  model: string;
-  variant: string;
-  year: number;
-  color: string;
-  mileage: number;
-  vin: string;
-  transmission: string;
-  fuelType: string;
-  images: string[];
-  specifications: Record<string, unknown>;
+export type MarketplaceVehicleWizardRequest = {
+  vehicleInfo: {
+    make: string;
+    model: string;
+    year: number;
+    engine: string;
+    power: string;
+    transmission: string;
+    drive: string;
+    zeroToHundred: string;
+    topSpeed: string;
+    fuelType: string;
+  };
+  ownershipInfo: {
+    colour: string;
+    chassisNo: string;
+    plate: string;
+    purchasedAt: string;
+    storageBay: string;
+    mileage: string;
+  };
+  health: Array<{
+    category: string;
+    percentage: number;
+    note?: string;
+  }>;
   price: number;
   discount: number;
   status: MarketplaceVehicleStatus;
 };
 
-export type MarketplaceVehicleUpdateRequest = MarketplaceVehicleCreateRequest;
+export type MarketplaceVehicleCreateRequest = MarketplaceVehicleWizardRequest;
+export type MarketplaceVehicleUpdateRequest = MarketplaceVehicleWizardRequest;
 
 export type MarketplaceOfferMemberRaw = {
   id?: string;

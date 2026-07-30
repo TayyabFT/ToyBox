@@ -4,11 +4,21 @@ import type {
   MarketplaceOfferRaw,
   MarketplaceOffersListData,
   MarketplaceVehicleRaw,
+  MarketplaceVehicleWizardRequest,
   MarketplaceVehiclesListData,
 } from "@/types/api";
+import {
+  DOC_FIELDS,
+  HEALTH_CATEGORIES,
+  createInitialAddVehicleForm,
+  createInitialDocsForm,
+  createInitialHealthForm,
+  type AddVehicleFormState,
+} from "@/components/staff/vehicles/add-vehicle/types";
 import type {
   MarketplaceOfferItem,
   MarketplaceOfferStatusTone,
+  MarketplaceVehicleHealthItem,
   MarketplaceVehicleItem,
   MarketplaceVehicleStatusTone,
 } from "@/components/admin/marketplace/types";
@@ -135,6 +145,8 @@ export function mapMarketplaceVehicle(
     return null;
   }
 
+  const info = raw.vehicleInfo;
+  const ownership = raw.ownershipInfo;
   const price = toNumber(raw.price);
   const discount = toNumber(raw.discount);
   const finalPrice =
@@ -142,34 +154,83 @@ export function mapMarketplaceVehicle(
       ? toNumber(raw.finalPrice)
       : Math.max(0, price - discount);
 
+  const make =
+    info?.make?.trim() ||
+    info?.name?.trim() ||
+    raw.make?.trim() ||
+    "";
+  const model = info?.model?.trim() || raw.model?.trim() || "";
+  const year = toNumber(info?.year ?? raw.year) || undefined;
+  const color =
+    ownership?.colour?.trim() ||
+    ownership?.color?.trim() ||
+    raw.color?.trim() ||
+    raw.colour?.trim() ||
+    "";
+  const mileageValue = ownership?.mileage ?? raw.mileage;
+  const vin =
+    ownership?.chassisNo?.trim() ||
+    raw.chassisNo?.trim() ||
+    raw.vin?.trim() ||
+    "";
+  const transmission =
+    info?.transmission?.trim() || raw.transmission?.trim() || "";
+  const fuelType = info?.fuelType?.trim() || raw.fuelType?.trim() || "";
+
   const title =
     raw.title?.trim() ||
-    [raw.make?.trim(), raw.model?.trim(), raw.variant?.trim()]
-      .filter(Boolean)
-      .join(" ") ||
+    [make, model, raw.variant?.trim()].filter(Boolean).join(" ") ||
     "Untitled Listing";
 
   const status = raw.status?.trim() || "AVAILABLE";
-  const imageUrl =
-    raw.images?.find((url) => url?.trim())?.trim() ||
-    raw.imageUrl?.trim() ||
-    "";
+  const images = [
+    ...(raw.images ?? []),
+    ...(raw.vehicleImages ?? []),
+  ]
+    .map((url) => url.trim())
+    .filter(Boolean);
+  const imageUrl = images[0] || raw.imageUrl?.trim() || "";
+
+  const health: MarketplaceVehicleHealthItem[] = (raw.health ?? [])
+    .map((item) => {
+      const category = item.category?.trim();
+      if (!category) return null;
+
+      return {
+        category,
+        percentage: toNumber(item.percentage),
+        ...(item.note?.trim() ? { note: item.note.trim() } : {}),
+      };
+    })
+    .filter((item): item is MarketplaceVehicleHealthItem => item !== null);
 
   return {
     id: String(raw.id),
     title,
     description: raw.description?.trim() || "",
-    make: raw.make?.trim() || "",
-    model: raw.model?.trim() || "",
+    make,
+    model,
     variant: raw.variant?.trim() || "",
-    year: toNumber(raw.year) || undefined,
-    color: raw.color?.trim() || raw.colour?.trim() || "",
-    mileageLabel: formatMileage(raw.mileage),
-    mileage: toNumber(raw.mileage),
-    vin: raw.vin?.trim() || "",
-    transmission: raw.transmission?.trim() || "",
-    fuelType: raw.fuelType?.trim() || "",
-    images: (raw.images ?? []).map((url) => url.trim()).filter(Boolean),
+    year,
+    color,
+    mileageLabel: formatMileage(mileageValue),
+    mileage: toNumber(mileageValue),
+    vin,
+    transmission,
+    fuelType,
+    engine: info?.engine?.trim() || raw.engine?.trim() || "",
+    power: info?.power?.trim() || raw.power?.trim() || "",
+    drive: info?.drive?.trim() || raw.drive?.trim() || "",
+    zeroToHundred:
+      info?.zeroToHundred?.trim() || raw.zeroToHundred?.trim() || "",
+    topSpeed: info?.topSpeed?.trim() || raw.topSpeed?.trim() || "",
+    plate: ownership?.plate?.trim() || raw.plate?.trim() || "",
+    purchasedAt:
+      ownership?.purchasedAt?.trim() || raw.purchasedAt?.trim() || "",
+    storageBay:
+      ownership?.storageBay?.trim() || raw.storageBay?.trim() || "",
+    health,
+    images,
     imageUrl,
     specifications: raw.specifications ?? {},
     price,
@@ -315,44 +376,190 @@ export function mapMarketplaceOffers(
     .filter((item): item is MarketplaceOfferItem => item !== null);
 }
 
-export function buildMarketplaceVehicleBody(input: {
-  title: string;
-  description: string;
-  make: string;
-  model: string;
-  variant: string;
-  year: string;
-  color: string;
-  mileage: string;
-  vin: string;
-  transmission: string;
+function parsePurchasedAt(value: string): string {
+  const trimmed = value.trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) {
+    return trimmed;
+  }
+
+  const parsed = Date.parse(trimmed);
+
+  if (!Number.isNaN(parsed)) {
+    return new Date(parsed).toISOString().slice(0, 10);
+  }
+
+  const monthYear = trimmed.match(/^([A-Za-z]+)\s+(\d{4})$/);
+
+  if (monthYear) {
+    const date = new Date(`${monthYear[1]} 1, ${monthYear[2]}`);
+
+    if (!Number.isNaN(date.getTime())) {
+      return date.toISOString().slice(0, 10);
+    }
+  }
+
+  return trimmed;
+}
+
+export type MarketplaceVehicleWizardForm = AddVehicleFormState & {
   fuelType: string;
-  imagesText: string;
   price: string;
   discount: string;
   status: string;
-}) {
-  const images = input.imagesText
-    .split(/\n|,/)
-    .map((url) => url.trim())
-    .filter(Boolean);
+  existingImageUrls: string[];
+};
+
+export function createInitialMarketplaceVehicleForm(): MarketplaceVehicleWizardForm {
+  return {
+    ...createInitialAddVehicleForm(),
+    fuelType: "",
+    price: "",
+    discount: "0",
+    status: "AVAILABLE",
+    existingImageUrls: [],
+  };
+}
+
+export function marketplaceVehicleToWizardForm(
+  vehicle: MarketplaceVehicleItem,
+): MarketplaceVehicleWizardForm {
+  const health = createInitialHealthForm();
+
+  for (const item of vehicle.health) {
+    const key = item.category as keyof typeof health;
+
+    if (key in health) {
+      health[key] = {
+        percentage: item.percentage || 45,
+        note: item.note || "",
+        noteOpen: Boolean(item.note),
+      };
+    }
+  }
 
   return {
-    title: input.title.trim(),
-    description: input.description.trim(),
-    make: input.make.trim(),
-    model: input.model.trim(),
-    variant: input.variant.trim(),
-    year: toNumber(input.year),
-    color: input.color.trim(),
-    mileage: toNumber(input.mileage),
-    vin: input.vin.trim(),
-    transmission: input.transmission.trim(),
-    fuelType: input.fuelType.trim(),
-    images,
-    specifications: {},
-    price: toNumber(input.price),
-    discount: toNumber(input.discount),
-    status: input.status.trim() || "AVAILABLE",
+    vehicleInfo: {
+      name: vehicle.make,
+      model: vehicle.model,
+      year: vehicle.year ? String(vehicle.year) : "",
+      engine: vehicle.engine,
+      power: vehicle.power,
+      transmission: vehicle.transmission,
+      drive: vehicle.drive,
+      zeroToHundred: vehicle.zeroToHundred,
+      topSpeed: vehicle.topSpeed,
+      vehicleImages: [],
+    },
+    ownershipInfo: {
+      colour: vehicle.color,
+      chassisNo: vehicle.vin,
+      plate: vehicle.plate,
+      purchased: vehicle.purchasedAt,
+      storageBay: vehicle.storageBay,
+      mileage: vehicle.mileage ? String(vehicle.mileage) : "",
+    },
+    docs: createInitialDocsForm(),
+    health,
+    fuelType: vehicle.fuelType,
+    price: vehicle.price ? String(vehicle.price) : "",
+    discount: String(vehicle.discount || 0),
+    status: vehicle.status || "AVAILABLE",
+    existingImageUrls: vehicle.images,
   };
+}
+
+export function buildMarketplaceVehicleWizardPayload(
+  form: MarketplaceVehicleWizardForm,
+): MarketplaceVehicleWizardRequest {
+  const { vehicleInfo, ownershipInfo, health, fuelType, price, discount, status } =
+    form;
+  const make = vehicleInfo.name.trim() || vehicleInfo.model.trim();
+
+  return {
+    vehicleInfo: {
+      make,
+      model: vehicleInfo.model.trim(),
+      year: Number.parseInt(vehicleInfo.year, 10),
+      engine: vehicleInfo.engine.trim(),
+      power: vehicleInfo.power.trim(),
+      transmission: vehicleInfo.transmission.trim(),
+      drive: vehicleInfo.drive.trim(),
+      zeroToHundred: vehicleInfo.zeroToHundred.trim(),
+      topSpeed: vehicleInfo.topSpeed.trim(),
+      fuelType: fuelType.trim(),
+    },
+    ownershipInfo: {
+      colour: ownershipInfo.colour.trim(),
+      chassisNo: ownershipInfo.chassisNo.trim(),
+      plate: ownershipInfo.plate.trim(),
+      purchasedAt: parsePurchasedAt(ownershipInfo.purchased),
+      storageBay: ownershipInfo.storageBay.trim(),
+      mileage: ownershipInfo.mileage.trim(),
+    },
+    health: HEALTH_CATEGORIES.map(({ key }) => ({
+      category: key,
+      percentage: health[key].percentage,
+      ...(health[key].note.trim() ? { note: health[key].note.trim() } : {}),
+    })),
+    price: toNumber(price),
+    discount: toNumber(discount),
+    status: status.trim() || "AVAILABLE",
+  };
+}
+
+export function buildMarketplaceVehicleFormData(
+  form: MarketplaceVehicleWizardForm,
+): FormData {
+  const payload = buildMarketplaceVehicleWizardPayload(form);
+  const formData = new FormData();
+  const { vehicleInfo, ownershipInfo } = payload;
+
+  formData.append("make", vehicleInfo.make);
+  formData.append("model", vehicleInfo.model);
+  formData.append("year", String(vehicleInfo.year));
+  formData.append("engine", vehicleInfo.engine);
+  formData.append("power", vehicleInfo.power);
+  formData.append("transmission", vehicleInfo.transmission);
+  formData.append("drive", vehicleInfo.drive);
+  formData.append("zeroToHundred", vehicleInfo.zeroToHundred);
+  formData.append("topSpeed", vehicleInfo.topSpeed);
+  formData.append("fuelType", vehicleInfo.fuelType);
+  formData.append("colour", ownershipInfo.colour);
+  formData.append("chassisNo", ownershipInfo.chassisNo);
+  formData.append("plate", ownershipInfo.plate);
+  formData.append("purchasedAt", ownershipInfo.purchasedAt);
+  formData.append("storageBay", ownershipInfo.storageBay);
+  formData.append("mileage", ownershipInfo.mileage);
+  formData.append("health", JSON.stringify(payload.health));
+  formData.append("price", String(payload.price));
+  formData.append("discount", String(payload.discount));
+  formData.append("status", payload.status);
+
+  // Nested JSON also sent for backends that read multipart nested fields.
+  formData.append("vehicleInfo", JSON.stringify(payload.vehicleInfo));
+  formData.append("ownershipInfo", JSON.stringify(payload.ownershipInfo));
+
+  for (const field of DOC_FIELDS) {
+    const file = form.docs[field.key];
+
+    if (file) {
+      formData.append(field.key, file);
+    }
+  }
+
+  for (const image of form.vehicleInfo.vehicleImages) {
+    formData.append("vehicleImages", image);
+  }
+
+  return formData;
+}
+
+export function marketplaceVehicleNeedsMultipart(
+  form: MarketplaceVehicleWizardForm,
+): boolean {
+  return (
+    Object.values(form.docs).some((file) => file !== null) ||
+    form.vehicleInfo.vehicleImages.length > 0
+  );
 }

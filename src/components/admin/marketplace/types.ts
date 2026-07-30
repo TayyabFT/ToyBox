@@ -14,6 +14,12 @@ export type MarketplaceOfferStatusTone =
   | "countered"
   | "other";
 
+export type MarketplaceVehicleHealthItem = {
+  category: string;
+  percentage: number;
+  note?: string;
+};
+
 export type MarketplaceVehicleItem = {
   id: string;
   title: string;
@@ -28,6 +34,15 @@ export type MarketplaceVehicleItem = {
   vin: string;
   transmission: string;
   fuelType: string;
+  engine: string;
+  power: string;
+  drive: string;
+  zeroToHundred: string;
+  topSpeed: string;
+  plate: string;
+  purchasedAt: string;
+  storageBay: string;
+  health: MarketplaceVehicleHealthItem[];
   images: string[];
   imageUrl: string;
   specifications: Record<string, unknown>;
@@ -75,40 +90,4 @@ export type MarketplaceOfferItem = {
   canCounter: boolean;
   canApprovePayment: boolean;
   canRejectPayment: boolean;
-};
-
-export type MarketplaceVehicleFormState = {
-  title: string;
-  description: string;
-  make: string;
-  model: string;
-  variant: string;
-  year: string;
-  color: string;
-  mileage: string;
-  vin: string;
-  transmission: string;
-  fuelType: string;
-  imagesText: string;
-  price: string;
-  discount: string;
-  status: string;
-};
-
-export const EMPTY_MARKETPLACE_VEHICLE_FORM: MarketplaceVehicleFormState = {
-  title: "",
-  description: "",
-  make: "",
-  model: "",
-  variant: "",
-  year: "",
-  color: "",
-  mileage: "",
-  vin: "",
-  transmission: "",
-  fuelType: "",
-  imagesText: "",
-  price: "",
-  discount: "0",
-  status: "AVAILABLE",
 };

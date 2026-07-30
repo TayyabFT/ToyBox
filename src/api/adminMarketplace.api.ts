@@ -1,14 +1,18 @@
 import { apiClient } from "@/api/client";
 import { API_ENDPOINTS } from "@/api/endpoints";
+import {
+  buildMarketplaceVehicleFormData,
+  buildMarketplaceVehicleWizardPayload,
+  marketplaceVehicleNeedsMultipart,
+  type MarketplaceVehicleWizardForm,
+} from "@/lib/adminMarketplace";
 import type {
   MarketplaceOfferActionRequest,
   MarketplaceOfferActionResponse,
   MarketplaceOfferDetailResponse,
   MarketplaceOffersListResponse,
-  MarketplaceVehicleCreateRequest,
   MarketplaceVehicleDetailResponse,
   MarketplaceVehicleMutationResponse,
-  MarketplaceVehicleUpdateRequest,
   MarketplaceVehiclesListResponse,
 } from "@/types/api";
 
@@ -46,23 +50,45 @@ export const adminMarketplaceApi = {
       API_ENDPOINTS.adminMarketplace.vehicleDetail(id),
     ),
 
-  createVehicle: (body: MarketplaceVehicleCreateRequest) =>
-    apiClient<MarketplaceVehicleMutationResponse>(
+  createVehicle: (form: MarketplaceVehicleWizardForm) => {
+    if (marketplaceVehicleNeedsMultipart(form)) {
+      return apiClient<MarketplaceVehicleMutationResponse>(
+        API_ENDPOINTS.adminMarketplace.vehicles,
+        {
+          method: "POST",
+          formData: buildMarketplaceVehicleFormData(form),
+        },
+      );
+    }
+
+    return apiClient<MarketplaceVehicleMutationResponse>(
       API_ENDPOINTS.adminMarketplace.vehicles,
       {
         method: "POST",
-        body,
+        body: buildMarketplaceVehicleWizardPayload(form),
       },
-    ),
+    );
+  },
 
-  updateVehicle: (id: string | number, body: MarketplaceVehicleUpdateRequest) =>
-    apiClient<MarketplaceVehicleMutationResponse>(
+  updateVehicle: (id: string | number, form: MarketplaceVehicleWizardForm) => {
+    if (marketplaceVehicleNeedsMultipart(form)) {
+      return apiClient<MarketplaceVehicleMutationResponse>(
+        API_ENDPOINTS.adminMarketplace.vehicleDetail(id),
+        {
+          method: "PATCH",
+          formData: buildMarketplaceVehicleFormData(form),
+        },
+      );
+    }
+
+    return apiClient<MarketplaceVehicleMutationResponse>(
       API_ENDPOINTS.adminMarketplace.vehicleDetail(id),
       {
         method: "PATCH",
-        body,
+        body: buildMarketplaceVehicleWizardPayload(form),
       },
-    ),
+    );
+  },
 
   deleteVehicle: (id: string | number) =>
     apiClient<MarketplaceVehicleMutationResponse>(

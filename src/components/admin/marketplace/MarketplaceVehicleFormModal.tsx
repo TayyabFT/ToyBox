@@ -3,22 +3,42 @@
 import { useEffect, useState } from "react";
 import { Dropdown } from "@/components/common/Dropdown";
 import { Input } from "@/components/common/Input";
-import { buildMarketplaceVehicleBody } from "@/lib/adminMarketplace";
-import type {
-  MarketplaceVehicleFormState,
-  MarketplaceVehicleItem,
-} from "./types";
-import { EMPTY_MARKETPLACE_VEHICLE_FORM } from "./types";
+import { RightArrow } from "@/components/common/Svgs";
+import { DocsStep } from "@/components/staff/vehicles/add-vehicle/DocsStep";
+import { HealthStep } from "@/components/staff/vehicles/add-vehicle/HealthStep";
+import { OwnershipInfoStep } from "@/components/staff/vehicles/add-vehicle/OwnershipInfoStep";
+import { VehicleInfoStep } from "@/components/staff/vehicles/add-vehicle/VehicleInfoStep";
+import {
+  stepHasErrors,
+  validateAddVehicleStep,
+  validateDocsStep,
+  validateHealthStep,
+  validateOwnershipInfoStep,
+  validateVehicleInfoStep,
+  type AddVehicleStepErrors,
+} from "@/lib/addVehicleValidation";
+import {
+  createInitialMarketplaceVehicleForm,
+  marketplaceVehicleToWizardForm,
+  type MarketplaceVehicleWizardForm,
+} from "@/lib/adminMarketplace";
+import type { MarketplaceVehicleItem } from "./types";
 
 type MarketplaceVehicleFormModalProps = {
   open: boolean;
   vehicle?: MarketplaceVehicleItem | null;
   submitting?: boolean;
   onClose: () => void;
-  onSubmit: (body: ReturnType<typeof buildMarketplaceVehicleBody>) => void;
+  onSubmit: (form: MarketplaceVehicleWizardForm) => void;
 };
 
-type FormErrors = Partial<Record<keyof MarketplaceVehicleFormState, string>>;
+const MARKETPLACE_STEPS = [
+  { id: 1, label: "Vehicle" },
+  { id: 2, label: "Ownership" },
+  { id: 3, label: "Docs" },
+  { id: 4, label: "Health" },
+  { id: 5, label: "Listing" },
+] as const;
 
 const STATUS_OPTIONS = [
   { label: "AVAILABLE", value: "AVAILABLE" },
@@ -26,67 +46,27 @@ const STATUS_OPTIONS = [
   { label: "SOLD", value: "SOLD" },
 ];
 
-const MIN_YEAR = 1900;
-const MAX_YEAR = new Date().getFullYear() + 1;
+type ListingErrors = {
+  fuelType?: string;
+  price?: string;
+  discount?: string;
+  status?: string;
+};
 
-function vehicleToForm(
-  vehicle: MarketplaceVehicleItem,
-): MarketplaceVehicleFormState {
-  return {
-    title: vehicle.title,
-    description: vehicle.description,
-    make: vehicle.make,
-    model: vehicle.model,
-    variant: vehicle.variant,
-    year: vehicle.year ? String(vehicle.year) : "",
-    color: vehicle.color,
-    mileage: vehicle.mileage ? String(vehicle.mileage) : "",
-    vin: vehicle.vin,
-    transmission: vehicle.transmission,
-    fuelType: vehicle.fuelType,
-    imagesText: vehicle.images.join("\n"),
-    price: String(vehicle.price || ""),
-    discount: String(vehicle.discount || 0),
-    status: vehicle.status || "AVAILABLE",
-  };
-}
+function validateListingStep(form: MarketplaceVehicleWizardForm): ListingErrors {
+  const errors: ListingErrors = {};
 
-function validateForm(form: MarketplaceVehicleFormState): FormErrors {
-  const errors: FormErrors = {};
-
-  if (!form.title.trim()) {
-    errors.title = "Title is required.";
-  }
-
-  if (!form.make.trim()) {
-    errors.make = "Make is required.";
-  }
-
-  if (!form.model.trim()) {
-    errors.model = "Model is required.";
-  }
-
-  if (!form.year.trim()) {
-    errors.year = "Year is required.";
-  } else {
-    const year = Number(form.year);
-
-    if (!Number.isInteger(year)) {
-      errors.year = "Year must be a whole number.";
-    } else if (year < MIN_YEAR) {
-      errors.year = `Year must be ${MIN_YEAR} or later.`;
-    } else if (year > MAX_YEAR) {
-      errors.year = `Year cannot be later than ${MAX_YEAR}.`;
-    }
+  if (!form.fuelType.trim()) {
+    errors.fuelType = "Fuel type is required";
   }
 
   if (!form.price.trim()) {
-    errors.price = "Price is required.";
+    errors.price = "Price is required";
   } else {
     const price = Number(form.price);
 
     if (Number.isNaN(price) || price < 0) {
-      errors.price = "Enter a valid price.";
+      errors.price = "Enter a valid price";
     }
   }
 
@@ -94,29 +74,25 @@ function validateForm(form: MarketplaceVehicleFormState): FormErrors {
     const discount = Number(form.discount);
 
     if (Number.isNaN(discount) || discount < 0) {
-      errors.discount = "Enter a valid discount.";
+      errors.discount = "Enter a valid discount";
     } else if (
       form.price.trim() &&
       !Number.isNaN(Number(form.price)) &&
       discount > Number(form.price)
     ) {
-      errors.discount = "Discount cannot exceed price.";
-    }
-  }
-
-  if (form.mileage.trim()) {
-    const mileage = Number(form.mileage);
-
-    if (Number.isNaN(mileage) || mileage < 0) {
-      errors.mileage = "Enter a valid mileage.";
+      errors.discount = "Discount cannot exceed price";
     }
   }
 
   if (!form.status.trim()) {
-    errors.status = "Status is required.";
+    errors.status = "Status is required";
   }
 
   return errors;
+}
+
+function listingHasErrors(errors: ListingErrors): boolean {
+  return Object.values(errors).some(Boolean);
 }
 
 export function MarketplaceVehicleFormModal({
@@ -126,50 +102,114 @@ export function MarketplaceVehicleFormModal({
   onClose,
   onSubmit,
 }: MarketplaceVehicleFormModalProps) {
-  const [form, setForm] = useState<MarketplaceVehicleFormState>(
-    EMPTY_MARKETPLACE_VEHICLE_FORM,
-  );
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [submitted, setSubmitted] = useState(false);
-
   const isEdit = Boolean(vehicle);
+  const [step, setStep] = useState(1);
+  const [form, setForm] = useState<MarketplaceVehicleWizardForm>(
+    createInitialMarketplaceVehicleForm(),
+  );
+  const [errors, setErrors] = useState<AddVehicleStepErrors>({});
+  const [listingErrors, setListingErrors] = useState<ListingErrors>({});
 
   useEffect(() => {
     if (!open) return;
 
+    setStep(1);
     setErrors({});
-    setSubmitted(false);
-    setForm(vehicle ? vehicleToForm(vehicle) : EMPTY_MARKETPLACE_VEHICLE_FORM);
+    setListingErrors({});
+    setForm(
+      vehicle
+        ? marketplaceVehicleToWizardForm(vehicle)
+        : createInitialMarketplaceVehicleForm(),
+    );
   }, [open, vehicle]);
 
   if (!open) return null;
 
-  function updateField<K extends keyof MarketplaceVehicleFormState>(
-    key: K,
-    value: MarketplaceVehicleFormState[K],
-  ) {
-    const updated = { ...form, [key]: value };
-    setForm(updated);
-
-    if (submitted) {
-      const nextErrors = validateForm(updated);
-      setErrors((current) => ({ ...current, [key]: nextErrors[key] }));
+  function validateCurrentStep(): boolean {
+    if (step === 5) {
+      const next = validateListingStep(form);
+      setListingErrors(next);
+      return !listingHasErrors(next);
     }
+
+    if (step === 1) {
+      const vehicleInfoErrors = validateVehicleInfoStep(form.vehicleInfo);
+
+      if (
+        isEdit &&
+        form.existingImageUrls.length > 0 &&
+        form.vehicleInfo.vehicleImages.length === 0
+      ) {
+        delete vehicleInfoErrors.vehicleImages;
+      }
+
+      setErrors((current) => ({ ...current, vehicleInfo: vehicleInfoErrors }));
+      return !Object.values(vehicleInfoErrors).some(Boolean);
+    }
+
+    if (step === 3 && isEdit) {
+      // Docs already on listing — new uploads optional on edit.
+      setErrors((current) => ({ ...current, docs: undefined }));
+      return true;
+    }
+
+    const stepErrors = validateAddVehicleStep(step, form);
+    setErrors((current) => ({ ...current, ...stepErrors }));
+    return !stepHasErrors(step, stepErrors);
   }
 
-  function handleSubmit() {
-    setSubmitted(true);
+  function handleBack() {
+    if (submitting || step <= 1) return;
+    setStep((current) => current - 1);
+  }
 
-    const nextErrors = validateForm(form);
-    setErrors(nextErrors);
+  function handleNext() {
+    if (!validateCurrentStep()) return;
 
-    if (Object.keys(nextErrors).length > 0) {
+    if (step < 5) {
+      setStep((current) => current + 1);
       return;
     }
 
-    onSubmit(buildMarketplaceVehicleBody(form));
+    const vehicleInfoErrors = validateVehicleInfoStep(form.vehicleInfo);
+
+    if (
+      isEdit &&
+      form.existingImageUrls.length > 0 &&
+      form.vehicleInfo.vehicleImages.length === 0
+    ) {
+      delete vehicleInfoErrors.vehicleImages;
+    }
+
+    const ownershipErrors = validateOwnershipInfoStep(form.ownershipInfo);
+    const docsErrors = isEdit ? {} : validateDocsStep(form.docs);
+    const healthErrors = validateHealthStep(form.health);
+    const listing = validateListingStep(form);
+
+    setErrors({
+      vehicleInfo: vehicleInfoErrors,
+      ownershipInfo: ownershipErrors,
+      docs: docsErrors,
+      health: healthErrors,
+    });
+    setListingErrors(listing);
+
+    if (
+      Object.values(vehicleInfoErrors).some(Boolean) ||
+      Object.values(ownershipErrors).some(Boolean) ||
+      Object.values(docsErrors).some(Boolean) ||
+      Object.values(healthErrors).some(Boolean) ||
+      listingHasErrors(listing)
+    ) {
+      return;
+    }
+
+    onSubmit(form);
   }
 
+  const stepTitle = MARKETPLACE_STEPS[step - 1]?.label ?? "Marketplace Vehicle";
+  const actionLabel =
+    step === 1 ? "Next" : step === 5 ? (isEdit ? "Save Changes" : "Create Vehicle") : "Continue";
   const previewFinal = Math.max(
     0,
     Number(form.price || 0) - Number(form.discount || 0),
@@ -181,183 +221,275 @@ export function MarketplaceVehicleFormModal({
         type="button"
         aria-label="Close modal backdrop"
         className="absolute inset-0 bg-black/60 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={() => {
+          if (submitting) return;
+          onClose();
+        }}
       />
 
-      <div className="admin-modal-panel relative z-10 flex max-h-[92vh] w-full max-w-[560px] flex-col overflow-hidden rounded-[28px] border border-accent/20 shadow-[var(--shadow-modal)]">
-        <div className="shrink-0 border-b border-accent/10 px-6 py-5">
-          <h2 className="font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
+      <div className="admin-modal-panel relative z-10 flex max-h-[92vh] w-full max-w-[520px] flex-col overflow-hidden rounded-[28px] border border-accent/20 shadow-[var(--shadow-modal)]">
+        <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">
+          <h2 className="mb-2 text-center font-copperplate text-[18px] tracking-[0.06em] text-foreground uppercase">
             {isEdit ? "Edit Vehicle" : "Add Vehicle"}
           </h2>
-          <p className="font-roboto mt-1 text-[10px] tracking-[0.1em] text-secondary uppercase">
-            Final price = price − discount
-          </p>
-        </div>
-
-        <div className="Custom__Scrollbar min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
-          <Input
-            label="Title"
-            value={form.title}
-            onChange={(event) => updateField("title", event.target.value)}
-            placeholder="Ferrari 296 GTB"
-            error={errors.title}
-          />
-
-          <div className="space-y-2">
-            <label className="font-roboto block text-[11px] tracking-[0.04em] text-foreground">
-              Description
-            </label>
-            <textarea
-              value={form.description}
-              onChange={(event) =>
-                updateField("description", event.target.value)
-              }
-              rows={3}
-              className="font-roboto w-full resize-none rounded-xl border border-accent/15 bg-input-muted px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-secondary/80 focus:border-accent/35"
-              placeholder="Listing description"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Input
-              label="Make"
-              value={form.make}
-              onChange={(event) => updateField("make", event.target.value)}
-              placeholder="Ferrari"
-              error={errors.make}
-            />
-            <Input
-              label="Model"
-              value={form.model}
-              onChange={(event) => updateField("model", event.target.value)}
-              placeholder="296"
-              error={errors.model}
-            />
-            <Input
-              label="Variant"
-              value={form.variant}
-              onChange={(event) => updateField("variant", event.target.value)}
-              placeholder="GTB"
-            />
-            <Input
-              label="Year"
-              type="number"
-              min={MIN_YEAR}
-              max={MAX_YEAR}
-              value={form.year}
-              onChange={(event) => updateField("year", event.target.value)}
-              placeholder="2024"
-              error={errors.year}
-            />
-            <Input
-              label="Color"
-              value={form.color}
-              onChange={(event) => updateField("color", event.target.value)}
-              placeholder="Rosso Corsa"
-            />
-            <Input
-              label="Mileage"
-              type="number"
-              min={0}
-              value={form.mileage}
-              onChange={(event) => updateField("mileage", event.target.value)}
-              placeholder="8150"
-              error={errors.mileage}
-            />
-            <Input
-              label="VIN"
-              value={form.vin}
-              onChange={(event) => updateField("vin", event.target.value)}
-              placeholder="ZFF92LLA4R0312345"
-            />
-            <Input
-              label="Transmission"
-              value={form.transmission}
-              onChange={(event) =>
-                updateField("transmission", event.target.value)
-              }
-              placeholder="Automatic"
-            />
-            <Input
-              label="Fuel Type"
-              value={form.fuelType}
-              onChange={(event) => updateField("fuelType", event.target.value)}
-              placeholder="Petrol"
-            />
-            <Dropdown
-              label="Status"
-              options={STATUS_OPTIONS}
-              value={form.status}
-              onChange={(value) => updateField("status", value)}
-              placeholder="Select status"
-              error={errors.status}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <Input
-              label="Price"
-              type="number"
-              min={0}
-              value={form.price}
-              onChange={(event) => updateField("price", event.target.value)}
-              placeholder="1200000"
-              error={errors.price}
-            />
-            <Input
-              label="Discount"
-              type="number"
-              min={0}
-              value={form.discount}
-              onChange={(event) => updateField("discount", event.target.value)}
-              placeholder="50000"
-              error={errors.discount}
-            />
-          </div>
-
-          <p className="font-roboto text-[11px] tracking-[0.06em] text-accent uppercase">
-            Final price preview · AED {previewFinal.toLocaleString("en-US")}
+          <p className="mb-6 text-center font-roboto text-[10px] tracking-[0.1em] text-secondary uppercase">
+            {stepTitle}
           </p>
 
-          <div className="space-y-2">
-            <label className="font-roboto block text-[11px] tracking-[0.04em] text-foreground">
-              Image URLs
-            </label>
-            <textarea
-              value={form.imagesText}
-              onChange={(event) =>
-                updateField("imagesText", event.target.value)
-              }
-              rows={3}
-              className="font-roboto w-full resize-none rounded-xl border border-accent/15 bg-input-muted px-4 py-3 text-sm text-foreground outline-none transition-colors placeholder:text-secondary/80 focus:border-accent/35"
-              placeholder={"One URL per line\nhttps://..."}
-            />
-          </div>
-        </div>
-
-        <div className="flex shrink-0 gap-3 border-t border-accent/10 px-6 py-5">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="font-roboto flex flex-1 cursor-pointer items-center justify-center rounded-2xl border border-accent/25 bg-input-muted py-4 text-sm font-bold tracking-[0.08em] text-foreground disabled:cursor-not-allowed disabled:opacity-60"
+            className="absolute right-5 top-5 cursor-pointer text-secondary transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label="Close"
           >
-            Cancel
+            ✕
           </button>
-          <button
-            type="button"
-            onClick={handleSubmit}
-            disabled={submitting}
-            className="admin-gold-cta font-roboto flex flex-1 cursor-pointer items-center justify-center rounded-2xl py-4 text-sm font-bold tracking-[0.08em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {submitting
-              ? isEdit
-                ? "Saving..."
-                : "Creating..."
-              : isEdit
-                ? "Save Changes"
-                : "Create Vehicle"}
-          </button>
+
+          <div className="flex items-center">
+            {MARKETPLACE_STEPS.map((item, index) => {
+              const stepNumber = index + 1;
+              const isReached = stepNumber <= step;
+              const isLast = index === MARKETPLACE_STEPS.length - 1;
+
+              return (
+                <div
+                  key={item.id}
+                  className={`flex items-center ${isLast ? "" : "min-w-0 flex-1"}`}
+                >
+                  <div className="flex shrink-0 flex-col items-center">
+                    <span
+                      className={`flex size-8 items-center justify-center rounded-full text-[10px] font-semibold ${
+                        isReached
+                          ? "admin-gold-cta text-white"
+                          : "border border-accent/40 bg-transparent text-accent"
+                      }`}
+                    >
+                      {stepNumber}
+                    </span>
+                  </div>
+                  {!isLast && (
+                    <span
+                      className={`h-px min-w-0 flex-1 ${
+                        stepNumber < step ? "bg-accent" : "bg-accent/20"
+                      }`}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <div className="Custom__Scrollbar min-h-0 flex-1 space-y-4 overflow-y-auto px-6 py-5">
+          {step === 1 && (
+            <>
+              <VehicleInfoStep
+                value={form.vehicleInfo}
+                errors={errors.vehicleInfo}
+                onChange={(vehicleInfo) => {
+                  setForm((current) => ({ ...current, vehicleInfo }));
+                  setErrors((current) => ({
+                    ...current,
+                    vehicleInfo: undefined,
+                  }));
+                }}
+              />
+
+              {isEdit && form.existingImageUrls.length > 0 ? (
+                <div className="space-y-2">
+                  <p className="font-roboto text-[11px] tracking-[0.04em] text-foreground">
+                    Current Images
+                  </p>
+                  <div className="grid grid-cols-3 gap-2.5">
+                    {form.existingImageUrls.map((url) => (
+                      <div
+                        key={url}
+                        className="aspect-square overflow-hidden rounded-lg border border-accent/15 bg-input-muted"
+                      >
+                        <img
+                          src={url}
+                          alt="Current vehicle"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <p className="font-roboto text-[10px] text-secondary">
+                    Upload new images below to replace / add more.
+                  </p>
+                </div>
+              ) : null}
+            </>
+          )}
+
+          {step === 2 && (
+            <OwnershipInfoStep
+              value={form.ownershipInfo}
+              errors={errors.ownershipInfo}
+              onChange={(ownershipInfo) => {
+                setForm((current) => ({ ...current, ownershipInfo }));
+                setErrors((current) => ({
+                  ...current,
+                  ownershipInfo: undefined,
+                }));
+              }}
+            />
+          )}
+
+          {step === 3 && (
+            <>
+              {isEdit ? (
+                <p className="font-roboto text-[11px] text-secondary">
+                  Documents are optional on edit. Upload only if you want to replace them.
+                </p>
+              ) : null}
+              <DocsStep
+                value={form.docs}
+                errors={errors.docs}
+                onChange={(docs) => {
+                  setForm((current) => ({ ...current, docs }));
+                  setErrors((current) => ({
+                    ...current,
+                    docs: undefined,
+                  }));
+                }}
+              />
+            </>
+          )}
+
+          {step === 4 && (
+            <HealthStep
+              value={form.health}
+              errors={errors.health}
+              onChange={(health) => {
+                setForm((current) => ({ ...current, health }));
+                setErrors((current) => ({
+                  ...current,
+                  health: undefined,
+                }));
+              }}
+            />
+          )}
+
+          {step === 5 && (
+            <div className="space-y-4">
+              <Input
+                label="Fuel Type"
+                value={form.fuelType}
+                onChange={(event) => {
+                  setForm((current) => ({
+                    ...current,
+                    fuelType: event.target.value,
+                  }));
+                  setListingErrors((current) => ({
+                    ...current,
+                    fuelType: undefined,
+                  }));
+                }}
+                placeholder="Petrol"
+                error={listingErrors.fuelType}
+              />
+
+              <Input
+                label="Price"
+                type="number"
+                min={0}
+                value={form.price}
+                onChange={(event) => {
+                  setForm((current) => ({
+                    ...current,
+                    price: event.target.value,
+                  }));
+                  setListingErrors((current) => ({
+                    ...current,
+                    price: undefined,
+                  }));
+                }}
+                placeholder="500000"
+                error={listingErrors.price}
+              />
+
+              <Input
+                label="Discount"
+                type="number"
+                min={0}
+                value={form.discount}
+                onChange={(event) => {
+                  setForm((current) => ({
+                    ...current,
+                    discount: event.target.value,
+                  }));
+                  setListingErrors((current) => ({
+                    ...current,
+                    discount: undefined,
+                  }));
+                }}
+                placeholder="25000"
+                error={listingErrors.discount}
+              />
+
+              <Dropdown
+                label="Status"
+                options={STATUS_OPTIONS}
+                value={form.status}
+                onChange={(value) => {
+                  setForm((current) => ({ ...current, status: value }));
+                  setListingErrors((current) => ({
+                    ...current,
+                    status: undefined,
+                  }));
+                }}
+                placeholder="Select status"
+                error={listingErrors.status}
+              />
+
+              <p className="font-roboto text-[11px] tracking-[0.06em] text-accent uppercase">
+                Final price · AED {previewFinal.toLocaleString("en-US")}
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="shrink-0 border-t border-accent/10 px-6 py-5">
+          {step > 1 ? (
+            <div className="flex gap-3">
+              <button
+                type="button"
+                onClick={handleBack}
+                disabled={submitting}
+                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-accent/25 bg-input-muted py-4 text-sm font-bold tracking-[0.08em] text-foreground disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                <RightArrow className="shrink-0 rotate-180" />
+                Back
+              </button>
+              <button
+                type="button"
+                onClick={handleNext}
+                disabled={submitting}
+                className="admin-gold-cta font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold tracking-[0.08em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {submitting
+                  ? isEdit
+                    ? "Saving..."
+                    : "Creating..."
+                  : actionLabel}
+                {!submitting && step < 5 ? (
+                  <RightArrow className="shrink-0" />
+                ) : null}
+              </button>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={handleNext}
+              disabled={submitting}
+              className="admin-gold-cta font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold tracking-[0.08em] uppercase disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {actionLabel}
+              <RightArrow className="shrink-0" />
+            </button>
+          )}
         </div>
       </div>
     </div>

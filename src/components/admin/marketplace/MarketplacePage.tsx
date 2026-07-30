@@ -100,17 +100,17 @@ export function MarketplacePage() {
     }
   }
 
-  async function handleVehicleSubmit(
-    body: Parameters<typeof adminMarketplaceApi.createVehicle>[0],
-  ) {
+  async function handleVehicleSubmit(form: Parameters<
+    typeof adminMarketplaceApi.createVehicle
+  >[0]) {
     setVehicleSubmitting(true);
 
     try {
       if (editingVehicle) {
-        await adminMarketplaceApi.updateVehicle(editingVehicle.id, body);
+        await adminMarketplaceApi.updateVehicle(editingVehicle.id, form);
         showSuccess("Vehicle updated");
       } else {
-        await adminMarketplaceApi.createVehicle(body);
+        await adminMarketplaceApi.createVehicle(form);
         showSuccess("Vehicle created");
       }
 
@@ -262,7 +262,7 @@ export function MarketplacePage() {
           setVehicleFormOpen(false);
           setEditingVehicle(null);
         }}
-        onSubmit={(body) => void handleVehicleSubmit(body)}
+        onSubmit={(form) => void handleVehicleSubmit(form)}
       />
 
       <MarketplaceDeleteVehicleModal
