@@ -249,7 +249,9 @@ export function MarketplaceDetailModal({
               <button
                 type="button"
                 disabled={purchaseLoading}
-                onClick={() => onPurchase(listing.id)}
+                onClick={() => {
+                  if (listing.id != null) onPurchase(listing.id);
+                }}
                 className="font-roboto flex-1 rounded-full bg-accent py-3 text-[11px] font-semibold tracking-[0.14em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {purchaseLoading ? "Submitting…" : "Express Interest"}

@@ -40,16 +40,26 @@ export function toListingView(
   // Support both backend shapes:
   // - /marketplace/vehicles  → finalPrice / originalPrice
   // - legacy /marketplace/listings → priceAed / priceLabel
-  const price = raw.finalPrice ?? raw.priceAed ?? 0;
+  const rawPrice = raw.finalPrice ?? raw.priceAed ?? 0;
+  const price =
+    typeof rawPrice === "number"
+      ? rawPrice
+      : Number(String(rawPrice).replace(/,/g, "")) || 0;
   const displayPrice =
     raw.priceLabel ??
     (price > 0
       ? `AED ${price.toLocaleString("en-AE")}`
       : "Price on Request");
 
+  const mileageValue =
+    typeof raw.mileage === "number"
+      ? raw.mileage
+      : Number(String(raw.mileage ?? "").replace(/,/g, ""));
   const displayMileage =
     raw.mileageLabel ??
-    (raw.mileage != null ? `${raw.mileage.toLocaleString()} km` : "—");
+    (Number.isFinite(mileageValue) && mileageValue > 0
+      ? `${mileageValue.toLocaleString()} km`
+      : "—");
 
   const status = (raw.status ?? "available").toLowerCase();
   const statusTone: "gold" | "teal" | "pink" =

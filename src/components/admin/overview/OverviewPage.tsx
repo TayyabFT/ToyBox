@@ -222,11 +222,9 @@ export function AdminOverviewPage() {
   const staffOnShift = overview?.staffOnShift;
   const todaySchedule = overview?.todaySchedule;
 
-  const criticalTickerAlerts = (ticker?.alerts ?? []).filter(
-    (alert) => alert.severity?.trim().toLowerCase() === "critical",
-  );
-  const criticalTickerCount = criticalTickerAlerts.length;
-  const tickerItems = criticalTickerAlerts
+  const criticalTickerCount = ticker?.criticalCount ?? 0;
+  const tickerItems = (ticker?.alerts ?? [])
+    .filter((alert) => alert.severity?.trim().toLowerCase() === "critical")
     .slice(0, TICKER_VISIBLE_COUNT)
     .map((a) => {
       const dashIdx = a.message.indexOf(" — ");
@@ -331,9 +329,9 @@ export function AdminOverviewPage() {
               title=""
               subtitle={priorities?.subtitle ?? ""}
             />
-            <section className={`${overviewPanelClass} flex flex-col ${hasPriorities ? "h-95" : ""}`}>
+            <section className={`${overviewPanelClass} flex flex-col ${hasPriorities ? "max-h-95 overflow-hidden" : ""}`}>
               {hasPriorities ? (
-                <div className="flex-1 overflow-y-auto Custom__Scrollbar">
+                <div className="min-h-0 flex-1 overflow-y-auto Custom__Scrollbar">
                   {(priorities?.items ?? []).map((item) => {
                     const tagTone = mapPriorityTagTone(item.type);
                     const dashIdx = item.title.indexOf(" — ");
@@ -373,9 +371,9 @@ export function AdminOverviewPage() {
                   : ""
               }
             />
-            <section className={`${overviewPanelClass} flex flex-col ${hasQueue ? "h-110" : ""}`}>
+            <section className={`${overviewPanelClass} flex flex-col ${hasQueue ? "max-h-110 overflow-hidden" : ""}`}>
               {hasQueue ? (
-                <div className="flex-1 overflow-x-hidden overflow-y-auto Custom__Scrollbar">
+                <div className="min-h-0 flex-1 overflow-x-hidden overflow-y-auto Custom__Scrollbar">
                   <OpenRequestsTable rows={queueRows} />
                 </div>
               ) : (
@@ -395,7 +393,7 @@ export function AdminOverviewPage() {
                   : ""
               }
             />
-            <section className={`${overviewPanelClass} flex flex-col ${hasActivity ? "h-110" : ""}`}>
+            <section className={`${overviewPanelClass} flex flex-col ${hasActivity ? "max-h-110 overflow-hidden" : ""}`}>
               {hasActivity ? (
                 <div className="min-h-0 flex-1 overflow-y-auto overflow-x-hidden Custom__Scrollbar">
                   <div className="pr-3">
@@ -433,7 +431,7 @@ export function AdminOverviewPage() {
           <section
             ref={criticalAlertsRef}
             id="critical-alerts"
-            className={`${criticalAlertsPanelClass} scroll-mt-6 flex flex-col ${hasAlerts ? "h-105" : ""}`}
+            className={`${criticalAlertsPanelClass} scroll-mt-6 flex flex-col ${hasAlerts ? "max-h-105 overflow-hidden" : ""}`}
           >
             <OverviewSectionHeader
               titleSplit={{ before: "Critical", after: "Alerts" }}
@@ -441,7 +439,7 @@ export function AdminOverviewPage() {
               divider
             />
             {hasAlerts ? (
-              <div className="flex-1 overflow-y-auto Custom__Scrollbar">
+              <div className="min-h-0 flex-1 overflow-y-auto Custom__Scrollbar">
                 {(criticalAlerts?.items ?? []).map((item) => {
                   const tone = mapAlertTone(item.severity);
                   return (
@@ -463,14 +461,14 @@ export function AdminOverviewPage() {
           </section>
 
           {/* Staff on Shift */}
-          <section className={`${overviewPanelClass} flex flex-col ${hasStaff ? "h-110" : ""}`}>
+          <section className={`${overviewPanelClass} flex flex-col ${hasStaff ? "max-h-110 overflow-hidden" : ""}`}>
             <OverviewSectionHeader
               titleSplit={{ before: "Staff on", after: "Shift" }}
               title=""
               trailing={staffOnShift ? String(staffOnShift.activeCount) : ""}
             />
             {hasStaff ? (
-              <div className="flex-1 overflow-y-auto Custom__Scrollbar">
+              <div className="min-h-0 flex-1 overflow-y-auto Custom__Scrollbar">
                 <StaffOnShiftList rows={staffRows} />
               </div>
             ) : (
@@ -479,14 +477,14 @@ export function AdminOverviewPage() {
           </section>
 
           {/* Today's Schedule */}
-          <section className={`${overviewPanelClass} flex flex-col ${hasSchedule ? "h-110" : ""}`}>
+          <section className={`${overviewPanelClass} flex flex-col ${hasSchedule ? "max-h-110 overflow-hidden" : ""}`}>
             <OverviewSectionHeader
               titleSplit={{ before: "Today's", after: "Schedule" }}
               title=""
               trailing={todaySchedule?.date ?? ""}
             />
             {hasSchedule ? (
-              <div className="flex-1 overflow-y-auto Custom__Scrollbar">
+              <div className="min-h-0 flex-1 overflow-y-auto Custom__Scrollbar">
                 <ScheduleTimeline>
                   {(todaySchedule?.items ?? []).map((item, i) => {
                     const state = scheduleState(item.time);

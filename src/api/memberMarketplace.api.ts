@@ -199,11 +199,23 @@ export const memberMarketplaceApi = {
  * Backend sends:   isFavorite, finalPrice, originalPrice, color, images[]
  * UI expects:      isFavorited, priceAed, colour, coverImage
  */
+function toPriceNumber(value: unknown): number | undefined {
+  if (typeof value === "number" && !Number.isNaN(value)) return value;
+  if (typeof value === "string" && value.trim()) {
+    const parsed = Number(value.replace(/,/g, "").trim());
+    return Number.isNaN(parsed) ? undefined : parsed;
+  }
+  return undefined;
+}
+
 function normalizeVehicle(v: MarketplaceVehicleRaw): MarketplaceVehicleRaw {
   return {
     ...v,
     // isFavorite (backend) → isFavorited (UI state)
-    isFavorited: (v as unknown as { isFavorite?: boolean }).isFavorite ?? v.isFavorited ?? false,
+    isFavorited:
+      (v as unknown as { isFavorite?: boolean }).isFavorite ??
+      v.isFavorited ??
+      false,
     // First image → coverImage
     coverImage:
       v.coverImage ??
@@ -211,7 +223,10 @@ function normalizeVehicle(v: MarketplaceVehicleRaw): MarketplaceVehicleRaw {
     // color → colour (legacy alias)
     colour: v.colour ?? v.color,
     // finalPrice → priceAed (legacy price display)
-    priceAed: v.priceAed ?? v.finalPrice ?? v.originalPrice,
+    priceAed:
+      toPriceNumber(v.priceAed) ??
+      toPriceNumber(v.finalPrice) ??
+      toPriceNumber(v.originalPrice),
     // Normalise status to lowercase (backend sends AVAILABLE / RESERVED / SOLD)
     status: v.status
       ? ((v.status as string).toLowerCase() as typeof v.status)

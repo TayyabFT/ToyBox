@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { memberMarketplaceApi, type MarketplaceListingsParams } from "@/api/memberMarketplace.api";
 import { MOCK_MARKETPLACE_LISTINGS } from "@/components/member/marketplace/mockListings";
-import type { MarketplaceVehicleRaw } from "@/types/api";
+import type { ApiError, MarketplaceVehicleRaw } from "@/types/api";
 
 // ── State ─────────────────────────────────────────────────────────────────────
 
@@ -101,7 +101,11 @@ export const purchaseMarketplaceListing = createAsyncThunk(
         ...state.marketplace.listings,
       ];
       const vehicle = allVehicles.find((v) => v.id === id);
-      const price = offerPrice ?? vehicle?.finalPrice ?? vehicle?.priceAed ?? 0;
+      const rawPrice = offerPrice ?? vehicle?.finalPrice ?? vehicle?.priceAed ?? 0;
+      const price =
+        typeof rawPrice === "number"
+          ? rawPrice
+          : Number(String(rawPrice).replace(/,/g, "")) || 0;
 
       const res = await memberMarketplaceApi.submitOffer(id, price);
       return { id, data: res.data };

@@ -158,7 +158,9 @@ export function MarketplaceFeaturedCard({
               <button
                 type="button"
                 disabled={purchaseLoading}
-                onClick={() => onPurchase(listing.id)}
+                onClick={() => {
+                  if (listing.id != null) onPurchase(listing.id);
+                }}
                 className="font-roboto flex-1 rounded-full bg-accent px-5 py-2.5 text-[11px] font-semibold tracking-[0.14em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-50"
               >
                 {purchaseLoading ? "Requesting…" : "Express Interest"}
@@ -175,7 +177,11 @@ export function MarketplaceFeaturedCard({
             <button
               type="button"
               disabled={favoriteLoading}
-              onClick={() => onFavoriteToggle(listing.id, !!listing.isFavorited)}
+              onClick={() => {
+                if (listing.id != null) {
+                  onFavoriteToggle(listing.id, !!listing.isFavorited);
+                }
+              }}
               aria-label={listing.isFavorited ? "Remove from saved" : "Save"}
               className="flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/15 text-secondary/40 transition-colors hover:border-accent/30 hover:text-accent disabled:opacity-40"
             >

@@ -4649,3 +4649,33 @@ export type MarketplaceOffersListResponse =
   ApiResponse<MarketplaceOffersListData>;
 export type MarketplaceOfferDetailResponse = ApiResponse<MarketplaceOfferRaw>;
 export type MarketplaceOfferActionResponse = ApiResponse<MarketplaceOfferRaw>;
+
+/** Member catalogue listings response (supports vehicles / featured / listings). */
+export type MarketplaceListingsData = {
+  total?: number;
+  count?: number;
+  limit?: number;
+  offset?: number;
+  vehicles?: MarketplaceVehicleRaw[];
+  featured?: MarketplaceVehicleRaw[];
+  listings?: MarketplaceVehicleRaw[];
+};
+
+export type MarketplaceListingsResponse = ApiResponse<MarketplaceListingsData>;
+
+export type MarketplacePurchaseData = {
+  id?: string | number;
+  listingId?: string | number;
+  vehicleId?: string | number;
+  status?: string;
+  message?: string;
+  offer?: {
+    id?: string;
+    vehicleId?: string;
+    offerPrice?: number;
+    status?: string;
+    statusLabel?: string;
+  };
+};
+
+export type MarketplacePurchaseResponse = ApiResponse<MarketplacePurchaseData>;
