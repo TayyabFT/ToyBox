@@ -216,7 +216,7 @@ export function OfferVehicleModal({
       <div className="relative z-10 w-full max-w-[500px] overflow-hidden rounded-[28px] border border-accent/20 bg-background shadow-[var(--shadow-modal)]">
         <div className="relative border-b border-accent/10 px-6 pb-5 pt-6">
           <p className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
-            Bookings
+            Sourcing
           </p>
           <h2 className="mt-2 font-copperplate text-[22px] uppercase">
             <span className="text-foreground">Offer a </span>

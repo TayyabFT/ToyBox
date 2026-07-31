@@ -23,6 +23,7 @@ import {
   NavGarage,
   NavMarketplace,
   NavParking,
+  NavSourcing,
   Sunburst,
   User,
   VehicleCalendar,
@@ -140,6 +141,7 @@ const navIcons: Record<string, (active: boolean) => ReactNode> = {
       color={active ? "var(--nav-icon-active)" : "var(--muted)"}
     />
   ),
+  sourcing: (active) => <NavSourcing active={active} />,
   inspections: (active) => <Checkbox active={active} />,
   "health-reports": (active) => <CircleCheck active={active} />,
   "service-requests": (active) => <Sunburst active={active} />,
@@ -189,6 +191,11 @@ const ADMIN_BADGE_KEY_BY_NAV_ID: Record<string, AdminNavigationBadgeKey> = {
 
 // e.g. "service-requests" -> "serviceRequests", matching the badges API's key casing.
 function navIdToBadgeKey(navId: string): string {
+  // Staff sourcing page still uses the bookings badge key from the API.
+  if (navId === "sourcing") {
+    return "bookings";
+  }
+
   return navId.replace(/-([a-z])/g, (_match, letter: string) =>
     letter.toUpperCase(),
   );

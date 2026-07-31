@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  ConfirmationPendingClock,
+  ConfirmationPendingCheck,
   ConfirmationShiftProgress,
   ConfirmationSignOffEdit,
   VehicleFleetReady,
@@ -57,7 +57,7 @@ export function ConfirmationsPage() {
     } catch (error) {
       const message =
         (error as { message?: string }).message ??
-        "Failed to load bookings";
+        "Failed to load sourcing";
 
       showError(message);
       setPending([]);
@@ -84,7 +84,7 @@ export function ConfirmationsPage() {
           label={stats.pendingConfirm.label}
           value={stats.pendingConfirm.value}
           subtext={stats.pendingConfirm.subtext}
-          icon={<ConfirmationPendingClock />}
+          icon={<ConfirmationPendingCheck />}
           iconSize="lg"
           valueLoading={loading}
         />

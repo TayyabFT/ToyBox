@@ -5,7 +5,7 @@ export function ConfirmationsGreeting() {
     <div className="space-y-3">
       <StaffShiftMeta split />
       <h1 className="font-copperplate text-[32px] leading-tight">
-        <span className="text-primary">Bookings</span>
+        <span className="text-primary">Sourcing</span>
       </h1>
     </div>
   );

@@ -59,29 +59,43 @@ export function InspectionProgressStepper({
       </div>
 
       <div className="mt-2 flex">
-        {steps.map((step, index) => (
-          <button
-            key={step.id}
-            type="button"
-            onClick={() => onStepSelect?.(step.id)}
-            disabled={!onStepSelect}
-            className={`flex-1 text-center ${index === 0 ? "text-left" : ""} ${index === steps.length - 1 ? "text-right" : ""} ${
-              onStepSelect ? "cursor-pointer" : "cursor-default"
-            }`}
-          >
-            <span
-              className={`font-roboto text-[9px] tracking-[0.08em] uppercase ${
-                step.state === "active"
-                  ? "text-primary"
-                  : step.state === "complete"
-                    ? "text-teal"
-                    : "text-secondary"
-              }`}
+        {steps.map((step, index) => {
+          const isLast = index === steps.length - 1;
+
+          return (
+            <div
+              key={step.id}
+              className={`flex ${isLast ? "" : "min-w-0 flex-1"}`}
             >
-              {step.label}
-            </span>
-          </button>
-        ))}
+              <button
+                type="button"
+                onClick={() => onStepSelect?.(step.id)}
+                disabled={!onStepSelect}
+                className={`flex w-8 shrink-0 ${
+                  index === 0
+                    ? "justify-start"
+                    : isLast
+                      ? "justify-end"
+                      : "justify-center"
+                } ${onStepSelect ? "cursor-pointer" : "cursor-default"}`}
+              >
+                <span
+                  className={`font-roboto whitespace-nowrap text-[9px] tracking-[0.08em] uppercase ${
+                    step.state === "active"
+                      ? "text-primary"
+                      : step.state === "complete"
+                        ? "text-teal"
+                        : "text-secondary"
+                  }`}
+                >
+                  {step.label}
+                </span>
+              </button>
+
+              {!isLast && <span className="mx-1 min-w-0 flex-1" />}
+            </div>
+          );
+        })}
       </div>
     </div>
   );

@@ -53,11 +53,19 @@ function resolveQuickActionHref(
   apiHref?: string,
 ): string {
   if (apiHref?.trim()) {
-    return apiHref.trim();
+    const href = apiHref.trim();
+
+    if (href.includes("/staff/bookings")) {
+      return href.replace("/staff/bookings", "/staff/sourcing");
+    }
+
+    return href;
   }
 
+  const navId = id === "bookings" ? "sourcing" : id;
+
   return (
-    staffNavItems.find((item) => item.id === id)?.href ??
+    staffNavItems.find((item) => item.id === navId)?.href ??
     `${STAFF_BASE}/overview`
   );
 }
@@ -85,11 +93,11 @@ const defaultQuickActions: StaffOverviewDisplay["quickActions"] = [
     href: resolveQuickActionHref("concierge"),
   },
   {
-    id: "bookings",
-    title: "Bookings",
+    id: "sourcing",
+    title: "Sourcing",
     subtitle: "0 await signature",
-    iconKey: "bookings",
-    href: resolveQuickActionHref("bookings"),
+    iconKey: "sourcing",
+    href: resolveQuickActionHref("sourcing"),
   },
 ];
 
@@ -224,13 +232,15 @@ function mapQuickAction(
   item: StaffOverviewQuickActionRaw,
   fallback: StaffOverviewDisplay["quickActions"][number],
 ): StaffOverviewDisplay["quickActions"][number] {
-  const id = item.key?.trim() || item.id?.trim() || fallback.id;
+  const rawId = item.key?.trim() || item.id?.trim() || fallback.id;
+  const id = rawId === "bookings" ? "sourcing" : rawId;
   const pendingCount =
     typeof item.pendingCount === "number"
       ? item.pendingCount
       : typeof item.count === "number"
         ? item.count
         : undefined;
+  const apiTitle = item.title?.trim() || item.label?.trim();
   const subtitle =
     item.subtitle?.trim() ||
     item.subtext?.trim() ||
@@ -238,9 +248,15 @@ function mapQuickAction(
 
   return {
     id,
-    title: item.title?.trim() || item.label?.trim() || fallback.title,
+    title:
+      id === "sourcing" && (!apiTitle || apiTitle === "Bookings")
+        ? fallback.title
+        : apiTitle || fallback.title,
     subtitle,
-    iconKey: item.icon?.trim() || fallback.iconKey,
+    iconKey:
+      id === "sourcing"
+        ? "sourcing"
+        : item.icon?.trim() || fallback.iconKey,
     href: resolveQuickActionHref(id, item.path?.trim() || item.href?.trim()),
   };
 }
@@ -409,7 +425,7 @@ function applyJobsEnrichment(
   const next = { ...display };
 
   next.quickActions = display.quickActions.map((action) => {
-    if (action.id !== "bookings") {
+    if (action.id !== "sourcing" && action.id !== "bookings") {
       return action;
     }
 

@@ -7,6 +7,7 @@ import type { NotificationItem as NotificationData } from "@/types/api";
 function NotificationRowSkeleton() {
   return (
     <div className="flex items-start gap-3 rounded-xl border border-accent/8 px-4 py-3.5">
+      <ShimmerBlock className="size-8 shrink-0 rounded-lg" />
       <div className="min-w-0 flex-1 space-y-1.5">
         <ShimmerBlock className="h-3 w-40" />
         <ShimmerBlock className="h-2.5 w-24" />

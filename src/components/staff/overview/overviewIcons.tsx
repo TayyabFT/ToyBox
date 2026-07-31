@@ -45,6 +45,7 @@ export const resolveOverviewIcon: OverviewIconResolver = (iconKey) => {
     case "message":
       return <ActionMessage />;
     case "bookings":
+    case "sourcing":
       return <ActionCheckbox />;
     case "clock":
       return <ClockSmall color="var(--pink)" />;

@@ -18,9 +18,9 @@ export const staffOperationsNav: StaffNavItem[] = [
     section: "operations",
   },
   {
-    id: "bookings",
-    label: "Bookings",
-    href: `${STAFF_BASE}/bookings`,
+    id: "sourcing",
+    label: "Sourcing",
+    href: `${STAFF_BASE}/sourcing`,
     section: "operations",
   },
   {
@@ -60,6 +60,12 @@ export const staffManagementNav: StaffNavItem[] = [
     id: "vehicles",
     label: "Vehicles",
     href: `${STAFF_BASE}/vehicles`,
+    section: "management",
+  },
+  {
+    id: "marketplace",
+    label: "Marketplace",
+    href: `${STAFF_BASE}/marketplace`,
     section: "management",
   },
   {

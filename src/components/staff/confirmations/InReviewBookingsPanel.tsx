@@ -18,10 +18,10 @@ export function InReviewBookingsPanel({
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
           <span className="text-foreground">In Review</span>{" "}
-          <span className="text-primary">Bookings</span>
+          <span className="text-primary">Sourcing</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
-          {pendingCount} Booking{pendingCount === 1 ? "" : "s"} Pending Review
+          {pendingCount} Request{pendingCount === 1 ? "" : "s"} Pending Review
         </p>
       </div>
 
@@ -29,7 +29,7 @@ export function InReviewBookingsPanel({
         <ConfirmationScrollableList
           items={requests}
           loading={loading}
-          emptyText="No in-review bookings"
+          emptyText="No in-review sourcing"
           listClassName="space-y-3 pr-1"
           renderItem={(request) => <InReviewRequestRow request={request} />}
           getItemKey={(request) => request.id}

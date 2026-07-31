@@ -2,10 +2,10 @@
 
 import { useCallback, useEffect, useState } from "react";
 import {
-  Building,
-  Car,
   CircleCheck,
   ClockSmall,
+  ConfirmationPendingCheck,
+  ServiceRequestStackedLayers,
 } from "@/components/common/Svgs";
 import { StatCard } from "@/components/staff/overview/StatCard";
 import { showError } from "@/lib/toast";
@@ -22,9 +22,9 @@ function createEmptyStats(): ServiceRequestStat[] {
 function statIcon(icon: ServiceRequestStat["icon"]) {
   switch (icon) {
     case "urgent":
-      return <Building active stroke="var(--primary)" />;
+      return <ConfirmationPendingCheck />;
     case "transport":
-      return <Car />;
+      return <ServiceRequestStackedLayers />;
     case "in-progress":
       return <ClockSmall color="var(--primary)" />;
     case "completed":

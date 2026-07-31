@@ -20,7 +20,7 @@ export function PendingConfirmationsPanel({
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
           <span className="text-foreground">Pending</span>{" "}
-          <span className="text-primary">Bookings</span>
+          <span className="text-primary">Sourcing</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
           {pendingCount} Job{pendingCount === 1 ? "" : "s"} Require Your
@@ -32,7 +32,7 @@ export function PendingConfirmationsPanel({
         <ConfirmationScrollableList
           items={requests}
           loading={loading}
-          emptyText="No pending bookings"
+          emptyText="No pending sourcing"
           renderItem={(request) => (
             <ConfirmationRequestRow
               request={request}

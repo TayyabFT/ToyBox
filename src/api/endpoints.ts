@@ -83,6 +83,16 @@ export const API_ENDPOINTS = {
     vehicleDetail: (id: string | number) =>
       `/api/v1/admin/marketplace/vehicles/${id}`,
   },
+  staffMarketplace: {
+    offers: "/api/v1/staff/marketplace/offers",
+    offerDetail: (id: string | number) =>
+      `/api/v1/staff/marketplace/offers/${id}`,
+    offerAction: (id: string | number) =>
+      `/api/v1/staff/marketplace/offers/${id}`,
+    vehicles: "/api/v1/staff/marketplace/vehicles",
+    vehicleDetail: (id: string | number) =>
+      `/api/v1/staff/marketplace/vehicles/${id}`,
+  },
   sourcing: {
     staffRequests: "/api/v1/staff/sourcing/requests",
     adminRequests: "/api/v1/admin/sourcing/requests",

@@ -30,7 +30,7 @@ export function CompletedTodayPanel({
         <ConfirmationScrollableList
           items={requests}
           loading={loading}
-          emptyText="No completed bookings"
+          emptyText="No completed sourcing"
           renderItem={(request) => <CompletedRequestRow request={request} />}
           getItemKey={(request) => request.id}
         />

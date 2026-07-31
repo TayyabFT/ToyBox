@@ -18,10 +18,10 @@ export function ConfirmedBookingsPanel({
       <div className="space-y-2">
         <h2 className="font-copperplate text-[18px]">
           <span className="text-foreground">Confirmed</span>{" "}
-          <span className="text-primary">Bookings</span>
+          <span className="text-primary">Sourcing</span>
         </h2>
         <p className="font-roboto text-[10px] tracking-[0.08em] text-secondary uppercase">
-          {confirmedCount} Booking{confirmedCount === 1 ? "" : "s"} Ready For
+          {confirmedCount} Request{confirmedCount === 1 ? "" : "s"} Ready For
           Member Collection
         </p>
       </div>
@@ -30,7 +30,7 @@ export function ConfirmedBookingsPanel({
         <ConfirmationScrollableList
           items={requests}
           loading={loading}
-          emptyText="No confirmed bookings"
+          emptyText="No confirmed sourcing"
           renderItem={(request) => <ConfirmedRequestRow request={request} />}
           getItemKey={(request) => request.id}
         />

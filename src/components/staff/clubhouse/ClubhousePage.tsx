@@ -225,7 +225,7 @@ export function ClubhousePage() {
           <div className="space-y-1.5">
             <h2 className="font-copperplate text-[18px] leading-none tracking-[0.06em] uppercase">
               <span className="text-foreground">Today&apos;s </span>
-              <span className="text-accent">Reservations</span>
+              <span className="text-primary">Reservations</span>
             </h2>
             <p className="font-roboto text-[10px] tracking-[0.12em] text-secondary uppercase">
               {summary.confirmedCount} confirmed · {summary.walkInCount} walk-ins

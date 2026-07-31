@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
 
-export default function StaffConfirmationsRedirect() {
+export default function StaffBookingsRedirect() {
   redirect("/staff/sourcing");
 }

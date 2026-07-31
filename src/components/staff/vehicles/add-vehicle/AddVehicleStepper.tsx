@@ -49,19 +49,32 @@ export function AddVehicleStepper({ currentStep }: AddVehicleStepperProps) {
         {ADD_VEHICLE_STEPS.map((step, index) => {
           const stepNumber = index + 1;
           const isReached = stepNumber <= currentStep;
+          const isLast = index === ADD_VEHICLE_STEPS.length - 1;
 
           return (
             <div
               key={step.id}
-              className={`flex-1 text-center ${index === 0 ? "text-left" : ""} ${index === ADD_VEHICLE_STEPS.length - 1 ? "text-right" : ""}`}
+              className={`flex ${isLast ? "" : "min-w-0 flex-1"}`}
             >
               <span
-                className={`font-roboto text-[9px] tracking-[0.04em] uppercase ${
-                  isReached ? "text-primary" : "text-foreground-soft/50"
+                className={`flex w-10 shrink-0 ${
+                  index === 0
+                    ? "justify-start"
+                    : isLast
+                      ? "justify-end"
+                      : "justify-center"
                 }`}
               >
-                {step.label}
+                <span
+                  className={`font-roboto whitespace-nowrap text-[9px] tracking-[0.04em] uppercase ${
+                    isReached ? "text-primary" : "text-foreground-soft/50"
+                  }`}
+                >
+                  {step.label}
+                </span>
               </span>
+
+              {!isLast && <span className="min-w-0 flex-1" />}
             </div>
           );
         })}
