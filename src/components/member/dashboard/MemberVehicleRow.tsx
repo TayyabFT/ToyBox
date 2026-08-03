@@ -112,10 +112,10 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
     : null;
 
   return (
-    <div className="group flex flex-col sm:flex-row overflow-hidden rounded-xl border border-accent/15 bg-card transition-all duration-200 hover:border-accent/30">
+    <div className="group flex flex-col sm:flex-row overflow-hidden rounded-xl border border-accent/15 bg-card transition-all duration-200 hover:border-accent/30 sm:min-h-[130px] md:min-h-[140px]">
 
       {/* ── Image ── */}
-      <div className="relative shrink-0 w-full sm:w-[190px] md:w-[220px] h-[130px] sm:h-auto overflow-hidden bg-surface">
+      <div className="relative shrink-0 w-full sm:w-[190px] md:w-[220px] h-[130px] sm:h-auto sm:self-stretch sm:min-h-[130px] md:min-h-[140px] overflow-hidden bg-surface">
 
         {/* Image or placeholder */}
         {vehicle.imageUrl ? (

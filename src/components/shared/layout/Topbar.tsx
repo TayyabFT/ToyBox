@@ -37,7 +37,7 @@ type TopbarSpec = {
 const PROFILE_ICON_TRIGGER =
   "flex size-10 cursor-pointer items-center justify-center rounded-full border border-accent/10 transition-colors hover:border-primary/40 [&_svg]:size-[18px]";
 const PROFILE_INITIAL_TRIGGER =
-  "flex size-10 cursor-pointer items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] text-sm font-medium text-dark uppercase";
+  "flex size-10 cursor-pointer items-center justify-center rounded-full bg-[var(--accent)] text-sm font-medium text-[var(--shell-bg)] uppercase";
 
 /* ------------------------------------------------------------------ *
  * Per-role topbar specifications.
@@ -150,7 +150,7 @@ export function Topbar({
 
   return (
     <>
-      <header className="fixed top-0 right-0 left-0 z-30 flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-accent/8 bg-[var(--shell-bg)] px-4 sm:px-6 lg:left-[340px] lg:px-8">
+      <header className="fixed top-0 right-0 left-0 z-30 flex h-[72px] shrink-0 items-center justify-between gap-3 border-b border-foreground/10 bg-[var(--shell-bg)] px-4 sm:px-6 lg:left-[340px] lg:px-8">
         <nav
           aria-label="Breadcrumb"
           className="flex min-w-0 flex-1 items-center gap-2 overflow-hidden text-[13px] tracking-[0.14em] uppercase"

@@ -396,11 +396,11 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
         </div>
 
         {/* Step Indicators */}
-        <div className="px-5 py-4 flex items-center justify-between">
+        <div className="px-5 py-4 flex items-center w-full">
           {[1, 2, 3, 4].map((num, i) => (
-            <div key={num} className="flex-1 flex items-center">
+            <div key={num} className={`flex items-center ${i < 3 ? "flex-1" : ""}`}>
               <div
-                className={`flex items-center justify-center size-[35px] rounded-full text-[11px] font-bold transition-all duration-300 ${step >= num
+                className={`flex-shrink-0 flex items-center justify-center size-[35px] rounded-full text-[11px] font-bold transition-all duration-300 ${step >= num
                   ? "bg-accent text-dark shadow-[0_0_12px_rgba(212,168,71,0.35)]"
                   : "bg-[#14120F] text-secondary border border-accent/10"
                   }`}

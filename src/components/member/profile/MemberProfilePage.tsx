@@ -15,6 +15,7 @@ import { MemberEditProfileModal } from "./MemberEditProfileModal";
 import { memberProfileMock } from "./mockData";
 import { MemberProfileSettingsGrid } from "./MemberProfileSettingsGrid";
 import type { MemberProfileData } from "./types";
+import { useTheme } from "@/components/common/ThemeProvider";
 
 function getInitial(name: string): string {
   return name.trim().charAt(0).toUpperCase() || "A";
@@ -32,6 +33,8 @@ const EMPTY_EDIT_FORM: MemberProfileEditFormState = {
 };
 
 export function MemberProfilePage() {
+  const { theme } = useTheme();
+  const isLight = theme === "light";
   const [data, setData] = useState<MemberProfileData>(memberProfileMock);
   const [profileRaw, setProfileRaw] = useState<AuthProfileData | null>(null);
   const [editForm, setEditForm] =
@@ -106,17 +109,27 @@ export function MemberProfilePage() {
         ) : null}
 
         <section
-          className="relative overflow-hidden rounded-2xl border border-accent/15 px-5 py-6 sm:px-9 sm:py-9"
-          style={{
-            background:
-              "radial-gradient(90% 130% at 38% -15%, rgba(212,168,71,0.22) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
+          className="relative overflow-hidden rounded-2xl border px-5 py-6 sm:px-9 sm:py-9"
+          style={isLight ? {
+            background: "radial-gradient(90% 130% at 38% -15%, rgba(138,125,106,0.14) 0%, rgba(90,83,73,0.06) 38%, transparent 68%), var(--card)",
+            borderColor: "rgba(26,24,22,0.08)",
+          } : {
+            background: "radial-gradient(90% 130% at 38% -15%, rgba(212,168,71,0.22) 0%, rgba(140,105,45,0.10) 38%, rgba(10,8,6,0) 68%), #0a0806",
+            borderColor: "rgba(201,168,76,0.15)",
           }}
         >
           <button
             type="button"
             onClick={handleOpenEdit}
             disabled={loading || !profileRaw}
-            className="font-roboto absolute right-4 top-4 inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#C9A84C]/40 px-3 py-1.5 text-[9px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase transition-colors hover:bg-[#C9A84C]/10 disabled:cursor-not-allowed disabled:opacity-50 sm:right-6 sm:top-6 sm:px-3.5"
+            className="font-roboto absolute right-4 top-4 inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-[9px] font-semibold tracking-[0.12em] uppercase transition-colors disabled:cursor-not-allowed disabled:opacity-50 sm:right-6 sm:top-6 sm:px-3.5"
+            style={isLight ? {
+              borderColor: "color-mix(in srgb, var(--accent) 35%, transparent)",
+              color: "var(--accent)",
+            } : {
+              borderColor: "rgba(201,168,76,0.40)",
+              color: "#C9A84C",
+            }}
           >
             <EditPencil className="size-3" />
             <span className="hidden xs:inline">Edit Details</span>
@@ -128,18 +141,42 @@ export function MemberProfilePage() {
               <img
                 src={data.profileImageUrl}
                 alt={data.name}
-                className="size-20 shrink-0 rounded-full border-2 border-[#C9A84C] object-cover shadow-[0_0_34px_rgba(201,168,76,0.30)] sm:size-24"
+                className="size-20 shrink-0 rounded-full border-2 object-cover sm:size-24"
+                style={isLight ? {
+                  borderColor: "var(--accent)",
+                  boxShadow: "0 0 16px color-mix(in srgb, var(--accent) 20%, transparent)",
+                } : {
+                  borderColor: "#C9A84C",
+                  boxShadow: "0 0 34px rgba(201,168,76,0.30)",
+                }}
               />
             ) : (
-              <span className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 border-[#C9A84C] bg-[#0d0b08] shadow-[0_0_34px_rgba(201,168,76,0.30)] sm:size-24">
-                <span className="font-copperplate text-[28px] text-[#C9A84C] sm:text-[34px]">
+              <span
+                className="flex size-20 shrink-0 items-center justify-center rounded-full border-2 sm:size-24"
+                style={isLight ? {
+                  borderColor: "var(--accent)",
+                  background: "color-mix(in srgb, var(--accent) 12%, var(--card))",
+                  boxShadow: "none",
+                } : {
+                  borderColor: "#C9A84C",
+                  background: "#0d0b08",
+                  boxShadow: "0 0 34px rgba(201,168,76,0.30)",
+                }}
+              >
+                <span
+                  className="font-copperplate text-[28px] sm:text-[34px]"
+                  style={{ color: isLight ? "var(--accent)" : "#C9A84C" }}
+                >
                   {getInitial(data.name)}
                 </span>
               </span>
             )}
 
             <div className="min-w-0 space-y-2 sm:space-y-2.5">
-              <h1 className="font-copperplate text-[22px] leading-none tracking-[0.03em] text-[#F2EAD5] sm:text-[30px]">
+              <h1
+                className="font-copperplate text-[22px] leading-none tracking-[0.03em] sm:text-[30px]"
+                style={{ color: isLight ? "var(--foreground)" : "#F2EAD5" }}
+              >
                 {loading ? "Loading..." : data.name}
               </h1>
 
@@ -147,9 +184,21 @@ export function MemberProfilePage() {
                 {data.handle} · {data.memberNumber}
               </p>
 
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-[#C9A84C]/40 bg-[#C9A84C]/8 px-3.5 py-1.5">
-                <StarFilled className="size-3" />
-                <span className="font-roboto text-[10px] font-semibold tracking-[0.12em] text-[#C9A84C] uppercase">
+              <span
+                className="inline-flex items-center gap-1.5 rounded-full border px-3.5 py-1.5"
+                style={isLight ? {
+                  borderColor: "color-mix(in srgb, var(--accent) 35%, transparent)",
+                  background: "color-mix(in srgb, var(--accent) 10%, transparent)",
+                } : {
+                  borderColor: "rgba(201,168,76,0.40)",
+                  background: "rgba(201,168,76,0.08)",
+                }}
+              >
+                <StarFilled className="size-3" style={{ color: isLight ? "var(--accent)" : "#C9A84C" }} />
+                <span
+                  className="font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase"
+                  style={{ color: isLight ? "var(--accent)" : "#C9A84C" }}
+                >
                   {data.tier}
                 </span>
               </span>

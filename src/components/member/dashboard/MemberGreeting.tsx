@@ -20,15 +20,13 @@ export function MemberGreeting({ memberName, sublabel }: MemberGreetingProps) {
   return (
     <div className="space-y-1">
       {sublabel && (
-        <p className="font-Roboto text-[10px] tracking-[0.18em] text-primary uppercase">
-          {/* {sublabel} */}
+        <p className="font-Roboto text-[10px] tracking-[0.18em] text-secondary uppercase">
           Welcome back
         </p>
       )}
-      {/* Figma: ~32px Copperplate, white + gold first name */}
-      <h1 className="font-copperplate text-[20px] sm:text-[26px] md:text-[32px] leading-[1.2] tracking-[0.03em] uppercase">
-        <span className="text-foreground">{getGreeting()}, </span>
-        <span className="text-accent">{firstName}.</span>
+      {/* Figma: ~32px Copperplate, all foreground in light mode, name accented in dark */}
+      <h1 className="font-copperplate text-[20px] sm:text-[26px] md:text-[32px] leading-[1.2] tracking-[0.03em] uppercase text-foreground">
+        {getGreeting()}, {firstName}.
       </h1>
     </div>
   );

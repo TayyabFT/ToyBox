@@ -201,7 +201,10 @@ export function MemberVehicleDetailPage({
 
       <div className="grid grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-2">
         <div className="space-y-5 sm:space-y-6">
-          <MemberVehicleHeroCard vehicle={vehicle} />
+          <MemberVehicleHeroCard
+              vehicle={vehicle}
+              onDocumentUploaded={() => setRefreshTrigger((prev) => prev + 1)}
+            />
           <div ref={requestsRef}>
             <MemberVehicleRequestsCard
               vehicleId={vehicleId}

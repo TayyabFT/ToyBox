@@ -24,6 +24,12 @@ export const staffOperationsNav: StaffNavItem[] = [
     section: "operations",
   },
   {
+    id: "marketplace",
+    label: "Marketplace",
+    href: `${STAFF_BASE}/marketplace`,
+    section: "operations",
+  },
+  {
     id: "inspections",
     label: "Inspections",
     href: `${STAFF_BASE}/inspections`,
@@ -60,12 +66,6 @@ export const staffManagementNav: StaffNavItem[] = [
     id: "vehicles",
     label: "Vehicles",
     href: `${STAFF_BASE}/vehicles`,
-    section: "management",
-  },
-  {
-    id: "marketplace",
-    label: "Marketplace",
-    href: `${STAFF_BASE}/marketplace`,
     section: "management",
   },
   {

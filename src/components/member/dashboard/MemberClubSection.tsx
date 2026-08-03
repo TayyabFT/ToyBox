@@ -168,18 +168,18 @@ export function VenueCard({
           className="absolute inset-0"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.55) 42%, rgba(0,0,0,0.12) 100%)",
+              "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.75) 45%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.10) 100%)",
           }}
         />
 
         {/* Top-left icon */}
-        <div className="absolute left-3.5 top-3.5 flex size-8 items-center justify-center rounded-lg border border-accent/25 bg-black/55 text-accent backdrop-blur-sm">
+        <div className="absolute left-3.5 top-3.5 flex size-8 items-center justify-center rounded-lg border border-accent/25 bg-black/70 text-accent backdrop-blur-sm">
           <VenueIcon iconKey={venue.iconKey} />
         </div>
 
         {/* Top-right status badge */}
         {venue.tag && (
-          <span className="font-roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/60 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
+          <span className="font-roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/75 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
             <span className="size-1.5 rounded-full bg-accent" />
             {venue.tag}
           </span>
@@ -187,17 +187,17 @@ export function VenueCard({
 
         {/* Bottom content */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h3 className="font-copperplate text-[18px] leading-tight tracking-[0.02em] text-white uppercase">
+          <h3 className="font-copperplate text-[18px] leading-tight tracking-[0.02em] text-white uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
             {venue.name}
           </h3>
-          <p className="mt-2 font-roboto text-[11px] leading-relaxed text-secondary/75">
+          <p className="mt-2 font-roboto text-[11px] leading-relaxed text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)]">
             {venue.description}
           </p>
 
-          <div className="mt-3 border-t border-white/8 pt-3">
+          <div className="mt-3 border-t border-white/12 pt-3">
             <div className="flex items-center justify-between gap-3">
               {venue.footerLeft && (
-                <span className="font-roboto text-[9px] tracking-[0.1em] text-secondary/65 uppercase">
+                <span className="font-roboto text-[9px] tracking-[0.1em] text-white/60 uppercase">
                   {venue.footerLeft}
                 </span>
               )}

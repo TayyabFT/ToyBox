@@ -22,17 +22,18 @@ export function MembershipCard({
   const isLight = theme === "light";
 
   /* ── Light mode card ─────────────────────────────────────────────────
-   * Figma: flat warm-clay surface, no gold border, all text dark
+   * Figma: very light warm clay, barely distinct from page background,
+   * no border, all text dark and readable
    */
   if (isLight) {
     return (
       <div
-        className="w-full rounded-[20px] border border-foreground/10 overflow-hidden"
+        className="w-full rounded-[20px] overflow-hidden"
         style={{
           aspectRatio: "642 / 405",
           maxHeight: "405px",
           background:
-            "radial-gradient(ellipse at 60% 30%, #e8e3d8 0%, #cdc8bc 55%, #c2bdb1 100%)",
+            "radial-gradient(ellipse at 60% 30%, #e8e3d8 0%, #ddd8ce 55%, #d5d0c5 100%)",
         }}
       >
         <div className="relative flex h-full w-full flex-col justify-between px-5 py-5 sm:px-8 sm:py-6">
@@ -47,7 +48,7 @@ export function MembershipCard({
             />
           </div>
 
-          {/* Name — both words dark, no gold split */}
+          {/* Name — all dark */}
           <div className="py-1 sm:py-2">
             <h2
               className="font-copperplate uppercase leading-tight tracking-[0.04em] text-[clamp(18px,6vw,35px)]"
@@ -62,13 +63,13 @@ export function MembershipCard({
             <div className="space-y-1 min-w-0">
               <p
                 className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
-                style={{ color: "rgba(26,24,22,0.45)" }}
+                style={{ color: "rgba(26,24,22,0.50)" }}
               >
                 Member
               </p>
               <p
                 className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em] truncate"
-                style={{ color: "rgba(26,24,22,0.70)" }}
+                style={{ color: "rgba(26,24,22,0.75)" }}
               >
                 {memberNumber}
               </p>
@@ -76,13 +77,13 @@ export function MembershipCard({
             <div className="space-y-1 text-right shrink-0">
               <p
                 className="font-roboto text-[8px] sm:text-[9px] tracking-[0.22em] uppercase"
-                style={{ color: "rgba(26,24,22,0.45)" }}
+                style={{ color: "rgba(26,24,22,0.50)" }}
               >
                 Founding
               </p>
               <p
                 className="font-roboto text-[11px] sm:text-[15px] tracking-[0.06em]"
-                style={{ color: "rgba(26,24,22,0.70)" }}
+                style={{ color: "rgba(26,24,22,0.75)" }}
               >
                 {validityDate ?? memberSince}
               </p>

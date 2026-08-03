@@ -3425,9 +3425,9 @@ type MemberVehicleRequestIconProps = {
   highlighted?: boolean;
 };
 
-const MEMBER_REQUEST_ICON_MUTED = "#3A3A42";
-const MEMBER_REQUEST_ICON_ACCENT = "#FB923C";
-const MEMBER_REQUEST_ICON_GOLD = "#C9A86C";
+const MEMBER_REQUEST_ICON_MUTED = "var(--muted)";
+const MEMBER_REQUEST_ICON_ACCENT = "var(--nav-icon-active)";
+const MEMBER_REQUEST_ICON_GOLD = "var(--nav-icon-active)";
 
 export function MemberVehicleTransportIcon({
   className,
@@ -3581,6 +3581,38 @@ export function MemberVehicleSourcingIcon({
       />
       <path
         d="M8.29411 13.429C6.7675 13.429 5.5293 14.6672 5.5293 16.1935C5.5293 17.7201 6.7675 18.9584 8.29411 18.9584C9.82072 18.9584 11.0589 17.7201 11.0589 16.1935C11.0589 14.6672 9.82072 13.429 8.29411 13.429ZM8.29411 17.3784C7.64006 17.3784 7.10923 16.8478 7.10923 16.1935C7.10923 15.5395 7.64006 15.0086 8.29411 15.0086C8.94817 15.0086 9.479 15.5395 9.479 16.1935C9.479 16.8478 8.94817 17.3784 8.29411 17.3784Z"
+        fill={fill}
+      />
+    </svg>
+  );
+}
+
+export function MemberVehicleParkingIcon({
+  className,
+  highlighted = false,
+}: MemberVehicleRequestIconProps) {
+  const fill = highlighted ? MEMBER_REQUEST_ICON_GOLD : MEMBER_REQUEST_ICON_MUTED;
+
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 18 18"
+      fill="none"
+      aria-hidden
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M9 1C4.58172 1 1 4.58172 1 9C1 13.4183 4.58172 17 9 17C13.4183 17 17 13.4183 17 9C17 4.58172 13.4183 1 9 1ZM0 9C0 4.02944 4.02944 0 9 0C13.9706 0 18 4.02944 18 9C18 13.9706 13.9706 18 9 18C4.02944 18 0 13.9706 0 9Z"
+        fill={fill}
+      />
+      <path
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M7 4.5H10.5C11.8807 4.5 13 5.61929 13 7C13 8.38071 11.8807 9.5 10.5 9.5H8V13.5H7V4.5ZM8 8.5H10.5C11.3284 8.5 12 7.82843 12 7C12 6.17157 11.3284 5.5 10.5 5.5H8V8.5Z"
         fill={fill}
       />
     </svg>

@@ -2,7 +2,7 @@ export function MemberProfileCard() {
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center gap-3">
-        <span className="flex size-12 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-medium uppercase text-dark">
+        <span className="staff-profile-avatar flex size-12 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-medium uppercase text-dark">
           M
         </span>
         <div className="space-y-0.5 uppercase">

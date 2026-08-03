@@ -16,9 +16,10 @@ const statusToneClass: Record<GarageVehicleStatusTone, string> = {
 
 type MemberVehicleHeroCardProps = {
   vehicle: MemberVehicleDetail;
+  onDocumentUploaded?: () => void;
 };
 
-export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
+export function MemberVehicleHeroCard({ vehicle, onDocumentUploaded }: MemberVehicleHeroCardProps) {
   const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
 
   return (
@@ -108,8 +109,12 @@ export function MemberVehicleHeroCard({ vehicle }: MemberVehicleHeroCardProps) {
 
       <VehicleDocumentsModal
         open={isDocumentsOpen}
+        vehicleId={vehicle.id}
         onClose={() => setIsDocumentsOpen(false)}
         documents={vehicle.documents}
+        onUploaded={() => {
+          onDocumentUploaded?.();
+        }}
       />
     </>
   );

@@ -150,119 +150,127 @@
 }
 
 [data-theme="light"] {
-  /* Brand — same keys, light-surface values (Figma warm beige stack) */
+  /* ── Brand ───────────────────────────────────────────────────────────
+   * Light mode uses a very light warm neutral palette (Figma).
+   * NO accent colors on text — accent is only used for interactive elements.
+   * ─────────────────────────────────────────────────────────────────── */
   --primary: #1a1816;
-  --secondary: #6b665e;
+  --secondary: #6b5f52;
 
-  --accent: #bfa05a;
-  --muted: #8c8c8c;
+  /* Accent: subtle warm taupe — used ONLY for icons, buttons, borders */
+  --accent: #8a7d6a;
+  --muted: #9a8f84;
   --foreground: #1a1816;
   --foreground-soft: #3a3530;
-  --background: #e4e0d8;
-  --card: #ebe6d9;
-  --surface: #dad4c8;
-  --section-canvas: #dcd6c8;
-  --shell-bg: #f0eeea;
-  --sidebar-bg: #f0eeea;
+  --background: #f0ede6;
+  --card: #f0ede6;
+  --surface: #e8e3da;
+  --section-canvas: #f0ede6;
+  --shell-bg: #f5f2ee;
+  /* Sidebar: very light warm beige, barely distinct from page */
+  --sidebar-bg: #e0dcd4;
   --dark: #0a0806;
-  --teal: #4d8f72;
-  --pink: #c45c5c;
-  --section-label: #8a8378;
+  --teal: #3d7a5f;
+  --pink: #b84f4f;
+  /* Section labels: very muted/faint */
+  --section-label: #a8a099;
 
-  --elevated: #d0c8bc;
-  --input-muted: #e3ded4;
-  --stepper-inactive: #d5cfc4;
+  --elevated: #e0dcd4;
+  --input-muted: #e8e3da;
+  --stepper-inactive: #dad5cb;
 
-  --info: #4a8ab8;
-  --vehicle-blue: #4a7c9e;
-  --gold-bright: #bfa05a;
-  --gold-deep: #8b6f2a;
+  --info: #3d7ab0;
+  --vehicle-blue: #3d6e8a;
+  --gold-bright: #8a7d6a;
+  --gold-deep: #5a5349;
   --stat-card-hover-from: #3a3530;
   --stat-card-hover-to: #8a7d6a;
-  --stat-card-hover-fg: #ffffff;
-  --stat-card-hover-fg-muted: rgba(255, 255, 255, 0.7);
+  --stat-card-hover-fg: #f5f2ee;
+  --stat-card-hover-fg-muted: rgba(245, 242, 238, 0.75);
   --stat-card-active-from: #3a3530;
   --stat-card-active-to: #8a7d6a;
-  --stat-card-active-fg: #ffffff;
-  --stat-card-active-fg-muted: rgba(255, 255, 255, 0.7);
-  --stat-card-bg: #d0c8bc;
+  --stat-card-active-fg: #f5f2ee;
+  --stat-card-active-fg-muted: rgba(245, 242, 238, 0.75);
+  /* Stat card bg: extremely subtle, almost matching page background */
+  --stat-card-bg: #ebe8e1;
   --stat-card-border: radial-gradient(100% 100% at 50% 0%,
-      #ffffff 0%,
-      #ffffff 18%,
-      #f0ede6 72%,
-      #f0ede6 100%);
+      rgba(255, 255, 255, 0.95) 0%,
+      rgba(240, 237, 230, 0.4) 40%,
+      rgba(224, 220, 212, 0.3) 100%);
   --stat-card-border-hover: radial-gradient(100% 100% at 50% 0%,
-      #ffffff 0%,
-      #f0ede6 55%,
-      #d0c8bc 100%);
-  --avatar-slate: #4a7c9e;
-  --avatar-rose: #9e6b8a;
-  --avatar-purple: #6b5b9e;
-  --avatar-green: #5b8a72;
+      rgba(255, 255, 255, 1) 0%,
+      rgba(224, 220, 212, 0.6) 55%,
+      rgba(200, 194, 184, 0.5) 100%);
+  --avatar-slate: #3d6e8a;
+  --avatar-rose: #8a5a72;
+  --avatar-purple: #5a4a8a;
+  --avatar-green: #3d7a5f;
 
-  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.12);
-  --shadow-glow-teal: 0 0 8px rgba(77, 143, 114, 0.35);
-  --shadow-glow-teal-strong: 0 0 6px rgba(77, 143, 114, 0.4);
-  --shadow-glow-primary: 0 0 8px rgba(201, 168, 76, 0.25);
-  --shadow-glow-gold: 0 0 24px rgba(201, 168, 76, 0.2);
+  --shadow-modal: 0 24px 80px rgba(0, 0, 0, 0.15);
+  --shadow-glow-teal: 0 0 8px rgba(61, 122, 95, 0.3);
+  --shadow-glow-teal-strong: 0 0 6px rgba(61, 122, 95, 0.38);
+  --shadow-glow-primary: 0 0 8px rgba(138, 125, 106, 0.2);
+  --shadow-glow-gold: 0 0 16px rgba(138, 125, 106, 0.18);
 
-  --gold: #bfa05a;
-  --gold-light: #c9a84c;
-  --gold-glow: rgba(191, 160, 90, 0.25);
-  --card-dark: rgba(235, 230, 217, 0.95);
-  --critical-banner: #f3ebe8;
+  /* Legacy gold aliases — remap to subtle taupe in light mode */
+  --gold: #8a7d6a;
+  --gold-light: #9a8f84;
+  --gold-glow: rgba(138, 125, 106, 0.2);
+  --card-dark: rgba(240, 237, 230, 0.96);
+  --critical-banner: #f5f2ee;
   --overview-border: rgba(26, 24, 22, 0.08);
   --overview-heading-accent: #1a1816;
-  --tag-gold: #c9a84c;
-  --shimmer-base: color-mix(in srgb, var(--foreground) 10%, transparent);
-  --shimmer-sweep: color-mix(in srgb, var(--foreground) 22%, transparent);
-  --tag-pink: #c45c5c;
-  --tag-purple: #8b7cb8;
-  --nav-active-bg: radial-gradient(140% 180% at 0% 50%,
-      #ffffff 0%,
-      #d0c8bc 28%,
-      #b3a99a 58%,
-      #8a7d6a 100%);
+  --tag-gold: #8a7d6a;
+  --shimmer-base: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --shimmer-sweep: color-mix(in srgb, var(--foreground) 18%, transparent);
+  --tag-pink: #b84f4f;
+  --tag-purple: #7a6aaa;
+
+  /* Sidebar nav active: subtle warm beige fill — very light */
+  --nav-active-bg: linear-gradient(to right, #d4cfc7 0%, #ddd9d1 100%);
   --nav-active-fg: #1a1816;
   --nav-active-indicator: #8a7d6a;
   --nav-icon-active: #1a1816;
   --nav-hover-bg: rgba(26, 24, 22, 0.04);
-  --badge-warm: #bfa05a;
+  --badge-warm: #8a7d6a;
   --font-copperplate: "Copperplate", serif;
 
-  /* Modal panel surface (light) */
-  --modal-panel-bg: #d0c8bc;
+  /* Darkoverlay — light mode equivalents */
+  --darkoverlay: linear-gradient(180deg, rgba(224, 220, 212, 0) 50%, rgba(224, 220, 212, 0.5) 100%);
+  --darkoverlay2: rgba(26, 24, 22, 0.75);
 
-  /* Header CTA buttons — Invite Member / Staff, Add Vehicle (light) */
-  --admin-cta-bg: linear-gradient(90deg, #8a7d6a 0%, #d0c8bc 100%);
-  --admin-cta-fg: #1a1816;
-  --admin-cta-hover-bg: linear-gradient(90deg, #958770 0%, #d8d1c6 100%);
+  /* Modal panel surface (light) */
+  --modal-panel-bg: #e0dcd4;
+
+  /* Header CTA buttons — light mode */
+  --admin-cta-bg: linear-gradient(90deg, #8a7d6a 0%, #b8b0a6 100%);
+  --admin-cta-fg: #f5f2ee;
+  --admin-cta-hover-bg: linear-gradient(90deg, #9a8f84 0%, #c8c2b8 100%);
 
   /* Member / vehicle profile hero (light) — from / via / to */
   --entity-hero-from: color-mix(in srgb, var(--elevated) 0%, transparent);
-  --entity-hero-via: color-mix(in srgb, #8a7d6a 30%, transparent);
+  --entity-hero-via: color-mix(in srgb, #8a7d6a 20%, transparent);
   --entity-hero-to: var(--elevated);
   --entity-hero-base: var(--elevated);
   --entity-hero-title: var(--foreground);
   --entity-hero-accent: var(--accent);
-  --entity-hero-avatar-bg: color-mix(in srgb, #8a7d6a 30%, var(--elevated));
+  --entity-hero-avatar-bg: color-mix(in srgb, #8a7d6a 20%, var(--elevated));
   --entity-hero-avatar-border: #f0ede6;
   --entity-hero-avatar-fg: var(--foreground);
 
-  /* Profile initial avatar (no photo) — light (Figma fill + shell border) */
+  /* Profile initial avatar (no photo) — light subtle fill */
   --profile-avatar-fill: linear-gradient(
     180deg,
-    rgba(138, 125, 106, 0.4) 0%,
-    rgba(138, 125, 106, 0.3) 46.33%,
-    rgba(138, 125, 106, 0.2) 100%
+    rgba(138, 125, 106, 0.35) 0%,
+    rgba(138, 125, 106, 0.25) 46%,
+    rgba(138, 125, 106, 0.18) 100%
   );
-  /* Same shell technique as --stat-card-border: soft #F0EDE6 rim */
   --profile-avatar-border: radial-gradient(
     100% 100% at 50% 0%,
-    #ffffff 0%,
-    #f0ede6 18%,
-    #f0ede6 72%,
-    #f0ede6 100%
+    rgba(255, 255, 255, 0.9) 0%,
+    rgba(240, 237, 230, 0.7) 18%,
+    rgba(224, 220, 212, 0.6) 72%,
+    rgba(224, 220, 212, 0.5) 100%
   );
   --profile-avatar-fg: #1a1816;
 }
@@ -610,9 +618,9 @@ h6 {
 /* Light theme — the dark-tuned gradient/text above is unreadable on light
    surfaces, so give the toast its own light-appropriate treatment. */
 [data-theme="light"] .toybox-toast {
-  background: linear-gradient(135deg, var(--card) 0%, #ffffff 100%) !important;
-  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent) !important;
-  box-shadow: 0 20px 50px rgba(26, 24, 22, 0.14), 0 0 0 1px rgba(255, 255, 255, 0.4) inset !important;
+  background: linear-gradient(135deg, var(--card) 0%, #f5f2ee 100%) !important;
+  border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent) !important;
+  box-shadow: 0 20px 50px rgba(26, 24, 22, 0.14), 0 0 0 1px rgba(255, 255, 255, 0.5) inset !important;
   color: var(--foreground) !important;
 }
 
@@ -1211,17 +1219,17 @@ html .garage-filter-active {
   color: var(--dark);
 }
 
-/* Light mode active: warm beige fill + radial-gradient border shell */
+/* Light mode active: warm taupe fill + subtle border */
 html[data-theme="light"] .garage-filter-active {
   background-color: transparent;
   background-image:
     linear-gradient(var(--elevated), var(--elevated)),
     radial-gradient(
       121.25% 121.25% at 110% 121.25%,
-      #F0EDE6 34.71%,
+      rgba(255, 255, 255, 0.9) 34.71%,
       rgba(255, 255, 255, 0) 54.43%,
       rgba(255, 255, 255, 0) 71.13%,
-      #F0EDE6 90.77%
+      rgba(224, 220, 212, 0.7) 90.77%
     );
   background-origin: padding-box, border-box;
   background-clip: padding-box, border-box;
@@ -1558,4 +1566,65 @@ html {
 
 [data-theme="light"] ::-webkit-scrollbar-thumb:hover {
   background: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+/* ── Light mode — member portal: hardcoded gold overrides ───────────────────
+ *
+ * The member portal uses `text-accent` and inline gold hex values in several
+ * places. In light mode --accent is now warm taupe (#8a7d6a), so these render
+ * correctly via CSS variables. The exceptions below handle the few places where
+ * raw hex values (#C9A84C etc.) are still hardcoded in member components.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── AskSteve send button — taupe fill ──────────────────────────────────── */
+[data-theme="light"] .ask-steve-send-btn {
+  background: linear-gradient(135deg, #8a7d6a, #5a5349) !important;
+  color: #f5f2ee !important;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 18%, transparent) !important;
+}
+
+/* ── Garage add-vehicle button — taupe variant ──────────────────────────── */
+html[data-theme="light"] .garage-add-vehicle-btn {
+  background: linear-gradient(135deg, #8a7d6a 0%, #b8b0a6 45%, #9a8f84 80%, #a89e93 100%) !important;
+  color: #f5f2ee !important;
+  border: 1px solid rgba(138, 125, 106, 0.35) !important;
+  box-shadow:
+    0 0 0 1px rgba(90, 83, 73, 0.12),
+    0 4px 16px rgba(90, 83, 73, 0.2),
+    0 1px 0 rgba(200, 195, 185, 0.4) inset !important;
+}
+
+html[data-theme="light"] .garage-add-vehicle-btn:hover {
+  filter: brightness(1.06) !important;
+  box-shadow:
+    0 0 0 1px rgba(90, 83, 73, 0.18),
+    0 8px 24px rgba(90, 83, 73, 0.28),
+    0 1px 0 rgba(200, 195, 185, 0.5) inset !important;
+}
+
+/* ── Member profile avatar — hardcoded #F0C566 / #8B6F2A gradient ──────────
+ * MemberProfileCard uses span.bg-gradient-to-b.from-[#F0C566].to-[#8B6F2A]
+ * ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] span.bg-gradient-to-b.from-\[\#F0C566\] {
+  background-image: linear-gradient(180deg, #8a7d6a 0%, #5a5349 100%) !important;
+  color: #f5f2ee !important;
+}
+
+/* ── Diary record surface — match new taupe accent ───────────────────────── */
+[data-theme="light"] .diary-record-surface {
+  background: linear-gradient(
+    180.02deg,
+    rgba(138, 125, 106, 0.28) 0%,
+    rgba(138, 125, 106, 0.18) 60%,
+    rgba(138, 125, 106, 0.10) 100%
+  );
+}
+
+[data-theme="light"] .diary-record-stats {
+  background: linear-gradient(
+    180deg,
+    rgba(138, 125, 106, 0.28) 0%,
+    rgba(138, 125, 106, 0.18) 46%,
+    rgba(138, 125, 106, 0.10) 100%
+  );
 }

@@ -58,11 +58,11 @@ export function SidebarProfileFooter({ profilePath }: SidebarProfileFooterProps)
         href={profilePath}
         className={`flex items-center gap-3 rounded-2xl border px-4 py-3 transition-colors ${
           active
-            ? "border-accent/50 bg-accent/8"
-            : "border-accent/20 hover:border-accent/45 hover:bg-accent/5"
+            ? "border-foreground/25 bg-foreground/6"
+            : "border-foreground/12 hover:border-foreground/25 hover:bg-foreground/4"
         }`}
       >
-        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-accent/50 font-copperplate text-[15px] text-accent">
+        <span className="flex size-10 shrink-0 items-center justify-center rounded-full border border-foreground/25 font-copperplate text-[15px] text-foreground">
           {profile?.initial ?? "A"}
         </span>
         <div className="min-w-0 flex-1">

@@ -260,7 +260,7 @@ function NavSection({
                   <span
                     className={`sidebar-count-badge flex h-4 min-w-6 shrink-0 items-center justify-center rounded-full px-1 text-[10px] font-semibold leading-none ${
                       isLightMode
-                        ? "bg-[#8A7D6A] text-white"
+                        ? "bg-[#6b5f52] text-[#f0ede8]"
                         : badgeToneClass[item.badge.tone]
                     }`}
                   >
@@ -598,7 +598,7 @@ export function Sidebar({
       )}
 
       <aside
-        className={`sidebar fixed z-50 flex h-screen w-[280px] shrink-0 flex-col overflow-hidden border-r border-accent/8 bg-[var(--sidebar-bg)] transition-transform duration-300 ease-in-out sm:w-[330px] lg:translate-x-0 ${
+        className={`sidebar fixed z-50 flex h-screen w-[280px] shrink-0 flex-col overflow-hidden border-r border-foreground/10 bg-[var(--sidebar-bg)] transition-transform duration-300 ease-in-out sm:w-[330px] lg:translate-x-0 ${
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
@@ -629,7 +629,7 @@ export function Sidebar({
           </div>
         </div>
 
-        <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto border-y border-accent/8 px-4 py-5">
+        <div className="Custom__Scrollbar min-h-0 flex-1 overflow-y-auto border-y border-foreground/10 px-4 py-5">
           <nav className="space-y-7">
             {sections.map((section) => (
               <NavSection

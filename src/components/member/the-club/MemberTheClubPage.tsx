@@ -185,11 +185,11 @@ function SpaceCard({
         )}
 
         {/* Gradient */}
-        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.45) 45%, rgba(0,0,0,0.08) 100%)" }} />
+        <div aria-hidden className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.97) 0%, rgba(0,0,0,0.75) 45%, rgba(0,0,0,0.30) 75%, rgba(0,0,0,0.10) 100%)" }} />
 
         {/* Status badge */}
         {space.statusLabel && (
-          <span className="font-Roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/60 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
+          <span className="font-Roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/75 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
             <span className="size-1.5 rounded-full bg-accent" />
             {space.statusLabel}
           </span>
@@ -197,25 +197,25 @@ function SpaceCard({
 
         {/* Sub-category badge */}
         {space.type && (
-          <span className="font-Roboto absolute left-3.5 top-3.5 rounded-lg border border-white/10 bg-black/55 px-2 py-1 text-[9px] tracking-[0.1em] text-secondary/80 uppercase backdrop-blur-sm">
+          <span className="font-Roboto absolute left-3.5 top-3.5 rounded-lg border border-white/10 bg-black/70 px-2 py-1 text-[9px] tracking-[0.1em] text-white/75 uppercase backdrop-blur-sm">
             {space.type}
           </span>
         )}
 
         {/* Bottom info */}
         <div className="absolute bottom-0 left-0 right-0 p-4">
-          <h3 className="font-copperplate text-[16px] leading-tight tracking-[0.02em] text-white uppercase">
+          <h3 className="font-copperplate text-[16px] leading-tight tracking-[0.02em] text-white uppercase drop-shadow-[0_1px_3px_rgba(0,0,0,0.9)]">
             {space.title}
           </h3>
           {space.description && (
-            <p className="mt-1 font-Roboto text-[11px] leading-relaxed text-secondary/70 line-clamp-2">
+            <p className="mt-1 font-Roboto text-[11px] leading-relaxed text-white/80 drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] line-clamp-2">
               {space.description}
             </p>
           )}
 
-          <div className="mt-3 flex items-center justify-between border-t border-white/8 pt-3">
+          <div className="mt-3 flex items-center justify-between border-t border-white/12 pt-3">
             {space.capacity && (
-              <span className="font-Roboto text-[9px] tracking-[0.1em] text-secondary/55 uppercase">
+              <span className="font-Roboto text-[9px] tracking-[0.1em] text-white/60 uppercase">
                 Cap. {space.capacity}
               </span>
             )}

@@ -5,9 +5,9 @@ import {
   MemberGarageChevronRight,
   MemberVehicleDetailingIcon,
   MemberVehicleMaintenanceIcon,
+  MemberVehicleParkingIcon,
   MemberVehicleSourcingIcon,
   MemberVehicleTransportIcon,
-  NavParking,
 } from "@/components/common/Svgs";
 import { DetailingWashModal } from "./detailing-wash/DetailingWashModal";
 import { MaintenanceServiceModal } from "./maintenance-service/MaintenanceServiceModal";
@@ -42,7 +42,7 @@ function RequestIcon({ icon }: { icon: MemberVehicleRequestItem["icon"] }) {
   }
 
   if (icon === "parking") {
-    return <NavParking className="size-[18px]" />;
+    return <MemberVehicleParkingIcon className={iconClass} />;
   }
 
   return <MemberVehicleSourcingIcon className={iconClass} />;

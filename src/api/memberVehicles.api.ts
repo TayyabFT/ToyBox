@@ -14,18 +14,17 @@ export type MemberGarageListParams = {
   search?: string;
 };
 
+export type UploadVehicleDocumentParams = {
+  vehicleId: string;
+  documentKey: string;
+  file: File;
+};
+
 export const memberVehiclesApi = {
   /**
    * GET /api/v1/vehicles?memberId=...&filter=mine&garageStatus=...&search=...
-   * Returns the member's own garage list plus tab counts for the filter pills.
-   * `filter` is always "mine" for member-facing requests — "all" is admin-only.
-   * Tab keys like "ready", "in_service", "modern", etc. go into `garageStatus`.
    */
   getGarage: ({ memberId, garageStatus = "all", search }: MemberGarageListParams) => {
-    // Always use filter=mine for member-facing requests.
-    // garageStatus "all" means no status filter — just return all member vehicles.
-    // Any other garageStatus value (ready, in_service, away, modern, classic, stored, in_review)
-    // is forwarded as garageStatus query param.
     const qs = new URLSearchParams({ memberId, filter: "mine" });
 
     if (garageStatus !== "all") {
@@ -43,10 +42,24 @@ export const memberVehiclesApi = {
 
   /**
    * GET /api/v1/vehicles/:id
-   * Returns vehicle details, health report, documents, specs, and requests in one call.
    */
   getById: (vehicleId: string) =>
     apiClient<MemberVehicleDetailResponse>(
       API_ENDPOINTS.memberVehicles.detail(vehicleId),
     ),
+
+  /**
+   * POST /api/v1/garage/vehicles/:id/documents
+   * Uploads a document file for the vehicle. Uses multipart/form-data.
+   */
+  uploadDocument: ({ vehicleId, documentKey, file }: UploadVehicleDocumentParams) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("documentKey", documentKey);
+
+    return apiClient<{ message: string; url: string }>(
+      API_ENDPOINTS.memberVehicles.uploadDocument(vehicleId),
+      { method: "POST", formData },
+    );
+  },
 };

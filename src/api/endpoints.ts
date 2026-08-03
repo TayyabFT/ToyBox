@@ -20,6 +20,7 @@ export const API_ENDPOINTS = {
   memberVehicles: {
     list: "/api/v1/vehicles",
     detail: (id: string | number) => `/api/v1/vehicles/${id}`,
+    uploadDocument: (id: string | number) => `/api/v1/garage/vehicles/${id}/documents`,
   },
   memberTransport: {
     requests: "/api/v1/transport/requests",
