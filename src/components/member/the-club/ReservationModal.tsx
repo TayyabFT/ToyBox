@@ -373,7 +373,7 @@ export function ReservationModal({ venue, onClose, allVenues = [], initialSpaceI
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 backdrop-blur-md p-4">
       {/* Modal Container */}
-      <div className="Custom__Scrollbar relative w-full max-w-[480px] max-h-[92vh] bg-[#0A0907] border border-accent/20 rounded-[20px] shadow-2xl flex flex-col overflow-y-auto">
+      <div className="Custom__Scrollbar reservation-modal-overlay relative w-full max-w-[480px] max-h-[92vh] bg-[#0A0907] border border-accent/20 rounded-[20px] shadow-2xl flex flex-col overflow-y-auto">
 
         {/* Header */}
         <div className="flex items-start justify-between p-5 pb-3 border-b border-accent/5">

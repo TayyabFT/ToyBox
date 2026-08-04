@@ -14,7 +14,7 @@ export function DashboardGreeting({
       <p className="font-roboto text-[11px] tracking-[0.16em] text-secondary uppercase">
         {sublabel}
       </p>
-      <h1 className="font-copperplate text-[36px] leading-[1.1] tracking-[0.04em] uppercase">
+      <h1 className="font-copperplate text-[40px] leading-[1.1] tracking-[0.03em] uppercase">
         <span className="text-foreground">{greeting}, </span>
         <span className="text-accent">{name}</span>
       </h1>

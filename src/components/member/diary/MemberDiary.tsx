@@ -68,10 +68,10 @@ export function MemberDiarySkeleton() {
               </div>
               {/* Optional Hero Image for first item */}
               {idx === 0 && (
-                <Skeleton className="h-[150px] sm:h-[200px] md:h-[220px] w-full rounded-[18px] border border-accent/10" />
+                <Skeleton className="h-[150px] sm:h-[200px] md:h-[240px] max-w-[660px] w-full rounded-[18px] border border-accent/10" />
               )}
               {/* Description lines */}
-              <div className="space-y-2 max-w-2xl">
+              <div className="space-y-2 max-w-[660px]">
                 <Skeleton className="h-3.5 sm:h-4 w-full" />
                 <Skeleton className="h-3.5 sm:h-4 w-11/12" />
                 <Skeleton className="h-3.5 sm:h-4 w-3/4" />

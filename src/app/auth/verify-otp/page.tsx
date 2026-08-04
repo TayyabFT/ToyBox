@@ -65,18 +65,20 @@ const VerifyOtpPage = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-[#292D3200] via-[#11131594] to-[#000000]" />
 
       <div className="relative z-10 flex w-full justify-center">
-        <div className="w-full max-w-[490px] rounded-2xl border border-[#D4A8471F] px-9 py-7 backdrop-blur-xl space-y-8 bg-[#11100C80]">
+        <div className="w-full max-w-[490px] rounded-2xl border border-[#DCC6941F] px-9 py-7 backdrop-blur-xl space-y-8 bg-[#11100C80]">
           <Image
-            src="/images/logo.png"
-            alt="logo"
-            width={144}
-            height={48}
-            className="w-36 object-contain mx-auto"
+            src="/images/logo-v2.png"
+            alt="Toy Box"
+            width={168}
+            height={72}
+            className="mx-auto h-14 w-auto object-contain"
+            priority
+            unoptimized
           />
 
           <div className="space-y-2">
-            <h2 className="font-copperplate text-center text-2xl tracking-[0.20em] text-[#EDE4CE]">
-              Verify <span className="text-[#C9A84C]">OTP</span>
+            <h2 className="font-copperplate text-center text-2xl tracking-[0.20em] text-[#F2EAD5]">
+              Verify <span className="text-[#DCC694]">OTP</span>
             </h2>
             <p className="font-roboto text-center text-sm font-light text-[#FFFFFF73]">
               Enter the 6-digit code sent to your email.
@@ -106,7 +108,7 @@ const VerifyOtpPage = () => {
               type="button"
               onClick={handleSubmit}
               disabled={verifyOtpLoading}
-              className="w-full rounded-lg bg-[#C9A84C] py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#1a1208] uppercase cursor-pointer disabled:opacity-60"
+              className="w-full rounded-lg bg-[#DCC694] py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#1a1208] uppercase cursor-pointer disabled:opacity-60"
             >
               {verifyOtpLoading ? "Verifying..." : "Verify OTP"}
             </button>

@@ -55,7 +55,7 @@ type DetailingWashModalProps = {
   vehicleId: string;
   vehicleName: string;
   open: boolean;
-  onClose: () => void;
+  onClose: (submitted?: boolean) => void;
 };
 
 export function DetailingWashModal({
@@ -69,6 +69,7 @@ export function DetailingWashModal({
   const [referenceNumber, setReferenceNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   // Active booking state
   const [isCheckingActive, setIsCheckingActive] = useState(false);
@@ -121,15 +122,17 @@ export function DetailingWashModal({
 
   // Reset when modal closes
   function handleClose() {
+    const wasSubmitted = didSubmit;
     setStep(1);
     setForm(INITIAL_FORM_STATE);
     setReferenceNumber("");
     setSubmitError(null);
     setIsSubmitting(false);
+    setDidSubmit(false);
     setProgressData(null);
     setActiveBookingTotal(null);
     checkedForRef.current = null;
-    onClose();
+    onClose(wasSubmitted);
   }
 
   function handleChange(patch: Partial<WashDetailsFormState>) {
@@ -163,6 +166,7 @@ export function DetailingWashModal({
       );
 
       setReferenceNumber(resolveDetailingReferenceNumber(response.data));
+      setDidSubmit(true);
       setStep(3);
     } catch (error) {
       setSubmitError(
@@ -298,7 +302,7 @@ export function DetailingWashModal({
           )}
 
           {step === 4 && (
-            <DetailingWashBookingStatusStep form={form} progressData={progressData} />
+            <DetailingWashBookingStatusStep form={form} progressData={progressData} onClose={handleClose} />
           )}
         </>
       )}

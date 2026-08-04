@@ -214,7 +214,7 @@ export function AddSlotsModal({
               onChange={(event) =>
                 updateField("createMultiple", event.target.checked)
               }
-              className="size-4 cursor-pointer accent-[#D4A847]"
+              className="size-4 cursor-pointer accent-[#DCC694]"
             />
             <span className="text-sm text-foreground">Create multiple slots</span>
           </label>

@@ -12,7 +12,7 @@ export function JobProgressBar({
   const barClass =
     tone === "teal"
       ? "bg-teal"
-      : "bg-gradient-to-r from-[#F0C566] to-[#C9A84C]";
+      : "bg-gradient-to-r from-[#DCC694] to-[#584D43]";
 
   return (
     <div className="space-y-1.5">

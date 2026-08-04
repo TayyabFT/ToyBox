@@ -86,7 +86,7 @@ type ParkingModalProps = {
   vehicleId: string;
   vehicleName: string;
   open: boolean;
-  onClose: () => void;
+  onClose: (submitted?: boolean) => void;
 };
 
 // ── Component ─────────────────────────────────────────────────────────────
@@ -104,6 +104,7 @@ export function ParkingModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitResult, setSubmitResult] = useState<ParkingSubmitResult | null>(null);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   // ── Vehicle list ──────────────────────────────────────────────────────────
   const [vehicles, setVehicles] = useState<ParkingVehicleOption[]>([
@@ -155,6 +156,7 @@ export function ParkingModal({
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   function handleClose() {
+    const wasSubmitted = didSubmit;
     setStep(1);
     setForm(buildInitialForm());
     setSelectedSlot(null);
@@ -162,7 +164,8 @@ export function ParkingModal({
     setIsSubmitting(false);
     setSubmitError(null);
     setSubmitResult(null);
-    onClose();
+    setDidSubmit(false);
+    onClose(wasSubmitted);
   }
 
   function handleChangeFindSlot(patch: Partial<ParkingFindSlotFormState>) {
@@ -235,6 +238,7 @@ export function ParkingModal({
       // ── Invalidate diary so it refetches on next visit ──────────────
       dispatch(invalidateDiary());
 
+      setDidSubmit(true);
       setStep(3);
     } catch (err) {
       setSubmitError(

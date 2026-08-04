@@ -78,7 +78,7 @@ export function CommunicationsPage() {
         <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           — Member Communications
         </p>
-        <h1 className="mt-2 font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground uppercase">
+        <h1 className="mt-2 font-copperplate text-[40px] leading-none tracking-[0.03em] text-foreground uppercase">
           Communications
         </h1>
       </div>

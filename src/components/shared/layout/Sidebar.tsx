@@ -129,7 +129,7 @@ const SIDEBAR_SPECS: Record<UserRole, SidebarSpec> = {
 };
 
 const badgeToneClass: Record<BadgeTone, string> = {
-  gold: "bg-[#F0C566] text-dark",
+  gold: "bg-primary text-dark",
   pink: "bg-pink text-dark",
   teal: "bg-teal text-dark",
 };
@@ -249,7 +249,7 @@ function NavSection({
                 </span>
 
                 <span
-                  className={`font-roboto flex-1 text-[13px] tracking-[0.04em] ${
+                  className={`font-roboto flex-1 text-[15px] tracking-[0.04em] ${
                     active ? "font-medium text-[var(--nav-active-fg)]" : "font-normal"
                   }`}
                 >
@@ -605,11 +605,12 @@ export function Sidebar({
         <div className="shrink-0 px-5 py-5">
           <div className="flex items-center justify-between gap-2">
             <Image
-              src={isLightMode ? "/images/lightlogo.png" : "/images/logo.png"}
+              src={isLightMode ? "/images/lightlogo-v2.png" : "/images/logo-v2.png"}
               alt="Toy Box"
               width={120}
               height={56}
               className="h-14 w-auto"
+              unoptimized
             />
             <div className="flex items-center gap-2">
               <div

@@ -11,7 +11,7 @@ export function ServiceSectionHeader({
   actions,
 }: ServiceSectionHeaderProps) {
   return (
-    <div className="-mx-5 mb-4 flex items-start justify-between gap-3 border-b border-[#D4A8470F] px-5 pb-4">
+    <div className="-mx-5 mb-4 flex items-start justify-between gap-3 border-b border-accent/[0.06] px-5 pb-4">
       <div className="space-y-1">
         <h3 className="font-copperplate text-sm font-normal tracking-[0.06em] text-primary uppercase">
           {meta.title}

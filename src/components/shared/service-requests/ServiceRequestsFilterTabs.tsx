@@ -20,7 +20,7 @@ export function ServiceRequestsFilterTabs({
   onChange,
 }: ServiceRequestsFilterTabsProps) {
   return (
-    <div className="flex shrink-0 flex-wrap items-center justify-end gap-1 rounded-full border border-[#D4A8471A] bg-card p-1">
+    <div className="flex shrink-0 flex-wrap items-center justify-end gap-1 rounded-full border border-accent/10 bg-card p-1">
       {filters.map((filter) => {
         const isActive = active === filter.id;
 
@@ -31,7 +31,7 @@ export function ServiceRequestsFilterTabs({
             onClick={() => onChange(filter.id)}
             className={`font-roboto cursor-pointer rounded-full px-3.5 py-2 text-[9px] font-medium tracking-[0.12em] uppercase transition-colors sm:px-4 ${
               isActive
-                ? "bg-gradient-to-r from-[#F0C566] to-[#C9A84C] text-dark"
+                ? "bg-gradient-to-r from-[#DCC694] to-[#584D43] text-dark"
                 : "text-secondary hover:text-foreground"
             }`}
           >

@@ -17,10 +17,10 @@ export function AskSteveHero({ greeting }: AskSteveHeroProps) {
       />
 
       <div className="space-y-2">
-        <p className="font-copperplate text-[18px] leading-tight tracking-[0.06em] text-foreground uppercase sm:text-[22px]">
+        <p className="font-copperplate text-[20px] leading-tight tracking-[0.04em] text-foreground uppercase sm:text-[24px]">
           {greeting}
         </p>
-        <h1 className="font-copperplate text-[22px] leading-tight tracking-[0.06em] uppercase sm:text-[28px]">
+        <h1 className="font-copperplate text-[26px] leading-tight tracking-[0.03em] uppercase sm:text-[32px]">
           <span className="text-foreground">How may I </span>
           <span className="text-primary">help</span>
           <span className="text-foreground">?</span>

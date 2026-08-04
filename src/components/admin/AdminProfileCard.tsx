@@ -2,7 +2,7 @@ export function AdminProfileCard() {
   return (
     <div className="flex items-center justify-between gap-2">
       <div className="flex items-center gap-3">
-        <span className="flex size-12 items-center justify-center rounded-full bg-gradient-to-b from-[#F0C566] to-[#8B6F2A] font-medium uppercase text-dark">
+        <span className="flex size-12 items-center justify-center rounded-full bg-gradient-to-b from-[#DCC694] to-[#584D43] font-medium uppercase text-dark">
           F
         </span>
         <div className="space-y-0.5 uppercase">

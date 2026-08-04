@@ -548,7 +548,7 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
             <p className="text-[10px] font-bold tracking-[0.2em] text-accent uppercase">
               {isEditMode ? "— Edit" : "— Create New"}
             </p>
-            <h2 className="text-2xl font-semibold font-copperplate uppercase mt-1">
+            <h2 className="text-2xl font-copperplate uppercase mt-1 tracking-[0.03em]">
               {isEditMode ? "Edit Event" : "Add Event"}
             </h2>
           </div>

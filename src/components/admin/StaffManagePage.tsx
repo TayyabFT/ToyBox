@@ -15,7 +15,7 @@ export function StaffManagePage() {
         <p className="font-roboto text-xs tracking-[0.14em] text-primary uppercase">
           Manage
         </p>
-        <h1 className="font-copperplate text-[32px] leading-tight text-foreground">
+        <h1 className="font-copperplate text-[36px] leading-tight text-foreground">
           Staff Access
         </h1>
         <p className="font-roboto max-w-xl text-sm text-secondary">

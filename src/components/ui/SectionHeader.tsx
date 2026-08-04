@@ -21,10 +21,10 @@ export function SectionHeader({
         {titleSplit ? (
           <>
             <span className="text-[#E7E5E4]">{titleSplit.before} </span>
-            <span className="text-[#D4AF37]">{titleSplit.after}</span>
+            <span className="text-primary">{titleSplit.after}</span>
           </>
         ) : (
-          <span className={titleAccent ? "text-[#C5A059]" : "text-[#E7E5E4]"}>{title}</span>
+          <span className={titleAccent ? "text-primary" : "text-[#E7E5E4]"}>{title}</span>
         )}
       </h3>
 

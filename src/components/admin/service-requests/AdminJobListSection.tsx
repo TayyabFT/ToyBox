@@ -24,7 +24,7 @@ export function AdminJobListSection({
 }: AdminJobListSectionProps) {
   return (
     <section
-      className="rounded-2xl border border-[#D4A8471A] bg-surface p-5"
+      className="rounded-2xl border border-accent/10 bg-surface p-5"
       aria-busy={loading}
     >
       <ServiceSectionHeader

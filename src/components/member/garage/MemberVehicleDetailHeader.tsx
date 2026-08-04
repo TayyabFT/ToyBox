@@ -40,7 +40,7 @@ export function MemberVehicleDetailHeader({ onBookServices }: MemberVehicleDetai
           <p className="font-roboto text-[10px] tracking-[0.18em] text-primary uppercase">
             Your Collection
           </p>
-          <h1 className="font-copperplate text-[28px] sm:text-[32px] md:text-[36px] leading-none tracking-[0.04em] text-foreground-soft uppercase">
+          <h1 className="font-copperplate text-[30px] sm:text-[34px] md:text-[40px] leading-none tracking-[0.03em] text-foreground-soft uppercase">
             Details
           </h1>
         </div>

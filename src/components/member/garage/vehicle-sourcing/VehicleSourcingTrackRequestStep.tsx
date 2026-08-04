@@ -146,12 +146,12 @@ export function VehicleSourcingTrackRequestStep({
       </div>
 
       {/* Assigned manager */}
-      <ConciergeCard
+      {/* <ConciergeCard
         sectionLabel="Your Manager"
         name={assignee?.name ?? "Toybox Concierge"}
         initials={assignee?.initials ?? "TC"}
         subtitle={assignee ? "Acquisition Manager · Available now" : "Awaiting assignment"}
-      />
+      /> */}
     </div>
   );
 }

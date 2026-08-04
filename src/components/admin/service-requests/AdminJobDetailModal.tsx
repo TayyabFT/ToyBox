@@ -100,7 +100,7 @@ export function AdminJobDetailModal({
             ) : null}
 
             {job.pickup || job.dropoff ? (
-              <div className="space-y-3 rounded-xl border border-[#D4A8471A] bg-input-muted p-4">
+              <div className="space-y-3 rounded-xl border border-accent/10 bg-input-muted p-4">
                 {job.pickup ? (
                   <div className="space-y-1">
                     <p className="font-roboto text-[9px] tracking-[0.12em] text-primary uppercase">
@@ -202,7 +202,7 @@ export function AdminJobDetailModal({
                 <h5 className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
                   Special Instructions
                 </h5>
-                <div className="rounded-xl border border-[#D4A8471A] bg-input-muted p-4">
+                <div className="rounded-xl border border-accent/10 bg-input-muted p-4">
                   <p className="font-roboto text-[11px] leading-relaxed tracking-[0.02em] text-secondary italic">
                     &ldquo;{job.specialInstructions}&rdquo;
                   </p>

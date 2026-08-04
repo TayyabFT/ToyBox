@@ -76,7 +76,7 @@ export function StaffCompletedJobsSection({
 
   return (
     <section
-      className={`flex flex-col overflow-hidden rounded-2xl border border-[#D4A8471A] bg-surface p-5 ${
+      className={`flex flex-col overflow-hidden rounded-2xl border border-accent/10 bg-surface p-5 ${
         loading ? "opacity-70" : ""
       }`}
       aria-busy={loading}

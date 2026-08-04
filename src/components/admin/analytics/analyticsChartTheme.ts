@@ -1,4 +1,4 @@
-export const GOLD = "#C9A84C";
+export const GOLD = "#DCC694";
 export const GOLD_BRIGHT = "#E5C05A";
 export const GOLD_MUTED = "rgba(201, 168, 76, 0.42)";
 export const MUTED = "#7D7460";

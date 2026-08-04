@@ -25,7 +25,7 @@ ChartJS.register(
   Tooltip,
 );
 
-const GOLD = "#C9A84C";
+const GOLD = "#DCC694";
 const MUTED = "#7D7460";
 const PURPLE = "#9E8AD4";
 const GRID = "rgba(212, 168, 71, 0.08)";

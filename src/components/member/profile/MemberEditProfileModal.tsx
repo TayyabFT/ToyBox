@@ -116,7 +116,7 @@ export function MemberEditProfileModal({
         <div className="flex w-full flex-col gap-1">
           <label
             htmlFor="member-profile-residence"
-            className="font-roboto text-[11px] font-medium tracking-[0.15em] text-[#6E6455] uppercase"
+            className="font-roboto text-[11px] font-medium tracking-[0.15em] text-secondary uppercase"
           >
             Residence
           </label>
@@ -126,7 +126,7 @@ export function MemberEditProfileModal({
             rows={3}
             placeholder="Enter your residence address"
             onChange={(event) => updateField("residence", event.target.value)}
-            className="font-roboto w-full resize-none rounded-lg border border-[#D4A84740] bg-[#11100C] px-3 py-2.5 text-sm text-white outline-none transition-colors placeholder:text-[#7D7460] focus:border-[#C9A84C]"
+            className="font-roboto w-full resize-none rounded-lg border border-accent/25 bg-input-muted px-3 py-2.5 text-sm text-foreground outline-none transition-colors placeholder:text-secondary/50 focus:border-accent/50"
           />
         </div>
 

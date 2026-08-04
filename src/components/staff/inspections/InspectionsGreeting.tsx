@@ -10,7 +10,7 @@ export function InspectionsGreeting({ onAddInspection }: InspectionsGreetingProp
     <div className="flex items-end justify-between gap-4">
       <div className="space-y-3">
         <StaffShiftMeta split />
-        <h1 className="font-copperplate text-[32px] leading-tight">
+        <h1 className="font-copperplate text-[36px] leading-tight">
           <span className="text-foreground">Vehicle </span>
           <span className="text-primary">Inspections</span>
         </h1>

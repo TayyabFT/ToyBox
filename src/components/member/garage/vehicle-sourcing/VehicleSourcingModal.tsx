@@ -58,7 +58,7 @@ const BASE_FORM_STATE: VehicleSourcingDetailsFormState = {
 
 type VehicleSourcingModalProps = {
   open: boolean;
-  onClose: () => void;
+  onClose: (submitted?: boolean) => void;
   vehicleMake?: string;
   vehicleModel?: string;
   vehicleYear?: string;
@@ -102,6 +102,7 @@ export function VehicleSourcingModal({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitResult, setSubmitResult] = useState<SubmitResult | null>(null);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   const isLanding  = step === 0;
   const isReview   = step === 2;
@@ -113,12 +114,14 @@ export function VehicleSourcingModal({
   }
 
   function handleClose() {
+    const wasSubmitted = didSubmit;
     setStep(0);
     setForm(buildInitialFormState(vehicleMake, vehicleModel, vehicleYear, vehicleColour));
     setSubmitError(null);
     setIsSubmitting(false);
     setSubmitResult(null);
-    onClose();
+    setDidSubmit(false);
+    onClose(wasSubmitted);
   }
 
   function handleNewRequest() {
@@ -158,6 +161,7 @@ export function VehicleSourcingModal({
         requestId: resolveSourcingRequestId(response.data),
         submittedDate: resolveSourcingSubmittedDate(response.data),
       });
+      setDidSubmit(true);
       setStep(3);
     } catch (error) {
       setSubmitError(

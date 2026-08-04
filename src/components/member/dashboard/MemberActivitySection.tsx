@@ -61,7 +61,7 @@ function ActivityRow({
       <div className="relative flex w-5 shrink-0 flex-col items-center">
         {/* Outer ring + inner filled dot */}
         <span className="relative z-10 mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-full border border-accent/60">
-          <span className="size-2.5 rounded-full bg-accent shadow-[0_0_6px_rgba(201,168,76,0.55)]" />
+          <span className="size-2.5 rounded-full bg-accent" />
         </span>
 
         {/* Connector line — below node (hidden for last) */}

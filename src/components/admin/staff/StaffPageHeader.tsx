@@ -16,7 +16,7 @@ export function StaffPageHeader({ onInviteClick }: StaffPageHeaderProps) {
         <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           — Staff Directory
         </p>
-        <h1 className="font-copperplate text-[36px] leading-none tracking-[0.04em] text-foreground uppercase">
+        <h1 className="font-copperplate text-[40px] leading-none tracking-[0.03em] text-foreground uppercase">
           Staff
         </h1>
       </div>

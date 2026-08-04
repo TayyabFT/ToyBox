@@ -18,7 +18,7 @@ export function MarketplacePageHeader({
         <p className="font-roboto text-[10px] tracking-[0.18em] text-accent uppercase">
           — Marketplace Management
         </p>
-        <h1 className="font-copperplate text-[28px] leading-none tracking-[0.04em] text-foreground uppercase sm:text-[36px]">
+        <h1 className="font-copperplate text-[32px] leading-none tracking-[0.03em] text-foreground uppercase sm:text-[40px]">
           Marketplace
         </h1>
       </div>

@@ -137,11 +137,14 @@ type MaintenanceServiceTrackRequestStepProps = {
   form: MaintenanceDetailsFormState;
   /** Live status data from GET /api/v1/maintenance/requests/:id/status */
   statusData?: MemberMaintenanceRequestStatusData | null;
+  /** Called to close the parent modal (used before navigating to concierge) */
+  onClose?: () => void;
 };
 
 export function MaintenanceServiceTrackRequestStep({
   form,
   statusData,
+  onClose,
 }: MaintenanceServiceTrackRequestStepProps) {
   const serviceCentre = getMaintenanceServiceCentre(form.serviceCentre);
 
@@ -198,12 +201,13 @@ export function MaintenanceServiceTrackRequestStep({
       <DotTimeline steps={steps} />
 
       {/* Concierge card */}
-      <ConciergeCard
+      {/* <ConciergeCard
         sectionLabel="Your Concierge"
         name="Sarah Khalid"
         initials="SK"
         subtitle="Available · Responds in <2 min"
-      />
+        onChatClick={onClose}
+      /> */}
     </div>
   );
 }

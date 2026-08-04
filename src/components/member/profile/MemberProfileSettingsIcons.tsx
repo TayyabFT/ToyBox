@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import type { MemberProfileSettingsIconKey } from "./types";
 
-const iconColor = "#D4A847";
+const iconColor = "#DCC694";
 
 function SettingsIconShell({ children }: { children: ReactNode }) {
   return (

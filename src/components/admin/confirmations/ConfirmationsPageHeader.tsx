@@ -20,7 +20,7 @@ export function ConfirmationsPageHeader() {
       <p className="font-roboto text-[11px] tracking-[0.14em] text-section-label uppercase">
         {dateShiftLine || "\u00A0"}
       </p>
-      <h1 className="font-copperplate text-[32px] leading-tight tracking-[0.04em] uppercase sm:text-[36px]">
+      <h1 className="font-copperplate text-[34px] leading-tight tracking-[0.03em] uppercase sm:text-[40px]">
         <span className="text-accent">Bookings</span>
       </h1>
     </div>

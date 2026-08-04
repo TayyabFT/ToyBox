@@ -132,7 +132,7 @@ function DiaryRow({ event }: { event: MemberDiaryEvent }) {
   return (
     <Link
       href="/member/events"
-      className="flex items-center gap-3.5 rounded-[16px] border border-white/6 card-view px-4 py-3.5 transition-colors hover:border-accent/20"
+      className="flex items-center gap-3.5 rounded-[16px] border border-foreground/8 card-view px-4 py-3.5 transition-colors hover:border-accent/20"
     >
       {/* Date column */}
       <div className="flex w-8 shrink-0 flex-col items-center gap-0.5 sm:w-10">
@@ -145,7 +145,7 @@ function DiaryRow({ event }: { event: MemberDiaryEvent }) {
       </div>
 
       {/* Divider */}
-      <div className="h-11 w-px shrink-0 bg-white/8" />
+      <div className="h-11 w-px shrink-0 bg-foreground/10" />
 
       {/* Title + subtitle */}
       <div className="min-w-0 flex-1 space-y-1">

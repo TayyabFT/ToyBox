@@ -145,18 +145,20 @@ const LoginPage = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-[#292D3200] via-[#11131594] to-[#000000]" />
 
       <div className="relative z-10 flex w-full justify-center">
-        <div className="w-full max-w-[490px] rounded-2xl border border-[#D4A8471F] px-9 py-7 backdrop-blur-xl space-y-8 bg-[#11100C80]">
+        <div className="w-full max-w-[490px] rounded-2xl border border-[#DCC6941F] px-9 py-7 backdrop-blur-xl space-y-8 bg-[#11100C80]">
           <Image
-            src="/images/logo.png"
-            alt="logo"
-            width={144}
-            height={48}
-            className="w-36 object-contain mx-auto"
+            src="/images/logo-v2.png"
+            alt="Toy Box"
+            width={168}
+            height={72}
+            className="mx-auto h-14 w-auto object-contain"
+            priority
+            unoptimized
           />
 
           <div className="space-y-2">
-            <h2 className="font-copperplate text-center text-xl text-[#EDE4CE] uppercase">
-              Welcome to the <span className="text-[#C9A84C]">club</span>
+            <h2 className="font-copperplate text-center text-xl text-[#F2EAD5] uppercase">
+              Welcome to the <span className="text-[#DCC694]">club</span>
             </h2>
             <p className="font-roboto text-center text-sm font-light text-[#FFFFFF73]">
               Sign in to access your private club.
@@ -202,7 +204,7 @@ const LoginPage = () => {
               <div className="mt-3 flex justify-end">
                 <button
                   type="button"
-                  className="font-roboto text-[10px] font-medium tracking-[0.15em] text-[#C9A84C] cursor-pointer uppercase"
+                  className="font-roboto text-[10px] font-medium tracking-[0.15em] text-[#DCC694] cursor-pointer uppercase"
                 >
                   Forgot Password?
                 </button>
@@ -213,7 +215,7 @@ const LoginPage = () => {
               <button
                 type="button"
                 onClick={() => setOtpOpen(true)}
-                className="w-full rounded-lg border border-[#C9A84C] bg-transparent py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#C9A84C] uppercase cursor-pointer"
+                className="w-full rounded-lg border border-[#DCC694] bg-transparent py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#DCC694] uppercase cursor-pointer"
               >
                 Login via OTP
               </button>
@@ -222,7 +224,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full rounded-lg bg-[#C9A84C] py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#1a1208] uppercase cursor-pointer disabled:opacity-60"
+                className="w-full rounded-lg bg-[#DCC694] py-3 text-[11px] tracking-[0.2em] font-roboto font-semibold text-[#1a1208] uppercase cursor-pointer disabled:opacity-60"
               >
                 {loading ? "Signing In..." : "Sign In"}
               </button>
@@ -239,15 +241,15 @@ const LoginPage = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-          <div className="relative z-10 w-full max-w-md rounded-2xl border border-[#D4A84740] bg-[#11100C] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+          <div className="relative z-10 w-full max-w-md rounded-2xl border border-[#DCC69440] bg-[#121212] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-lg tracking-[0.06em] text-white uppercase">
+              <h2 className="font-copperplate text-lg tracking-[0.06em] text-[#F2EAD5] uppercase">
                 Enter OTP
               </h2>
               <button
                 type="button"
                 onClick={handleCloseOtp}
-                className="cursor-pointer text-[#7D7460] transition-colors hover:text-white"
+                className="cursor-pointer text-[#7D7460] transition-colors hover:text-[#F2EAD5]"
               >
                 ✕
               </button>
@@ -271,7 +273,7 @@ const LoginPage = () => {
                 type="button"
                 onClick={handleOtpSubmit}
                 disabled={verifyOtpLoading}
-                className="mt-2 w-full cursor-pointer rounded-lg bg-[#C9A84C] py-3 text-sm font-roboto font-semibold tracking-[0.15em] text-[#1a1208] uppercase disabled:opacity-60"
+                className="mt-2 w-full cursor-pointer rounded-lg bg-[#DCC694] py-3 text-sm font-roboto font-semibold tracking-[0.15em] text-[#1a1208] uppercase disabled:opacity-60"
               >
                 {verifyOtpLoading ? "Verifying..." : "Verify OTP"}
               </button>

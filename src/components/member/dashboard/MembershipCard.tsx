@@ -40,7 +40,7 @@ export function MembershipCard({
           {/* Top */}
           <div className="flex items-center justify-between">
             <Image
-              src="/images/lightlogo.png"
+              src="/images/lightlogo-v2.png"
               alt="Toy Box"
               width={100}
               height={50}
@@ -102,7 +102,7 @@ export function MembershipCard({
       className="w-full rounded-[20px] p-[5px]"
       style={{
         background:
-          "linear-gradient(145deg, #C9A84C 0%, #8B6F2A 28%, #3a2e1a 50%, #8B6F2A 72%, #C9A84C 100%)",
+          "linear-gradient(145deg, #DCC694 0%, #8B6F2A 28%, #3a2e1a 50%, #8B6F2A 72%, #DCC694 100%)",
         aspectRatio: "642 / 405",
         maxHeight: "405px",
       }}
@@ -117,7 +117,7 @@ export function MembershipCard({
         {/* Top */}
         <div className="flex items-center justify-between">
           <Image
-            src="/images/logo.png"
+            src="/images/logo-v2.png"
             alt="Toy Box"
             width={100}
             height={50}
@@ -131,7 +131,7 @@ export function MembershipCard({
             className="font-copperplate uppercase leading-tight tracking-[0.04em] text-[clamp(18px,6vw,35px)]"
           >
             <span style={{ color: "#EDE4CE" }}>{firstName} </span>
-            <span style={{ color: "#C9A84C" }}>{lastName}</span>
+            <span style={{ color: "var(--primary)" }}>{lastName}</span>
           </h2>
         </div>
 

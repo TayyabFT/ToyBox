@@ -142,11 +142,14 @@ type DetailingWashBookingStatusStepProps = {
   form: WashDetailsFormState;
   /** Live progress data from GET /api/v1/detailing/bookings/:id/progress */
   progressData?: MemberDetailingBookingProgressData | null;
+  /** Called to close the parent modal (used before navigating to concierge) */
+  onClose?: () => void;
 };
 
 export function DetailingWashBookingStatusStep({
   form,
   progressData,
+  onClose,
 }: DetailingWashBookingStatusStepProps) {
   const timeline = progressData?.timeline;
 
@@ -168,12 +171,13 @@ export function DetailingWashBookingStatusStep({
     <div className="space-y-7">
       <BookingTimeline steps={steps} />
 
-      <ConciergeCard
+      {/* <ConciergeCard
         sectionLabel="Your Concierge"
         name={conciergeName}
         initials={conciergeInitials}
         subtitle="Available · Responds in <2 min"
-      />
+        onChatClick={onClose}
+      /> */}
     </div>
   );
 }

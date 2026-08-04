@@ -21,8 +21,8 @@ export function OtpInput({ value, onChange, error }: OtpInputProps) {
         renderInput={(props) => (
           <input
             {...props}
-            className={`size-11 flex-1 rounded-lg border bg-[#11100C] text-center text-lg font-roboto text-white outline-none transition-colors focus:border-[#C9A84C] ${
-              error ? "border-red-500" : "border-[#D4A84740]"
+            className={`size-11 flex-1 rounded-lg border bg-[#121212] text-center text-lg font-roboto text-[#F2EAD5] outline-none transition-colors focus:border-[#DCC694] ${
+              error ? "border-red-500" : "border-[#DCC69440]"
             }`}
           />
         )}

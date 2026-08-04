@@ -11,7 +11,7 @@ export function ParkingGreeting({ onAddSlots }: ParkingGreetingProps) {
       <div className="space-y-3">
         <StaffShiftMeta />
         <div className="space-y-1">
-          <h1 className="font-copperplate text-[32px] leading-tight">
+          <h1 className="font-copperplate text-[36px] leading-tight">
             <span className="text-foreground">Parking </span>
             <span className="text-primary">Slots</span>
           </h1>
@@ -21,7 +21,7 @@ export function ParkingGreeting({ onAddSlots }: ParkingGreetingProps) {
       <button
         type="button"
         onClick={onAddSlots}
-        className="staff-add-cta font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-[#D4A847] bg-surface px-5 py-3 text-[11px] font-semibold tracking-[0.14em] text-[#D4A847] uppercase transition-colors hover:bg-accent/8"
+        className="staff-add-cta font-roboto flex shrink-0 cursor-pointer items-center gap-2 rounded-full border border-accent bg-surface px-5 py-3 text-[11px] font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:bg-accent/8"
       >
         <PlusSmall color="currentColor" />
         Add Slots

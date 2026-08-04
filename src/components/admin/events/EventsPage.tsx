@@ -303,7 +303,7 @@ export function EventsPage() {
           <p className="font-roboto text-[11px] tracking-[0.18em] text-accent uppercase">
             — Events management
           </p>
-          <h2 className="mt-2 text-4xl font-semibold font-copperplate uppercase">
+          <h2 className="mt-2 text-4xl font-copperplate uppercase tracking-[0.03em]">
             Events
           </h2>
         </div>

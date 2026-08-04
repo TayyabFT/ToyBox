@@ -1,43 +1,17 @@
 @import "tailwindcss";
 
-@font-face {
-  font-family: "Copperplate";
-  src: url("/fonts/copperplate/OPTICopperplate-Light.otf") format("opentype");
-  font-weight: 300;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* hello world */
-
-@font-face {
-  font-family: "Copperplate";
-  src: url("/fonts/copperplate/OPTICopperplate.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Copperplate";
-  src: url("/fonts/copperplate/CopperplateCC-Bold.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root,
 [data-theme="dark"] {
   /* Brand */
-  --primary: #c9a84c;
+  --primary: #dcc694;
   --secondary: #7d7460;
 
   /* Extended palette */
-  --accent: #d4a847;
+  --accent: #dcc694;
   --muted: #b8ae96;
   --foreground: #f2ead5;
   --foreground-soft: #f0ede8;
-  --background: #070605;
+  --background: #191919;
   --card: #11100c;
   --surface: #0d0c0a;
   --dark: #0a0806;
@@ -59,26 +33,20 @@
   /* Extended accents */
   --info: #7eb0d8;
   --vehicle-blue: #6b9ec4;
-  --gold-bright: #f0c566;
-  --gold-deep: #8b6f2a;
-  --stat-card-hover-from: #f0c566;
-  --stat-card-hover-to: #8b6f2a;
+  --gold-bright: #dcc694;
+  --gold-deep: #584d43;
+  --stat-card-hover-from: #dcc694;
+  --stat-card-hover-to: #584d43;
   --stat-card-hover-fg: #0a0806;
-  --stat-card-hover-fg-muted: rgba(10, 8, 6, 0.6);
-  --stat-card-active-from: #f0c566;
-  --stat-card-active-to: #8b6f2a;
+  --stat-card-hover-fg-muted: rgba(10, 8, 6, 0.65);
+  --stat-card-active-from: #dcc694;
+  --stat-card-active-to: #584d43;
   --stat-card-active-fg: #0a0806;
-  --stat-card-active-fg-muted: rgba(10, 8, 6, 0.6);
+  --stat-card-active-fg-muted: rgba(10, 8, 6, 0.65);
   --stat-card-bg: var(--card);
-  --stat-card-border: radial-gradient(100% 100% at 50% 0%,
-      rgba(240, 237, 230, 0.14) 0%,
-      rgba(197, 160, 89, 0.32) 38%,
-      rgba(197, 160, 89, 0.12) 100%);
-  --stat-card-border-hover: radial-gradient(100% 100% at 50% 0%,
-      rgba(240, 197, 102, 0.42) 0%,
-      rgba(197, 160, 89, 0.52) 45%,
-      rgba(197, 160, 89, 0.28) 100%);
-  --badge-warm: #e8b84b;
+  --stat-card-border: linear-gradient(#dcc6941a, #dcc6941a);
+  --stat-card-border-hover: linear-gradient(to right, #dcc694, #584d43);
+  --badge-warm: #dcc694;
   --avatar-slate: #4a7c9e;
   --avatar-rose: #9e6b8a;
   --avatar-purple: #6b5b9e;
@@ -98,23 +66,27 @@
   --card-dark: rgba(22, 19, 16, 0.82);
   --critical-banner: #141210;
   --overview-border: rgba(255, 255, 255, 0.05);
-  --overview-heading-accent: #c5a059;
-  --tag-gold: #c5a059;
+  --overview-heading-accent: #dcc694;
+  --tag-gold: #dcc694;
   --tag-pink: #d89999;
-  --shimmer-base: color-mix(in srgb, var(--accent) 8%, transparent);
-  --shimmer-sweep: color-mix(in srgb, var(--accent) 14%, transparent);
+  --shimmer-base: color-mix(in srgb, var(--accent) 3%, transparent);
+  --shimmer-sweep: color-mix(in srgb, var(--accent) 8%, transparent);
   --tag-purple: #9e8ad4;
   --nav-active-bg: linear-gradient(to right,
-      color-mix(in srgb, var(--accent) 13%, transparent),
-      color-mix(in srgb, var(--accent) 3%, transparent));
+      color-mix(in srgb, var(--accent) 3%, transparent),
+      color-mix(in srgb, var(--accent) 1%, transparent));
   --nav-active-fg: var(--accent);
   --nav-active-indicator: var(--accent);
-  --nav-icon-active: var(--accent);
+  --nav-icon-active: var(--primary);
   --nav-hover-bg: rgba(255, 255, 255, 0.03);
+  /* Soft gold wash — #DCC69408 (dark only) */
+  --accent-wash: #dcc69408;
+  --accent-wash-border: #dcc69408;
   --section-canvas: #11100c;
-  --shell-bg: var(--background);
-  --sidebar-bg: var(--shell-bg);
-  --font-copperplate: "Copperplate", serif;
+  --shell-bg: #191919;
+  --sidebar-bg: #121212;
+  --topbar-bg: #121212;
+  --chrome-border: #dcc6940f;
 
   /* Admin invite / add-vehicle modal panel (dark) */
   --modal-panel-bg: var(--card);
@@ -147,6 +119,50 @@
     var(--gold-deep) 100%
   );
   --profile-avatar-fg: var(--dark);
+}
+
+/* Dark-only: gold wash borders/fills → #DCC69408.
+   Light mode keeps its own accent opacities untouched. */
+[data-theme="dark"] .border-accent\/12 {
+  border-color: #dcc69408;
+}
+[data-theme="dark"] .bg-accent\/12 {
+  background-color: #dcc69408;
+}
+
+/* Dark-only: hardcoded icon golds → #DCC694 (sidebar + UI icons) */
+:root svg [fill="#D4A847" i],
+:root svg [fill="#C9A84C" i],
+:root svg [fill="#BFA05A" i],
+:root svg [fill="#C5A059" i],
+:root svg [fill="#E8B84B" i],
+:root svg [fill="#F0C566" i],
+:root svg [fill="#D4AF37" i],
+[data-theme="dark"] svg [fill="#D4A847" i],
+[data-theme="dark"] svg [fill="#C9A84C" i],
+[data-theme="dark"] svg [fill="#BFA05A" i],
+[data-theme="dark"] svg [fill="#C5A059" i],
+[data-theme="dark"] svg [fill="#E8B84B" i],
+[data-theme="dark"] svg [fill="#F0C566" i],
+[data-theme="dark"] svg [fill="#D4AF37" i] {
+  fill: #dcc694;
+}
+
+:root svg [stroke="#D4A847" i],
+:root svg [stroke="#C9A84C" i],
+:root svg [stroke="#BFA05A" i],
+:root svg [stroke="#C5A059" i],
+:root svg [stroke="#E8B84B" i],
+:root svg [stroke="#F0C566" i],
+:root svg [stroke="#D4AF37" i],
+[data-theme="dark"] svg [stroke="#D4A847" i],
+[data-theme="dark"] svg [stroke="#C9A84C" i],
+[data-theme="dark"] svg [stroke="#BFA05A" i],
+[data-theme="dark"] svg [stroke="#C5A059" i],
+[data-theme="dark"] svg [stroke="#E8B84B" i],
+[data-theme="dark"] svg [stroke="#F0C566" i],
+[data-theme="dark"] svg [stroke="#D4AF37" i] {
+  stroke: #dcc694;
 }
 
 [data-theme="light"] {
@@ -233,7 +249,6 @@
   --nav-icon-active: #1a1816;
   --nav-hover-bg: rgba(26, 24, 22, 0.04);
   --badge-warm: #8a7d6a;
-  --font-copperplate: "Copperplate", serif;
 
   /* Darkoverlay — light mode equivalents */
   --darkoverlay: linear-gradient(180deg, rgba(224, 220, 212, 0) 50%, rgba(224, 220, 212, 0.5) 100%);
@@ -303,14 +318,14 @@
   --color-avatar-rose: var(--avatar-rose);
   --color-avatar-purple: var(--avatar-purple);
   --color-avatar-green: var(--avatar-green);
-  --font-sans: var(--font-roboto), sans-serif;
+  --font-sans: var(--font-roboto), "Alegreya Sans", sans-serif;
   --font-copperplate: var(--font-copperplate);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: var(--font-roboto), sans-serif;
+  font-family: var(--font-roboto), "Alegreya Sans", sans-serif;
   font-weight: 400;
 }
 
@@ -417,6 +432,41 @@ body {
     var(--stat-card-border-hover, var(--stat-card-border));
 }
 
+/* Dark: hover runs left → right (#DCC694 → #584D43) */
+[data-theme="dark"] .stat-card-shell:hover,
+:root .stat-card-shell:hover {
+  background-image:
+    linear-gradient(to right,
+      var(--stat-card-hover-from),
+      var(--stat-card-hover-to)),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
+[data-theme="dark"] .stat-card-shell--featured:hover,
+:root .stat-card-shell--featured:hover {
+  background-image:
+    linear-gradient(to right,
+      var(--stat-card-active-from),
+      var(--stat-card-active-to)),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
+[data-theme="light"] .stat-card-shell:hover {
+  background-image:
+    linear-gradient(to bottom right,
+      var(--stat-card-hover-from),
+      var(--stat-card-hover-to)),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
+[data-theme="light"] .stat-card-shell--featured:hover {
+  background-image:
+    linear-gradient(to bottom right,
+      var(--stat-card-active-from),
+      var(--stat-card-active-to)),
+    var(--stat-card-border-hover, var(--stat-card-border));
+}
+
 .overview-elevated-card-shell {
   border: 1px solid transparent;
   background-image:
@@ -441,33 +491,74 @@ body {
   color: var(--foreground);
 }
 
-/* Copperplate — headings only */
+/* Dark chrome — sidebar + topbar share bg #121212 and border #DCC6940F */
+:root .sidebar,
+[data-theme="dark"] .sidebar,
+:root .topbar,
+[data-theme="dark"] .topbar {
+  background-color: #121212 !important;
+  background-image: none !important;
+}
+
+:root .sidebar,
+[data-theme="dark"] .sidebar {
+  border-right-color: #dcc6940f !important;
+}
+
+:root .topbar,
+[data-theme="dark"] .topbar {
+  border-bottom-color: #dcc6940f !important;
+}
+
+[data-theme="light"] .sidebar {
+  background-color: var(--sidebar-bg) !important;
+}
+
+[data-theme="light"] .topbar {
+  background-color: var(--shell-bg) !important;
+}
+
+/* Montserrat — headings (utility class names kept for existing markup).
+   Copperplate read larger/lighter at the same px; Montserrat Medium looked
+   heavy and optically small, so we stay Regular and ease the tracking. */
 .font-copperplate,
 .font-headline {
-  font-family: var(--font-copperplate);
+  font-family: var(--font-copperplate), "Montserrat", sans-serif;
   font-weight: 400;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
   text-transform: uppercase;
 }
 
-/* Copperplate font family without the heading uppercase/letter-spacing */
-.font-copperplate-body {
-  font-family: var(--font-copperplate);
+/* Don't let utility bold/semibold push Montserrat into a heavy look */
+.font-copperplate.font-medium,
+.font-copperplate.font-semibold,
+.font-copperplate.font-bold,
+.font-headline.font-medium,
+.font-headline.font-semibold,
+.font-headline.font-bold {
+  font-weight: 500;
 }
 
-/* Roboto Regular — body & subheadings */
+/* Montserrat without the heading uppercase/letter-spacing */
+.font-copperplate-body {
+  font-family: var(--font-copperplate), "Montserrat", sans-serif;
+  font-weight: 400;
+}
+
+/* Alegreya Sans — body & subheadings */
 .font-roboto,
+.font-Roboto,
 .font-body,
 input,
 textarea,
 select {
-  font-family: var(--font-roboto), sans-serif;
+  font-family: var(--font-roboto), "Alegreya Sans", sans-serif;
   font-weight: 400;
 }
 
-/* Roboto Bold — labels / emphasis */
+/* Alegreya Sans Bold — labels / emphasis */
 .font-header {
-  font-family: var(--font-roboto), sans-serif;
+  font-family: var(--font-roboto), "Alegreya Sans", sans-serif;
   font-weight: 700;
 }
 
@@ -495,7 +586,7 @@ h6 {
 }
 
 .toybox-toast {
-  font-family: var(--font-roboto), sans-serif !important;
+  font-family: var(--font-roboto), "Alegreya Sans", sans-serif !important;
   background: linear-gradient(135deg, var(--card) 0%, #1a1814 100%) !important;
   border: 1px solid color-mix(in srgb, var(--accent) 20%, transparent) !important;
   border-radius: 14px !important;
@@ -1602,9 +1693,11 @@ html[data-theme="light"] .garage-add-vehicle-btn:hover {
     0 1px 0 rgba(200, 195, 185, 0.5) inset !important;
 }
 
-/* ── Member profile avatar — hardcoded #F0C566 / #8B6F2A gradient ──────────
- * MemberProfileCard uses span.bg-gradient-to-b.from-[#F0C566].to-[#8B6F2A]
+/* ── Member profile avatar — gold gradient; light mode uses taupe ───────────
+ * Avatars use from-[#DCC694] to-[#584D43] in markup.
  * ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] span.bg-gradient-to-b.from-\[\#DCC694\],
+[data-theme="light"] span.bg-gradient-to-r.from-\[\#DCC694\],
 [data-theme="light"] span.bg-gradient-to-b.from-\[\#F0C566\] {
   background-image: linear-gradient(180deg, #8a7d6a 0%, #5a5349 100%) !important;
   color: #f5f2ee !important;
@@ -1627,4 +1720,192 @@ html[data-theme="light"] .garage-add-vehicle-btn:hover {
     rgba(138, 125, 106, 0.18) 46%,
     rgba(138, 125, 106, 0.10) 100%
   );
+}
+
+/* ── Member ReservationModal — dark input surfaces → light in light mode ────
+ * The modal is built for dark mode with bg-[#11100C] inputs and dark overlays.
+ * These classes swap the surfaces in light mode without touching the component.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* Modal outer container */
+[data-theme="light"] .reservation-modal-overlay {
+  background-color: var(--card) !important;
+  border-color: color-mix(in srgb, var(--foreground) 10%, transparent) !important;
+}
+
+/* Modal header title */
+[data-theme="light"] .reservation-modal-overlay h2 {
+  color: var(--foreground) !important;
+}
+
+/* All dark inputs inside modal → light surface */
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#11100C\],
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#0A0907\],
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#14120F\],
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#11100C\]\/40 {
+  background-color: var(--input-muted) !important;
+}
+
+/* bg-black/40 search bar inside dropdown */
+[data-theme="light"] .reservation-modal-overlay .bg-black\/40 {
+  background-color: color-mix(in srgb, var(--foreground) 6%, transparent) !important;
+}
+
+/* Borders inside modal */
+[data-theme="light"] .reservation-modal-overlay .border-accent\/15,
+[data-theme="light"] .reservation-modal-overlay .border-accent\/10,
+[data-theme="light"] .reservation-modal-overlay .border-accent\/5,
+[data-theme="light"] .reservation-modal-overlay .border-accent\/8,
+[data-theme="light"] .reservation-modal-overlay .border-accent\/20 {
+  border-color: color-mix(in srgb, var(--foreground) 10%, transparent) !important;
+}
+
+/* hover:bg-white/5 buttons → foreground tint */
+[data-theme="light"] .reservation-modal-overlay .hover\:bg-white\/5:hover {
+  background-color: color-mix(in srgb, var(--foreground) 5%, transparent) !important;
+}
+
+/* Step inactive indicator */
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#14120F\] {
+  background-color: var(--elevated) !important;
+}
+
+/* Step active — shadow override */
+[data-theme="light"] .reservation-modal-overlay .shadow-\[0_0_12px_rgba\(212\2c 168\2c 71\2c 0\.35\)\] {
+  box-shadow: none !important;
+}
+
+/* Calendar selected date shadow */
+[data-theme="light"] .reservation-modal-overlay .shadow-\[0_0_8px_rgba\(201\2c 168\2c 76\2c 0\.4\)\],
+[data-theme="light"] .reservation-modal-overlay .shadow-\[0_0_8px_rgba\(212\2c 168\2c 71\2c 0\.25\)\] {
+  box-shadow: none !important;
+}
+
+/* Member avatar gold glow */
+[data-theme="light"] .reservation-modal-overlay .shadow-\[0_0_8px_rgba\(212\2c 168\2c 71\2c 0\.2\)\] {
+  box-shadow: none !important;
+}
+
+/* Payment option selected glow */
+[data-theme="light"] .reservation-modal-overlay .shadow-\[0_0_10px_rgba\(212\2c 168\2c 71\2c 0\.1\)\] {
+  box-shadow: none !important;
+}
+
+/* Close button border */
+[data-theme="light"] .reservation-modal-overlay .border-white\/10 {
+  border-color: color-mix(in srgb, var(--foreground) 12%, transparent) !important;
+}
+
+[data-theme="light"] .reservation-modal-overlay .hover\:border-white\/20:hover {
+  border-color: color-mix(in srgb, var(--foreground) 22%, transparent) !important;
+}
+
+[data-theme="light"] .reservation-modal-overlay .hover\:text-white:hover {
+  color: var(--foreground) !important;
+}
+
+/* text-accent on bg-accent → shell bg text */
+[data-theme="light"] .reservation-modal-overlay .bg-accent.text-dark {
+  color: var(--shell-bg) !important;
+}
+
+[data-theme="light"] .reservation-modal-surface {
+  background-color: var(--card) !important;
+  border-color: color-mix(in srgb, var(--foreground) 10%, transparent) !important;
+}
+
+[data-theme="light"] .reservation-modal-input {
+  background-color: var(--input-muted) !important;
+  border-color: color-mix(in srgb, var(--foreground) 12%, transparent) !important;
+  color: var(--foreground) !important;
+}
+
+/* ── MemberGarageCard — away/stored status over images ──────────────────────
+ * bg-dark/85 renders as rgba(10,8,6,0.85) — dark enough on any image. Fine.
+ * ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── DiaryEntryCard — muted badge white/5 background ────────────────────── */
+[data-theme="light"] .diary-badge-muted {
+  border-color: color-mix(in srgb, var(--foreground) 15%, transparent) !important;
+  background-color: color-mix(in srgb, var(--foreground) 5%, transparent) !important;
+  color: var(--secondary) !important;
+}
+
+/* ── MemberGarageHeader eyebrow — text-accent → text-secondary ───────────── */
+[data-theme="light"] .garage-page-eyebrow {
+  color: var(--secondary) !important;
+}
+
+/* ── ReservationModal footer strip ──────────────────────────────────────── */
+[data-theme="light"] .reservation-modal-overlay .bg-\[\#0A0907\] {
+  background-color: var(--card) !important;
+}
+
+/* ── ReservationModal CTA buttons — gold glow shadow ───────────────────── */
+[data-theme="light"] .reservation-modal-overlay
+  .shadow-\[0_0_12px_rgba\(212\2c168\2c71\2c0\.15\)\] {
+  box-shadow: 0 2px 8px rgba(26, 24, 22, 0.12) !important;
+}
+
+/* ── Garage stepper active dot — gold glow ───────────────────────────────── */
+/* TransportDeliveryStepper, RequestStepper, DetailingWashBookingStatusStep */
+[data-theme="light"] .shadow-\[0_0_16px_rgba\(201\2c168\2c76\2c0\.4\)\] {
+  box-shadow: none !important;
+}
+[data-theme="light"] .shadow-\[0_0_16px_rgba\(201\2c168\2c76\2c0\.35\)\] {
+  box-shadow: none !important;
+}
+
+/* ── requestFormUi range thumb — gold ring ───────────────────────────────── */
+[data-theme="light"] .shadow-\[0_0_0_4px_rgba\(201\2c168\2c76\2c0\.22\)\] {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent) !important;
+}
+
+/* ── Garage stepper inactive dot — bg-dark → input-muted ────────────────── */
+/* RequestStepper, TransportDeliveryStepper */
+[data-theme="light"] .garage-form-chip.border.border-accent\/15 {
+  background: var(--input-muted) !important;
+}
+
+/* bg-dark used on inactive stepper circles */
+[data-theme="light"] .border-accent\/15.bg-dark {
+  background-color: var(--input-muted) !important;
+}
+
+/* ── Vehicle row status badges — bg-black/60 on non-image areas ─────────── */
+/* Only applied where badge is NOT overlaid on an image.
+   The badge position is always absolute over an image, so black/60 is fine. */
+
+/* ── MemberTheClubPage space card badge — bg-black/70 ──────────────────── */
+/* These are overlaid on images with a dark gradient — bg-black/70 is fine.  */
+
+/* ── Marketplace Detail Modal close button — bg-black/50 ───────────────── */
+[data-theme="light"] .bg-black\/50.border-white\/20 {
+  background-color: color-mix(in srgb, var(--foreground) 8%, transparent) !important;
+  border-color: color-mix(in srgb, var(--foreground) 15%, transparent) !important;
+  color: var(--foreground) !important;
+}
+
+/* ── MarketplaceDetailModal CTA — bg-accent text-dark ───────────────────── */
+/* bg-accent is now taupe #8a7d6a — text-dark (#0a0806) is readable. OK.    */
+/* But ensure the Express Interest button has enough contrast:               */
+[data-theme="light"] .bg-accent.text-dark {
+  color: var(--shell-bg) !important;
+}
+
+/* ── MemberRequestModalFrame primary CTA — from-gold-bright to-primary ──────
+ * In dark mode: gold gradient with dark text. Fine.
+ * In light mode: gold-bright=#8a7d6a, primary=#1a1816 — both near-dark,
+ * making text-dark (#0a0806) invisible. Switch to light text.
+ * ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] .bg-gradient-to-r.from-gold-bright.to-primary.text-dark {
+  background-image: linear-gradient(to right, #8a7d6a, #5a5349) !important;
+  color: var(--shell-bg) !important;
+}
+
+/* ── MemberLayout / member page canvas ──────────────────────────────────────
+ * Ensure the main content area uses the page background variable
+ * ─────────────────────────────────────────────────────────────────────────── */
+[data-theme="light"] .section-canvas {
+  background-color: var(--section-canvas) !important;
 }

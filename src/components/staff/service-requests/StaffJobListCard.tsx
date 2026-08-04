@@ -8,7 +8,7 @@ type StaffJobListCardProps = {
 
 export function StaffJobListCard({ job }: StaffJobListCardProps) {
   return (
-    <article className="space-y-3 rounded-xl border border-[#D4A8471A] bg-card p-4">
+    <article className="space-y-3 rounded-xl border border-accent/10 bg-card p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 space-y-1">
           <h4 className="font-roboto text-[12px] font-medium tracking-[0.02em] text-foreground">

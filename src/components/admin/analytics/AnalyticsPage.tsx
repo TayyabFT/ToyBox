@@ -125,7 +125,7 @@ export function AnalyticsPage() {
         <p className="font-roboto text-[11px] tracking-[0.18em] text-primary uppercase">
           — Performance Insights
         </p>
-        <h2 className="mt-2 font-copperplate text-4xl font-semibold uppercase">
+        <h2 className="mt-2 font-copperplate text-4xl uppercase tracking-[0.03em]">
           Analytics
         </h2>
       </div>

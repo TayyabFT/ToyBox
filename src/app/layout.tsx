@@ -1,15 +1,23 @@
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Alegreya_Sans, Montserrat } from "next/font/google";
 import StoreProvider from "@/store/StoreProvider";
 import ToastProvider from "@/components/common/ToastProvider";
 import { ApiBackendUrlLog } from "@/components/common/ApiBackendUrlLog";
 import { ThemeProvider } from "@/components/common/ThemeProvider";
 import "./globals.css";
 
-const roboto = Roboto({
+/** Headings — replaces Copperplate; kept as --font-copperplate for existing utilities */
+const montserrat = Montserrat({
+  variable: "--font-copperplate",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+/** Body / UI — replaces Roboto; kept as --font-roboto for existing utilities */
+const alegreyaSans = Alegreya_Sans({
   variable: "--font-roboto",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "700"],
+  weight: ["300", "400", "500", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -28,7 +36,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full antialiased`} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={`${montserrat.variable} ${alegreyaSans.variable} h-full antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{

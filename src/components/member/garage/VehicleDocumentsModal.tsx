@@ -36,7 +36,7 @@ const iconToneStyles: Record<
   },
   orange: {
     box: "border-primary/25 bg-primary/10",
-    color: "#D4A847",
+    color: "var(--accent)",
   },
   green: {
     box: "border-teal/25 bg-teal/10",

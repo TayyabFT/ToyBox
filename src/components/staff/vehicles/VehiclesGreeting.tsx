@@ -10,7 +10,7 @@ export function VehiclesGreeting({ onAddVehicle }: VehiclesGreetingProps) {
     <div className="flex items-end justify-between gap-4">
       <div className="space-y-3">
         <StaffShiftMeta />
-        <h1 className="font-copperplate text-[32px] leading-tight text-foreground">
+        <h1 className="font-copperplate text-[36px] leading-tight text-foreground">
           Vehicles
         </h1>
       </div>

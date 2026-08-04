@@ -41,7 +41,7 @@ export function OverviewGreeting({
       <p className="font-roboto text-xs tracking-[0.14em] text-primary uppercase">
         {meta}
       </p>
-      <h1 className="font-copperplate text-[32px] leading-tight">
+      <h1 className="font-copperplate text-[36px] leading-tight">
         <span className="text-foreground-soft">{buildGreeting(staffName)}, </span>
         <span className="text-primary">{firstName}.</span>
       </h1>

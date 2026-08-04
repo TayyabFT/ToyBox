@@ -11,8 +11,8 @@ type ActiveJobDetailPanelProps = {
 
 export function ActiveJobDetailPanel({ detail }: ActiveJobDetailPanelProps) {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-[#D4A8471A] bg-surface p-5">
-      <div className="-mx-5 mb-4 space-y-1 border-b border-[#D4A8470F] px-5 pb-4">
+    <section className="flex h-full flex-col rounded-2xl border border-accent/10 bg-surface p-5">
+      <div className="-mx-5 mb-4 space-y-1 border-b border-accent/[0.06] px-5 pb-4">
         <h3 className="font-copperplate text-sm font-normal tracking-[0.06em] text-primary uppercase">
           Active Job Detail
         </h3>
@@ -41,7 +41,7 @@ export function ActiveJobDetailPanel({ detail }: ActiveJobDetailPanelProps) {
           <AssigneeBadge label={detail.assignee} />
         </div>
 
-        <div className="space-y-3 rounded-xl border border-[#D4A8471A] bg-card p-4">
+        <div className="space-y-3 rounded-xl border border-accent/10 bg-card p-4">
           <div className="space-y-1">
             <p className="font-roboto text-[9px] tracking-[0.12em] text-primary uppercase">
               {detail.pickup.label}
@@ -108,7 +108,7 @@ export function ActiveJobDetailPanel({ detail }: ActiveJobDetailPanelProps) {
           <h5 className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
             Special Instructions
           </h5>
-          <div className="rounded-xl border border-[#D4A8471A] bg-card p-4">
+          <div className="rounded-xl border border-accent/10 bg-card p-4">
             <p className="font-roboto text-[11px] leading-relaxed tracking-[0.02em] text-secondary italic">
               &ldquo;{detail.specialInstructions}&rdquo;
             </p>

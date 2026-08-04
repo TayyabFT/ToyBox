@@ -1,5 +1,8 @@
 // ── Shared assigned concierge / manager card ─────────────────────────────────
 
+"use client";
+
+import { useRouter } from "next/navigation";
 import { MemberGarageConciergeChatIcon } from "@/components/common/Svgs";
 
 type ConciergeCardProps = {
@@ -11,6 +14,8 @@ type ConciergeCardProps = {
   subtitle: string;
   /** Section label shown above the card */
   sectionLabel?: string;
+  /** Called when the chat button is pressed. Defaults to navigating to /member/concierge. */
+  onChatClick?: () => void;
 };
 
 export function ConciergeCard({
@@ -18,7 +23,18 @@ export function ConciergeCard({
   initials,
   subtitle,
   sectionLabel,
+  onChatClick,
 }: ConciergeCardProps) {
+  const router = useRouter();
+
+  function handleChat() {
+    if (onChatClick) {
+      onChatClick();
+    } else {
+      router.push("/member/concierge");
+    }
+  }
+
   return (
     <div>
       {sectionLabel ? (
@@ -43,8 +59,9 @@ export function ConciergeCard({
 
         <button
           type="button"
+          onClick={handleChat}
           className="flex size-10 shrink-0 cursor-pointer items-center justify-center rounded-full border border-primary/40 bg-primary/10 text-primary transition-colors hover:border-primary/60 hover:bg-primary/15"
-          aria-label={`Message ${name}`}
+          aria-label={`Message ${name} via Concierge`}
         >
           <MemberGarageConciergeChatIcon />
         </button>

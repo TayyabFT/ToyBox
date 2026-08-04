@@ -128,7 +128,7 @@ export function MemberProfilePage() {
               color: "var(--accent)",
             } : {
               borderColor: "rgba(201,168,76,0.40)",
-              color: "#C9A84C",
+              color: "var(--primary)",
             }}
           >
             <EditPencil className="size-3" />
@@ -146,7 +146,7 @@ export function MemberProfilePage() {
                   borderColor: "var(--accent)",
                   boxShadow: "0 0 16px color-mix(in srgb, var(--accent) 20%, transparent)",
                 } : {
-                  borderColor: "#C9A84C",
+                  borderColor: "var(--primary)",
                   boxShadow: "0 0 34px rgba(201,168,76,0.30)",
                 }}
               />
@@ -158,14 +158,14 @@ export function MemberProfilePage() {
                   background: "color-mix(in srgb, var(--accent) 12%, var(--card))",
                   boxShadow: "none",
                 } : {
-                  borderColor: "#C9A84C",
+                  borderColor: "var(--primary)",
                   background: "#0d0b08",
                   boxShadow: "0 0 34px rgba(201,168,76,0.30)",
                 }}
               >
                 <span
                   className="font-copperplate text-[28px] sm:text-[34px]"
-                  style={{ color: isLight ? "var(--accent)" : "#C9A84C" }}
+                  style={{ color: "var(--primary)" }}
                 >
                   {getInitial(data.name)}
                 </span>
@@ -194,10 +194,12 @@ export function MemberProfilePage() {
                   background: "rgba(201,168,76,0.08)",
                 }}
               >
-                <StarFilled className="size-3" style={{ color: isLight ? "var(--accent)" : "#C9A84C" }} />
+                <span style={{ color: "var(--primary)" }} className="flex items-center">
+                  <StarFilled className="size-3" />
+                </span>
                 <span
                   className="font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase"
-                  style={{ color: isLight ? "var(--accent)" : "#C9A84C" }}
+                  style={{ color: "var(--primary)" }}
                 >
                   {data.tier}
                 </span>

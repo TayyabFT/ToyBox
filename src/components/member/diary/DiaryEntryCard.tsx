@@ -16,7 +16,7 @@ const STATUS_STYLES: Record<
   teal:  "border-teal-400/40 bg-teal-400/10 text-teal-400",
   green: "border-emerald-400/40 bg-emerald-400/10 text-emerald-400",
   red:   "border-red-400/35 bg-red-400/10 text-red-400",
-  muted: "border-white/15 bg-white/5 text-secondary/50",
+  muted: "diary-badge-muted border-white/15 bg-white/5 text-secondary/50",
 };
 
 function StatusPill({
@@ -57,39 +57,42 @@ export function DiaryEntryCard({ entry }: { entry: DiaryEntry }) {
         </h3>
       </div>
 
-      {/* Optional hero image */}
-      {entry.imageUrl && (
-        <div className="relative overflow-hidden rounded-[14px] sm:rounded-[18px] border border-accent/10">
-          <div className="relative h-[150px] w-full sm:h-[200px] md:h-[220px]">
-            <img
-              src={entry.imageUrl}
-              alt={`${entry.titlePrefix} ${entry.titleHighlight ?? ""}`.trim()}
-              className="h-full w-full object-cover object-center"
-            />
-            <div
-              aria-hidden
-              className="member-dash-media-overlay pointer-events-none absolute inset-0"
-            />
+      {/* Image + body text + tags — all constrained to the same max width */}
+      <div className="w-full max-w-[660px] space-y-2.5 sm:space-y-3">
+        {/* Optional hero image */}
+        {entry.imageUrl && (
+          <div className="relative overflow-hidden rounded-[14px] sm:rounded-[18px] border border-accent/10">
+            <div className="relative h-[150px] w-full sm:h-[200px] md:h-[240px]">
+              <img
+                src={entry.imageUrl}
+                alt={`${entry.titlePrefix} ${entry.titleHighlight ?? ""}`.trim()}
+                className="h-full w-full object-cover object-center"
+              />
+              <div
+                aria-hidden
+                className="member-dash-media-overlay pointer-events-none absolute inset-0"
+              />
+            </div>
           </div>
-        </div>
-      )}
+        )}
 
-      {/* Description */}
-      <p className="font-roboto max-w-2xl text-[12px] sm:text-[12.5px] leading-relaxed text-secondary/75">
-        {entry.description}
-      </p>
+        {/* Description */}
+        <p className="font-roboto text-[12px] sm:text-[12.5px] leading-relaxed text-secondary/75">
+          {entry.description}
+        </p>
 
-      {/* Tags + Status pill */}
-      {(entry.tags.length > 0 || entry.statusLabel) && (
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-0.5">
-          {entry.tags.map((tag) => (
-            <DiaryTag key={tag} label={tag} />
-          ))}
-          {entry.statusLabel && (
-            <StatusPill label={entry.statusLabel} tone={entry.statusTone} />
-          )}
-        </div>
-      )}
+        {/* Tags + Status pill */}
+        {(entry.tags.length > 0 || entry.statusLabel) && (
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-0.5">
+            {entry.tags.map((tag) => (
+              <DiaryTag key={tag} label={tag} />
+            ))}
+            {entry.statusLabel && (
+              <StatusPill label={entry.statusLabel} tone={entry.statusTone} />
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

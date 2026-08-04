@@ -25,7 +25,7 @@ export function MemberGreeting({ memberName, sublabel }: MemberGreetingProps) {
         </p>
       )}
       {/* Figma: ~32px Copperplate, all foreground in light mode, name accented in dark */}
-      <h1 className="font-copperplate text-[20px] sm:text-[26px] md:text-[32px] leading-[1.2] tracking-[0.03em] uppercase text-foreground">
+      <h1 className="font-copperplate text-[24px] sm:text-[30px] md:text-[36px] leading-[1.2] tracking-[0.03em] uppercase text-foreground">
         {getGreeting()}, {firstName}.
       </h1>
     </div>

@@ -278,9 +278,9 @@ export function MemberVehicleRequestsCard({
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isTransportOpen}
-        onClose={() => {
+        onClose={(submitted?: boolean) => {
           setIsTransportOpen(false);
-          onRequestCreated?.();
+          if (submitted) onRequestCreated?.();
         }}
       />
 
@@ -288,26 +288,26 @@ export function MemberVehicleRequestsCard({
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isDetailingOpen}
-        onClose={() => {
+        onClose={(submitted?: boolean) => {
           setIsDetailingOpen(false);
-          onRequestCreated?.();
+          if (submitted) onRequestCreated?.();
         }}
       />
 
       <MaintenanceServiceModal
         vehicleId={vehicleId}
         open={isMaintenanceOpen}
-        onClose={() => {
+        onClose={(submitted?: boolean) => {
           setIsMaintenanceOpen(false);
-          onRequestCreated?.();
+          if (submitted) onRequestCreated?.();
         }}
       />
 
       <VehicleSourcingModal
         open={isSourcingOpen}
-        onClose={() => {
+        onClose={(submitted?: boolean) => {
           setIsSourcingOpen(false);
-          onRequestCreated?.();
+          if (submitted) onRequestCreated?.();
         }}
         vehicleMake={vehicleMake}
         vehicleModel={vehicleModel}
@@ -319,9 +319,9 @@ export function MemberVehicleRequestsCard({
         vehicleId={vehicleId}
         vehicleName={vehicleName}
         open={isParkingOpen}
-        onClose={() => {
+        onClose={(submitted?: boolean) => {
           setIsParkingOpen(false);
-          onRequestCreated?.();
+          if (submitted) onRequestCreated?.();
         }}
       />
     </div>

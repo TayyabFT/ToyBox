@@ -41,7 +41,7 @@ function isActiveStatus(status?: string): boolean {
 type MaintenanceServiceModalProps = {
   vehicleId: string;
   open: boolean;
-  onClose: () => void;
+  onClose: (submitted?: boolean) => void;
 };
 
 function createInitialFormState(vehicleId: string): MaintenanceDetailsFormState {
@@ -77,6 +77,7 @@ export function MaintenanceServiceModal({
   const [statusData, setStatusData] = useState<MemberMaintenanceRequestStatusData | null>(null);
   const [isCancelling, setIsCancelling] = useState(false);
   const [cancelError, setCancelError] = useState<string | null>(null);
+  const [didSubmit, setDidSubmit] = useState(false);
 
   // Track the vehicleId we already checked so we don't repeat on re-renders
   const checkedForRef = useRef<string | null>(null);
@@ -129,17 +130,19 @@ export function MaintenanceServiceModal({
   // ── Reset on close ────────────────────────────────────────────────────────
 
   function handleClose() {
+    const wasSubmitted = didSubmit;
     setStep(1);
     setForm(createInitialFormState(vehicleId));
     setReferenceNumber("");
     setSubmitError(null);
     setIsSubmitting(false);
+    setDidSubmit(false);
     setActiveRequestId(null);
     setStatusData(null);
     setIsCancelling(false);
     setCancelError(null);
     checkedForRef.current = null;
-    onClose();
+    onClose(wasSubmitted);
   }
 
   // ── Form navigation ───────────────────────────────────────────────────────
@@ -177,6 +180,7 @@ export function MaintenanceServiceModal({
       );
 
       setReferenceNumber(resolveMaintenanceReferenceNumber(response.data));
+      setDidSubmit(true);
       setStep(3);
     } catch (error) {
       setSubmitError(
@@ -355,6 +359,7 @@ export function MaintenanceServiceModal({
             <MaintenanceServiceTrackRequestStep
               form={form}
               statusData={statusData}
+              onClose={handleClose}
             />
           )}
         </>

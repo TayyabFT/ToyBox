@@ -28,7 +28,7 @@ function createDraftSubtask(): DraftSubtask {
 
 function PanelShell({ children }: { children: React.ReactNode }) {
   return (
-    <section className="flex h-full flex-col rounded-2xl border border-[#D4A8471A] bg-surface p-5">
+    <section className="flex h-full flex-col rounded-2xl border border-accent/10 bg-surface p-5">
       {children}
     </section>
   );
@@ -87,7 +87,7 @@ export function StaffActiveJobDetailPanel({
     return (
       <PanelShell>
         <div
-          className="-mx-5 mb-4 space-y-2 border-b border-[#D4A8470F] px-5 pb-4"
+          className="-mx-5 mb-4 space-y-2 border-b border-accent/[0.06] px-5 pb-4"
           aria-busy="true"
           aria-live="polite"
         >
@@ -109,7 +109,7 @@ export function StaffActiveJobDetailPanel({
 
           <ShimmerBlock className="h-2 w-full rounded-full" />
 
-          <div className="space-y-3 rounded-xl border border-[#D4A8471A] bg-card p-4">
+          <div className="space-y-3 rounded-xl border border-accent/10 bg-card p-4">
             <ShimmerBlock className="h-2.5 w-20" />
             <ShimmerBlock className="h-3 w-40" />
           </div>
@@ -130,7 +130,7 @@ export function StaffActiveJobDetailPanel({
   if (!job) {
     return (
       <PanelShell>
-        <div className="-mx-5 mb-4 space-y-1 border-b border-[#D4A8470F] px-5 pb-4">
+        <div className="-mx-5 mb-4 space-y-1 border-b border-accent/[0.06] px-5 pb-4">
           <h3 className="font-copperplate text-sm font-normal tracking-[0.06em] text-primary uppercase">
             Active Job Detail
           </h3>
@@ -217,7 +217,7 @@ export function StaffActiveJobDetailPanel({
 
   return (
     <PanelShell>
-      <div className="-mx-5 mb-4 space-y-1 border-b border-[#D4A8470F] px-5 pb-4">
+      <div className="-mx-5 mb-4 space-y-1 border-b border-accent/[0.06] px-5 pb-4">
         <h3 className="font-copperplate text-sm font-normal tracking-[0.06em] text-primary uppercase">
           Active Job Detail
         </h3>
@@ -266,7 +266,7 @@ export function StaffActiveJobDetailPanel({
         ) : null}
 
         {job.pickup || job.dropoff ? (
-          <div className="space-y-3 rounded-xl border border-[#D4A8471A] bg-card p-4">
+          <div className="space-y-3 rounded-xl border border-accent/10 bg-card p-4">
             {job.pickup ? (
               <div className="space-y-1">
                 <p className="font-roboto text-[9px] tracking-[0.12em] text-primary uppercase">
@@ -459,7 +459,7 @@ export function StaffActiveJobDetailPanel({
             <h5 className="font-roboto text-[10px] tracking-[0.14em] text-secondary uppercase">
               Special Instructions
             </h5>
-            <div className="rounded-xl border border-[#D4A8471A] bg-card p-4">
+            <div className="rounded-xl border border-accent/10 bg-card p-4">
               <p className="font-roboto text-[11px] leading-relaxed tracking-[0.02em] text-secondary italic">
                 &ldquo;{job.specialInstructions}&rdquo;
               </p>

@@ -43,7 +43,7 @@ type TransportDeliveryModalProps = {
   vehicleId: string;
   vehicleName: string;
   open: boolean;
-  onClose: () => void;
+  onClose: (submitted?: boolean) => void;
 };
 
 export function TransportDeliveryModal({
@@ -57,18 +57,22 @@ export function TransportDeliveryModal({
   const [requestNumber, setRequestNumber] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  // Track whether a request was successfully submitted this session
+  const [didSubmit, setDidSubmit] = useState(false);
 
   function handleChange(patch: Partial<TransportDetailsFormState>) {
     setForm((current) => ({ ...current, ...patch }));
   }
 
   function handleClose() {
+    const wasSubmitted = didSubmit;
     setStep(1);
     setForm(INITIAL_FORM_STATE);
     setRequestNumber("");
     setSubmitError(null);
     setIsSubmitting(false);
-    onClose();
+    setDidSubmit(false);
+    onClose(wasSubmitted);
   }
 
   function handleEditRequest() {
@@ -98,6 +102,7 @@ export function TransportDeliveryModal({
       );
 
       setRequestNumber(resolveTransportRequestNumber(response.data));
+      setDidSubmit(true);
       setStep(3);
     } catch (error) {
       setSubmitError(

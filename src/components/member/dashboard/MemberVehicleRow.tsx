@@ -4,32 +4,32 @@ import type { MemberVehicleItem } from "@/components/member/dashboard/types";
 const statusConfig: Record<string, { label: string; badgeCls: string; dotCls?: string }> = {
   ready: {
     label: "READY",
-    badgeCls: "border-teal/60 bg-dark/70 text-teal",
+    badgeCls: "border-teal/60 bg-black/60 text-teal",
     dotCls: "bg-teal",
   },
   in_service: {
     label: "IN SERVICE",
-    badgeCls: "border-accent/60 bg-dark/70 text-accent",
+    badgeCls: "border-accent/60 bg-black/60 text-accent",
     dotCls: "bg-accent",
   },
   scheduled: {
     label: "SCHEDULED",
-    badgeCls: "border-accent/60 bg-dark/70 text-accent",
+    badgeCls: "border-accent/60 bg-black/60 text-accent",
     dotCls: "bg-accent",
   },
   stored: {
     label: "STORED",
-    badgeCls: "border-accent/50 bg-dark/70 text-accent",
+    badgeCls: "border-accent/50 bg-black/60 text-accent",
     dotCls: "bg-accent",
   },
   away: {
     label: "AWAY",
-    badgeCls: "border-accent/50 bg-dark/70 text-accent",
+    badgeCls: "border-accent/50 bg-black/60 text-accent",
     dotCls: "bg-accent",
   },
   in_review: {
     label: "IN REVIEW",
-    badgeCls: "border-pink/60 bg-dark/70 text-pink",
+    badgeCls: "border-pink/60 bg-black/60 text-pink",
     dotCls: "bg-pink",
   },
 };
@@ -169,7 +169,7 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
         <div>
           <h3 className="font-copperplate text-[15px] sm:text-[16px] leading-tight tracking-[0.05em] text-foreground uppercase">
             {brand}{" "}
-            <span className="text-accent">{model}</span>
+            <span className="text-foreground">{model}</span>
           </h3>
           {subInfo && (
             <p className="font-roboto mt-1 text-[9.5px] sm:text-[10px] tracking-[0.12em] text-secondary/70 uppercase">

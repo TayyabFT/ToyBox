@@ -72,15 +72,15 @@ export function ResendOtpModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
 
-      <div className="relative z-10 w-full max-w-md rounded-2xl border border-[#D4A84740] bg-[#11100C] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+      <div className="relative z-10 w-full max-w-md rounded-2xl border border-[#DCC69440] bg-[#121212] p-6 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-lg tracking-[0.06em] text-white uppercase">
+          <h2 className="font-copperplate text-lg tracking-[0.06em] text-[#F2EAD5] uppercase">
             Resend OTP
           </h2>
           <button
             type="button"
             onClick={handleClose}
-            className="cursor-pointer text-[#7D7460] transition-colors hover:text-white"
+            className="cursor-pointer text-[#7D7460] transition-colors hover:text-[#F2EAD5]"
           >
             ✕
           </button>
@@ -108,7 +108,7 @@ export function ResendOtpModal({
             type="button"
             onClick={handleResend}
             disabled={resendLoading}
-            className="mt-2 w-full cursor-pointer rounded-lg bg-[#C9A84C] py-3 text-sm font-roboto font-semibold tracking-[0.15em] text-[#1a1208] uppercase disabled:opacity-60"
+            className="mt-2 w-full cursor-pointer rounded-lg bg-[#DCC694] py-3 text-sm font-roboto font-semibold tracking-[0.15em] text-[#1a1208] uppercase disabled:opacity-60"
           >
             {resendLoading ? "Sending..." : "Resend OTP"}
           </button>

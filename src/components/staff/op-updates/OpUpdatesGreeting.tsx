@@ -19,7 +19,7 @@ export function OpUpdatesGreeting({
     <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
       <div className="space-y-3">
         <StaffShiftMeta split />
-        <h1 className="font-copperplate text-[32px] leading-tight">
+        <h1 className="font-copperplate text-[36px] leading-tight">
           <span className="text-foreground">Operational </span>
           <span className="text-primary">Updates</span>
         </h1>
