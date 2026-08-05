@@ -21,6 +21,8 @@ import type {
   MemberVehicleDocumentBadgeTone,
   MemberVehicleDocumentIconTone,
 } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 const iconToneStyles: Record<
   MemberVehicleDocumentIconTone,
@@ -49,10 +51,10 @@ const iconToneStyles: Record<
   },
 };
 
-const badgeToneClass: Record<MemberVehicleDocumentBadgeTone, string> = {
-  valid: "border-teal/30 bg-teal/10 text-teal",
-  expiring: "border-primary/30 bg-primary/10 text-primary",
-  expired: "border-pink/30 bg-pink/10 text-pink",
+const BADGE_TONE_MAP: Record<MemberVehicleDocumentBadgeTone, ChipTone> = {
+  valid:    "teal",
+  expiring: "gold",
+  expired:  "pink",
 };
 
 type VehicleDocumentsModalProps = {
@@ -108,11 +110,13 @@ function DocumentRow({ document, isSelected, onSelect }: DocumentRowProps) {
       </span>
 
       {document.badge ? (
-        <span
-          className={`font-roboto shrink-0 rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] uppercase ${badgeToneClass[document.badge.tone]}`}
-        >
-          {document.badge.label}
-        </span>
+        <Chip
+          label={document.badge.label}
+          context="inline"
+          tone={BADGE_TONE_MAP[document.badge.tone]}
+          shape="pill"
+          className="shrink-0"
+        />
       ) : null}
 
       <MemberGarageChevronRight

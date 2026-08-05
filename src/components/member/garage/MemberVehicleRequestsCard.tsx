@@ -15,6 +15,15 @@ import { ParkingModal } from "./parking/ParkingModal";
 import { TransportDeliveryModal } from "./transport-delivery/TransportDeliveryModal";
 import { VehicleSourcingModal } from "./vehicle-sourcing/VehicleSourcingModal";
 import type { MemberVehicleRecentRequest, MemberVehicleRequestItem } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
+
+const STATUS_TONE_MAP: Record<NonNullable<MemberVehicleRecentRequest["statusTone"]>, ChipTone> = {
+  completed:   "teal",
+  in_progress: "teal",
+  cancelled:   "pink",
+  pending:     "gold",
+};
 
 function RequestIcon({ icon }: { icon: MemberVehicleRequestItem["icon"] }) {
   const iconClass = icon === "sourcing" ? "size-5" : "size-[18px]";
@@ -71,20 +80,6 @@ function RequestRowContent({ request }: { request: MemberVehicleRequestItem }) {
   );
 }
 
-function getStatusBadgeStyle(tone?: MemberVehicleRecentRequest["statusTone"]) {
-  switch (tone) {
-    case "completed":
-      return "border-green-500/30 bg-green-500/10 text-green-400";
-    case "in_progress":
-      return "border-teal/30 bg-teal/10 text-teal";
-    case "cancelled":
-      return "border-pink/30 bg-pink/10 text-pink";
-    case "pending":
-    default:
-      return "border-gold/30 bg-gold/10 text-gold";
-  }
-}
-
 const REQUEST_TYPE_FALLBACK_TITLES: Record<string, string> = {
   transport: "Transport & Delivery",
   detailing: "Detailing & Wash",
@@ -120,7 +115,7 @@ function formatDisplaySubtitle(item: MemberVehicleRecentRequest): string {
 }
 
 function RecentRequestRow({ item }: { item: MemberVehicleRecentRequest }) {
-  const badgeStyle = getStatusBadgeStyle(item.statusTone);
+  const chipTone: ChipTone = STATUS_TONE_MAP[item.statusTone ?? "pending"] ?? "gold";
   const displayTitle = formatDisplayTitle(item);
   const displaySubtitle = formatDisplaySubtitle(item);
 
@@ -141,9 +136,12 @@ function RecentRequestRow({ item }: { item: MemberVehicleRecentRequest }) {
       </div>
 
       <div className="flex shrink-0 items-center gap-2">
-        <span className={`font-roboto rounded-full border px-2.5 py-0.5 text-[10px] font-medium uppercase tracking-wider ${badgeStyle}`}>
-          {item.status}
-        </span>
+        <Chip
+          label={item.status}
+          context="inline"
+          tone={chipTone}
+          shape="pill"
+        />
       </div>
     </div>
   );
@@ -253,9 +251,12 @@ export function MemberVehicleRequestsCard({
             Recent <span className="text-primary">Requests</span>
           </h3>
           {recentRequests.length > 0 && (
-            <span className="font-roboto text-[10px] font-medium text-secondary bg-accent/10 px-2 py-0.5 rounded-full">
-              {recentRequests.length}
-            </span>
+            <Chip
+              label={String(recentRequests.length)}
+              context="inline"
+              tone="neutral"
+              shape="pill"
+            />
           )}
         </div>
 

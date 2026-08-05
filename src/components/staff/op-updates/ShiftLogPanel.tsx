@@ -1,4 +1,5 @@
 import type { ShiftLogEntry } from "./types";
+import { Chip } from "@/components/ui/Chip";
 
 type ShiftLogPanelProps = {
   staffName: string;
@@ -46,9 +47,12 @@ export function ShiftLogPanel({
             </p>
           </div>
 
-          <span className="font-roboto rounded-full border border-accent/20 bg-elevated/50 px-2.5 py-0.5 text-[8px] font-semibold tracking-[0.12em] text-secondary uppercase">
-            {entries.length} {entries.length === 1 ? "Entry" : "Entries"}
-          </span>
+          <Chip
+            label={`${entries.length} ${entries.length === 1 ? "Entry" : "Entries"}`}
+            context="subtle"
+            tone="neutral"
+            shape="pill"
+          />
         </div>
       </div>
 
@@ -86,9 +90,12 @@ export function ShiftLogPanel({
                     className={`min-w-0 flex-1 rounded-xl border px-4 py-3 ${styles.card}`}
                   >
                     <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
-                      <time className="font-roboto rounded-md border border-accent/15 bg-surface/70 px-2 py-0.5 text-[8px] font-medium tracking-[0.1em] text-secondary uppercase">
-                        {entry.time}
-                      </time>
+                      <Chip
+                        label={entry.time}
+                        context="subtle"
+                        tone="neutral"
+                        shape="tag"
+                      />
                       {index === 0 ? (
                         <span className="font-roboto text-[7px] font-semibold tracking-[0.12em] text-secondary uppercase">
                           Latest

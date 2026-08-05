@@ -264,7 +264,7 @@ export function MarketplacePage() {
           type="button"
           id="add-sourcing-request-btn"
           onClick={() => setSourcingOpen(true)}
-          className="font-roboto inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-all hover:bg-accent/90 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] active:scale-[0.97] sm:w-auto sm:shrink-0 sm:justify-start"
+          className="font-roboto inline-flex w-full items-center justify-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-all hover:bg-accent/90 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] active:scale-[0.97] sm:w-auto sm:shrink-0 sm:justify-start cursor-pointer"
         >
           <svg
             width="13"

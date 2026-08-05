@@ -17,28 +17,22 @@ export function MemberGarageHeader({ onAddVehicleClick }: MemberGarageHeaderProp
       <button
         type="button"
         onClick={onAddVehicleClick}
-        className="garage-add-vehicle-btn font-roboto shrink-0 cursor-pointer rounded-full px-5 py-2.5 text-[10px] font-semibold tracking-[0.18em] uppercase sm:px-7 sm:py-3"
+        className="font-roboto inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-black transition-all hover:bg-accent/90 hover:shadow-[0_4px_20px_rgba(0,0,0,0.25)] active:scale-[0.97] sm:px-7 sm:py-3"
       >
-        <span className="garage-add-vehicle-btn__shimmer" aria-hidden="true" />
-        <span className="relative flex items-center gap-2">
-          <svg
-            width="12"
-            height="12"
-            viewBox="0 0 12 12"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <path
-              d="M6 1v10M1 6h10"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
-          Add Vehicle
-        </span>
+        <svg
+          width="13"
+          height="13"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M12 5v14M5 12h14" />
+        </svg>
+        Add Vehicle
       </button>
     </div>
   );

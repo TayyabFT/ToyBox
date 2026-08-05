@@ -1,9 +1,15 @@
-type StatusPillTone = "red" | "green" | "gold";
+// StatusPill — dot + label pill used in section headers and overview panels.
+// Delegates to the central Chip component.
 
-const toneClass: Record<StatusPillTone, string> = {
-  red: "border-pink/28 bg-pink/8 text-pink",
-  green: "border-teal/28 bg-teal/8 text-teal",
-  gold: "border-accent/28 bg-accent/8 text-primary",
+import { Chip } from "./Chip";
+import type { ChipTone } from "./Chip";
+
+export type StatusPillTone = "red" | "green" | "gold";
+
+const TONE_MAP: Record<StatusPillTone, ChipTone> = {
+  red:   "pink",
+  green: "teal",
+  gold:  "gold",
 };
 
 type StatusPillProps = {
@@ -13,11 +19,12 @@ type StatusPillProps = {
 
 export function StatusPill({ label, tone }: StatusPillProps) {
   return (
-    <span
-      className={`font-roboto inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-medium tracking-[0.08em] uppercase ${toneClass[tone]}`}
-    >
-      <span className="size-1.5 rounded-full bg-current" />
-      {label}
-    </span>
+    <Chip
+      label={label}
+      context="inline"
+      tone={TONE_MAP[tone]}
+      shape="pill"
+      showDot
+    />
   );
 }

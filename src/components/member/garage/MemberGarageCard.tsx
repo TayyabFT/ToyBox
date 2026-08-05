@@ -2,13 +2,15 @@ import Link from "next/link";
 import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import { resolveAssetUrl } from "@/lib/resolveAssetUrl";
 import type { GarageVehicle, GarageVehicleStatusTone } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
-const statusToneClass: Record<GarageVehicleStatusTone, string> = {
-  ready:      "border-teal/60 bg-teal/25 text-teal",
-  in_service: "border-accent/60 bg-accent/25 text-accent",
-  away:       "border-accent/50 bg-dark/85 text-accent backdrop-blur-sm",
-  stored:     "border-accent/50 bg-dark/85 text-accent backdrop-blur-sm",
-  in_review:  "border-pink/60 bg-pink/20 text-pink backdrop-blur-sm",
+const STATUS_TO_TONE: Record<GarageVehicleStatusTone, ChipTone> = {
+  ready:      "teal",
+  in_service: "gold",
+  away:       "gold",
+  stored:     "gold",
+  in_review:  "pink",
 };
 
 type MemberGarageCardProps = {
@@ -45,18 +47,24 @@ export function MemberGarageCard({ vehicle }: MemberGarageCardProps) {
         )}
 
         {vehicle.statusLabel && (
-          <span
-            className={`font-roboto absolute left-3 top-3 flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] uppercase ${statusToneClass[vehicle.statusTone]}`}
-          >
-            <span className="size-1.5 rounded-full bg-current" />
-            {vehicle.statusLabel}
-          </span>
+          <Chip
+            label={vehicle.statusLabel}
+            context="overlay"
+            tone={STATUS_TO_TONE[vehicle.statusTone]}
+            shape="pill"
+            showDot
+            className="absolute left-3 top-3"
+          />
         )}
 
         {vehicle.bayLabel && (
-          <span className="font-roboto absolute right-3 top-3 rounded-full border border-foreground/20 bg-background/60 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-foreground/85 uppercase backdrop-blur-sm">
-            {vehicle.bayLabel}
-          </span>
+          <Chip
+            label={vehicle.bayLabel}
+            context="overlay"
+            tone="ghost"
+            shape="pill"
+            className="absolute right-3 top-3"
+          />
         )}
       </div>
 

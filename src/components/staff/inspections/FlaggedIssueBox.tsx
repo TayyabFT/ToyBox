@@ -1,4 +1,5 @@
 import { ActionCamera } from "@/components/common/Svgs";
+import { Chip } from "@/components/ui/Chip";
 
 type FlaggedIssueBoxProps = {
   tag: string;
@@ -16,12 +17,8 @@ export function FlaggedIssueBox({
   return (
     <section className="space-y-4 rounded-xl border border-pink/30 bg-pink/[0.04] p-4">
       <div className="flex flex-wrap items-center gap-2">
-        <span className="font-roboto rounded-full border border-pink/40 bg-pink/12 px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] text-pink uppercase">
-          1 Issue Flagged
-        </span>
-        <span className="font-roboto rounded-full border border-accent/20 bg-card px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] text-secondary uppercase">
-          {tag}
-        </span>
+        <Chip label="1 Issue Flagged" context="inline" tone="pink" shape="pill" />
+        <Chip label={tag} context="inline" tone="neutral" shape="pill" />
       </div>
 
       <textarea

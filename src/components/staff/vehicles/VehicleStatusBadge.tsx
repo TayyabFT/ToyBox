@@ -1,57 +1,39 @@
+// VehicleStatusBadge — delegates to the central Chip component.
+
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 import type { VehicleStatus } from "./types";
 
-const statusConfig: Record<
-  VehicleStatus,
-  { label: string; className: string }
-> = {
-  "in-service": {
-    label: "IN SERVICE",
-    className: "border-accent/28 bg-accent/10 text-accent",
-  },
-  ready: {
-    label: "READY",
-    className: "border-teal/47 bg-teal/10 text-teal",
-  },
-  overdue: {
-    label: "OVERDUE",
-    className: "border-pink/47 bg-pink/10 text-pink",
-  },
-  dispatched: {
-    label: "DISPATCHED",
-    className: "border-vehicle-blue/28 bg-vehicle-blue/10 text-vehicle-blue",
-  },
-  away: {
-    label: "AWAY",
-    className: "border-secondary/47 bg-secondary/10 text-secondary",
-  },
-  "in-progress": {
-    label: "In Progress",
-    className: "border-primary/45 bg-primary/10 text-primary",
-  },
-  pending: {
-    label: "Pending",
-    className: "border-secondary/30 bg-secondary/8 text-secondary",
-  },
-  done: {
-    label: "Done",
-    className: "border-teal/35 bg-teal/8 text-teal",
-  },
-  critical: {
-    label: "Critical",
-    className: "border-pink/47 bg-pink/10 text-pink",
-  },
-  "due-service": {
-    label: "Due Service",
-    className: "border-primary/45 bg-primary/10 text-primary",
-  },
-  good: {
-    label: "Good",
-    className: "border-teal/35 bg-teal/8 text-teal",
-  },
-  excellent: {
-    label: "Excellent",
-    className: "border-teal/47 bg-teal/12 text-teal",
-  },
+const STATUS_TONE: Record<VehicleStatus, ChipTone> = {
+  "in-service":  "gold",
+  ready:         "teal",
+  overdue:       "pink",
+  dispatched:    "info",
+  away:          "neutral",
+  "in-progress": "gold",
+  pending:       "neutral",
+  done:          "teal",
+  critical:      "pink",
+  "due-service": "gold",
+  good:          "teal",
+  excellent:     "teal",
+  reserved:      "info",
+};
+
+const STATUS_LABEL: Record<VehicleStatus, string> = {
+  "in-service":  "IN SERVICE",
+  ready:         "READY",
+  overdue:       "OVERDUE",
+  dispatched:    "DISPATCHED",
+  away:          "AWAY",
+  "in-progress": "In Progress",
+  pending:       "Pending",
+  done:          "Done",
+  critical:      "Critical",
+  "due-service": "Due Service",
+  good:          "Good",
+  excellent:     "Excellent",
+  reserved:      "RESERVED",
 };
 
 type VehicleStatusBadgeProps = {
@@ -59,14 +41,13 @@ type VehicleStatusBadgeProps = {
 };
 
 export function VehicleStatusBadge({ status }: VehicleStatusBadgeProps) {
-  const config = statusConfig[status];
-
   return (
-    <span
-      className={`font-roboto inline-flex shrink-0 items-center gap-1 rounded-full border px-2 py-0.5 text-[8px] font-medium tracking-[0.08em] uppercase ${config.className}`}
-    >
-      <span className="size-1 rounded-full bg-current" />
-      {config.label}
-    </span>
+    <Chip
+      label={STATUS_LABEL[status] ?? status}
+      context="inline"
+      tone={STATUS_TONE[status] ?? "neutral"}
+      shape="pill"
+      showDot
+    />
   );
 }

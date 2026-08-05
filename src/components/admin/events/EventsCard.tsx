@@ -5,6 +5,7 @@ import { isApiError, isNetworkFailure } from "@/lib/apiError";
 import { toResourceId } from "@/lib/resourceId";
 import { EventCardSkeletonGrid } from "./EventCardSkeleton";
 import { EventsEmptyState } from "./EventsEmptyState";
+import { Chip } from "@/components/ui/Chip";
 
 function isPublishedEventStatus(status: string) {
   return status === "published" || status === "confirmed";
@@ -175,22 +176,28 @@ export function EventsCard({ onManageClick, refreshTrigger = 0, onEventUpdated }
                   className="w-full h-full object-cover opacity-80"
                 />
                 <div className="absolute top-4 left-4 flex flex-wrap gap-1.5 items-center">
-                  <span className={`bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border ${
-                    isPublishedEventStatus(event.status)
-                      ? "text-teal border-teal/30"
-                      : "text-accent border-accent/20"
-                  }`}>
-                    {event.tag}
-                  </span>
+                  <Chip
+                    label={event.tag}
+                    context="overlay"
+                    tone={isPublishedEventStatus(event.status) ? "teal" : "gold"}
+                    shape="pill"
+                  />
                   {event.hasEligibility && (
-                    <span className="bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-widest px-3 py-1 rounded-full border text-pink border-pink/30">
-                      RESTRICTED
-                    </span>
+                    <Chip
+                      label="RESTRICTED"
+                      context="overlay"
+                      tone="pink"
+                      shape="pill"
+                    />
                   )}
                 </div>
-                <span className="absolute bottom-4 right-4 bg-card/90 backdrop-blur-md text-[10px] font-bold tracking-wider text-foreground px-3 py-1 rounded-full border border-accent/12">
-                  {event.confirmedCount} / {event.totalCount} CONFIRMED
-                </span>
+                <Chip
+                  label={`${event.confirmedCount} / ${event.totalCount} CONFIRMED`}
+                  context="overlay"
+                  tone="neutral"
+                  shape="pill"
+                  className="absolute bottom-4 right-4"
+                />
               </div>
 
               {/* Bottom Content Area */}

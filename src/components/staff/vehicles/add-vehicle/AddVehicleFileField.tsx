@@ -23,7 +23,7 @@ export function AddVehicleFileField({
       </label>
 
       <div
-        className={`flex overflow-hidden rounded-xl border bg-input-muted ${
+        className={`flex overflow-hidden rounded-xl border bg-elevated ${
           error ? "border-red-500" : "border-accent/15"
         }`}
       >

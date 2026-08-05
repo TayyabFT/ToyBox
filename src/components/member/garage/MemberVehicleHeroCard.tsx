@@ -5,13 +5,15 @@ import { MemberGarageChevronRight } from "@/components/common/Svgs";
 import { VehicleDocumentsModal } from "./VehicleDocumentsModal";
 import { resolveAssetUrl } from "@/lib/resolveAssetUrl";
 import type { GarageVehicleStatusTone, MemberVehicleDetail } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
-const statusToneClass: Record<GarageVehicleStatusTone, string> = {
-  ready: "border-teal/30 bg-teal/10 text-teal",
-  in_service: "border-pink/30 bg-pink/10 text-pink",
-  away: "border-accent/25 bg-accent/8 text-secondary",
-  stored: "border-accent/20 bg-accent/6 text-foreground-soft",
-  in_review: "border-info/30 bg-info/10 text-info",
+const STATUS_TO_TONE: Record<GarageVehicleStatusTone, ChipTone> = {
+  ready:      "teal",
+  in_service: "pink",
+  away:       "gold",
+  stored:     "gold",
+  in_review:  "info",
 };
 
 type MemberVehicleHeroCardProps = {
@@ -41,18 +43,24 @@ export function MemberVehicleHeroCard({ vehicle, onDocumentUploaded }: MemberVeh
           )}
 
           {vehicle.statusLabel && (
-            <span
-              className={`font-roboto absolute left-3 top-3 flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] uppercase ${statusToneClass[vehicle.statusTone]}`}
-            >
-              <span className="size-1.5 rounded-full bg-current" />
-              {vehicle.statusLabel}
-            </span>
+            <Chip
+              label={vehicle.statusLabel}
+              context="overlay"
+              tone={STATUS_TO_TONE[vehicle.statusTone]}
+              shape="pill"
+              showDot
+              className="absolute left-3 top-3"
+            />
           )}
 
           {vehicle.bayLabel && (
-            <span className="font-roboto absolute right-3 top-3 rounded-full border border-foreground/20 bg-background/60 px-2.5 py-1 text-[9px] font-semibold tracking-[0.16em] text-foreground/85 uppercase backdrop-blur-sm">
-              {vehicle.bayLabel}
-            </span>
+            <Chip
+              label={vehicle.bayLabel}
+              context="overlay"
+              tone="ghost"
+              shape="pill"
+              className="absolute right-3 top-3"
+            />
           )}
         </div>
 
@@ -97,7 +105,7 @@ export function MemberVehicleHeroCard({ vehicle, onDocumentUploaded }: MemberVeh
               <button
                 type="button"
                 onClick={() => setIsDocumentsOpen(true)}
-                className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-3 sm:px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8"
+                className="font-roboto flex shrink-0 items-center gap-1 rounded-full border border-accent/25 bg-accent/8 px-3 sm:px-4 py-2 text-[9px] font-semibold tracking-[0.14em] text-primary uppercase transition-colors hover:border-primary/40 hover:bg-accent/8 cursor-pointer"
               >
                 View Document
                 <MemberGarageChevronRight className="size-[10px]" color="currentColor" />

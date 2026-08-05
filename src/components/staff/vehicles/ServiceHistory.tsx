@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { ServiceHistoryEntry } from "./types";
+import { Chip } from "@/components/ui/Chip";
 
 const DEFAULT_PREVIEW_LIMIT = 3;
 
@@ -32,9 +33,12 @@ export function ServiceHistory({
             Service History
           </h3>
           {entries.length > 0 ? (
-            <span className="font-roboto rounded-full border border-primary/25 bg-primary/8 px-2.5 py-0.5 text-[8px] font-semibold tracking-[0.12em] text-primary uppercase">
-              {entries.length} {entries.length === 1 ? "Record" : "Records"}
-            </span>
+            <Chip
+              label={`${entries.length} ${entries.length === 1 ? "Record" : "Records"}`}
+              context="inline"
+              tone="gold"
+              shape="pill"
+            />
           ) : null}
         </div>
 

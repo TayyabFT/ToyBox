@@ -31,6 +31,7 @@ const STATUS_LABELS: Record<VehicleStatus, string> = {
   "due-service": "DUE SERVICE",
   good: "GOOD",
   excellent: "EXCELLENT",
+  reserved: "RESERVED",
 };
 
 const METRIC_TONE_RGB = {

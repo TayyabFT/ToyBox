@@ -291,7 +291,7 @@ export function VehicleSourcingModal({
       stepper={
         isLanding || isTracking
           ? undefined
-          : <RequestStepper currentStep={step - 1} />
+          : <RequestStepper currentStep={step} />
       }
       footer={footer}
     >

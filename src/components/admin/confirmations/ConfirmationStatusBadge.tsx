@@ -1,21 +1,30 @@
+// ConfirmationStatusBadge — delegates to the central Chip component.
+// DoneStatusBadge kept as a named export for backwards compatibility.
+
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 import type { ConfirmationBadgeTone } from "./types";
 
-const badgeClass: Record<ConfirmationBadgeTone, string> = {
-  confirmed: "border-teal/50 bg-transparent text-teal",
-  pending: "border-accent/50 bg-transparent text-accent",
-  "in-review": "border-info/55 bg-info/10 text-info",
-  awaiting: "border-accent/50 bg-transparent text-accent",
-  "sign-off": "border-accent/50 bg-transparent text-accent",
-  done: "border-teal/55 bg-card text-teal shadow-[var(--shadow-glow-teal)]",
+const TONE_MAP: Record<ConfirmationBadgeTone, ChipTone> = {
+  confirmed:  "teal",
+  pending:    "gold",
+  "in-review": "info",
+  awaiting:   "gold",
+  "sign-off": "gold",
+  done:       "teal",
 };
 
-const labelMap: Record<ConfirmationBadgeTone, string> = {
-  confirmed: "Confirmed",
-  pending: "Pending",
+const LABEL_MAP: Record<ConfirmationBadgeTone, string> = {
+  confirmed:  "Confirmed",
+  pending:    "Pending",
   "in-review": "In Review",
-  awaiting: "No Vehicle Offer",
+  awaiting:   "No Vehicle Offer",
   "sign-off": "No Vehicle Offer",
-  done: "Done",
+  done:       "Done",
+};
+
+const SHOW_DOT: Partial<Record<ConfirmationBadgeTone, boolean>> = {
+  done: true,
 };
 
 type ConfirmationStatusBadgeProps = {
@@ -25,19 +34,25 @@ type ConfirmationStatusBadgeProps = {
 
 export function ConfirmationStatusBadge({ tone, label }: ConfirmationStatusBadgeProps) {
   return (
-    <span
-      className={`font-roboto inline-flex shrink-0 rounded-full border px-3 py-1 text-[9px] font-bold tracking-[0.1em] uppercase ${badgeClass[tone]}`}
-    >
-      {label ?? labelMap[tone]}
-    </span>
+    <Chip
+      label={label ?? LABEL_MAP[tone]}
+      context="inline"
+      tone={TONE_MAP[tone]}
+      shape="pill"
+      showDot={SHOW_DOT[tone] ?? false}
+    />
   );
 }
 
+// Kept for call-sites that use <DoneStatusBadge /> directly.
 export function DoneStatusBadge() {
   return (
-    <span className="font-roboto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-teal/55 bg-card px-3 py-1 text-[9px] font-bold tracking-[0.1em] text-teal uppercase shadow-[var(--shadow-glow-teal)]">
-      <span className="size-1.5 rounded-full bg-teal shadow-[var(--shadow-glow-teal-strong)]" />
-      Done
-    </span>
+    <Chip
+      label="Done"
+      context="inline"
+      tone="teal"
+      shape="pill"
+      showDot
+    />
   );
 }

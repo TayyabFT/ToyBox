@@ -4,6 +4,8 @@ import { CaptureCameraIcon, FilterIcon, FlagIcon, SyncIcon } from "./icons";
 import { CheckIcon } from "./icons";
 import { ShimmerBlock } from "@/components/common/ShimmerBlock";
 import type { RecentUpload, UploadState } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 function UploadRowSkeleton() {
   return (
@@ -27,28 +29,12 @@ type RecentUploadsProps = {
 
 const stateConfig: Record<
   UploadState,
-  { label: string; className: string; icon: "sync" | "flag" | "check" | "dot" }
+  { label: string; tone: ChipTone; icon: "sync" | "flag" | "check" | "dot" }
 > = {
-  synced: {
-    label: "Synced",
-    className: "border-teal/28 bg-teal/8 text-teal",
-    icon: "sync",
-  },
-  flagged: {
-    label: "Flagged",
-    className: "border-primary/30 bg-primary/10 text-primary",
-    icon: "flag",
-  },
-  pending: {
-    label: "Pending",
-    className: "border-pink/28 bg-pink/10 text-pink",
-    icon: "dot",
-  },
-  approved: {
-    label: "Approved",
-    className: "border-teal/28 bg-teal/8 text-teal",
-    icon: "check",
-  },
+  synced:   { label: "Synced",   tone: "teal",    icon: "sync"  },
+  flagged:  { label: "Flagged",  tone: "gold",    icon: "flag"  },
+  pending:  { label: "Pending",  tone: "pink",    icon: "dot"   },
+  approved: { label: "Approved", tone: "teal",    icon: "check" },
 };
 
 export function RecentUploads({
@@ -134,15 +120,20 @@ function UploadRow({
         </p>
       </div>
 
-      <span
-        className={`font-roboto flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] uppercase ${config.className}`}
-      >
-        {config.icon === "sync" && <SyncIcon className="size-2.5" />}
-        {config.icon === "flag" && <FlagIcon className="size-2.5" />}
-        {config.icon === "check" && <CheckIcon className="size-2.5" />}
-        {config.icon === "dot" && <span className="size-1.5 rounded-full bg-current" />}
-        {config.label}
-      </span>
+      <Chip
+        label={config.label}
+        context="inline"
+        tone={config.tone}
+        shape="pill"
+        icon={
+          config.icon === "sync"  ? <SyncIcon className="size-2.5" /> :
+          config.icon === "flag"  ? <FlagIcon className="size-2.5" /> :
+          config.icon === "check" ? <CheckIcon className="size-2.5" /> :
+          undefined
+        }
+        showDot={config.icon === "dot"}
+        className="shrink-0"
+      />
     </button>
   );
 }

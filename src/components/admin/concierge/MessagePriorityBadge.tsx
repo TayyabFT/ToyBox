@@ -1,17 +1,21 @@
+// MessagePriorityBadge — delegates to the central Chip component.
+
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 import type { MessagePriorityTag } from "./types";
 
-const tagClass: Record<MessagePriorityTag, string> = {
-  urgent: "border-pink/25 bg-pink/10 text-pink",
-  private: "border-accent/25 bg-accent/10 text-accent",
-  high: "border-accent/25 bg-accent/10 text-accent",
-  normal: "border-teal/25 bg-teal/10 text-teal",
+const TONE_MAP: Record<MessagePriorityTag, ChipTone> = {
+  urgent:  "pink",
+  private: "gold",
+  high:    "gold",
+  normal:  "teal",
 };
 
-const labelMap: Record<MessagePriorityTag, string> = {
-  urgent: "Urgent",
+const LABEL_MAP: Record<MessagePriorityTag, string> = {
+  urgent:  "Urgent",
   private: "Private",
-  high: "High",
-  normal: "Normal",
+  high:    "High",
+  normal:  "Normal",
 };
 
 type MessagePriorityBadgeProps = {
@@ -20,10 +24,11 @@ type MessagePriorityBadgeProps = {
 
 export function MessagePriorityBadge({ tag }: MessagePriorityBadgeProps) {
   return (
-    <span
-      className={`font-roboto inline-flex rounded-full border px-2.5 py-0.5 text-[8px] font-semibold tracking-[0.08em] uppercase ${tagClass[tag]}`}
-    >
-      {labelMap[tag]}
-    </span>
+    <Chip
+      label={LABEL_MAP[tag]}
+      context="inline"
+      tone={TONE_MAP[tag]}
+      shape="pill"
+    />
   );
 }

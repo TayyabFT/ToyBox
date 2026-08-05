@@ -6,6 +6,7 @@ import { buildClubStatusLine } from "@/lib/memberDashboard";
 import type { ClubhouseAreaSection, ClubhouseSpaceCardRaw } from "@/types/api";
 import type { MemberClubVenue } from "@/components/member/dashboard/types";
 import { ReservationModal } from "./ReservationModal";
+import { Chip } from "@/components/ui/Chip";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -63,7 +64,7 @@ function CategoryPill({ label, active, onClick }: { label: string; active: boole
   return (
     <button
       onClick={onClick}
-      className={`font-Roboto whitespace-nowrap rounded-full border px-3.5 py-1 text-[10px] font-semibold tracking-[0.14em] uppercase transition-all ${
+      className={`font-Roboto whitespace-nowrap rounded-full border px-3.5 py-1 text-[10px] font-semibold tracking-[0.14em] uppercase transition-all cursor-pointer ${
         active
           ? "border-accent bg-accent/10 text-accent"
           : "border-accent/15 text-secondary/60 hover:border-accent/30 hover:text-secondary"
@@ -104,9 +105,13 @@ function AreaSection({
           <p className="font-Roboto text-[11px] text-secondary/55">{section.description}</p>
         </div>
         {section.count > 0 && (
-          <span className="font-Roboto mt-1 shrink-0 rounded-full border border-accent/20 bg-accent/5 px-2.5 py-0.5 text-[10px] font-semibold tracking-[0.12em] text-accent/80 uppercase">
-            {section.count} {section.count === 1 ? "Space" : "Spaces"}
-          </span>
+          <Chip
+            label={`${section.count} ${section.count === 1 ? "Space" : "Spaces"}`}
+            context="inline"
+            tone="gold"
+            shape="pill"
+            className="mt-1 shrink-0"
+          />
         )}
       </div>
 
@@ -165,7 +170,7 @@ function SpaceCard({
     <button
       type="button"
       onClick={onBook}
-      className="group relative block w-full overflow-hidden rounded-[18px] text-left"
+      className="group relative block w-full overflow-hidden rounded-[18px] text-left cursor-pointer"
     >
       <div className="relative h-[220px] w-full bg-surface sm:h-[300px]">
         {image ? (
@@ -189,17 +194,25 @@ function SpaceCard({
 
         {/* Status badge */}
         {space.statusLabel && (
-          <span className="font-Roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/75 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
-            <span className="size-1.5 rounded-full bg-accent" />
-            {space.statusLabel}
-          </span>
+          <Chip
+            label={space.statusLabel}
+            context="overlay"
+            tone="gold"
+            shape="pill"
+            showDot
+            className="absolute right-3.5 top-3.5"
+          />
         )}
 
         {/* Sub-category badge */}
         {space.type && (
-          <span className="font-Roboto absolute left-3.5 top-3.5 rounded-lg border border-white/10 bg-black/70 px-2 py-1 text-[9px] tracking-[0.1em] text-white/75 uppercase backdrop-blur-sm">
-            {space.type}
-          </span>
+          <Chip
+            label={space.type}
+            context="overlay"
+            tone="ghost"
+            shape="tag"
+            className="absolute left-3.5 top-3.5"
+          />
         )}
 
         {/* Bottom info */}

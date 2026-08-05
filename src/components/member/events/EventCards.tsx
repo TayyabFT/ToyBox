@@ -3,14 +3,8 @@
 import { useState } from "react";
 import type { EventItem } from "./types";
 import { AttendeeAvatarStack } from "@/components/member/common/AttendeeAvatarStack";
-
-// ── Tag tone → Tailwind classes using CSS vars ─────────────────────────────
-
-const TAG_TONE: Record<string, string> = {
-  gold: "border border-accent/60 bg-dark/90 text-accent",
-  teal: "border border-teal/55 bg-dark/70 text-teal",
-  pink: "border border-pink/55 bg-dark/70 text-pink",
-};
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 function AvatarStack({ count, names, initials }: { count: number; names?: string[]; initials?: string[] }) {
   return (
@@ -92,10 +86,14 @@ export function EventsFeaturedCard({
           ) : (
             <EventImagePlaceholder title={event.title} />
           )}
-          {/* Tag pill – top-left */}
-          <span className="font-Roboto absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-[10px] font-bold tracking-[0.18em] text-dark uppercase">
-            {event.tag}
-          </span>
+          {/* Tag chip – top-left */}
+          <Chip
+            label={event.tag}
+            context="overlay"
+            tone={(event.tagTone as ChipTone) ?? "gold"}
+            shape="pill"
+            className="absolute left-3 top-3"
+          />
         </div>
 
         {/* ── Right: info panel ──────────────────────────────────────── */}
@@ -172,8 +170,8 @@ export function EventsFeaturedCard({
                   onClick={() => onRsvpToggle?.(event.id, event.userStatus ?? null)}
                   className={
                     event.userStatus === "going"
-                      ? "font-Roboto flex items-center gap-1.5 rounded-full bg-accent px-5 py-[9px] text-[12px] font-bold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-60"
-                      : "font-Roboto rounded-full border border-primary/35 bg-primary/10 px-5 py-[9px] text-[11px] font-bold tracking-[0.1em] text-primary uppercase transition-colors hover:bg-primary/18 disabled:opacity-60"
+                      ? "font-Roboto flex items-center gap-1.5 rounded-full bg-accent px-5 py-[9px] text-[12px] font-bold tracking-[0.1em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-60 cursor-pointer"
+                      : "font-Roboto rounded-full border border-primary/35 bg-primary/10 px-5 py-[9px] text-[11px] font-bold tracking-[0.1em] text-primary uppercase transition-colors hover:bg-primary/18 disabled:opacity-60 cursor-pointer"
                   }
                 >
                   {rsvpLoading ? (
@@ -205,7 +203,7 @@ export function EventsFeaturedCard({
                     e.stopPropagation();
                     onFavoriteToggle?.(event.id, event.isFavorite ?? false);
                   }}
-                  className={`flex size-10 items-center justify-center rounded-full border-[1.5px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`flex size-10 items-center justify-center rounded-full border-[1.5px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${
                     event.isFavorite
                       ? "border-primary/60 bg-primary/10 text-primary"
                       : "border-primary/25 bg-elevated text-secondary hover:border-primary/40 hover:text-primary"
@@ -238,7 +236,6 @@ export function EventsFeaturedCard({
 // ── Grid Card ─────────────────────────────────────────────────────────────────
 
 export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onClick }: CardProps) {
-  const tagClass = TAG_TONE[event.tagTone] ?? TAG_TONE.gold;
   const [imageError, setImageError] = useState(false);
 
   const gridTimeRange = (() => {
@@ -281,12 +278,14 @@ export function EventsGridCard({ event, rsvpLoading = false, onRsvpToggle, onCli
               "linear-gradient(to top, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.12) 50%, rgba(0,0,0,0) 100%)",
           }}
         />
-        {/* Tag pill */}
-        <span
-          className={`font-Roboto absolute left-3 top-3 rounded-full px-3 py-1 text-[9px] font-bold tracking-[0.16em] uppercase ${tagClass}`}
-        >
-          {event.tag}
-        </span>
+        {/* Tag chip */}
+        <Chip
+          label={event.tag}
+          context="overlay"
+          tone={(event.tagTone as ChipTone) ?? "gold"}
+          shape="pill"
+          className="absolute left-3 top-3"
+        />
       </div>
 
       {/* Info */}

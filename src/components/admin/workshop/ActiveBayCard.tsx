@@ -1,13 +1,14 @@
 import type { ActiveBayItem } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
-const statusBadgeClass = {
-  overdue: "border-pink/35 bg-pink/10 text-pink",
-  active: "border-teal/35 bg-teal/10 text-teal",
-  "final-check": "border-teal/35 bg-teal/10 text-teal",
-  "in-transit": "border-accent/35 bg-accent/10 text-accent",
-  "track-repairs":
-    "border-[var(--tag-purple)]/35 bg-[var(--tag-purple)]/10 text-[var(--tag-purple)]",
-} as const;
+const STATUS_TONE: Record<string, ChipTone> = {
+  overdue:        "pink",
+  active:         "teal",
+  "final-check":  "teal",
+  "in-transit":   "gold",
+  "track-repairs": "purple",
+};
 
 const timeToneClass = {
   pink: "text-pink",
@@ -28,11 +29,12 @@ export function ActiveBayCard({ bay }: ActiveBayCardProps) {
         <p className="font-roboto text-[10px] font-semibold tracking-[0.16em] text-accent uppercase">
           {bay.bay}
         </p>
-        <span
-          className={`font-roboto rounded-full border px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.1em] uppercase ${statusBadgeClass[bay.status]}`}
-        >
-          {bay.statusLabel}
-        </span>
+        <Chip
+          label={bay.statusLabel}
+          context="inline"
+          tone={STATUS_TONE[bay.status] ?? "neutral"}
+          shape="pill"
+        />
       </div>
 
       <div className="mb-3 space-y-1.5">

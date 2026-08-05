@@ -1,6 +1,8 @@
 "use client";
 
 import type { MarketplaceListingView } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 type Props = {
   listing: MarketplaceListingView;
@@ -9,18 +11,6 @@ type Props = {
   onPurchase: (id: string | number) => void;
   onFavoriteToggle: (id: string | number, current: boolean) => void;
   onClick: () => void;
-};
-
-const statusBg: Record<string, string> = {
-  teal: "border-teal/30 bg-teal/10 text-teal",
-  gold: "border-accent/30 bg-accent/10 text-accent",
-  pink: "border-pink/30 bg-pink/10 text-pink",
-};
-
-const statusDot: Record<string, string> = {
-  teal: "bg-teal",
-  gold: "bg-accent",
-  pink: "bg-pink",
 };
 
 export function MarketplaceFeaturedCard({
@@ -85,10 +75,14 @@ export function MarketplaceFeaturedCard({
               </svg>
             </div>
           )}
-          {/* FEATURED label over image */}
-          <span className="font-roboto absolute left-4 top-4 rounded-md border border-accent/40 bg-black/55 px-2.5 py-1 text-[8px] font-semibold tracking-[0.18em] text-accent uppercase backdrop-blur-sm">
-            FEATURED
-          </span>
+          {/* FEATURED chip over image */}
+          <Chip
+            label="FEATURED"
+            context="overlay"
+            tone="gold"
+            shape="tag"
+            className="absolute left-4 top-4"
+          />
         </button>
 
         {/* Info side */}
@@ -106,12 +100,14 @@ export function MarketplaceFeaturedCard({
                   {listing.displayTitle}
                 </h2>
               </div>
-              <span
-                className={`font-roboto mt-1 inline-flex shrink-0 items-center gap-1.5 rounded-full border px-2.5 py-1 text-[8px] font-semibold tracking-[0.14em] uppercase ${statusBg[tone]}`}
-              >
-                <span className={`size-1.5 rounded-full ${statusDot[tone]}`} />
-                {statusLabel.toUpperCase()}
-              </span>
+              <Chip
+                label={statusLabel.toUpperCase()}
+                context="inline"
+                tone={tone as ChipTone}
+                shape="pill"
+                showDot
+                className="mt-1 shrink-0"
+              />
             </div>
 
             {listing.description && (
@@ -127,12 +123,13 @@ export function MarketplaceFeaturedCard({
               {[listing.engineType, listing.transmission, listing.fuelType, listing.power]
                 .filter(Boolean)
                 .map((val) => (
-                  <span
+                  <Chip
                     key={val}
-                    className="font-roboto rounded-md border border-accent/12 bg-elevated px-2 py-0.5 text-[9px] tracking-[0.08em] text-secondary/65 uppercase"
-                  >
-                    {val}
-                  </span>
+                    label={val!}
+                    context="subtle"
+                    tone="neutral"
+                    shape="tag"
+                  />
                 ))}
             </div>
           )}
@@ -169,7 +166,7 @@ export function MarketplaceFeaturedCard({
             <button
               type="button"
               onClick={onClick}
-              className="font-roboto rounded-full border border-accent/25 px-5 py-2.5 text-[11px] font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:border-accent/50 hover:bg-accent/5"
+              className="font-roboto cursor-pointer rounded-full border border-accent/25 px-5 py-2.5 text-[11px] font-semibold tracking-[0.14em] text-accent uppercase transition-colors hover:border-accent/50 hover:bg-accent/5"
             >
               View Details
             </button>
@@ -183,7 +180,7 @@ export function MarketplaceFeaturedCard({
                 }
               }}
               aria-label={listing.isFavorited ? "Remove from saved" : "Save"}
-              className="flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/15 text-secondary/40 transition-colors hover:border-accent/30 hover:text-accent disabled:opacity-40"
+              className="flex size-9 shrink-0 items-center justify-center rounded-full border border-accent/15 text-secondary/40 transition-colors hover:border-accent/30 hover:text-accent disabled:opacity-40 cursor-pointer"
             >
               <svg
                 width="16"

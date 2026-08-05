@@ -250,7 +250,7 @@ export function MarketplaceDetailModal({
                 onClick={() => {
                   if (listing.id != null) onPurchase(listing.id);
                 }}
-                className="font-roboto flex-1 rounded-full bg-accent py-3 text-[11px] font-semibold tracking-[0.14em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-50"
+                className="font-roboto flex-1 rounded-full bg-accent py-3 text-[11px] font-semibold tracking-[0.14em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-50 cursor-pointer"
               >
                 {purchaseLoading ? "Submitting…" : "Express Interest"}
               </button>
@@ -262,7 +262,7 @@ export function MarketplaceDetailModal({
             <button
               type="button"
               onClick={onClose}
-              className="font-roboto rounded-full border border-accent/20 px-5 py-3 text-[11px] font-semibold tracking-[0.14em] text-secondary uppercase transition-colors hover:border-accent/40 hover:text-foreground"
+              className="font-roboto rounded-full border border-accent/20 px-5 py-3 text-[11px] font-semibold tracking-[0.14em] text-secondary uppercase transition-colors hover:border-accent/40 hover:text-foreground cursor-pointer"
             >
               Close
             </button>

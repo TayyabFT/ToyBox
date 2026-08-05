@@ -264,7 +264,7 @@ export function UploadDocumentModal({
                 type="button"
                 onClick={handleClose}
                 disabled={uploading}
-                className="font-roboto flex-1 rounded-full border border-accent/20 py-2.5 text-[11px] font-semibold tracking-[0.12em] text-secondary uppercase transition-colors hover:border-accent/40 hover:text-foreground disabled:opacity-40"
+                className="font-roboto flex-1 rounded-full border border-accent/20 py-2.5 text-[11px] font-semibold tracking-[0.12em] text-secondary uppercase transition-colors hover:border-accent/40 hover:text-foreground disabled:opacity-40 cursor-pointer"
               >
                 Cancel
               </button>
@@ -273,7 +273,7 @@ export function UploadDocumentModal({
                 type="submit"
                 form="upload-docs-form"
                 disabled={!canSubmit}
-                className="font-roboto flex-1 flex items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-40"
+                className="font-roboto flex-1 flex items-center justify-center gap-2 rounded-full bg-primary py-2.5 text-[11px] font-semibold tracking-[0.12em] text-dark uppercase transition-opacity hover:opacity-90 disabled:opacity-40 cursor-pointer"
               >
                 {uploading ? (
                   <>

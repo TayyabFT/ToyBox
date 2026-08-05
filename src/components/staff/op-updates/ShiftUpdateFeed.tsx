@@ -10,6 +10,8 @@ import {
   MegaphoneIcon,
 } from "./icons";
 import type { FeedStatus, FeedTag, ShiftFeedItem } from "./types";
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 function FeedItemCardSkeleton() {
   return (
@@ -116,9 +118,7 @@ function FeedItemCard({
               </p>
               <StatusBadge status={item.status} label={item.statusLabel} />
               {item.isPinned ? (
-                <span className="font-roboto rounded-full border border-primary/25 bg-primary/8 px-2 py-0.5 text-[9px] font-bold tracking-[0.1em] text-primary uppercase">
-                  Pinned
-                </span>
+                <Chip label="Pinned" context="inline" tone="gold" shape="pill" />
               ) : null}
             </div>
             <div className="flex items-center gap-2">
@@ -197,44 +197,40 @@ function FeedIcon({
   );
 }
 
-function StatusBadge({
-  status,
-  label,
-}: {
-  status: FeedStatus;
-  label: string;
-}) {
-  const className = {
-    issue: "border-pink/30 bg-pink/10 text-pink",
-    completed: "border-teal/30 bg-teal/10 text-teal",
-    "in-transit": "border-primary/30 bg-primary/10 text-primary",
-    "in-progress": "border-accent/20 bg-card text-secondary",
-    management: "border-primary/35 bg-primary/10 text-primary",
-    inspection: "border-teal/25 bg-teal/8 text-teal",
-  }[status];
+const FEED_STATUS_TONE: Record<FeedStatus, ChipTone> = {
+  issue:         "pink",
+  completed:     "teal",
+  "in-transit":  "gold",
+  "in-progress": "neutral",
+  management:    "gold",
+  inspection:    "teal",
+};
 
+const FEED_TAG_TONE: Record<NonNullable<FeedTag["tone"]>, ChipTone> = {
+  default: "neutral",
+  gold:    "gold",
+  pink:    "pink",
+  teal:    "teal",
+};
+
+function StatusBadge({ status, label }: { status: FeedStatus; label: string }) {
   return (
-    <span
-      className={`font-roboto rounded-full border px-2.5 py-0.5 text-[9px] font-bold tracking-[0.12em] uppercase ${className}`}
-    >
-      {label}
-    </span>
+    <Chip
+      label={label}
+      context="inline"
+      tone={FEED_STATUS_TONE[status]}
+      shape="pill"
+    />
   );
 }
 
 function FeedTagPill({ tag }: { tag: FeedTag }) {
-  const toneClass = {
-    default: "border-accent/15 bg-card text-secondary",
-    gold: "border-primary/25 bg-primary/8 text-primary",
-    pink: "border-pink/25 bg-pink/8 text-pink",
-    teal: "border-teal/25 bg-teal/8 text-teal",
-  }[tag.tone ?? "default"];
-
   return (
-    <span
-      className={`font-roboto rounded-md border px-2 py-1 text-[9px] font-semibold tracking-[0.1em] uppercase ${toneClass}`}
-    >
-      {tag.label}
-    </span>
+    <Chip
+      label={tag.label}
+      context="inline"
+      tone={FEED_TAG_TONE[tag.tone ?? "default"]}
+      shape="tag"
+    />
   );
 }

@@ -85,7 +85,7 @@ export function VehicleConfirmationModal({
         <div className={confirmationOverlayClass}>
           <div className={memberRequestModalBackdropClass} />
 
-          <div className="relative z-10 w-full max-w-[420px] rounded-[28px] border border-accent/20 bg-background p-5 sm:p-6 shadow-[var(--shadow-modal)]">
+          <div className="relative z-10 w-full max-w-[420px] rounded-[28px] border border-accent/20 bg-card p-5 sm:p-6 shadow-[var(--shadow-modal)]">
             <p className="font-copperplate mb-5 text-[14px] sm:text-[15px] tracking-[0.06em] text-foreground uppercase">
               Confirm the vehicle
             </p>
@@ -131,7 +131,7 @@ export function VehicleConfirmationModal({
       <div className={confirmationOverlayClass}>
         <div className={memberRequestModalBackdropClass} />
 
-        <div className="relative z-10 w-full max-w-[420px] rounded-[28px] border border-accent/20 bg-background p-5 sm:p-6 shadow-[var(--shadow-modal)]">
+        <div className="relative z-10 w-full max-w-[420px] rounded-[28px] border border-accent/20 bg-card p-5 sm:p-6 shadow-[var(--shadow-modal)]">
           {/* Header */}
           <div className="mb-5 sm:mb-6 flex items-center gap-3">
             <button

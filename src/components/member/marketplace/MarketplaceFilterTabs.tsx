@@ -18,7 +18,7 @@ export function MarketplaceFilterTabs({ active, onChange }: Props) {
           key={f.id}
           type="button"
           onClick={() => onChange(f.id)}
-          className={`font-roboto whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[10px] font-semibold tracking-[0.14em] uppercase transition-all ${
+          className={`font-roboto whitespace-nowrap rounded-full border px-3.5 py-1.5 text-[10px] font-semibold tracking-[0.14em] cursor-pointer uppercase transition-all ${
             active === f.id
               ? "border-accent bg-accent/10 text-accent"
               : "border-accent/15 text-secondary/60 hover:border-accent/30 hover:text-secondary"

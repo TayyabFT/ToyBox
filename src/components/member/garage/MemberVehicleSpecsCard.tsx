@@ -1,4 +1,5 @@
 import type { MemberVehicleOwnership, MemberVehicleSpecs } from "./types";
+import { Chip } from "@/components/ui/Chip";
 
 function SpecRow({ label, value }: { label: string; value: string }) {
   return (
@@ -35,15 +36,11 @@ export function MemberVehicleSpecsCard({
           <div className="divide-y divide-accent/8">
             <div className="flex items-center justify-between gap-4 py-2 sm:py-2.5">
               <span className="font-roboto text-[11px] text-secondary">Make</span>
-              <span className="font-roboto rounded-full border border-primary/35 bg-primary/8 px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.08em] text-primary uppercase">
-                {specs.make}
-              </span>
+              <Chip label={specs.make} context="inline" tone="gold" shape="pill" />
             </div>
             <div className="flex items-center justify-between gap-4 py-2 sm:py-2.5">
               <span className="font-roboto text-[11px] text-secondary">Model</span>
-              <span className="font-roboto rounded-full border border-teal/35 bg-teal/8 px-2.5 py-0.5 text-[9px] font-semibold tracking-[0.08em] text-teal uppercase">
-                {specs.model}
-              </span>
+              <Chip label={specs.model} context="inline" tone="teal" shape="pill" />
             </div>
             <SpecRow label="Year" value={specs.year} />
             <SpecRow label="Engine" value={specs.engine} />

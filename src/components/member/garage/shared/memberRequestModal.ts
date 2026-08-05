@@ -1,11 +1,11 @@
 export const memberRequestModalOverlayClass =
-  "fixed inset-0 z-[60] flex items-end sm:items-center justify-center m-2 sm:p-4";
+  "fixed inset-0 z-[60] flex items-end sm:items-center justify-center p-2 sm:p-4";
 
 export const memberRequestModalBackdropClass =
-  "absolute inset-0 bg-black/70";
+  "fixed inset-0 bg-black/70";
 
 export const memberRequestModalPanelClass =
-  "relative z-10 flex w-full max-h-[92dvh] sm:max-h-[92vh] max-w-full sm:max-w-[500px] flex-col overflow-hidden  rounded-[20px] sm:rounded-[28px] border border-accent/20 bg-background shadow-[var(--shadow-modal)]";
+  "relative z-10 flex w-full max-h-[92dvh] sm:max-h-[92vh] max-w-full sm:max-w-[500px] flex-col overflow-hidden  rounded-[20px] sm:rounded-[28px] border border-accent/20 bg-card shadow-[var(--shadow-modal)]";
 
 export const memberRequestModalHeaderClass =
   "relative shrink-0 border-b border-accent/10 px-4 sm:px-6 pb-3.5 sm:pb-5 pt-4 sm:pt-6";

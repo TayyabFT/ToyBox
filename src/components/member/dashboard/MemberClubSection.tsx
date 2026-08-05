@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { MemberClubVenue } from "./types";
 import { ReservationModal } from "@/components/member/the-club/ReservationModal";
 import { dashboardSectionHeadingClass, dashboardSectionHeadingPrefixClass, dashboardSectionHeadingAccentClass, dashboardSectionSubtitleClass } from "./dashboardStyles";
+import { Chip } from "@/components/ui/Chip";
 
 type MemberClubSectionProps = {
   venues?: MemberClubVenue[];
@@ -179,10 +180,14 @@ export function VenueCard({
 
         {/* Top-right status badge */}
         {venue.tag && (
-          <span className="font-roboto absolute right-3.5 top-3.5 inline-flex items-center gap-1.5 rounded-full border border-accent/30 bg-black/75 px-2.5 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm">
-            <span className="size-1.5 rounded-full bg-accent" />
-            {venue.tag}
-          </span>
+          <Chip
+            label={venue.tag}
+            context="overlay"
+            tone="gold"
+            shape="pill"
+            showDot
+            className="absolute right-3.5 top-3.5"
+          />
         )}
 
         {/* Bottom content */}

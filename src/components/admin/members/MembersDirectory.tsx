@@ -9,6 +9,7 @@ import {
 } from "@/components/common/Svgs";
 import type { MemberFilterOption, MemberTierFilter } from "@/types/api";
 import type { MemberProfile } from "./types";
+import { Chip } from "@/components/ui/Chip";
 
 type MemberStatItemProps = {
   value: number;

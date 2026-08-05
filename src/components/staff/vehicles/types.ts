@@ -10,7 +10,8 @@ export type VehicleStatus =
   | "critical"
   | "due-service"
   | "good"
-  | "excellent";
+  | "excellent"
+  | "reserved";
 
 export type VehicleListItem = {
   id: string;

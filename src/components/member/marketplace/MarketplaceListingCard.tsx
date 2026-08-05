@@ -1,27 +1,8 @@
 "use client";
 
 import type { MarketplaceListingView } from "./types";
-
-// Status badge — two variants:
-// • onImage  : dark pill (sits over the photo + scrim, always readable)
-// • offImage : theme-aware pill (sits over the bg-elevated placeholder)
-const statusBadgeOnImage: Record<string, string> = {
-  gold: "border-accent/40 bg-black/55 text-accent",
-  teal: "border-teal/40  bg-black/55 text-teal",
-  pink: "border-pink/40  bg-black/55 text-pink",
-};
-
-const statusBadgeOffImage: Record<string, string> = {
-  gold: "border-accent/30 bg-accent/10 text-accent",
-  teal: "border-teal/30  bg-teal/10  text-teal",
-  pink: "border-pink/30  bg-pink/10  text-pink",
-};
-
-const statusDot: Record<string, string> = {
-  gold: "bg-accent",
-  teal: "bg-teal",
-  pink: "bg-pink",
-};
+import { Chip } from "@/components/ui/Chip";
+import type { ChipTone } from "@/components/ui/Chip";
 
 type Props = {
   listing: MarketplaceListingView;
@@ -57,7 +38,7 @@ export function MarketplaceListingCard({
         type="button"
         onClick={onClick}
         aria-label={`View ${listing.displayTitle}`}
-        className="relative block h-[200px] w-full shrink-0 overflow-hidden sm:h-[220px]"
+        className="relative block h-[200px] w-full shrink-0 overflow-hidden sm:h-[220px] cursor-pointer"
       >
         {image ? (
           <>
@@ -129,27 +110,25 @@ export function MarketplaceListingCard({
           </div>
         )}
 
-        {/* Status badge — style adapts to whether a photo is present */}
-        <span
-          className={`font-roboto absolute right-3 top-3 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[8px] font-semibold tracking-[0.14em] uppercase backdrop-blur-sm ${
-            image ? statusBadgeOnImage[tone] : statusBadgeOffImage[tone]
-          }`}
-        >
-          <span className={`size-1.5 rounded-full ${statusDot[tone]}`} />
-          {statusLabel.toUpperCase()}
-        </span>
+        {/* Status chip — context adapts to whether a photo is present */}
+        <Chip
+          label={statusLabel.toUpperCase()}
+          context={image ? "overlay" : "inline"}
+          tone={tone as ChipTone}
+          shape="pill"
+          showDot
+          className="absolute right-3 top-3"
+        />
 
-        {/* Featured badge */}
+        {/* Featured chip */}
         {listing.isFeatured && (
-          <span
-            className={`font-roboto absolute left-3 top-3 rounded-md border px-2 py-1 text-[8px] font-semibold tracking-[0.16em] text-accent uppercase backdrop-blur-sm ${
-              image
-                ? "border-accent/40 bg-black/55"
-                : "border-accent/30 bg-accent/10"
-            }`}
-          >
-            FEATURED
-          </span>
+          <Chip
+            label="FEATURED"
+            context={image ? "overlay" : "inline"}
+            tone="gold"
+            shape="tag"
+            className="absolute left-3 top-3"
+          />
         )}
       </button>
 
@@ -158,9 +137,13 @@ export function MarketplaceListingCard({
       <div className="flex items-center justify-between gap-3 border-t border-accent/10 px-4 py-3 mt-auto">
         <div className="flex items-center gap-2 overflow-hidden">
           {listing.year && (
-            <span className="font-roboto shrink-0 rounded-md border border-accent/20 bg-elevated px-2 py-0.5 text-[9px] tracking-[0.1em] text-foreground/60 uppercase">
-              {listing.year}
-            </span>
+            <Chip
+              label={String(listing.year)}
+              context="subtle"
+              tone="gold"
+              shape="tag"
+              className="shrink-0"
+            />
           )}
           {hasMileage && (
             <span className="font-roboto truncate text-[10px] text-foreground/50">
@@ -185,7 +168,7 @@ export function MarketplaceListingCard({
             }
           }}
           aria-label={listing.isFavorited ? "Remove from saved" : "Save listing"}
-          className="shrink-0 p-1 text-foreground/30 transition-colors hover:text-accent disabled:opacity-40"
+          className="shrink-0 p-1 text-foreground/30 transition-colors hover:text-accent disabled:opacity-40 cursor-pointer"
         >
           <svg
             width="16"

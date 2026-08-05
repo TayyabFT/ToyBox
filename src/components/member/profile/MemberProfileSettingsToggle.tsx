@@ -13,7 +13,7 @@ export function MemberProfileSettingsToggle({
       role="switch"
       aria-checked={enabled}
       onClick={() => onChange?.(!enabled)}
-      className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors ${
+      className={`relative h-5 w-9 shrink-0 rounded-full border transition-colors cursor-pointer ${
         enabled
           ? "border-accent/40 bg-accent/20"
           : "border-accent/15 bg-accent/8"

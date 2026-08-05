@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { MemberVehicleItem } from "@/components/member/dashboard/types";
+import { resolveAssetUrl } from "@/lib/resolveAssetUrl";
 
 const statusConfig: Record<string, { label: string; badgeCls: string; dotCls?: string }> = {
   ready: {
@@ -112,15 +113,15 @@ export function MemberVehicleRow({ vehicle }: MemberVehicleRowProps) {
     : null;
 
   return (
-    <div className="group flex flex-col sm:flex-row overflow-hidden rounded-xl border border-accent/15 bg-card transition-all duration-200 hover:border-accent/30 sm:min-h-[130px] md:min-h-[140px]">
+    <div className="group flex flex-col sm:flex-row overflow-hidden rounded-xl border border-accent/15 bg-card transition-all duration-200 hover:border-accent/30 h-[160px]">
 
       {/* ── Image ── */}
-      <div className="relative shrink-0 w-full sm:w-[190px] md:w-[220px] h-[130px] sm:h-auto sm:self-stretch sm:min-h-[130px] md:min-h-[140px] overflow-hidden bg-surface">
+      <div className="relative shrink-0 w-[180px] h-full overflow-hidden bg-surface">
 
         {/* Image or placeholder */}
         {vehicle.imageUrl ? (
           <img
-            src={vehicle.imageUrl}
+            src={resolveAssetUrl(vehicle.imageUrl)}
             alt={vehicle.name}
             className="h-full w-full object-cover"
             onError={(e) => {

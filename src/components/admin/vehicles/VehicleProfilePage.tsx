@@ -11,6 +11,7 @@ import type {
   VehicleActivityHistoryItem,
   VehicleDetailsScreenDisplay,
 } from "./types";
+import { Chip } from "@/components/ui/Chip";
 
 type VehicleProfilePageProps = {
   vehicleId: string;
@@ -25,9 +26,9 @@ const dotToneClass: Record<Tone, string> = {
 };
 
 const pillToneClass = {
-  teal: "border-teal/35 bg-teal/8 text-teal",
-  outline: "border-accent/20 text-muted",
-};
+  teal:    "teal",
+  outline: "neutral",
+} as const;
 
 function SectionCard({
   title,
@@ -152,12 +153,13 @@ function ProfilePageContent({ detail }: { detail: VehicleDetailsScreenDisplay })
 
             <div className="flex flex-wrap items-center gap-3 pt-1">
               {headerPills.map((pill) => (
-                <span
+                <Chip
                   key={pill.label}
-                  className={`inline-flex items-center rounded-full border px-3.5 py-1.5 font-roboto text-[10px] font-semibold tracking-[0.12em] uppercase ${pillToneClass[pill.tone]}`}
-                >
-                  {pill.label}
-                </span>
+                  label={pill.label}
+                  context="inline"
+                  tone={pillToneClass[pill.tone]}
+                  shape="pill"
+                />
               ))}
             </div>
           </div>

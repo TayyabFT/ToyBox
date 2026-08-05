@@ -1,5 +1,6 @@
 import { HealthProgressBar } from "@/components/staff/vehicles/HealthProgressBar";
 import type { HealthMetric } from "@/components/staff/vehicles/types";
+import { Chip } from "@/components/ui/Chip";
 
 type SystemBreakdownSectionProps = {
   metrics: HealthMetric[];
@@ -21,9 +22,12 @@ export function SystemBreakdownSection({
           System Breakdown
         </h3>
         {criticalCount > 0 && (
-          <span className="font-roboto rounded-full border border-pink/35 bg-pink/10 px-2.5 py-1 text-[9px] font-semibold tracking-[0.08em] text-pink uppercase">
-            + {criticalCount} Critical
-          </span>
+          <Chip
+            label={`+ ${criticalCount} Critical`}
+            context="inline"
+            tone="pink"
+            shape="pill"
+          />
         )}
       </div>
 

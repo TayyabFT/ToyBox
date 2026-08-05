@@ -9,7 +9,6 @@ import {
   type AddVehicleStepErrors,
 } from "@/lib/addVehicleValidation";
 import { showError, showSuccess } from "@/lib/toast";
-import { useTheme } from "@/components/common/ThemeProvider";
 import { AddVehicleStepper } from "./AddVehicleStepper";
 import { VehicleInfoStep } from "./VehicleInfoStep";
 import { OwnershipInfoStep } from "./OwnershipInfoStep";
@@ -21,10 +20,6 @@ import {
   type AddVehicleFormState,
 } from "./types";
 import { RightArrow } from "@/components/common";
-
-const LIGHT_PANEL_STYLE = {
-  backgroundColor: "#D0C8BC",
-} as const;
 
 type AddVehicleModalProps = {
   open: boolean;
@@ -39,8 +34,6 @@ export function AddVehicleModal({
   onSuccess,
   apiUrl,
 }: AddVehicleModalProps) {
-  const { theme } = useTheme();
-  const isLight = theme === "light";
   const [step, setStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<AddVehicleStepErrors>({});
@@ -123,8 +116,7 @@ export function AddVehicleModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
       <div
-        className="admin-modal-panel relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 shadow-[var(--shadow-modal)]"
-        style={isLight ? LIGHT_PANEL_STYLE : undefined}
+        className="relative z-10 flex max-h-[92vh] w-full max-w-[500px] flex-col overflow-hidden rounded-[28px] border border-accent/20 bg-card shadow-[var(--shadow-modal)]"
       >
         <div className="relative shrink-0 border-b border-accent/10 px-6 pb-5 pt-6">
           <h2 className="mb-8 text-center text-[20px] text-primary">
@@ -208,7 +200,7 @@ export function AddVehicleModal({
                 type="button"
                 onClick={handleBack}
                 disabled={submitting}
-                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl border border-accent/25 bg-input-muted py-4 text-sm font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
+                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full border border-accent/25 bg-surface py-3.5 text-[13px] font-bold tracking-[0.08em] text-foreground transition-colors hover:border-primary/40 hover:text-primary disabled:cursor-not-allowed disabled:opacity-60"
               >
                 <RightArrow className="shrink-0 rotate-180" />
                 Back
@@ -217,7 +209,7 @@ export function AddVehicleModal({
                 type="button"
                 onClick={handleNext}
                 disabled={submitting}
-                className="admin-gold-cta font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-sm font-bold tracking-[0.08em] disabled:cursor-not-allowed disabled:opacity-60"
+                className="font-roboto flex flex-1 cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-bright to-primary py-3.5 text-[13px] font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {submitting ? "Submitting..." : actionLabel}
                 {!submitting && step < 4 && (
@@ -230,7 +222,7 @@ export function AddVehicleModal({
               type="button"
               onClick={handleNext}
               disabled={submitting}
-              className="admin-gold-cta font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-2xl py-4 text-[13px] font-bold tracking-[0.08em] disabled:cursor-not-allowed disabled:opacity-60"
+              className="font-roboto flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-gold-bright to-primary py-3.5 text-[13px] font-bold tracking-[0.08em] text-dark disabled:cursor-not-allowed disabled:opacity-60"
             >
               {actionLabel}
               <RightArrow className="shrink-0" />
