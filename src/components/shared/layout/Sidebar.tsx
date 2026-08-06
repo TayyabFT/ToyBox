@@ -602,15 +602,13 @@ export function Sidebar({
           mobileOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="shrink-0 px-5 py-5">
-          <div className="flex items-center justify-between gap-2">
-            <Image
+        <div className="shrink-0 px-5 py-4">
+          <div className="flex items-start justify-between gap-2">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={isLightMode ? "/images/lightlogo-v2.png" : "/images/logo-v2.png"}
               alt="Toy Box"
-              width={120}
-              height={56}
-              className="h-14 w-auto"
-              unoptimized
+              style={{ width: 150, height: "auto", display: "block" }}
             />
             <div className="flex items-center gap-2">
               <div

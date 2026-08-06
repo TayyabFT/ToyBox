@@ -1,5 +1,4 @@
 import { useTheme } from "@/components/common/ThemeProvider";
-import Image from "next/image";
 
 
 type MembershipCardProps = {
@@ -38,13 +37,13 @@ export function MembershipCard({
       >
         <div className="relative flex h-full w-full flex-col justify-between px-5 py-5 sm:px-8 sm:py-6">
           {/* Top */}
-          <div className="flex items-center justify-between">
-            <Image
+          <div className="flex items-start justify-between">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src="/images/lightlogo-v2.png"
               alt="Toy Box"
-              width={100}
-              height={50}
-              className="h-9 w-auto sm:h-14"
+              style={{ width: 110, height: "auto", display: "block" }}
+              className="sm:w-[130px]"
             />
           </div>
 
@@ -115,13 +114,13 @@ export function MembershipCard({
         }}
       >
         {/* Top */}
-        <div className="flex items-center justify-between">
-          <Image
+        <div className="flex items-start justify-between">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src="/images/logo-v2.png"
             alt="Toy Box"
-            width={100}
-            height={50}
-            className="h-9 w-auto sm:h-14"
+            style={{ width: 110, height: "auto", display: "block" }}
+            className="sm:w-[130px]"
           />
         </div>
 

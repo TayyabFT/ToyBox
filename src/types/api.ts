@@ -501,6 +501,36 @@ export type MemberTransportRequestData = {
 export type CreateMemberTransportRequestResponse =
   ApiResponse<MemberTransportRequestData>;
 
+// ── Member Transport — request status / timeline ─────────────────────────────
+
+export type MemberTransportTimelineStep = {
+  key?: string;
+  label?: string;
+  status?: string;
+  completedAt?: string;
+  meta?: Record<string, unknown>;
+};
+
+export type MemberTransportRequestStatusData = {
+  id?: string | number;
+  referenceNumber?: string;
+  status?: string;
+  vehicle?: string;
+  serviceType?: string;
+  serviceTypeLabel?: string;
+  pickupLocation?: string;
+  dropoffLocation?: string;
+  preferredDate?: string;
+  preferredDateLabel?: string;
+  timeWindow?: string;
+  timeline?: MemberTransportTimelineStep[];
+  canCancel?: boolean;
+  createdAt?: string;
+};
+
+export type MemberTransportRequestStatusResponse =
+  ApiResponse<MemberTransportRequestStatusData>;
+
 // ── Member Detailing Booking ─────────────────────────────────────────────────
 
 export type CreateDetailingBookingBody = {

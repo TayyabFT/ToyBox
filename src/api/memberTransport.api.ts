@@ -4,6 +4,7 @@ import { stripEmptyRequestFields } from "@/lib/apiPayload";
 import type {
   CreateMemberTransportRequestBody,
   CreateMemberTransportRequestResponse,
+  MemberTransportRequestStatusResponse,
 } from "@/types/api";
 
 export const memberTransportApi = {
@@ -18,5 +19,14 @@ export const memberTransportApi = {
         method: "POST",
         body: stripEmptyRequestFields(body),
       },
+    ),
+
+  /**
+   * GET /api/v1/transport/requests/:id/status
+   * Returns the live status and timeline for a transport request.
+   */
+  getStatus: (requestId: string) =>
+    apiClient<MemberTransportRequestStatusResponse>(
+      `${API_ENDPOINTS.memberTransport.requests}/${encodeURIComponent(requestId)}/status`,
     ),
 };
