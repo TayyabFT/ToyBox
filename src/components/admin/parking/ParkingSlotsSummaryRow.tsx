@@ -74,7 +74,7 @@ export function ParkingSlotsSummaryRow({
         label={summary.occupied.label}
         value={summary.occupied.value}
         subtext={summary.occupied.subtext || "IN USE"}
-        icon={<VehicleFleetInService />}
+        icon={<VehicleFleetOverdue />}
         iconSize="lg"
         valueLoading={valueLoading}
       />
@@ -82,7 +82,7 @@ export function ParkingSlotsSummaryRow({
         label={summary.maintenance.label}
         value={summary.maintenance.value}
         subtext={summary.maintenance.subtext || "UNDER MAINTENANCE"}
-        icon={<VehicleFleetOverdue />}
+        icon={<VehicleFleetInService />}
         iconSize="lg"
         valueLoading={valueLoading}
       />

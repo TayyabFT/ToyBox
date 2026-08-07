@@ -48,7 +48,7 @@ function formatNowTime(): string {
 function createOptimisticMessage(body: string): ConciergeChatMessage {
   return {
     id: `optimistic-${Date.now()}`,
-    sender: "staff",
+    sender: "admin",
     senderName: "You",
     time: formatNowTime(),
     message: body,

@@ -18,8 +18,14 @@ export function mapChatMessage(message: ChatMessage): ConciergeChatMessage {
 
   if (senderType === "member") {
     sender = "member";
-  } else if (senderType === "admin") {
+  } else if (senderType === "admin" || senderType === "administrator") {
     sender = "admin";
+  } else if (
+    senderType === "staff" ||
+    senderType === "concierge" ||
+    senderType === "operator"
+  ) {
+    sender = "staff";
   }
 
   return {

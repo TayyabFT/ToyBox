@@ -30,28 +30,32 @@ function escapeRegExp(value: string) {
 }
 
 export function ChatMessage({ message }: ChatMessageProps) {
-  const isStaff = message.sender === "staff";
+  const isOutgoing = message.sender !== "member";
 
   return (
     <div
-      className={`flex flex-col gap-2 ${isStaff ? "items-end" : "items-start"}`}
+      className={`flex w-full ${isOutgoing ? "justify-end" : "justify-start"}`}
     >
       <div
-        className={`max-w-[78%] rounded-2xl px-5 py-4 ${
-          isStaff
-            ? "bg-gradient-to-r from-gold-bright to-accent text-dark"
-            : "bg-elevated text-foreground-soft"
-        }`}
+        className={`flex max-w-[78%] flex-col gap-2 ${isOutgoing ? "items-end" : "items-start"}`}
       >
-        <p className="font-roboto text-[14px] leading-[1.65] tracking-[0.02em]">
-          {renderMessageText(message)}
-        </p>
-      </div>
+        <div
+          className={`rounded-2xl px-5 py-4 ${
+            isOutgoing
+              ? "bg-gradient-to-r from-gold-bright to-accent text-dark"
+              : "bg-elevated text-foreground-soft"
+          }`}
+        >
+          <p className="font-roboto text-[14px] leading-[1.65] tracking-[0.02em]">
+            {renderMessageText(message)}
+          </p>
+        </div>
 
-      <span className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
-        {message.senderName} · {message.time}
-        {isStaff && message.read ? " · Read" : ""}
-      </span>
+        <span className="font-roboto text-[11px] tracking-[0.04em] text-secondary">
+          {message.senderName} · {message.time}
+          {isOutgoing && message.read ? " · Read" : ""}
+        </span>
+      </div>
     </div>
   );
 }

@@ -26,7 +26,8 @@ const DOT_TONE: Record<OperationStatus, string> = {
   ready: "bg-teal",
 };
 
-const GRID = "grid grid-cols-[120px_1.2fr_1.8fr_1.3fr_1.5fr_110px] items-center gap-4";
+const GRID =
+  "grid grid-cols-[72px_minmax(160px,1.1fr)_minmax(200px,1.35fr)_minmax(136px,1fr)_minmax(152px,1.05fr)_104px] items-center gap-x-8 gap-y-0";
 
 function StatusPill({ op }: { op: VehicleOperationRow }) {
   return (
@@ -142,10 +143,10 @@ export function VehicleOperations({
         </div>
       </div>
 
-      <div className="mt-5 overflow-x-auto">
-        <div className="min-w-[820px]">
+      <div className="mt-6 overflow-x-auto">
+        <div className="min-w-[980px]">
           <div
-            className={`${GRID} border-b border-accent/10 px-3 pb-3 font-roboto text-[9px] tracking-[0.14em] text-secondary uppercase`}
+            className={`${GRID} border-b border-accent/10 px-6 pb-4 font-roboto text-[9px] tracking-[0.14em] text-secondary uppercase`}
           >
             <span>Bay</span>
             <span>Member</span>
@@ -158,7 +159,7 @@ export function VehicleOperations({
           {loading && rows.length === 0 ? (
             <div className="divide-y divide-accent/8" aria-hidden="true">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className={`${GRID} px-3 py-4`}>
+                <div key={index} className={`${GRID} px-6 py-4`}>
                   <ShimmerBlock className="h-4 w-8" />
                   <div className="flex items-center gap-3">
                     <ShimmerBlock className="size-8 shrink-0 rounded-full" />
@@ -188,7 +189,7 @@ export function VehicleOperations({
             {rows.map((op) => (
               <div
                 key={op.id}
-                className={`${GRID} px-3 py-4 transition-colors hover:bg-surface/40`}
+                className={`${GRID} px-6 py-4 transition-colors hover:bg-surface/40`}
               >
                 <span className="font-copperplate text-[15px] text-accent">
                   {op.bay}

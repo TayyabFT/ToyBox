@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { eventsApi } from "@/api/events.api";
 import type { CreateEventRequest, EventEligibilityConfig } from "@/types/api";
 import { showError, showSuccess } from "@/lib/toast";
-import { VehicleCalendar, ClockSmall } from "@/components/common/Svgs";
+import { VehicleCalendar, ClockSmall, ChevronDown } from "@/components/common/Svgs";
 
 type FormEligibility = {
   enabled: boolean;
@@ -587,18 +587,26 @@ export function EventForm({ isOpen, onClose, onSuccess, eventId, initialData }: 
               {/* Category */}
               <div className="flex flex-col gap-1">
                 <label className="text-[10px] font-bold tracking-widest text-secondary uppercase">Category *</label>
-                <select
-                  name="category"
-                  value={formData.category}
-                  onChange={handleChange}
-                  disabled={isSubmitting}
-                  className="bg-input-muted border border-[var(--overview-border)] rounded-lg px-4 py-3 text-sm focus:border-accent/40 outline-none transition-all appearance-none cursor-pointer"
-                >
-                  <option value="drives">Drives</option>
-                  <option value="auctions">Auctions</option>
-                  <option value="dining">Dining</option>
-                  <option value="track">Track</option>
-                </select>
+                <div className="relative">
+                  <select
+                    name="category"
+                    value={formData.category}
+                    onChange={handleChange}
+                    disabled={isSubmitting}
+                    className="w-full bg-input-muted border border-[var(--overview-border)] rounded-lg px-4 py-3 pr-10 text-sm focus:border-accent/40 outline-none transition-all appearance-none cursor-pointer"
+                  >
+                    <option value="drives">Drives</option>
+                    <option value="auctions">Auctions</option>
+                    <option value="dining">Dining</option>
+                    <option value="track">Track</option>
+                  </select>
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute top-1/2 right-3 z-10 -translate-y-1/2 text-accent"
+                  >
+                    <ChevronDown color="currentColor" className="size-4" />
+                  </span>
+                </div>
               </div>
 
               {/* Capacity */}

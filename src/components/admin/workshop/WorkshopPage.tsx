@@ -6,7 +6,7 @@ import {
   PackageBox,
   StatMembersIcon,
   VehicleFlag,
-  Workshop,
+  WorkshopActiveJobs,
 } from "@/components/common/Svgs";
 import { adminWorkshopApi } from "@/api/adminWorkshop.api";
 import {
@@ -36,7 +36,7 @@ const QUEUE_PAGE_SIZE = 10;
 const ALERT_BAR_VISIBLE_COUNT = 3;
 
 const statIcons = [
-  <Workshop key="jobs" />,
+  <WorkshopActiveJobs key="jobs" color="currentColor" className="size-4" />,
   <VehicleFlag key="overdue" color="currentColor" className="size-4" />,
   <PackageBox key="parts" className="size-4" />,
   <ClockIcon key="turnaround" color="currentColor" className="size-4" />,
